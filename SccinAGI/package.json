@@ -1,0 +1,13 @@
+{
+  "name": "SccinAGI",
+  "version": "0.0.0",
+  "description": "SccinAGI",
+  "main": "server.js",
+  "author": {
+    "name": "LinYong",
+    "email": ""
+  },
+  "dependencies": {
+    "agi": "*"
+  }
+}
