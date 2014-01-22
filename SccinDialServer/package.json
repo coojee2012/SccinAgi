@@ -1,0 +1,18 @@
+{
+  "name": "SccinDialServer",
+  "version": "0.0.1",
+  "description": "Sccin Dial Server Interface",
+  "main": "app.js",
+  "author": {
+    "name": "LinYong",
+    "email": "11366846@qq.com"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "dependencies": {
+    "mysql":"*",
+    "node-conf":"*",
+    "log4js":"*"
+  }
+}
