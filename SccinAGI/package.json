@@ -1,13 +1,19 @@
 {
   "name": "SccinAGI",
-  "version": "0.0.0",
-  "description": "SccinAGI",
+  "version": "0.0.1",
+  "description": "Sccin AGI Server",
   "main": "server.js",
   "author": {
     "name": "LinYong",
-    "email": ""
+    "email": "11366846@qq.com"
+  },
+  "engines": {
+    "node": ">=0.8.0"
   },
   "dependencies": {
-    "agi": "*"
+    "mysql":"*",
+    "node-conf":"*",
+    "log4js":"*",
+    "readable-stream": "*"
   }
 }

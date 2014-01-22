@@ -1,6 +1,21 @@
-var AGI=require('agi');
+var AGI=require('./lib/index');
 var ServerPort=4573;
 var routing=require('./routing');
+var log4js = require('log4js');
+log4js.configure({
+  appenders: [{
+      type: 'console'
+    }, //控制台输出
+    {
+      type: 'file', //文件输出
+      filename: 'agi.log',
+      maxLogSize: 10240000,
+      backups: 3,
+      category: 'normal'
+    }
+  ],
+  replaceConsole: true
+});
 
 AGI.createServer(function(context) {
   //context is a new instance of agi.Context for each new agi session
