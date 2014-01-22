@@ -1,0 +1,21 @@
+{
+  "name": "SccinCRM",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "jugglingdb":"*",
+    "jugglingdb-mysql":"*",
+    "nami":">=0.5",
+    "node-conf":"*",
+    "log4js":"*",
+    "guid":">=0.0.12",
+    "mysql":"*",
+    "express": "3.4.8",
+    "ejs": "*",
+    "moment":"*",
+    "stylus": "*"
+  }
+}
