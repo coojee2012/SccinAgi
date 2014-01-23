@@ -34,18 +34,22 @@ free.on('error', function (err) {
 });*/
 
 var exec = require('child_process').exec,
-    last = exec('dir',function(error, stdout, stderr){
-    res.render('index', { title: 'Express'+stdout });
+    last = exec('/usr/bin/java -jar /var/lib/asterisk/agi-bin/VoiceTest_fat.jar 11',function(error, stdout, stderr){
+      if(error){
+        res.render('index', { title: '执行错误：'+error });
+      }else{
+    res.render('index', { title: '程序输出：'+stdout });
+  }
   });
 
 last.stdout.on('data', function (data) {
     console.log('标准输出：' + data);
-    //res.render('index', { title: 'Express'+data });
+    //res.render('index', { title: '标准输出：'+data });
 });
 
 last.on('exit', function (code) {
     console.log('子进程已关闭，代码：' + code);
-      //res.render('index', { title: 'Express'+code });
+    //res.render('index', { title: '子进程已关闭，代码：'+code });
 });
 
  

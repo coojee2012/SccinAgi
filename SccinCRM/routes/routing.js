@@ -135,6 +135,12 @@ routes.asami = [{
 		file: '/routes/asami',
 		method: 'all',
 		fn: 'sippeers'
+	},{
+		urlreg: '/asami/autodial',
+		file: '/routes/asami',
+		method: 'all',
+		fn: 'autodial'
+		
 	}
 
 ];

@@ -12,7 +12,7 @@ var conf = require('node-conf');
 var log4js = require('log4js');
 var nami=require(__dirname+'/asterisk/asmanager').nami;
 var conn=require(__dirname+'/database/mysqlconn').connection;
-var schema = require(__dirname+'/database/jdmysql').schema;
+var Schemas = require(__dirname+'/database/schema').Schemas;
 var logconf=conf.load('log4js');
 log4js.configure(logconf);
 
