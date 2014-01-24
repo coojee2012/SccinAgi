@@ -214,6 +214,31 @@ exports.autodial = function(req, res) {
 	var ProjExpertID = req.body['ProjExpertID'] || req.query['ProjExpertID'];
 	var Content = req.body['Content'] || req.query['Content'];
 	var Phones = req.body['Phones'] || req.query['Phones'];
+
+	if(!ProjExpertID || ProjExpertID==""){
+	res.send({
+				"success": false,
+				"result": '抽取编号不能为空'
+			});	
+	return;
+	}
+
+	if(!Content || Content==""){
+	res.send({
+				"success": false,
+				"result": '合成语音类容不能为空'
+			});	
+	return;
+	}
+
+	if(!Phones || Phones==""){
+	res.send({
+				"success": false,
+				"result": '拨打电话不能为空'
+			});	
+	return;
+	}
+
 	async.auto({
 		//保存初始化数据到拨打记录表
 		addCallRecords: function(callback) {
@@ -229,7 +254,6 @@ exports.autodial = function(req, res) {
 			function(callback, results) {
 
 				Schemas['VoiceContent'].create({
-					id: guid.create(),
 					Contents: Content,
 					callrecord: results.addCallRecords
 				}, function(err, inst) {
@@ -241,19 +265,18 @@ exports.autodial = function(req, res) {
 		addCallPhone: ['addCallRecords',
 			function(callback, results) {
 				var phones = Phones.split(',');
-
 				var count = 0;
 				async.whilst(
 					function() {
-						console.log('111111111111111');
 						return count < phones.length;
 					},
 					function(cb) {
+
 					count++;
-					Schemas['CallRecords'].create({
+					Schemas['CallPhone'].create({
 						id: guid.create(),
-						Phone: phones[count],
-						PhoneSequ: count,
+						Phone: phones[count-1],
+						PhoneSequ: count-1,
 						callrecord: results.addCallRecords
 					}, function(err, inst) {
 						cb(err, inst);
@@ -272,8 +295,8 @@ exports.autodial = function(req, res) {
 		addDialResult: ['addCallRecords',
 			function(callback, results) {
 				Schemas['DialResult'].create({
-					id: guid.create(),
-					dialResultID: results.addCallRecords
+					ProjExpertID:ProjExpertID,
+					callrecord: results.addCallRecords
 				}, function(err, inst) {
 					callback(err, inst);
 				});
@@ -311,10 +334,10 @@ exports.autodial = function(req, res) {
 				action.Channel = channel;
 				//action.Timeout=30;
 				action.Async = true;
-				action.Account = 8001;
-				action.CallerID = 8001;
+				action.Account = 8801;
+				action.CallerID = 8801;
 				action.Context = Context;
-				action.Exten = 8001;
+				action.Exten = 8801;
 				if (nami.connected) {
 					nami.send(action, function(response) {
 						callback(null, response);
@@ -330,18 +353,55 @@ exports.autodial = function(req, res) {
 		if (err) {
 			res.send({
 				"success": false,
-				"error": err
+				"result": "服务器发生内部异常"
 			});
 		} else {
 			res.send({
 				"success": true,
-				"error": null
+				"result": ""
 			});
 		}
 
 	});
 
 
+
+}
+
+
+
+exports.getresult=function(req,res){
+	var ProjExpertID = req.body['ProjExpertID'] || req.query['ProjExpertID'];
+	if(!ProjExpertID || ProjExpertID==""){
+	res.send({
+				"success": false,
+				"result": '抽取编号不能为空'
+			});	
+	return;
+	}
+	Schemas['DialResult'].findOne({where:{ProjExpertID:ProjExpertID}},function(err,inst){
+		if(err){
+			res.send({
+				"success": false,
+				"result": '获取拨打结果时服务器发生异常'
+			});	
+		}
+
+		else if(inst==null){
+		res.send({
+				"success": false,
+				"result": '在服务器上没有找到该数据'
+			});		
+		}
+		else{
+			res.send({
+				"success": true,
+				"result": ""+inst.Result+""
+			});	
+		}
+
+
+	});
 
 }
 

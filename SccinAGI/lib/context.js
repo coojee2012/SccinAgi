@@ -155,8 +155,82 @@ Context.prototype.end = function() {
 //noanswer: Playback without answering, otherwise the channel will
 //be answered before the sound is played.
 
-Context.prototype.Playback=function(filename,option) {
-  this.exec('Playback',filename,option);
+Context.prototype.Playback=function(filename,option,cb) {
+  this.exec('Playback',filename,option,cb);
+}
+//bong放背景音
+//filenames  - 播放的语音文件名称，可以通过&号连接不同的文件
+//options - 播放选项
+//s - 如果线路没有被应答将直接跳过，此时应用程序立即返回.
+//n - 在播放前不应答.
+//m - 接收到按键时打断播放.
+//langoverride - 显示的指定播放的语言.
+//context - 退出时,该应用程序将使用一个拨扩展
+//cb - 回掉函数
+Context.prototype.BackGround=function(filename,option,cb) {
+  this.exec('BackGround',filename,option,cb);
+}
+
+//获取按键
+//filename - 语音文件名称
+//timeout - 按键超时，默认是10秒
+//maxdigits - 获取获取到的最大按键数，最小默认为1
+Context.prototype.GetData=function(filename,timeout,maxdigits,cb) {
+  if(typeof timeout === 'function') {
+    cb = timeout;
+    //default to 2 second timeout
+    timeout = 5000;
+  }
+  if(typeof maxdigits === 'function') {
+    cb = maxdigits;
+    //default to 2 second timeout
+    maxdigits = 1;
+  }
+  this.send('GET DATA '+filename+' '+timeout+' '+maxdigits+ENDLINE,cb);
+}
+
+Context.prototype.NOOP=function(msg,cb){
+  this.send('NOOP '+msg+ENDLINE,cb);
+}
+
+
+//读出按键
+//number - 给定的按键
+//escape - 忽略的按键
+Context.prototype.SayDigits=function(number,escape,cb){
+  if(typeof escape === 'function') {
+    cb = escape;
+    //default to 2 second timeout
+    escape = "";
+  }
+  this.send('SAY DIGITS '+number+' '+ escape ,cb);
+}
+
+
+
+Context.prototype.GetChannelStatus=function(channelname,cb){
+  if(typeof channelname === 'function') {
+    cb = channelname;
+    //default to 2 second timeout
+    channelname = "";
+  }
+  this.send('CHANNEL STATUS '+channelname,cb);
+}
+
+Context.prototype.Dial=function(number,timeout,options,cb){
+ if(typeof timeout === 'function') {
+    cb = timeout;
+    //default to 2 second timeout
+    timeout = 30;
+    options = 'tr';
+  }
+  if(typeof options === 'function') {
+    cb = options;
+    //default to 2 second timeout
+    options = 'tr';
+  }
+
+  this.exec('Dial',number,timeout,options,cb);
 }
 
 module.exports = Context;

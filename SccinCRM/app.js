@@ -83,7 +83,16 @@ for (var i in routings) {
 
 }
 
-
-http.createServer(app).listen(app.get('port'), function(){
+var count=0;
+var server=http.createServer(app).listen(app.get('port'), function(){
   console.log('成功启动四川建设网语音拨打服务: ' + app.get('port'));
 });
+
+server.maxHeadersCount=0;
+
+server.on('connection',function(){
+count++;
+ console.log('当前有效连接: ' + count);
+});
+
+

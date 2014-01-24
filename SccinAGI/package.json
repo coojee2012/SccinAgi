@@ -11,6 +11,12 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
+    "jugglingdb":"*",
+    "jugglingdb-mysql":"*",
+    "nami":">=0.5",
+    "guid":">=0.0.12",
+    "async":">=0.2.9",
+    "moment":"*",
     "mysql":"*",
     "node-conf":"*",
     "log4js":"*",
