@@ -1,4 +1,5 @@
 var AGI=require('./lib/index');
+var nami=require(__dirname+'/asterisk/asmanager').nami;
 var conf = require('node-conf');
 var agiconf=conf.load('fastagi');
 var routing=require('./routing');
@@ -46,6 +47,7 @@ server.getConnections(function(err,count){
     vars.schemas=Schemas;
     vars.agiconf=agiconf;
     vars.args=args;
+    vars.nami=nami;
     if(typeof(routing[router])==='function'){
         routing[router](context,vars);
         }
@@ -63,7 +65,7 @@ server.getConnections(function(err,count){
 
 //捕获挂机
   context.on('hangup',function(vars){
-       console.log("AGI通道已断开：");
+       console.log("AGI通道已断开.");
        context.end();
       });
 

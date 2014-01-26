@@ -217,6 +217,10 @@ Context.prototype.GetChannelStatus=function(channelname,cb){
   this.send('CHANNEL STATUS '+channelname,cb);
 }
 
+Context.prototype.SetVariable=function(variablename,variablevalue,cb){
+  this.send('SET VARIABLE '+variablename+' '+variablevalue,cb);
+}
+
 Context.prototype.Dial=function(number,timeout,options,cb){
  if(typeof timeout === 'function') {
     cb = timeout;
@@ -233,4 +237,9 @@ Context.prototype.Dial=function(number,timeout,options,cb){
   this.exec('Dial',number,timeout,options,cb);
 }
 
+
+Context.prototype.Originate=function(channel,type,args,cb){
+ 
+  this.exec('Originate',channel,type,args,cb);
+}
 module.exports = Context;

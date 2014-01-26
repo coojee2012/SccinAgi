@@ -19,7 +19,7 @@ log4js.configure(logconf);
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.favicon());
@@ -93,6 +93,10 @@ server.maxHeadersCount=0;
 server.on('connection',function(){
 count++;
  console.log('当前有效连接: ' + count);
+});
+
+server.on('error',function(error){
+ console.log('发生错误: ', error);
 });
 
 
