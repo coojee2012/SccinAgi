@@ -4,7 +4,6 @@ var schema = require('../database/jdmysql').schema;
 var CallLog=require('./CallLog');
 var CallPhone=require('./CallPhone');
 var UserKeysRecord=schema.define('UserKeysRecord',{
-    userKeysRecordID:     { type: String, length: 50,index: true},//记录编号
     callLogID:     { type: String, length: 50},
     keyTypeID:     { type: String, length: 50},
     Key:   { type: String, length: 50},//用户按键

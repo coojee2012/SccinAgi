@@ -73,6 +73,7 @@ Context.prototype.readResponse = function(msg) {
 };
 //序列化AGI返回参数
 Context.prototype.readResponseLine = function(line) {
+  //console.log(line);
   if(!line) return;
   var parsed = /^(\d{3})(?: result=)(.*)/.exec(line);
   if(!parsed) {
@@ -103,7 +104,7 @@ Context.prototype.send = function(msg, cb) {
 
 Context.prototype.exec = function() {
   var args = Array.prototype.slice.call(arguments, 0);
-  console.log(args);
+  //console.log(args);
   var cmd=args.shift();
   var last = args.pop();
   if(typeof last !== 'function') {
@@ -156,6 +157,10 @@ Context.prototype.end = function() {
 //be answered before the sound is played.
 
 Context.prototype.Playback=function(filename,option,cb) {
+  if(typeof(option)==='function'){
+    cb=option;
+    option='skip';
+  }
   this.exec('Playback',filename,option,cb);
 }
 //bong放背景音
@@ -179,7 +184,7 @@ Context.prototype.GetData=function(filename,timeout,maxdigits,cb) {
   if(typeof timeout === 'function') {
     cb = timeout;
     //default to 2 second timeout
-    timeout = 5000;
+    timeout = 1200;
   }
   if(typeof maxdigits === 'function') {
     cb = maxdigits;

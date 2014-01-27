@@ -1,5 +1,6 @@
 var async = require('async');
 var AsAction = require("nami").Actions;
+var guid = require('guid');
 var routing = {};
 
 //呼叫路由处理
@@ -46,18 +47,32 @@ routing.sccincallout = function(context, vars) {
   var schemas = vars.schemas;
   var AMI = vars.nami;
   async.auto({
-    getPhones: function(cb) {
-      schemas.CallPhone.all({
-        where: {
-          callRecordsID: callRecordsID,
-          State: 0
-        },
-        order: ['PhoneSequ asc']
-      }, function(err, insts) {
-        cb(err, insts);
-
+    getcallrcordsid: function(cb) {
+      context.getVariable('callrecordid', function(err, response) {
+        var reg = /(\d+)\s+\((.*)\)/;
+        var c = null,
+          id = null;
+        if (reg.test(response.result)) {
+          c = RegExp.$1;
+          callRecordsID = RegExp.$2;
+        }
+        cb(err, callRecordsID);
       });
     },
+    getPhones: ['getcallrcordsid',
+      function(cb, results) {
+        schemas.CallPhone.all({
+          where: {
+            callRecordsID: callRecordsID,
+            State: 0
+          },
+          order: ['PhoneSequ asc']
+        }, function(err, insts) {
+          cb(err, insts);
+
+        });
+      }
+    ],
     updateCallRecords: ['getPhones',
       function(cb, results) {
         if (results.getPhones && results.getPhones.length > 0) {
@@ -103,7 +118,7 @@ routing.sccincallout = function(context, vars) {
       function(cb, results) {
         if (results.getPhones && results.getPhones.length > 0) {
           async.auto({
-            addCallinfo: function(cb) {
+            updateCallPhone: function(cb) {
               schemas.CallPhone.update({
                 where: {
                   id: results.getPhones[0].id
@@ -116,7 +131,16 @@ routing.sccincallout = function(context, vars) {
                 cb(err, inst);
               });
             },
-            dial: ['addCallinfo',
+            addCallLog: function(cb) {
+              schemas.CallLog.create({
+                Phone: results.getPhones[0].Phone,
+                PhoneSequ: results.getPhones[0].PhoneSequ,
+                callphone: results.getPhones[0]
+              }, function(err, inst) {
+                cb(err, inst);
+              });
+            },
+            dial: ['addCallLog', 'updateCallPhone',
               function(cb) {
                 context.Dial('SIP/8001', function(err, response) {
                   if (err) {
@@ -129,36 +153,54 @@ routing.sccincallout = function(context, vars) {
                   }
                 });
               }
+            ],
+            dialStatus: ['dial',
+              function(cb, results) {
+                var re = /(\d+)\s+\((\w+)\)/;
+                var anwserstatus = null;
+                if (re.test(results.dial.result)) {
+                  anwserstatus = RegExp.$2;
+                }
+                schemas.UserKeysRecord.create({
+                  id: guid.create(),
+                  Key: anwserstatus,
+                  keyTypeID: '111111',
+                  calllog: results.addCallLog
+                }, function(err, inst) {
+                  cb(err, inst);
+                });
+              }
             ]
           }, function(err, results) {
             cb(err, results);
           });
         } else {
-         cb('未有找到电话号码', results);
+          cb('未有找到电话号码', results);
         }
       }
     ]
 
 
-  },function(err, results) {
-    if(err){
-      console.log("错误捕获处理！");
-       context.hangup(function(err, response) {
-            console.log("没有找到需要拨打的号码，挂机！");
-          });
-    }
-    else{
-    var re = /1\s+\(ANSWER\)/;
-    var test = re.test(results.Dial.dial.result);
-    re.lastIndex = 0;
-    if (!test) {
-      NextDial(AMI, schemas, callRecordsID, function(err, result) {
-        console.log("继续拨打成功！");
+  }, function(err, results) {
+    if (err) {
+      context.hangup(function(err, response) {
+        console.log("没有找到需要拨打的号码，挂机！");
       });
     } else {
-      console.log("准备开始播放语音文件。");
+      var anwserstatus = results.Dial.dialStatus.Key;
+      if (anwserstatus === 'CONGESTION') {
+        context.hangup(function(err, response) {
+          console.log("被叫直接挂机！！");
+        });
+      }
+      if (anwserstatus !== 'ANSWER') {
+        NextDial(AMI, schemas, callRecordsID, function(err, result) {
+          console.log("继续拨打成功！");
+        });
+      } else {
+        console.log("准备开始播放语音文件。");
+      }
     }
-  }
   });
 
 };
@@ -169,12 +211,146 @@ routing.hangupcall = function(context, vars) {
 }
 
 routing.calloutback = function(context, vars) {
+  var schemas = vars.schemas;
+  var callRecordsID = null;
+  async.auto({
+      //通过通道变量获取呼叫记录编号
+      getcallrcordsid: function(cb) {
+        context.getVariable('callrecordid', function(err, response) {
+          var reg = /(\d+)\s+\((.*)\)/;
+          var c = null,
+            id = null;
+          if (reg.test(response.result)) {
+            c = RegExp.$1;
+            callRecordsID = RegExp.$2;
+          }
+          cb(err, callRecordsID);
+        });
+      },
+      //获取当前拨打的号码
+      getPhones: ['getcallrcordsid',
+        function(cb, results) {
+          schemas.CallPhone.all({
+            where: {
+              callRecordsID: callRecordsID,
+              State: 1
+            },
+            order: ['PhoneSequ desc']
+          }, function(err, insts) {
+            cb(err, insts);
 
-  context.Playback('welcome', 'skip', function(err, response) {
-    context.hangup(function(err, response) {
+          });
+        }
+      ],
+      //更新呼叫记录
+      updateCallRecords: ['getcallrcordsid',
+        function(cb, results) {
+          schemas.CallRecords.update({
+            where: {
+              id: callRecordsID
+            },
+            update: {
+              CallState: 2
+            }
+          }, function(err, inst) {
+            cb(err, inst);
+          });
+        }
+      ],
+      //获取按键记录
+      getKey: ['getPhones', 'updateCallRecords',
+        function(cb, results) {
+          var phone = results.getPhones[0];
+          //获取用户按键函数
+          //count  当前第几次调用
+          var GetInputKey = function(count) {
+            async.auto({
+              //播放语音
+              playinfo: function(callback) {
+                context.GetData('welcome', 5000, 1, function(err, response) {
+                  callback(err, response);
+                });
+              },
+              //检查用户按键
+              checkinput: ['playinfo',
+                function(callback, results) {
+                  var key = results.playinfo.result;
+                  key.replace(/\s+/, "");
+                  //记录用户按键到按键记录表
+                  schemas.UserKeysRecord.create({
+                    id: guid.create(),
+                    Key: key,
+                    keyTypeID: '111111',
+                    callLogID: phone.id
+                  }, function(err, inst) {
+                    switch (key) {
+                      case "1":
+                        count = 100;
+                        callback(err, {
+                          count: count,
+                          key: key
+                        });
+                        break;
+                      case "2":
+                        count = 100;
+                        callback(err, {
+                          count: count,
+                          key: key
+                        });
+                        break;
+                      case "9":
+                        count++;
+                        callback(err, {
+                          count: count,
+                          key: key
+                        });
+                        break;
+                      default:
+                        context.Playback('b_error', function(err, response2) {
+                          count++;
+                          callback(err, {
+                            count: count,
+                            key: key
+                          });
+                        });
+                        break;
+                    }
+                  });
+                }
+              ]
+            }, function(err, results) {
+              console.log("当前循环次数：", results.checkinput);
+              if (results.checkinput.count < 3) {
+                GetInputKey(results.checkinput.count);
+              } else if (results.checkinput.count == 100 && results.checkinput.key === '1') {
+
+              } else if (results.checkinput.count == 100 && results.checkinput.key === '2') {
+
+              } else {
+                context.Playback('b_timeout&b_bye', function(err, response) {
+                  context.hangup(function(err, response) {
+                    context.end();
+                  });
+
+                });
+              }
+
+            });
+          }
+
+          var count = 0;
+          GetInputKey(count);
+
+        }
+      ],
+    },
+
+    function(err, results) {
+      /* context.hangup(function(err, response) {
       context.end();
+    });*/
     });
-  });
+
 }
 
 function dial(context, schemas, items, cb) {
@@ -243,16 +419,17 @@ function NextDial(AMI, schemas, callrecordsid, cb) {
       function(cb, results) {
         if (results.getPhones && results.getPhones.length > 0) {
 
-          var channel = "LOCAL/" + callrecordsid + "@sub-outgoing";
+          var channel = "LOCAL/" + 200 + "@sub-outgoing";
           var Context = 'sub-outgoing-callback';
           var action = new AsAction.Originate();
           action.Channel = channel;
           //action.Timeout=30;
           action.Async = true;
-          action.Account = 8801;
-          action.CallerID = 8801;
+          action.Account = callrecordsid;
+          action.CallerID = 200;
           action.Context = Context;
-          action.Exten = 8801;
+          action.Variable = 'callrecordid=' + callrecordsid + ',testvar=test';
+          action.Exten = 200;
           if (AMI.connected) {
             AMI.send(action, function(response) {
               cb(null, response);
@@ -276,6 +453,16 @@ function NextDial(AMI, schemas, callrecordsid, cb) {
   }, function(err, results) {
     cb(err, results);
   });
+
+}
+
+function SureCome(context, schemas, callrecordid, cb) {
+async.auto({},function(err,results){
+
+});
+}
+
+function NoCome(context,schemas,callrecordid,cb){
 
 }
 module.exports = routing;

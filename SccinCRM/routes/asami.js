@@ -327,17 +327,18 @@ exports.autodial = function(req, res) {
 		callDial: ['addCallRecords', 'updateVoiceContent',
 			function(callback, results) {
 				//var Variable = "CHANNEL(language)=cn,Content=" + Content + "ProjExpertID=" + ProjExpertID;
-				var channel = "LOCAL/" + results.addCallRecords.id + "@sub-outgoing";
+				var channel = "LOCAL/" + 200 + "@sub-outgoing";
 				var Context = 'sub-outgoing-callback';
 				//var Context='app-exten';
 				var action = new AsAction.Originate();
 				action.Channel = channel;
 				//action.Timeout=30;
 				action.Async = true;
-				action.Account = 8801;
-				action.CallerID = 8801;
+				action.Account = results.addCallRecords.id;
+				action.CallerID = 200;
 				action.Context = Context;
-				action.Exten = 8801;
+				action.Variable='callrecordid='+results.addCallRecords.id+',testvar=test';
+				action.Exten = 200;
 				if (nami.connected) {
 					nami.send(action, function(response) {
 						callback(null, response);
