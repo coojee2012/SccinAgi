@@ -40,7 +40,7 @@ default = function(context, vars) {
 
 }
 
-//北京专家库自动外呼处理
+//北京专家库自动外呼
 //sccincallout?callRecordsID=
 routing.sccincallout = function(context, vars) {
   var callRecordsID = vars.args.callRecordsID;
@@ -210,6 +210,7 @@ routing.hangupcall = function(context, vars) {
   console.log(vars);
 }
 
+//北京专家库自动拨打接通后处理程序
 routing.calloutback = function(context, vars) {
   var schemas = vars.schemas;
   var callRecordsID = null;
@@ -268,6 +269,7 @@ routing.calloutback = function(context, vars) {
               //播放语音
               playinfo: function(callback) {
                 context.GetData('welcome', 5000, 1, function(err, response) {
+                  console.log("撒也不按，挂机了", response);
                   callback(err, response);
                 });
               },
@@ -320,19 +322,55 @@ routing.calloutback = function(context, vars) {
               ]
             }, function(err, results) {
               console.log("当前循环次数：", results.checkinput);
-              if (results.checkinput.count < 3) {
+              //直接挂机了
+              if (results.checkinput.key === '-1') {
+                schemas.DialResult.update({
+                  where: {
+                    id: callRecordsID
+                  },
+                  update: {
+                    Result: 3,
+                    State: 1
+                  }
+                }, function(err, inst) {
+                  cb(err, inst);
+                });
+              }
+              //按键错误或等待按键超时小于3次
+               else if (results.checkinput.count < 3) {
                 GetInputKey(results.checkinput.count);
-              } else if (results.checkinput.count == 100 && results.checkinput.key === '1') {
+              } 
+              //用户确定参加评标
+              else if (results.checkinput.count == 100 && results.checkinput.key === '1') {
+                SureCome(context, schemas, callRecordsID, phone, cb);
+              } 
+              //用户确定不参加评标
+              else if (results.checkinput.count == 100 && results.checkinput.key === '2') {
 
-              } else if (results.checkinput.count == 100 && results.checkinput.key === '2') {
+              } 
+              //播放三次无反应
+              else {
 
-              } else {
-                context.Playback('b_timeout&b_bye', function(err, response) {
+                schemas.DialResult.update({
+                  where: {
+                    id: callRecordsID
+                  },
+                  update: {
+                    Result: 3,
+                    State: 1
+                  }
+                }, function(err, inst) {
+                   context.Playback('b_timeout&b_bye', function(err, response) {
                   context.hangup(function(err, response) {
                     context.end();
+                     cb(err, inst);
                   });
 
                 });
+                 
+                });
+
+               
               }
 
             });
@@ -456,13 +494,93 @@ function NextDial(AMI, schemas, callrecordsid, cb) {
 
 }
 
-function SureCome(context, schemas, callrecordid, cb) {
-async.auto({},function(err,results){
+//确定参加评标后处理
 
-});
+function SureCome(context, schemas, callrecordid, phone, cb) {
+  async.auto({
+    saveDialResult: function(callback) {
+      schemas.DialResult.update({
+        where: {
+          id: callrecordid
+        },
+        update: {
+          Result: 1,
+          State: 1
+        }
+      }, function(err, inst) {
+        callback(err, inst);
+      });
+    },
+    voiceNotice: ['saveDialResult',
+      function(callback, results) {
+        var Notice = function(count) {
+          async.auto({
+            playvoice: function(CB) {
+              context.GetData('b_you_have_joined_please_bring_cert', 5000, 1, function(err, response) {
+                CB(err, response);
+              });
+            },
+            checkInput: ['playvoice',
+              function(CB, results) {
+                var key = results.playvoice.result;
+                key.replace(/\s+/, "");
+                //记录用户按键到按键记录表
+                schemas.UserKeysRecord.create({
+                  id: guid.create(),
+                  Key: key,
+                  keyTypeID: '111111',
+                  callLogID: phone.id
+                }, function(err, inst) {
+                  switch (key) {
+                    case "9":
+                      count++;
+                      CB(err, {
+                        count: count,
+                        key: key
+                      });
+                      break;
+                    default:
+                      context.Playback('b_error', function(err, response2) {
+                        count++;
+                        CB(err, {
+                          count: count,
+                          key: key
+                        });
+                      });
+                      break;
+                  }
+                });
+              }
+            ]
+
+
+          }, function(err, results) {
+            if (results.checkInput.count < 3) {
+              Notice(results.checkInput.count);
+            } else {
+              context.Playback('b_timeout&b_bye', function(err, response) {
+                context.hangup(function(err, response) {
+                  context.end();
+                });
+
+              });
+            }
+
+          });
+        }
+
+        var count = 0;
+        Notice(count);
+
+
+      }
+    ]
+  }, function(err, results) {
+    cb(err, results);
+  });
 }
 
-function NoCome(context,schemas,callrecordid,cb){
+function NoCome(context, schemas, callrecordid, cb) {
 
 }
 module.exports = routing;
