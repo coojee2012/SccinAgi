@@ -3,37 +3,18 @@ var nami=require(__dirname+'/asterisk/asmanager').nami;
 var conf = require('node-conf');
 var agiconf=conf.load('fastagi');
 var routing=require('./routing');
-var log4js = require('log4js');
 var Schemas=require('./database/schema').Schemas;
-
-log4js.configure({
-  appenders: [{
-      type: 'console'
-    }, //控制台输出
-    {
-      type: 'file', //文件输出
-      filename: 'agi.log',
-      maxLogSize: 10240000,
-      backups: 3,
-      category: 'normal'
-    }
-  ],
-  replaceConsole: true
-});
+var logger=require('./lib/logger').logger('Server');
 
 var server=AGI.createServer(function(context) {
-  //context is a new instance of agi.Context for each new agi session
-  //immedately after asterisk connects to the node process
-
   //捕获获取变量事件
   //vars 捕获到的变量
   //访问开始的地方 
 server.getConnections(function(err,count){
-  console.log('当前服务器连接数：'+count);
+  logger.info('当前服务器连接数：'+count);
 });
 
   context.on('variables', function(vars) {
-    //console.log(vars);
     var script=vars.agi_network_script.split("?");
     var router=script[0];
     var args={};

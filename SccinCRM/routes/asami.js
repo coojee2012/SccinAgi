@@ -112,6 +112,14 @@ exports.getconfigjson = function(req, res) {
 	});
 }
 
+exports.DAHDIShowChannels=function(req,res){
+var action = new AsAction.DahdiShowChannels();
+	nami.send(action, function(response) {
+		console.log(response);
+		res.send(response);
+	});
+}
+
 exports.coreshowchannels = function(req, res) {
 	var action = new AsAction.CoreShowChannels();
 	nami.send(action, function(response) {
@@ -212,8 +220,11 @@ exports.dialout = function(req, res) {
  **/
 exports.autodial = function(req, res) {
 	var ProjExpertID = req.body['ProjExpertID'] || req.query['ProjExpertID'];
-	var Content = req.body['Content'] || req.query['Content'];
+	var NoticeContent = req.body['NoticeContent'] || req.query['NoticeContent'];
+	var SureContent = req.body['SureContent'] || req.query['SureContent'];
+	var QueryContent = req.body['QueryContent'] || req.query['QueryContent'];
 	var Phones = req.body['Phones'] || req.query['Phones'];
+	var KeyNum=req.body['KeyNum'] || req.query['KeyNum'] || 1;
 
 	if(!ProjExpertID || ProjExpertID==""){
 	res.send({
@@ -223,13 +234,30 @@ exports.autodial = function(req, res) {
 	return;
 	}
 
-	if(!Content || Content==""){
+	if(!NoticeContent || NoticeContent==""){
 	res.send({
 				"success": false,
-				"result": '合成语音类容不能为空'
+				"result": '合成通知评标专家语音类容不能为空'
 			});	
 	return;
 	}
+
+	if(!SureContent || SureContent==""){
+	res.send({
+				"success": false,
+				"result": '合成确认参加评标提示语音类容不能为空'
+			});	
+	return;
+	}
+
+	if(!QueryContent || QueryContent==""){
+	res.send({
+				"success": false,
+				"result": '合成自动查询语音类容不能为空'
+			});	
+	return;
+	}
+
 
 	if(!Phones || Phones==""){
 	res.send({
@@ -238,6 +266,7 @@ exports.autodial = function(req, res) {
 			});	
 	return;
 	}
+
 
 	async.auto({
 		//保存初始化数据到拨打记录表
@@ -324,7 +353,7 @@ exports.autodial = function(req, res) {
 			}
 		],
 		//开始拨打
-		callDial: ['addCallRecords', 'updateVoiceContent',
+		callDial: ['updateVoiceContent',
 			function(callback, results) {
 				//var Variable = "CHANNEL(language)=cn,Content=" + Content + "ProjExpertID=" + ProjExpertID;
 				var channel = "LOCAL/" + 200 + "@sub-outgoing";

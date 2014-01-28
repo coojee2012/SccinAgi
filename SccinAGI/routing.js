@@ -1,8 +1,9 @@
 var async = require('async');
 var AsAction = require("nami").Actions;
 var guid = require('guid');
+var logger=require('./lib/logger').logger('routing');
+var conf = require('node-conf').load('fastagi');
 var routing = {};
-
 //呼叫路由处理
 routing.router = function(context, args, variables, schemas) {
   //console.log(this);
@@ -42,11 +43,13 @@ default = function(context, vars) {
 
 //北京专家库自动外呼
 //sccincallout?callRecordsID=
+
 routing.sccincallout = function(context, vars) {
   var callRecordsID = vars.args.callRecordsID;
   var schemas = vars.schemas;
   var AMI = vars.nami;
   async.auto({
+    //获取呼叫记录编号
     getcallrcordsid: function(cb) {
       context.getVariable('callrecordid', function(err, response) {
         var reg = /(\d+)\s+\((.*)\)/;
@@ -59,6 +62,7 @@ routing.sccincallout = function(context, vars) {
         cb(err, callRecordsID);
       });
     },
+    //获取需要拨打的电话号码,倒序取出第一个电话作为需要拨打的电话
     getPhones: ['getcallrcordsid',
       function(cb, results) {
         schemas.CallPhone.all({
@@ -73,12 +77,13 @@ routing.sccincallout = function(context, vars) {
         });
       }
     ],
+    //更新呼叫记录表
     updateCallRecords: ['getPhones',
       function(cb, results) {
         if (results.getPhones && results.getPhones.length > 0) {
           schemas.CallRecords.update({
             where: {
-              id: callRecordsID
+              id: callRecordsID,
             },
             update: {
               CallState: 1
@@ -94,6 +99,7 @@ routing.sccincallout = function(context, vars) {
 
       }
     ],
+    //更新呼叫结果表
     updateDialResult: ['getPhones',
       function(cb, results) {
         if (results.getPhones && results.getPhones.length > 0) {
@@ -114,10 +120,12 @@ routing.sccincallout = function(context, vars) {
         }
       }
     ],
+    //开始呼叫
     Dial: ['getPhones', 'updateDialResult', 'updateCallRecords',
       function(cb, results) {
         if (results.getPhones && results.getPhones.length > 0) {
           async.auto({
+            //更新电话记录表
             updateCallPhone: function(cb) {
               schemas.CallPhone.update({
                 where: {
@@ -131,6 +139,7 @@ routing.sccincallout = function(context, vars) {
                 cb(err, inst);
               });
             },
+            //添加呼叫日志
             addCallLog: function(cb) {
               schemas.CallLog.create({
                 Phone: results.getPhones[0].Phone,
@@ -140,9 +149,10 @@ routing.sccincallout = function(context, vars) {
                 cb(err, inst);
               });
             },
+            //产生拨打
             dial: ['addCallLog', 'updateCallPhone',
               function(cb) {
-                context.Dial('SIP/8001', function(err, response) {
+                context.Dial(conf.line+results.getPhones[0].Phone,conf.timeout,conf.dialoptions, function(err, response) {
                   if (err) {
                     cb(err, response);
                   } else {
@@ -154,6 +164,7 @@ routing.sccincallout = function(context, vars) {
                 });
               }
             ],
+            //获取拨打状态并记录在callog表里面
             dialStatus: ['dial',
               function(cb, results) {
                 var re = /(\d+)\s+\((\w+)\)/;
@@ -179,26 +190,26 @@ routing.sccincallout = function(context, vars) {
         }
       }
     ]
-
-
   }, function(err, results) {
     if (err) {
+      logger.error(err);
       context.hangup(function(err, response) {
-        console.log("没有找到需要拨打的号码，挂机！");
+        logger.error("没有找到需要拨打的号码，挂机！");
       });
     } else {
       var anwserstatus = results.Dial.dialStatus.Key;
       if (anwserstatus === 'CONGESTION') {
         context.hangup(function(err, response) {
-          console.log("被叫直接挂机！！");
+          logger.debug("被叫直接挂机！");
         });
       }
+
       if (anwserstatus !== 'ANSWER') {
         NextDial(AMI, schemas, callRecordsID, function(err, result) {
-          console.log("继续拨打成功！");
+          logger.debug("继续拨打成功！");
         });
       } else {
-        console.log("准备开始播放语音文件。");
+        logger.debug("准备开始播放语音文件。");
       }
     }
   });
@@ -300,7 +311,7 @@ routing.calloutback = function(context, vars) {
                           key: key
                         });
                         break;
-                      case "9":
+                      case conf.replaykey:
                         count++;
                         callback(err, {
                           count: count,

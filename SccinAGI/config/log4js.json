@@ -4,7 +4,7 @@
 		}, //控制台输出
 		{
 			"type": "file", //文件输出
-			"filename": "web.log",
+			"filename": "agi.log",
 			"maxLogSize": 10240000,
 			"backups": 3,
 			"category": "normal"
