@@ -1,11 +1,18 @@
 var async = require('async');
 var AsAction = require("nami").Actions;
 var guid = require('guid');
-var logger=require('./lib/logger').logger('routing');
 var conf = require('node-conf').load('fastagi');
-var routing = {};
+var routing = function(v) {
+  this.context = v.context;
+  this.schemas = v.Schemas;
+  this.agiconf = v.agiconf;
+  this.nami = v.nami;
+  this.args = v.args;
+  this.logger = v.logger;
+  this.vars = v.vars;
+};
 //呼叫路由处理
-routing.router = function(context, args, variables, schemas) {
+routing.prototype.router = function(context, args, variables, schemas) {
   //console.log(this);
 
   context.hangup(function(err, rep) {
@@ -14,26 +21,25 @@ routing.router = function(context, args, variables, schemas) {
   context.end();
 }
 //自动语音应答处理
-routing.ivr = function(context, vars) {
+routing.prototype.ivr = function(context, vars) {
 
 };
 //内部拨打
-routing.diallocal = function(context, vars) {
+routing.prototype.diallocal = function(context, vars) {
 
 
 };
 //拨打队列
-routing.queue = function(context, vars) {
+routing.prototype.queue = function(context, vars) {
 
 
 };
 //拨打外部电话
-routing.dialout = function(context, vars) {
+routing.prototype.dialout = function(context, vars) {
 
 };
 //默认触发处理
-routing.
-default = function(context, vars) {
+routing.prototype.default = function(context, vars) {
   context.hangup(function(err, rep) {
     console.log("Hangup success:", rep);
     context.end();
@@ -44,14 +50,20 @@ default = function(context, vars) {
 //北京专家库自动外呼
 //sccincallout?callRecordsID=
 
-routing.sccincallout = function(context, vars) {
-  var callRecordsID = vars.args.callRecordsID;
-  var schemas = vars.schemas;
-  var AMI = vars.nami;
+routing.prototype.sccincallout = function() {
+  var shelf = this;
+  var context = shelf.context;
+  var schemas = shelf.schemas;
+  var callRecordsID = shelf.args.callRecordsID;
+  var nami = shelf.nami;
+  var keyNum = null;
+  var logger = shelf.logger;
+
   async.auto({
     //获取呼叫记录编号
-    getcallrcordsid: function(cb) {
+    getCallrcordsId: function(cb) {
       context.getVariable('callrecordid', function(err, response) {
+        logger.debug("获取呼叫记录编号：", response);
         var reg = /(\d+)\s+\((.*)\)/;
         var c = null,
           id = null;
@@ -62,8 +74,24 @@ routing.sccincallout = function(context, vars) {
         cb(err, callRecordsID);
       });
     },
+    //通过通道变量获取有效按键
+    getKeyNum: ['getCallrcordsId',
+      function(cb) {
+        context.getVariable('keynum', function(err, response) {
+          logger.debug("获取有效按键：", response);
+          var reg = /(\d+)\s+\((.*)\)/;
+          var c = null,
+            id = null;
+          if (reg.test(response.result)) {
+            c = RegExp.$1;
+            keyNum = parseInt(RegExp.$2);
+          }
+          cb(err, keyNum);
+        });
+      }
+    ],
     //获取需要拨打的电话号码,倒序取出第一个电话作为需要拨打的电话
-    getPhones: ['getcallrcordsid',
+    getPhones: ['getKeyNum',
       function(cb, results) {
         schemas.CallPhone.all({
           where: {
@@ -152,7 +180,7 @@ routing.sccincallout = function(context, vars) {
             //产生拨打
             dial: ['addCallLog', 'updateCallPhone',
               function(cb) {
-                context.Dial(conf.line+results.getPhones[0].Phone,conf.timeout,conf.dialoptions, function(err, response) {
+                context.Dial(conf.line + results.getPhones[0].Phone, conf.timeout, conf.dialoptions, function(err, response) {
                   if (err) {
                     cb(err, response);
                   } else {
@@ -205,7 +233,7 @@ routing.sccincallout = function(context, vars) {
       }
 
       if (anwserstatus !== 'ANSWER') {
-        NextDial(AMI, schemas, callRecordsID, function(err, result) {
+        shelf.NextDial(callRecordsID, keyNum, function(err, result) {
           logger.debug("继续拨打成功！");
         });
       } else {
@@ -217,17 +245,21 @@ routing.sccincallout = function(context, vars) {
 };
 
 
-routing.hangupcall = function(context, vars) {
-  console.log(vars);
+routing.prototype.hangupcall = function() {
+
 }
 
 //北京专家库自动拨打接通后处理程序
-routing.calloutback = function(context, vars) {
-  var schemas = vars.schemas;
+routing.prototype.calloutback = function() {
+  var shelf = this;
+  var context = shelf.context;
+  var schemas = shelf.schemas;
   var callRecordsID = null;
+  var keyNum = null;
+  var logger = shelf.logger;
   async.auto({
       //通过通道变量获取呼叫记录编号
-      getcallrcordsid: function(cb) {
+      getCallrcordsId: function(cb) {
         context.getVariable('callrecordid', function(err, response) {
           var reg = /(\d+)\s+\((.*)\)/;
           var c = null,
@@ -239,8 +271,23 @@ routing.calloutback = function(context, vars) {
           cb(err, callRecordsID);
         });
       },
+      //通过通道变量获取有效按键
+      getKeyNum: ['getCallrcordsId',
+        function(cb) {
+          context.getVariable('keynum', function(err, response) {
+            var reg = /(\d+)\s+\((.*)\)/;
+            var c = null,
+              id = null;
+            if (reg.test(response.result)) {
+              c = RegExp.$1;
+              keyNum = parseInt(RegExp.$2);
+            }
+            cb(err, keyNum);
+          });
+        }
+      ],
       //获取当前拨打的号码
-      getPhones: ['getcallrcordsid',
+      getPhones: ['getKeyNum',
         function(cb, results) {
           schemas.CallPhone.all({
             where: {
@@ -255,7 +302,7 @@ routing.calloutback = function(context, vars) {
         }
       ],
       //更新呼叫记录
-      updateCallRecords: ['getcallrcordsid',
+      updateCallRecords: ['getKeyNum',
         function(cb, results) {
           schemas.CallRecords.update({
             where: {
@@ -296,43 +343,39 @@ routing.calloutback = function(context, vars) {
                     keyTypeID: '111111',
                     callLogID: phone.id
                   }, function(err, inst) {
-                    switch (key) {
-                      case "1":
-                        count = 100;
-                        callback(err, {
-                          count: count,
-                          key: key
-                        });
-                        break;
-                      case "2":
-                        count = 100;
-                        callback(err, {
-                          count: count,
-                          key: key
-                        });
-                        break;
-                      case conf.replaykey:
+                    var intkey = parseInt(key);
+                    if (intkey <= keyNum) {
+                      count = 100;
+                      callback(err, {
+                        count: count,
+                        key: key
+                      });
+                    } else if (key === '0') {
+                      count = 100;
+                      callback(err, {
+                        count: count,
+                        key: key
+                      });
+                    } else if (key === conf.replaykey) {
+                      count++;
+                      callback(err, {
+                        count: count,
+                        key: key
+                      });
+                    } else {
+                      context.Playback('b_error', function(err, response2) {
                         count++;
                         callback(err, {
                           count: count,
                           key: key
                         });
-                        break;
-                      default:
-                        context.Playback('b_error', function(err, response2) {
-                          count++;
-                          callback(err, {
-                            count: count,
-                            key: key
-                          });
-                        });
-                        break;
+                      });
                     }
                   });
                 }
               ]
             }, function(err, results) {
-              console.log("当前循环次数：", results.checkinput);
+              logger.debug("当前循环次数：", results.checkinput);
               //直接挂机了
               if (results.checkinput.key === '-1') {
                 schemas.DialResult.update({
@@ -348,17 +391,21 @@ routing.calloutback = function(context, vars) {
                 });
               }
               //按键错误或等待按键超时小于3次
-               else if (results.checkinput.count < 3) {
+              else if (results.checkinput.count < 3) {
                 GetInputKey(results.checkinput.count);
-              } 
+              }
               //用户确定参加评标
-              else if (results.checkinput.count == 100 && results.checkinput.key === '1') {
-                SureCome(context, schemas, callRecordsID, phone, cb);
-              } 
+              else if (results.checkinput.count == 100 && results.checkinput.key !== '0') {
+                shelf.SureCome(callRecordsID, phone, results.checkinput.key, function(err, results) {
+                  cb(err, results);
+                });
+              }
               //用户确定不参加评标
-              else if (results.checkinput.count == 100 && results.checkinput.key === '2') {
-
-              } 
+              else if (results.checkinput.count == 100 && results.checkinput.key === '0') {
+                shelf.NoCome(callRecordsID, function(err, results) {
+                  cb(err, results);
+                });
+              }
               //播放三次无反应
               else {
 
@@ -371,17 +418,17 @@ routing.calloutback = function(context, vars) {
                     State: 1
                   }
                 }, function(err, inst) {
-                   context.Playback('b_timeout&b_bye', function(err, response) {
-                  context.hangup(function(err, response) {
-                    context.end();
-                     cb(err, inst);
+                  context.Playback('b_timeout&b_bye', function(err, response) {
+                    context.hangup(function(err, response) {
+                      context.end();
+                      cb(err, inst);
+                    });
+
                   });
 
                 });
-                 
-                });
 
-               
+
               }
 
             });
@@ -395,62 +442,27 @@ routing.calloutback = function(context, vars) {
     },
 
     function(err, results) {
-      /* context.hangup(function(err, response) {
-      context.end();
-    });*/
+      if (err) {
+        console.log(results.getKey);
+        context.hangup(function(err, response) {
+          context.end();
+        });
+      }
+
     });
 
 }
 
-function dial(context, schemas, items, cb) {
-  var count = 0;
-  async.whilst(
-    function() {
-      return count < items.length;
-    },
-    function(callback) {
 
-      async.auto({
-        addCallinfo: function(cb) {
-          var callphone = new schemas.CallPhone(items[count]);
-          callphone.State = 1;
-          callphone.save(function(err, inst) {
-            cb(err, inst);
-          });
+//发起拨打下一个电话
 
-        },
-        dial: ['addCallinfo',
-          function(cb, res2) {
-            context.Dial('SIP/800' + (count + 1), function(err, response) {
-              console.log('拨打电话完毕。');
-              if (response.result != '1') {
-                console.log('呼叫不成功');
-                cb('呼叫不成功', response);
+routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
+  var shelf = this;
+  var context = shelf.context;
+  var schemas = shelf.schemas;
+  var logger = shelf.logger;
+  var AMI = shelf.nami;
 
-              } else {
-                console.log('呼叫成功');
-                cb('呼叫成功', response);
-              }
-
-            });
-          }
-        ]
-      }, function(err, results) {
-        console.log("完成次数:", count);
-        count++;
-        cb(err, results);
-
-
-      });
-    },
-    function(err) {
-      // 5 seconds have passed
-    }
-  );
-
-}
-
-function NextDial(AMI, schemas, callrecordsid, cb) {
   async.auto({
     getPhones: function(cb) {
       schemas.CallPhone.all({
@@ -477,7 +489,7 @@ function NextDial(AMI, schemas, callrecordsid, cb) {
           action.Account = callrecordsid;
           action.CallerID = 200;
           action.Context = Context;
-          action.Variable = 'callrecordid=' + callrecordsid + ',testvar=test';
+          action.Variable = 'callrecordid=' + callrecordsid + ',keynum=' + keyNum;
           action.Exten = 200;
           if (AMI.connected) {
             AMI.send(action, function(response) {
@@ -507,7 +519,11 @@ function NextDial(AMI, schemas, callrecordsid, cb) {
 
 //确定参加评标后处理
 
-function SureCome(context, schemas, callrecordid, phone, cb) {
+routing.prototype.SureCome = function(callrecordid, phone, key, cb) {
+  var shelf = this;
+  var context = shelf.context;
+  var schemas = shelf.schemas;
+  var logger = shelf.logger;
   async.auto({
     saveDialResult: function(callback) {
       schemas.DialResult.update({
@@ -526,13 +542,13 @@ function SureCome(context, schemas, callrecordid, phone, cb) {
       function(callback, results) {
         var Notice = function(count) {
           async.auto({
-            playvoice: function(CB) {
+            playvoice: function(callback) {
               context.GetData('b_you_have_joined_please_bring_cert', 5000, 1, function(err, response) {
-                CB(err, response);
+                callback(err, response);
               });
             },
             checkInput: ['playvoice',
-              function(CB, results) {
+              function(callback, results) {
                 var key = results.playvoice.result;
                 key.replace(/\s+/, "");
                 //记录用户按键到按键记录表
@@ -545,7 +561,7 @@ function SureCome(context, schemas, callrecordid, phone, cb) {
                   switch (key) {
                     case "9":
                       count++;
-                      CB(err, {
+                      callback(err, {
                         count: count,
                         key: key
                       });
@@ -553,7 +569,7 @@ function SureCome(context, schemas, callrecordid, phone, cb) {
                     default:
                       context.Playback('b_error', function(err, response2) {
                         count++;
-                        CB(err, {
+                        callback(err, {
                           count: count,
                           key: key
                         });
@@ -566,7 +582,9 @@ function SureCome(context, schemas, callrecordid, phone, cb) {
 
 
           }, function(err, results) {
-            if (results.checkInput.count < 3) {
+            if (results.checkInput.key === '-1') {
+              callback(null, -1);
+            } else if (results.checkInput.count < 3) {
               Notice(results.checkInput.count);
             } else {
               context.Playback('b_timeout&b_bye', function(err, response) {
@@ -591,7 +609,40 @@ function SureCome(context, schemas, callrecordid, phone, cb) {
   });
 }
 
-function NoCome(context, schemas, callrecordid, cb) {
+//确定不参加评标
 
+routing.prototype.NoCome = function(callrecordid, cb) {
+  var shelf = this;
+  var context = shelf.context;
+  var schemas = shelf.schemas;
+  var logger = shelf.logger;
+  async.auto({
+    saveDialResult: function(callback) {
+      schemas.DialResult.update({
+        where: {
+          id: callrecordid
+        },
+        update: {
+          Result: 3,
+          State: 1
+        }
+      }, function(err, inst) {
+        callback(err, inst);
+      });
+    },
+    voiceNotice: ['saveDialResult',
+      function(callback, results) {
+        context.Playback('b_bye', function(err, response) {
+          context.hangup(function(err, response) {
+            context.end();
+            callback(err, response);
+          });
+
+        });
+      }
+    ]
+  }, function(err, results) {
+    cb(err, results);
+  });
 }
 module.exports = routing;

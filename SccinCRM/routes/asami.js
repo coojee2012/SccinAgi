@@ -283,7 +283,7 @@ exports.autodial = function(req, res) {
 			function(callback, results) {
 
 				Schemas['VoiceContent'].create({
-					Contents: Content,
+					Contents: NoticeContent,
 					callrecord: results.addCallRecords
 				}, function(err, inst) {
 					callback(err, inst);
@@ -331,8 +331,28 @@ exports.autodial = function(req, res) {
 				});
 			}
 		],
-		//合成语音
-		voiceMix: ['addCallRecords',
+		//合成通知语音
+		voiceMixNotice: ['addCallRecords',
+			function(callback, results) {
+				//处理语音合成
+				var exec = require('child_process').exec,
+					last = exec('dir', function(error, stdout, stderr) {
+						callback(error, stdout);
+					});
+			}
+		],
+		//合成确认语音
+		voiceMixSure: ['addCallRecords',
+			function(callback, results) {
+				//处理语音合成
+				var exec = require('child_process').exec,
+					last = exec('dir', function(error, stdout, stderr) {
+						callback(error, stdout);
+					});
+			}
+		],
+		//合成查询语音
+		voiceMixQuery: ['addCallRecords',
 			function(callback, results) {
 				//处理语音合成
 				var exec = require('child_process').exec,
@@ -342,7 +362,7 @@ exports.autodial = function(req, res) {
 			}
 		],
 		//更新合成状态
-		updateVoiceContent: ['voiceMix', 'addVoiceContent',
+		updateVoiceContent: ['voiceMixNotice','voiceMixSure','voiceMixQuery','addVoiceContent',
 			function(callback, results) {
 				var voc = new Schemas['VoiceContent'](results.addVoiceContent);
 				voc.State = 1;
@@ -366,7 +386,7 @@ exports.autodial = function(req, res) {
 				action.Account = results.addCallRecords.id;
 				action.CallerID = 200;
 				action.Context = Context;
-				action.Variable='callrecordid='+results.addCallRecords.id+',testvar=test';
+				action.Variable='callrecordid='+results.addCallRecords.id+',keynum='+KeyNum;
 				action.Exten = 200;
 				if (nami.connected) {
 					nami.send(action, function(response) {
