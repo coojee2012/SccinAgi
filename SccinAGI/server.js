@@ -3,7 +3,7 @@ var nami = require(__dirname + '/asterisk/asmanager').nami;
 var conf = require('node-conf');
 var logconf = conf.load('log4js');
 var agiconf = conf.load('fastagi');
-
+var moment = require('moment');
 var routing = require('./routing');
 var Schemas = require('./database/schema').Schemas;
 var log4js = require('log4js');
@@ -11,6 +11,16 @@ log4js.configure(logconf, agiconf);
 var logger = log4js.getLogger('agi');
 logger.setLevel('DEBUG');
 var server = AGI.createServer(function(context) {
+
+  var route = new routing({
+    context: context,
+    Schemas: Schemas,
+    agiconf: agiconf,
+    nami: nami,
+    args: null,
+    logger: logger,
+    vars: null
+  });
 
 
   //捕获获取变量事件
@@ -31,36 +41,44 @@ var server = AGI.createServer(function(context) {
         args[kv[0]] = kv[1];
       }
     }
-
-    var route = new routing({
-      context: context,
-      Schemas: Schemas,
-      agiconf: agiconf,
-      nami: nami,
-      args: args,
-      logger: logger,
-      vars: vars
-    });
-
+    logger.debug(vars);
+    route.args = args;
+    route.vars = vars;
     if (typeof(route[router]) === 'function') {
       route[router]();
     }
     //找不到AGI路由处理函数，将调用默认路由处理
     else {
-      route.default();
+      route.
+      default ();
     }
 
     logger.info('捕获到来自' + vars.agi_callerid + '的新呼叫， 呼叫编号为: ' + vars.agi_uniqueid);
   });
   //监听事件返回结果
   context.on('response', function(response) {
-    logger.info("捕获到监听事件返回的结果：",response);
+    logger.info("捕获到监听事件返回的结果：", response);
   });
 
   //捕获挂机
   context.on('hangup', function(vars) {
-    logger.info("发生挂机事件.");
-    context.end();
+    logger.info("发生挂机事件.",vars);
+    if (route.args.routerline) {
+      logger.info("正常呼叫中心流程，记录挂机时间.");
+      Schemas.PBXCdr.update({
+        where: {
+          id: route.sessionnum
+        },
+        update: {
+          endtime: moment().format("YYYY-MM-DD HH:mm:ss")
+        }
+      }, function(err, inst) {
+        context.end();
+      });
+    } else {
+      context.end();
+    }
+
   });
 
   //捕获异常

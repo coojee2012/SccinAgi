@@ -10,15 +10,78 @@ var routing = function(v) {
   this.args = v.args;
   this.logger = v.logger;
   this.vars = v.vars;
+  this.sessionnum = guid.create();
 };
 //呼叫路由处理
-routing.prototype.router = function(context, args, variables, schemas) {
-  //console.log(this);
+//args.routerline
+//args.called
+routing.prototype.router = function() {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    AddCDR: function(cb) {
+      schemas.PBXCdr.create({
+        id: self.sessionnum,
+        caller: vars.agi_callerid,
+        called: args.called,
+        accountcode: vars.agi_accountcode,
+        routerline: args.routerline,
+        lastapp: 'router',
+        answerstatus: 'NOANSWER'
+      }, function(err, inst) {
+        cb(err, inst);
+      });
+    },
+    GetRouters: ['AddCDR',
+      function(cb, results) {
+        schemas.PBXRouter.all({
+          where: {
+            routerline: args.routerline,
+          },
+          order: ['proirety asc']
+        }, function(err, insts) {
+          cb(err, insts);
+        });
+      }
+    ],
+    Route: ['GetRouters',
+      function(cb, results) {
+        logger.debug(results.GetRouters);
+        var processmode = null;
+        var processdefined = null;
+        var match = false;
+        for (var i = 0; i < results.GetRouters.length; i++) {
+          if (vars.agi_accountcode === results.GetRouters[i].callergroup || results.GetRouters[i].callergroup === 'all') {
+            match = true;
+            if (results.GetRouters[i].callerid !== '' && vars.agi_callerid !== results.GetRouters[i].callerid)
+              match = false;
+            if (results.GetRouters[i].callerlen !== -1 && vars.agi_callerid.length !== results.GetRouters[i].callerlen)
+              match = false;
+          }
+        }
+        cb(null, 1);
+      }
+    ]
+  }, function(err, results) {
+    if (err) {
+      logger.error(err);
+      context.hangup(function(err, rep) {
 
-  context.hangup(function(err, rep) {
-    console.log("Hangup success:", rep);
+      });
+
+    } else {
+      context.hangup(function(err, rep) {
+        logger.debug("来自自动挂机");
+      });
+    }
   });
-  context.end();
+
+
 }
 //自动语音应答处理
 routing.prototype.ivr = function(context, vars) {
@@ -39,7 +102,8 @@ routing.prototype.dialout = function(context, vars) {
 
 };
 //默认触发处理
-routing.prototype.default = function(context, vars) {
+routing.prototype.
+default = function(context, vars) {
   context.hangup(function(err, rep) {
     console.log("Hangup success:", rep);
     context.end();
@@ -51,13 +115,13 @@ routing.prototype.default = function(context, vars) {
 //sccincallout?callRecordsID=
 
 routing.prototype.sccincallout = function() {
-  var shelf = this;
-  var context = shelf.context;
-  var schemas = shelf.schemas;
-  var callRecordsID = shelf.args.callRecordsID;
-  var nami = shelf.nami;
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var callRecordsID = self.args.callRecordsID;
+  var nami = self.nami;
   var keyNum = null;
-  var logger = shelf.logger;
+  var logger = self.logger;
 
   async.auto({
     //获取呼叫记录编号
@@ -233,7 +297,7 @@ routing.prototype.sccincallout = function() {
       }
 
       if (anwserstatus !== 'ANSWER') {
-        shelf.NextDial(callRecordsID, keyNum, function(err, result) {
+        self.NextDial(callRecordsID, keyNum, function(err, result) {
           logger.debug("继续拨打成功！");
         });
       } else {
@@ -251,12 +315,12 @@ routing.prototype.hangupcall = function() {
 
 //北京专家库自动拨打接通后处理程序
 routing.prototype.calloutback = function() {
-  var shelf = this;
-  var context = shelf.context;
-  var schemas = shelf.schemas;
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
   var callRecordsID = null;
   var keyNum = null;
-  var logger = shelf.logger;
+  var logger = self.logger;
   async.auto({
       //通过通道变量获取呼叫记录编号
       getCallrcordsId: function(cb) {
@@ -396,13 +460,13 @@ routing.prototype.calloutback = function() {
               }
               //用户确定参加评标
               else if (results.checkinput.count == 100 && results.checkinput.key !== '0') {
-                shelf.SureCome(callRecordsID, phone, results.checkinput.key, function(err, results) {
+                self.SureCome(callRecordsID, phone, results.checkinput.key, function(err, results) {
                   cb(err, results);
                 });
               }
               //用户确定不参加评标
               else if (results.checkinput.count == 100 && results.checkinput.key === '0') {
-                shelf.NoCome(callRecordsID, function(err, results) {
+                self.NoCome(callRecordsID, function(err, results) {
                   cb(err, results);
                 });
               }
@@ -457,11 +521,11 @@ routing.prototype.calloutback = function() {
 //发起拨打下一个电话
 
 routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
-  var shelf = this;
-  var context = shelf.context;
-  var schemas = shelf.schemas;
-  var logger = shelf.logger;
-  var AMI = shelf.nami;
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var logger = self.logger;
+  var AMI = self.nami;
 
   async.auto({
     getPhones: function(cb) {
@@ -520,10 +584,10 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
 //确定参加评标后处理
 
 routing.prototype.SureCome = function(callrecordid, phone, key, cb) {
-  var shelf = this;
-  var context = shelf.context;
-  var schemas = shelf.schemas;
-  var logger = shelf.logger;
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var logger = self.logger;
   async.auto({
     saveDialResult: function(callback) {
       schemas.DialResult.update({
@@ -612,10 +676,10 @@ routing.prototype.SureCome = function(callrecordid, phone, key, cb) {
 //确定不参加评标
 
 routing.prototype.NoCome = function(callrecordid, cb) {
-  var shelf = this;
-  var context = shelf.context;
-  var schemas = shelf.schemas;
-  var logger = shelf.logger;
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var logger = self.logger;
   async.auto({
     saveDialResult: function(callback) {
       schemas.DialResult.update({
