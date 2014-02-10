@@ -49,8 +49,7 @@ var server = AGI.createServer(function(context) {
     }
     //找不到AGI路由处理函数，将调用默认路由处理
     else {
-      route.
-      default ();
+      route.dodefault();
     }
 
     logger.info('捕获到来自' + vars.agi_callerid + '的新呼叫， 呼叫编号为: ' + vars.agi_uniqueid);
@@ -73,6 +72,9 @@ var server = AGI.createServer(function(context) {
           endtime: moment().format("YYYY-MM-DD HH:mm:ss")
         }
       }, function(err, inst) {
+        if(err)
+          logger.error(err);
+
         context.end();
       });
     } else {

@@ -11,6 +11,7 @@ var routing = function(v) {
   this.logger = v.logger;
   this.vars = v.vars;
   this.sessionnum = guid.create();
+  this.ivrlevel = 0;
 };
 //呼叫路由处理
 //args.routerline
@@ -58,13 +59,50 @@ routing.prototype.router = function() {
         for (var i = 0; i < results.GetRouters.length; i++) {
           if (vars.agi_accountcode === results.GetRouters[i].callergroup || results.GetRouters[i].callergroup === 'all') {
             match = true;
-            if (results.GetRouters[i].callerid !== '' && vars.agi_callerid !== results.GetRouters[i].callerid)
+            var reCaller = new RegExp("^" + results.GetRouters[i].callerid);
+            var reCalled = new RegExp("^" + results.GetRouters[i].callerid);
+            //匹配主叫以什么号码开头
+            if (results.GetRouters[i].callerid !== '' && reCaller.test(vars.agi_callerid))
               match = false;
+            //匹配主叫长度
             if (results.GetRouters[i].callerlen !== -1 && vars.agi_callerid.length !== results.GetRouters[i].callerlen)
               match = false;
+            //匹配被叫以什么号码开头
+            if (results.GetRouters[i].callednum !== '' && reCalled.test(args.called))
+              match = false;
+            //匹配被叫长度
+            if (results.GetRouters[i].calledlen !== -1 && args.called.length !== results.GetRouters[i].calledlen)
+              match = false;
+            //匹配成功后，对主叫和被叫进行替换
+            if (match) {
+              //主叫替换
+              if (results.GetRouters[i].replacecallerid !== '')
+                vars.agi_callerid = results.GetRouters[i].replacecallerid;
+              //删除被叫前几位
+              if (results.GetRouters[i].replacecalledtrim !== -1)
+                args.called = args.called.substr(results.GetRouters[i].replacecalledtrim);
+              //补充被叫前几位
+              if (results.GetRouters[i].replacecalledappend !== '')
+                args.called = results.GetRouters[i].replacecalledappend + args.called;
+
+              processmode = results.GetRouters[i].processmode;
+              processdefined = results.GetRouters[i].processdefined;
+
+              break;
+
+            } else {
+              continue;
+            }
           }
         }
-        cb(null, 1);
+        if (match) {
+          self[processmode](processdefined, function(err, result) {
+            cb(err, result);
+          });
+        } else {
+          cb('未找到匹配的路由！', 1);
+        }
+
       }
     ]
   }, function(err, results) {
@@ -84,12 +122,96 @@ routing.prototype.router = function() {
 
 }
 //自动语音应答处理
-routing.prototype.ivr = function(context, vars) {
+//IVR号码
+//IVR执行起点默认为1
+routing.prototype.ivr = function(ivarnum, action, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
 
+
+  if (self.ivrlevel > 50) {
+    callback('IVR嵌套过深', -1);
+  } else {
+    self.ivrlevel++;
+    async.auto({
+      updateCDR: function(cb) {
+        schemas.PBXCdr.update({
+          where: {
+            id: self.sessionnum
+          },
+          update: {
+            lastapp: 'ivr'
+          }
+        }, function(err, inst) {
+          cb(err, inst);
+        });
+      },
+      getIVRActions: [],
+      getIVRInputs: [],
+      action: []
+    }, function(err, results) {
+
+    });
+  }
 };
 //内部拨打
-routing.prototype.diallocal = function(context, vars) {
+routing.prototype.diallocal = function(localnum, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    updateCDR: function(cb) {
+      schemas.PBXCdr.update({
+        where: {
+          id: self.sessionnum
+        },
+        update: {
+          lastapp: 'diallocal'
+        }
+      }, function(err, inst) {
+        cb(err, inst);
+      });
+    },
+    //在本地号码表里面寻找合适的号码，如果没有找到，默认到IVR号码为200
+    findLocal: ['updateCDR',
+      function(cb, results) {
+        schemas.PBXLocalNumber.findOne({
+          where: {
+            id: localnum
+          }
+        }, function(err, inst) {
+          if (err)
+            cb(err, inst);
+          if (inst != null) {
+            self[inst.localtype](localnum, assign, function(err, result) {
+              cb(err, result);
+            });
+          }
+          //默认拨打IVR 200 1
+          else {
+            self.ivr(200, 1, function(err, result) {
+              cb(err, result);
+            })
+          }
+        });
+      }
+    ]
+  }, function(err, results) {
+    callback(err, results);
+  });
 
+};
+//拨打外部电话
+routing.prototype.dialout = function(linenum, cb) {
 
 };
 //拨打队列
@@ -97,19 +219,15 @@ routing.prototype.queue = function(context, vars) {
 
 
 };
-//拨打外部电话
-routing.prototype.dialout = function(context, vars) {
 
-};
 //默认触发处理
-routing.prototype.
-default = function(context, vars) {
+routing.prototype.dodefault = function(context, vars) {
   context.hangup(function(err, rep) {
     console.log("Hangup success:", rep);
     context.end();
   });
 
-}
+};
 
 //北京专家库自动外呼
 //sccincallout?callRecordsID=

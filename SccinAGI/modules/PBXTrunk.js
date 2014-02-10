@@ -7,7 +7,7 @@ var PBXTrunk=schema.define('PBXTrunk',{
 	trunkprototype:  {type:String,length:50},
 	trunkdevice:{type:String,length:50},
 	trunkremark: {type:String,length:100},
-	cretime:     {type: Date, default: function () {return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	cretime:     {type: String, length: 50, default: function () {return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	args:    {type:String,length:100}
 });
 PBXTrunk.Name='PBXTrunk';

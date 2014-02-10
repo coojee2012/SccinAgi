@@ -5,17 +5,17 @@ var PBXRouter=schema.define('PBXRouter',{
     proirety:   {type:Number},
 	createmode:   {type:Number,default: function () { return 0 }},
 	routerline:   {type:Number,default: function () { return 1 }},
-	routername:{type:String},
-	optextra:  {type:String},
+	routername:{type:String,length:100},
+	optextra:  {type:String,length:50},
 	lastwhendone:   {type:Number,default: function () { return 0 }},
 	callergroup:    {type:String,length:50},
-	callerid:    {type:String,length:200},
-	callerlen:    {type:Number,default: function () { return -1 ;}},
-	callednum:     {type:String,length:50},
-	calledlen:    {type:String,length:50},
-	callerid:   {type:String,length:50},
-	calledtrim:   {type:String,length:50},
-	calledappend: {type:String,length:50},
+	callerid:    {type:String,length:200},//匹配主叫以什么开头
+	callerlen:    {type:Number,default: function () { return -1 ;}},//匹配主叫长度
+	callednum:     {type:String,length:50},//匹配被叫以什么开头
+	calledlen:    {type:Number,default: function () { return -1 ;}},//匹配被叫长度
+	replacecallerid:   {type:String,length:50},//匹配后主叫替换
+	replacecalledtrim:   {type:Number,default: function () { return -1 ;}},//匹配后删除被叫前几位
+	replacecalledappend: {type:String,length:50},//匹配后补充被叫前几位
 	processmode:{type:Number,default: function () { return 0 }},
 	processdefined:   {type:String,length:100}
 });
