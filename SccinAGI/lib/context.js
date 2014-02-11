@@ -176,6 +176,10 @@ Context.prototype.BackGround=function(filename,option,cb) {
   this.exec('BackGround',filename,option,cb);
 }
 
+Context.prototype.AGI=function(agiurl,cb){
+  this.exec('AGI',agiurl,cb);
+}
+
 //获取按键
 //filename - 语音文件名称
 //timeout - 按键超时，默认是10秒

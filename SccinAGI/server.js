@@ -61,7 +61,7 @@ var server = AGI.createServer(function(context) {
 
   //捕获挂机
   context.on('hangup', function(vars) {
-    logger.info("发生挂机事件.",vars);
+    logger.info("发生挂机事件.");
     if (route.args.routerline) {
       logger.info("正常呼叫中心流程，记录挂机时间.");
       Schemas.PBXCdr.update({

@@ -29,6 +29,15 @@ routes.index = [{
 	}
 ];
 
+routes.builddbdata = [{
+		urlreg: '/builddata',
+		file: '/routes/builddbdata',
+		method: 'get',
+		fn: 'get'
+	}
+];
+
+
 routes.asami = [{
 		urlreg: '/asami/getconfig',
 		file: '/routes/asami',
