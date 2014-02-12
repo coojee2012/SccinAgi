@@ -12,6 +12,8 @@ var routing = function(v) {
   this.vars = v.vars;
   this.sessionnum = guid.create();
   this.ivrlevel = 0;
+  this.lastinputkey = '';
+  this.activevar = {}; //用户存储用户输入的临时变量
 };
 //呼叫路由处理
 //args.routerline
@@ -88,7 +90,7 @@ routing.prototype.router = function() {
                 args.called = results.GetRouters[i].replacecalledappend + args.called;
 
               processmode = results.GetRouters[i].processmode;
-              processdefined = results.GetRouters[i].processdefined;
+              processdefined = results.GetRouters[i].processdefined || args.called;
 
               break;
 
@@ -137,6 +139,7 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
   if (self.ivrlevel > 50) {
     callback('IVR嵌套过深', -1);
   } else {
+    logger.debug("当前IVR嵌套层数:", self.ivrlevel);
     self.ivrlevel++;
     async.auto({
       updateCDR: function(cb) {
@@ -230,6 +233,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
       }
     }
     logger.debug("Action 参数:", actargs);
+    //async auto 执行action 开始
     async.auto({
       Action: function(cb) {
         if (actmode.modename === '播放语音') {
@@ -244,43 +248,172 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           }
           //允许按键中断
           else {
-            var agintimemax = 3;
+            //获取用户按键函数
+            //count  当前第几次调用
+            var retrytime = 3;
+            if (actargs.retrytime && /\d+/.test(actargs.retrytime))
+              retrytime = parseInt(actargs.retrytime);
+            var timeout = 5000;
+            if (actargs.timeout && /\d+/.test(actargs.timeout))
+              timeout = parseInt(actargs.timeout) * 1000;
+            var failivrnum = actargs.failivrnum;
+            var failactid = 0;
+            if (actargs.failactid && /\d+/.test(actargs.failactid))
+              failactid = parseInt(actargs.failactid);
 
-            var getKey = function(myagintime, callsback) {
-              context.GetData(actargs.folder + '/' + actargs.filename, function(err, response) {
-                if (err)
-                  callsback(err, response);
-                else {
-                  var key = response.result;
-                  key.replace(/\s+/, "");
-                  self.ivrinput(key, inputs, function(err, result) {
-                    if (result == 0 && myagintime < agintimemax) {
-                      myagintime++;
-                      getKey(myagintime, callsback);
-                    } else {
-                      callsback(err, result);
-                    }
+            var GetInputKey = function(count) {
+              async.auto({
+                //播放语音
+                playinfo: function(callback) {
+                  context.GetData(actargs.folder + '/' + actargs.filename, timeout, 1, function(err, response) {
+                    callback(err, response);
                   });
-                }
-              });
-            };
+                },
+                //检查用户按键
+                checkinput: ['playinfo',
+                  function(callback, results) {
+                    var key = results.playinfo.result;
+                    key = key.replace(/\s+|\(|\)/g, "");
+                    self.ivrinput(key, inputs, function(err, result) {
+                      if (result == 0) {
+                        count++;
+                        callback(err, {
+                          count: count,
+                          key: key
+                        });
+                      } else {
+                        callback(err, {
+                          count: 100,
+                          key: key
+                        });
+                      }
+                    });
 
-            var agintime = 0;
-            getKey(agintime, function(err, result) {
-              cb(err, result);
-            });
+                  }
+                ]
+              }, function(err, results) {
+                logger.debug("当前循环次数：", results.checkinput);
+                if (err) {
+                  cb(err, -1);
+                } else {
+                  //直接挂机了
+                  if (results.checkinput.key === '-1') {
+                    cb('对方主动挂机。', -1);
+                  }
+                  //按键错误或等待按键超时小于3次
+                  else if (results.checkinput.count < retrytime) {
+                    GetInputKey(results.checkinput.count);
+                  }
+                  //播放三次无反应
+                  else {
+                    context.Playback('b_bye', function(err, response) {
+                      cb('超过允许最大的按键等待次数或错误次数', -1);
+                    });
+
+                  }
+                }
+
+              });
+            }
+
+            var count = 0;
+            GetInputKey(count);
 
           }
 
-        } else if (actmode.modename === '检查号码归属地') {
+        }
+        // 检查号码归属地
+        else if (actmode.modename === '检查号码归属地') {
+
+
 
         } else if (actmode.modename === '发起录音') {
 
         } else if (actmode.modename === '播放录音') {
 
-        } else if (actmode.modename === '录制数字字符') {
+        }
+        //录制数字字符
+        else if (actmode.modename === '录制数字字符') {
+          logger.debug("准备开始录制数字字符。");
+          var maxdigits = 20; //默认最多可接收20个按键
+          var inputkey = '';
+          if (actargs.maxdigits && /\d+/.test(actargs.maxdigits))
+            maxdigits = parseInt(actargs.maxdigits);
+          if (maxdigits <= 0) {
+            cb(null, 1);
+          } else {
+            async.auto({
+              GetKey: function(callback) {
+                var beep = actargs.beep;
+                var getkey = function() {
+                  context.waitForDigit(6000, function(err, response) {
+                    logger.debug(response);
+                    if (err)
+                      callback(err, response);
+                    else {
+                      var tmpkey = String.fromCharCode(response.result);
+                      if (tmpkey !== '#')
+                        inputkey = inputkey + tmpkey;
+                      if (inputkey.length < maxdigits && tmpkey !== '#') //当没有到达指定位数或#号
+                      {
 
-        } else if (actmode.modename === '读出数字字符') {
+                        logger.debug("录制到数字字符:" + inputkey);
+                        getkey();
+                      } else {
+                        if (actargs.addbefore && actargs.addbefore === 'true')
+                          inputkey = self.lastinputkey + inputkey; //添加上一层动作的最后一个按键输入
+                        var tempvarname = 'lastwaitfordigit';
+                        if (actargs.varname && actargs.varname !== '')
+                          tempvarname = actargs.varname;
+                        self.activevar[tempvarname] = inputkey; //将输入的按键保存到临时变量
+                        callback(null, inputkey);
+                      }
+
+                    }
+                  });
+
+                };
+
+                if (beep === 'true') {
+                  context.Playback('beep', function(err, response) {
+                    getkey();
+                  });
+                } else {
+                  getkey();
+                }
+              }
+            }, function(err, results) {
+              cb(err, results);
+            });
+
+
+          }
+        }
+        //读出数字字符 
+        else if (actmode.modename === '读出数字字符') {
+          logger.debug("准备读出数字字符。");
+          var tempvarname = 'lastwaitfordigit';
+          if (actargs.varname && actargs.varname !== '')
+            tempvarname = actargs.varname;
+          var digits = self.activevar[tempvarname];
+          if (actargs.digits && /\d+/.test(actargs.digits))
+            digits = actargs.digits;
+          if (digits && digits !== '') {
+            async.auto({
+              saydigits: function(callback) {
+                logger.debug("需要读出数字字符:", digits);
+                context.saydigits(digits, function(err, response) {
+                  logger.debug("读出数字字符返回结果：", response);
+                  callback(err, response);
+                });
+              }
+            }, function(err, results) {
+              cb(err, results);
+            });
+
+          } else {
+            cb('没有需要读取的数字', -1);
+          }
 
         } else if (actmode.modename === '数字方式读出') {
 
@@ -290,7 +423,38 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
 
         } else if (actmode.modename === '主叫变换') {
 
-        } else if (actmode.modename === '拨打号码') {
+        }
+        //拨打号码
+        else if (actmode.modename === '拨打号码') {
+          var dialnum = self.activevar.lastwaitfordigit;
+          if (actargs.varname && actargs.varname !== '')
+            dialnum = self.activevar[actargs.varname];
+          if (actargs.digits && actargs.digits !== '')
+            dialnum = actargs.digits;
+          if (/\d+/.test(dialnum)) {
+            if (actargs.dialway && actargs.dialway !== '') {
+              async.auto({
+                dial: function(callback) {
+                  logger.debug('拨打号码：' + actargs.dialway + "/" + dialnum);
+                  self[actargs.dialway](dialnum, function(err, result) {
+                    callback(err, result);
+                  });
+                }
+              }, function(err, results) {
+                cb(err, results);
+              });
+
+
+            } else {
+              logger.debug('非法拨打方式');
+              cb("非法拨打方式", -1);
+            }
+
+          } else {
+            logger.debug('需要拨打的号码有误。');
+            cb('需要拨打的号码有误。', -1);
+          }
+
 
         } else if (actmode.modename === '跳转到语音信箱') {
 
@@ -318,10 +482,10 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
         self.ivraction(actionid, actions, inputs, callback);
       }
 
-    });
+    }); //async auto 执行action 结束
 
   } else {
-    callback(null, 1);
+    callback('所有的动作执行完毕', -1);
   }
 }
 //响应IVR按键
@@ -336,8 +500,10 @@ routing.prototype.ivrinput = function(key, inputs, callback) {
   if (key === '-1')
     callback('获取按键时一方挂机', -1);
 
-
   var getinput = null;
+
+  self.lastinputkey = key;
+
   for (var i in inputs) {
     if (inputs[i].inputnum === key) {
       getinput = inputs[i];
@@ -346,11 +512,24 @@ routing.prototype.ivrinput = function(key, inputs, callback) {
   }
 
   if (getinput !== null) {
+    logger.debug("找到对应的按键流程：", getinput);
     self.ivr(getinput.gotoivrnumber, getinput.gotoivractid, function(err, result) {
+      if (err)
+        logger.debug("上层IVR返回了异常：", err);
       callback(err, result);
     });
   } else {
-    callback(null, 0);
+    logger.debug("没有找到按键:", key);
+    if (key === 'timeout') {
+      context.Playback('b_timeout', function(err, response) {
+        callback(null, 0);
+      });
+    } else {
+      context.Playback('b_error', function(err, response) {
+        callback(null, 0);
+      });
+    }
+
   }
 }
 //内部拨打
@@ -385,13 +564,15 @@ routing.prototype.diallocal = function(localnum, callback) {
         }, function(err, inst) {
           if (err)
             cb(err, inst);
+          logger.debug(inst);
           if (inst != null) {
-            self[inst.localtype](localnum, assign, function(err, result) {
+            self[inst.localtype](localnum, inst.assign, function(err, result) {
               cb(err, result);
             });
           }
           //默认拨打IVR 200 1
           else {
+            logger.debug("本地默认处理拨打IVR200");
             self.ivr(200, 1, function(err, result) {
               cb(err, result);
             })
@@ -409,7 +590,62 @@ routing.prototype.dialout = function(linenum, cb) {
 
 };
 //拨打队列
-routing.prototype.queue = function(context, vars) {
+routing.prototype.queue = function(queuenum, assign, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    updateCDR: function(cb) {
+      schemas.PBXCdr.update({
+        where: {
+          id: self.sessionnum
+        },
+        update: {
+          lastapp: 'diallocal'
+        }
+      }, function(err, inst) {
+        cb(err, inst);
+      });
+    },
+    queue: ['updateCDR',
+      function(cb, results) {
+        //Queue(queuename,options,URL,announceoverride,timeout,agi,cb)
+        context.Queue(queuenum, '', '', '', 30, '', function(err, response) {
+          logger.debug("队列拨打返回结果:", response);
+          cb(err, response);
+        });
+      }
+    ]
+  }, function(err, results) {
+    callback(err, results);
+  });
+
+};
+
+routing.prototype.AddQueueMember = function() {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    addqueue: function(cb) {
+      context.AddQueueMember(args.queuenum, args.agent, function(err, response) {
+        cb(err, response);
+      });
+    }
+  }, function(err, results) {
+    return;
+  });
+};
+//发起录音
+routing.prototype.monitor = function(context, vars) {
 
 
 };

@@ -40,7 +40,7 @@ exports.get = function(req, res) {
 				memo: ''
 			}, {
 				id: '5',
-				modename: '播放语音',
+				modename: '录制数字字符',
 				url: '',
 				iconame: '',
 				memo: ''
@@ -98,7 +98,7 @@ exports.get = function(req, res) {
 				replacecalledtrim: -1, //匹配后删除被叫前几位
 				replacecalledappend: '', //匹配后补充被叫前几位
 				processmode: 'diallocal',
-				processdefined: ''
+				processdefined: '200'
 			},{
 				proirety: 2,
 				routerline: 1,
@@ -113,7 +113,7 @@ exports.get = function(req, res) {
 				replacecalledtrim: -1, //匹配后删除被叫前几位
 				replacecalledappend: '', //匹配后补充被叫前几位
 				processmode: 'diallocal',
-				processdefined: ''
+				processdefined: '300'
 			},{
 				proirety: 1,
 				routerline: 2,
