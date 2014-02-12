@@ -1,7 +1,9 @@
 .externalToolBuilders
 .settings
 *.log
+*.log*
 web.log
 *.dll
 *.exe
 SccinAGI/node_modules
+SccinCRM/node_modules
