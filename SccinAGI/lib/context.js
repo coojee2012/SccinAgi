@@ -262,16 +262,68 @@ Context.prototype.Dial = function(number, timeout, options, cb) {
 
 Context.prototype.Queue=function(queuename,options,URL,announceoverride,timeout,agi,cb){
 if(options=='')
-  options='t';
+  options='tc';
 if(timeout==null)
   timeout=60;
 this.exec('Queue',queuename,options,URL,announceoverride,timeout,agi,cb);
 }
 
-Context.prototype.AddQueueMember=function(queuename,applaction,cb){
-  this.exec('AddQueueMember',queuename,applaction,cb);
+/**
+动态添加坐席
+描述
+向一个已经存在的队列中动态添加坐席. 如果坐席已经存在，将放回错误.
+这个应用在完成时设置以下通道变量:
+AQMSTATUS - The status of the attempt to add a queue member as a text string.
+ADDED
+MEMBERALREADY
+NOSUCHQUEUE
+**/
+Context.prototype.AddQueueMember=function(queuename,agent,cb){
+  this.exec('AddQueueMember',queuename,agent,cb);
+}
+/**
+动态删除坐席
+描述
+If the interface is NOT in the queue it will return an error.
+这个应用在完成时设置以下通道变量:
+RQMSTATUS - The status of the attempt to remove a queue member as a text string.
+ADDED
+REMOVED
+NOTINQUEUE
+NOSUCHQUEUE
+NOTDYNAMIC
+Example: RemoveQueueMember(techsupport,SIP/3000)
+**/
+Context.prototype.RemoveQueueMember=function(queuename,agent,cb){
+  this.exec('RemoveQueueMember',queuename,agent,cb);
 }
 
+/**
+队列示忙
+描述
+Pauses (blocks calls for) a queue member. The given interface will be paused in the given queue. This prevents any calls from being sent from the queue to the interface until it is unpaused with UnpauseQueueMember or the manager interface. If no queuename is given, the interface is paused in every queue it is a member of. The application will fail if the interface is not found.
+这个应用在完成时设置以下通道变量:
+PQMSTATUS - The status of the attempt to pause a queue member as a text string.
+PAUSED
+NOTFOUND
+Example: PauseQueueMember(,SIP/3000)
+**/
+Context.prototype.PauseQueueMember=function(queuename,agent,cb){
+ this.exec('PauseQueueMember',queuename,agent,cb);
+}
+/**
+队列示闲
+描述
+Unpauses (resumes calls to) a queue member. This is the counterpart to PauseQueueMember() and operates exactly the same way, except it unpauses instead of pausing the given interface.
+This application sets the following channel variable upon completion:
+UPQMSTATUS - The status of the attempt to unpause a queue member as a text string.
+UNPAUSED
+NOTFOUND
+Example: UnpauseQueueMember(,SIP/3000)
+**/
+Context.prototype.UnpauseQueueMember=function(queuename,agent,cb){
+this.exec('UnpauseQueueMember',queuename,agent,cb);
+}
 
 Context.prototype.Originate = function(channel, type, args, cb) {
 

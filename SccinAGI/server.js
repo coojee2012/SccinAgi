@@ -12,6 +12,8 @@ var logger = log4js.getLogger('agi');
 logger.setLevel('DEBUG');
 var server = AGI.createServer(function(context) {
 
+logger.debug("当前上下文状态："+context.state+'，上下文流是否可读：'+context.stream.readable);
+
   var route = new routing({
     context: context,
     Schemas: Schemas,

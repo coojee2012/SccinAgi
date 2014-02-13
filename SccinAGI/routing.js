@@ -112,18 +112,21 @@ routing.prototype.router = function() {
   }, function(err, results) {
     if (err) {
       logger.error(err);
-      context.hangup(function(err, rep) {
-
+      logger.debug("当前上下文状态："+context.state+'，上下文流是否可读：'+context.stream.readable);
+       if(context.stream && context.stream.readable){
+        context.hangup(function(err, rep) {
       });
+      }
 
     } else {
-      context.hangup(function(err, rep) {
+      logger.debug("当前上下文状态："+context.state+'，上下文流是否可读：'+context.stream.readable);
+      if(context.stream && context.stream.readable){
+        context.hangup(function(err, rep) {
         logger.debug("来自自动挂机");
       });
+      }
     }
   });
-
-
 }
 //自动语音应答处理
 //IVR号码
@@ -614,9 +617,25 @@ routing.prototype.queue = function(queuenum, assign, callback) {
     queue: ['updateCDR',
       function(cb, results) {
         //Queue(queuename,options,URL,announceoverride,timeout,agi,cb)
-        context.Queue(queuenum, '', '', '', 30, '', function(err, response) {
+        context.Queue(queuenum, 'tc', '', '', 30, 'agi://192.168.0.114/queueAnswered?queuenum=' + queuenum+'&sessionnum='+self.sessionnum, function(err, response) {
           logger.debug("队列拨打返回结果:", response);
           cb(err, response);
+        });
+      }
+    ],
+    getQueueStatus: ['queue',
+      function(cb, results) {
+        context.getVariable('QUEUESTATUS', function(err, response) {
+          var queueStatus = '';
+          var reg = /(\d+)\s+\((.*)\)/;
+          var c = null,
+            id = null;
+          if (reg.test(response.result)) {
+            c = RegExp.$1;
+            queueStatus = RegExp.$2;
+          }
+          logger.debug("获取呼叫队列状态：", queueStatus);
+          cb(err, queueStatus);
         });
       }
     ]
@@ -625,8 +644,64 @@ routing.prototype.queue = function(queuenum, assign, callback) {
   });
 
 };
+//队列中坐席应答成功
+routing.prototype.queueAnswered = function() {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  var sessionnum=args.sessionnum;
+  var queuenum=args.queuenum;
+  logger.debug("队列被接听:", vars);
+  async.auto({
+    getAnswerMem: function(cb) {
+      context.getVariable('MEMBERINTERFACE', function(err, response) {
+        var member = '';
+        var reg = /(\d+)\s+\((.*)\)/;
+        var c = null,
+          id = null;
+        if (reg.test(response.result)) {
+          c = RegExp.$1;
+          member = RegExp.$2;
+        }
+        if(/\/(\d+)/.test(member)){
+          member = RegExp.$1;
+        }
+        logger.debug("当前应答坐席：", member);
+        cb(err, member);
+      });
+    },
+    //更新CDR应答状态和被叫坐席
+    updateCDR:['getAnswerMem', function(cb,results) {
+      schemas.PBXCdr.update({
+        where: {
+          id: sessionnum
+        },
+        update: {
+          answerstatus:'ANSWERED',
+          called:results.getAnswerMem,
+          lastapp: 'queue'+queuenum
+        }
+      }, function(err, inst) {
+        cb(err, inst);
+      });
+    }],
+    //写入弹屏数据
+    updatePop:['getAnswerMem',function(cb,results){
+      cb(null,1);
+    }]
+  }, function(err, results) {
+    context.end();
+  });
 
-routing.prototype.AddQueueMember = function() {
+}
+//动态添加指定队列坐席成员
+//queuenum-队列名称
+//agent-坐席
+routing.prototype.addQueueMember = function() {
   var self = this;
   var context = self.context;
   var schemas = self.schemas;
@@ -635,7 +710,7 @@ routing.prototype.AddQueueMember = function() {
   var args = self.args;
   var vars = self.vars;
   async.auto({
-    addqueue: function(cb) {
+    addAgent: function(cb) {
       context.AddQueueMember(args.queuenum, args.agent, function(err, response) {
         cb(err, response);
       });
@@ -644,12 +719,86 @@ routing.prototype.AddQueueMember = function() {
     return;
   });
 };
+//动态删除指定队列坐席成员
+//queuenum-队列名称
+//agent-坐席
+routing.prototype.removeQueueMember = function() {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    removeAgent: function(cb) {
+      context.RemoveQueueMember(args.queuenum, args.agent, function(err, response) {
+        cb(err, response);
+      });
+    }
+  }, function(err, results) {
+    return;
+  });
+};
+
+//示忙指定队列坐席成员
+//queuenum-队列名称，留空所有队列里面的该坐席都示忙
+//agent-坐席
+routing.prototype.pauseQueueMember = function(queuenum, assign, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    removeAgent: function(cb) {
+      var queuenum = args.queuenum || '';
+      var agent = args.agent || vars.agi_callerid;
+
+      context.PauseQueueMember(queuenum, 'SIP/' + agent + ',0,' + agent, function(err, response) {
+        cb(err, response);
+      });
+    }
+  }, function(err, results) {
+    callback(err, results);
+  });
+};
+
+//取消示忙指定队列坐席成员
+//queuenum-队列名称，留空所有队列里面的该坐席都取消示忙
+//agent-坐席
+routing.prototype.unPauseQueueMember = function(queuenum, assign, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    removeAgent: function(cb) {
+      var queuenum = args.queuenum || '';
+      var agent = args.agent || vars.agi_callerid;
+      context.UnpauseQueueMember(queuenum, 'SIP/' + agent + ',0,' + agent, function(err, response) {
+        cb(err, response);
+      });
+    }
+  }, function(err, results) {
+    callback(err, results);
+  });
+};
+
 //发起录音
 routing.prototype.monitor = function(context, vars) {
 
 
 };
+//调用其它AGI程序
+routing.prototype.agi = function(agiaddr, callback) {
 
+}
 //默认触发处理
 routing.prototype.dodefault = function(context, vars) {
   context.hangup(function(err, rep) {
