@@ -329,4 +329,39 @@ Context.prototype.Originate = function(channel, type, args, cb) {
 
   this.exec('Originate', channel, type, args, cb);
 }
+/*
+概要
+Record a call and mix the audio during the recording. Use of StopMixMonitor is required to guarantee the audio file is available for processing during dialplan execution.
+描述
+Records the audio on the current channel to the specified file.
+This application does not automatically answer and should be preceeded by an application such as Answer or Progress().
+Note
+Icon
+MixMonitor runs as an audiohook. 
+In order to keep it running through a transfer, AUDIOHOOK_INHERIT must be set for the channel which ran mixmonitor. 
+For more information, including dialplan configuration set for using AUDIOHOOK_INHERIT with MixMonitor, see the function documentation for AUDIOHOOK_INHERIT.
+MIXMONITOR_FILENAME - Will contain the filename used to record.
+语法
+MixMonitor(filename.extension,options,command)
+Arguments
+file
+filename - If filename is an absolute path, uses that path, otherwise creates the file in the configured monitoring directory from asterisk.conf.
+extension
+options
+a - Append to the file instead of overwriting it.
+b - Only save audio to the file while the channel is bridged.
+v - Adjust the heard volume by a factor of x (range -4 to 4)
+x
+V - Adjust the spoken volume by a factor of x (range -4 to 4)
+x
+W - Adjust both, heard and spoken volumes by a factor of x (range -4 to 4)
+x
+command - Will be executed when the recording is over.
+Any strings matching ^{X} will be unescaped to X.
+All variables will be evaluated at the time MixMonitor is called.
+*/
+Context.prototype.MixMonitor = function(filename, options,command, cb) {
+  this.exec('MixMonitor', filename, options, command, cb);
+}
+
 module.exports = Context;

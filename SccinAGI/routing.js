@@ -1,5 +1,6 @@
 var async = require('async');
 var AsAction = require("nami").Actions;
+var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf').load('fastagi');
 var routing = function(v) {
@@ -34,12 +35,25 @@ routing.prototype.router = function() {
         called: args.called,
         accountcode: vars.agi_accountcode,
         routerline: args.routerline,
-        lastapp: 'router',
+        lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+        lastapp: '呼叫路由处理',
         answerstatus: 'NOANSWER'
       }, function(err, inst) {
         cb(err, inst);
       });
     },
+    MixMonitor: ['AddCDR',
+      function(cb, results) {
+        logger.debug("发起自动录音。");
+        var filename=self.sessionnum+'.wav';
+        context.MixMonitor(filename, '', '', function(err, response) {
+          if(err)
+            logger.debug("自动录音，发生错误：",err);
+          logger.debug("自动录音，完毕。",response);
+          cb(null, response);
+        });
+      }
+    ],
     GetRouters: ['AddCDR',
       function(cb, results) {
         schemas.PBXRouter.all({
@@ -90,7 +104,7 @@ routing.prototype.router = function() {
                 args.called = results.GetRouters[i].replacecalledappend + args.called;
 
               processmode = results.GetRouters[i].processmode;
-              processdefined = results.GetRouters[i].processdefined || args.called;
+              processdefined = results.GetRouters[i].processdefined || args.called; //如果指匹配设置号码否则采用被叫
 
               break;
 
@@ -112,18 +126,17 @@ routing.prototype.router = function() {
   }, function(err, results) {
     if (err) {
       logger.error(err);
-      logger.debug("当前上下文状态："+context.state+'，上下文流是否可读：'+context.stream.readable);
-       if(context.stream && context.stream.readable){
-        context.hangup(function(err, rep) {
-      });
+      logger.debug("当前上下文状态：" + context.state + '，上下文流是否可读：' + context.stream.readable);
+      if (context.stream && context.stream.readable) {
+        context.hangup(function(err, rep) {});
       }
 
     } else {
-      logger.debug("当前上下文状态："+context.state+'，上下文流是否可读：'+context.stream.readable);
-      if(context.stream && context.stream.readable){
+      logger.debug("当前上下文状态：" + context.state + '，上下文流是否可读：' + context.stream.readable);
+      if (context.stream && context.stream.readable) {
         context.hangup(function(err, rep) {
-        logger.debug("来自自动挂机");
-      });
+          logger.debug("来自自动挂机");
+        });
       }
     }
   });
@@ -151,7 +164,8 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
             id: self.sessionnum
           },
           update: {
-            lastapp: 'ivr'
+            lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+            lastapp: '自动语音应答处理'
           }
         }, function(err, inst) {
           cb(err, inst);
@@ -199,7 +213,9 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
       action: ['Answer',
         function(cb, results) {
           logger.debug("开始执行IVR动作");
-          self.ivraction(0, results.getIVRActions, results.getIVRInputs, function(err, result) {
+          if (!action)
+            action = 0;
+          self.ivraction(action, results.getIVRActions, results.getIVRInputs, function(err, result) {
             cb(err, result);
           });
         }
@@ -227,14 +243,14 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
   if (actionid < actions.length) {
     logger.debug(actions[actionid].__cachedRelations.Actmode);
     var actmode = actions[actionid].__cachedRelations.Actmode;
-    var actargs = {};
-    if (actions[actionid].args && actions[actionid].args != "") {
+    var actargs = str2obj(actions[actionid].args);
+    /* if (actions[actionid].args && actions[actionid].args != "") {
       var tmp = actions[actionid].args.split('&');
       for (var i in tmp) {
         var kv = tmp[i].split('=');
         actargs[kv[0]] = kv[1];
       }
-    }
+    }*/
     logger.debug("Action 参数:", actargs);
     //async auto 执行action 开始
     async.auto({
@@ -357,10 +373,9 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                       var tmpkey = String.fromCharCode(response.result);
                       if (tmpkey !== '#')
                         inputkey = inputkey + tmpkey;
+                      logger.debug("录制到数字字符:" + inputkey);
                       if (inputkey.length < maxdigits && tmpkey !== '#') //当没有到达指定位数或#号
                       {
-
-                        logger.debug("录制到数字字符:" + inputkey);
                         getkey();
                       } else {
                         if (actargs.addbefore && actargs.addbefore === 'true')
@@ -368,7 +383,9 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                         var tempvarname = 'lastwaitfordigit';
                         if (actargs.varname && actargs.varname !== '')
                           tempvarname = actargs.varname;
+
                         self.activevar[tempvarname] = inputkey; //将输入的按键保存到临时变量
+                        logger.debug("保存到变量" + tempvarname + "的数字字符:" + self.activevar[tempvarname]);
                         callback(null, inputkey);
                       }
 
@@ -399,6 +416,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           if (actargs.varname && actargs.varname !== '')
             tempvarname = actargs.varname;
           var digits = self.activevar[tempvarname];
+          logger.debug("准备从变量" + tempvarname + "读出数字字符:" + digits);
           if (actargs.digits && /\d+/.test(actargs.digits))
             digits = actargs.digits;
           if (digits && digits !== '') {
@@ -551,7 +569,8 @@ routing.prototype.diallocal = function(localnum, callback) {
           id: self.sessionnum
         },
         update: {
-          lastapp: 'diallocal'
+          lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          lastapp: '本地呼叫'
         }
       }, function(err, inst) {
         cb(err, inst);
@@ -576,7 +595,7 @@ routing.prototype.diallocal = function(localnum, callback) {
           //默认拨打IVR 200 1
           else {
             logger.debug("本地默认处理拨打IVR200");
-            self.ivr(200, 1, function(err, result) {
+            self.ivr(200, 0, function(err, result) {
               cb(err, result);
             })
           }
@@ -588,10 +607,103 @@ routing.prototype.diallocal = function(localnum, callback) {
   });
 
 };
-//拨打外部电话
-routing.prototype.dialout = function(linenum, cb) {
 
-};
+//拨打分机
+routing.prototype.extension = function(extennum, assign, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    updateCDR: function(cb) {
+      schemas.PBXCdr.update({
+        where: {
+          id: self.sessionnum
+        },
+        update: {
+          lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          lastapp: '拨打分机'
+        }
+      }, function(err, inst) {
+        cb(err, inst);
+      });
+    },
+    //添加被叫弹屏信息
+    updateScreenPop: function(cb) {
+      schemas.PBXCdr.update({
+        where: {
+          id: self.sessionnum
+        },
+        update: {
+          lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          lastapp: '拨打分机'
+        }
+      }, function(err, inst) {
+        cb(err, inst);
+      });
+    },
+    dial: ['updateCDR',
+      function(cb, resluts) {
+        var localargs = str2obj(assign);
+        var extenproto = localargs.extenproto || 'SIP';
+        var timeout = localargs.timeout || '60';
+        timeout = parseInt(timeout);
+        context.Dial(extenproto + '/' + extennum, timeout, 'tr', function(err, response) {
+          logger.debug("拨打分机返回结果：", response);
+          if (err) {
+            cb(err, response);
+          } else {
+            context.getVariable('DIALSTATUS', function(err, response) {
+              cb(null, response);
+            });
+          }
+        });
+      }
+    ],
+    afterdial: ['dial',
+      function(cb, resluts) {
+        var re = /(\d+)\s+\((\w+)\)/;
+        var anwserstatus = null;
+        if (re.test(resluts.dial.result)) {
+          anwserstatus = RegExp.$2;
+        }
+        logger.debug("应答状态：", anwserstatus);
+        if (anwserstatus === 'CANCEL') {
+          logger.debug("主叫叫直接挂机！");
+          cb("主叫直接挂机！", -1);
+        }
+        /*else if (anwserstatus === 'CONGESTION') {
+          logger.debug("被叫直接挂机！");
+          cb("被叫直接挂机！", -1);
+        }  else if (anwserstatus === 'NOANSWER') {
+          logger.debug("被叫无应答！");
+          cb("被叫无应答！", -1);
+        }*/
+        else if (anwserstatus !== 'ANSWER') {
+          self.dialExtenFail(extennum, anwserstatus, function(err, result) {
+            cb(err, result);
+          });
+        } else {
+          logger.debug("应答成功。");
+          cb(null, 1);
+        }
+      }
+    ]
+  }, function(err, results) {
+    callback(err, results);
+  });
+}
+//呼叫坐席分机失败处理
+routing.prototype.dialExtenFail = function(extennum, failstatus, callback) {
+  callback('呼叫失败扩展', -1);
+}
+//拨打电话会议
+routing.prototype.conference = function(confno, assign, callback) {
+
+}
 //拨打队列
 routing.prototype.queue = function(queuenum, assign, callback) {
   var self = this;
@@ -608,7 +720,8 @@ routing.prototype.queue = function(queuenum, assign, callback) {
           id: self.sessionnum
         },
         update: {
-          lastapp: 'diallocal'
+          lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          lastapp: '拨打队列' + queuenum
         }
       }, function(err, inst) {
         cb(err, inst);
@@ -617,7 +730,7 @@ routing.prototype.queue = function(queuenum, assign, callback) {
     queue: ['updateCDR',
       function(cb, results) {
         //Queue(queuename,options,URL,announceoverride,timeout,agi,cb)
-        context.Queue(queuenum, 'tc', '', '', 30, 'agi://192.168.0.114/queueAnswered?queuenum=' + queuenum+'&sessionnum='+self.sessionnum, function(err, response) {
+        context.Queue(queuenum, 'tc', '', '', 30, 'agi://192.168.0.114/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
           logger.debug("队列拨打返回结果:", response);
           cb(err, response);
         });
@@ -653,8 +766,8 @@ routing.prototype.queueAnswered = function() {
   var logger = self.logger;
   var args = self.args;
   var vars = self.vars;
-  var sessionnum=args.sessionnum;
-  var queuenum=args.queuenum;
+  var sessionnum = args.sessionnum;
+  var queuenum = args.queuenum;
   logger.debug("队列被接听:", vars);
   async.auto({
     getAnswerMem: function(cb) {
@@ -667,7 +780,7 @@ routing.prototype.queueAnswered = function() {
           c = RegExp.$1;
           member = RegExp.$2;
         }
-        if(/\/(\d+)/.test(member)){
+        if (/\/(\d+)/.test(member)) {
           member = RegExp.$1;
         }
         logger.debug("当前应答坐席：", member);
@@ -675,24 +788,28 @@ routing.prototype.queueAnswered = function() {
       });
     },
     //更新CDR应答状态和被叫坐席
-    updateCDR:['getAnswerMem', function(cb,results) {
-      schemas.PBXCdr.update({
-        where: {
-          id: sessionnum
-        },
-        update: {
-          answerstatus:'ANSWERED',
-          called:results.getAnswerMem,
-          lastapp: 'queue'+queuenum
-        }
-      }, function(err, inst) {
-        cb(err, inst);
-      });
-    }],
+    updateCDR: ['getAnswerMem',
+      function(cb, results) {
+        schemas.PBXCdr.update({
+          where: {
+            id: sessionnum
+          },
+          update: {
+            answerstatus: 'ANSWERED',
+            called: results.getAnswerMem,
+            lastapptime: moment().format("YYYY-MM-DD HH:mm:ss")
+          }
+        }, function(err, inst) {
+          cb(err, inst);
+        });
+      }
+    ],
     //写入弹屏数据
-    updatePop:['getAnswerMem',function(cb,results){
-      cb(null,1);
-    }]
+    updatePop: ['getAnswerMem',
+      function(cb, results) {
+        cb(null, 1);
+      }
+    ]
   }, function(err, results) {
     context.end();
   });
@@ -788,6 +905,11 @@ routing.prototype.unPauseQueueMember = function(queuenum, assign, callback) {
   }, function(err, results) {
     callback(err, results);
   });
+};
+
+//拨打外部电话
+routing.prototype.dialout = function(linenum, cb) {
+
 };
 
 //发起录音
@@ -1406,4 +1528,17 @@ routing.prototype.NoCome = function(callrecordid, cb) {
     cb(err, results);
   });
 }
+
+function str2obj(str) {
+  var obj = {};
+  if (str && str !== '') {
+    var tmp = str.split('&');
+    for (var i in tmp) {
+      var kv = tmp[i].split('=');
+      obj[kv[0]] = kv[1];
+    }
+  }
+  return obj;
+}
+
 module.exports = routing;
