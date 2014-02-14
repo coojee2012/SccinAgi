@@ -9,9 +9,9 @@ var PBXExtension=schema.define('PBXExtension',{
 	devicenumber:{type:String,length:50},//设备号
 	devicestring:  {type:String,length:50},//设备字符串
 	fristchecked:   {type:Number,default: function () { return 0 }},//是否检查过
-	transfernumber:    {type:String,length:50,default: function () { return ''; }},//呼叫转移号码
+	transfernumber:    {type:String,length:50,default: function () { return 'deailway=&number='; }},//deailway-互转方式，diallocal,dialout ; number-呼叫转移号码,非空将强制互转号码到指定号码
 	dndinfo:    {type:String,length:10,default: function () { return 'off'; }},//示忙状态 off/on
-	failed:    {type:String,length:50,default: function () { return 'hangup' }},//呼叫失败处理方式:hangup,ivr,voicemail
+	failed:    {type:String,length:50,default: function () { return 'deailway=hangup&number=' }},//deailway-呼叫失败处理方式:hangup,ivr,voicemail,fllowme,transfer
 	cretime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
 });
 PBXExtension.Name='PBXExtension';

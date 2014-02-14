@@ -13,6 +13,7 @@ var routing = function(v) {
   this.vars = v.vars;
   this.sessionnum = guid.create();
   this.ivrlevel = 0;
+  this.transferlevel = 0; //防止呼叫转移死循环
   this.lastinputkey = '';
   this.activevar = {}; //用户存储用户输入的临时变量
 };
@@ -45,12 +46,15 @@ routing.prototype.router = function() {
     MixMonitor: ['AddCDR',
       function(cb, results) {
         logger.debug("发起自动录音。");
-        var filename=self.sessionnum+'.wav';
+        var filename = self.sessionnum + '.wav';
         context.MixMonitor(filename, '', '', function(err, response) {
-          if(err)
-            logger.debug("自动录音，发生错误：",err);
-          logger.debug("自动录音，完毕。",response);
-          cb(null, response);
+          if (err) {
+            logger.error("自动录音，发生错误：", err);
+            cb('自动录音发生异常.', err);
+          } else {
+            logger.debug("自动录音，完毕。", response);
+            cb(null, response);
+          }
         });
       }
     ],
@@ -114,10 +118,35 @@ routing.prototype.router = function() {
           }
         }
         if (match) {
-          self[processmode](processdefined, function(err, result) {
+          schemas.PBXCallProcees.create({
+              callsession: self.sessionnum,
+              caller: vars.agi_callerid,
+              called: args.called,
+              routerline: args.routerline,
+              passargs: 'processmode='+processmode+'&processdefined='+processdefined,
+              processname: '呼叫路由处理',
+              doneresults: '匹配到呼叫路由'
+            }, function(err, inst) {
+              if(err)
+                logger.error("记录呼叫处理过程发生异常：",err);
+            });
+
+          self[processmode](processdefined, function(err, result) {            
             cb(err, result);
           });
         } else {
+          schemas.PBXCallProcees.create({
+              callsession: self.sessionnum,
+              caller: vars.agi_callerid,
+              called: args.called,
+              routerline: args.routerline,
+              passargs: '',
+              processname: '呼叫路由处理',
+              doneresults: '未找到匹配的路由！'
+            }, function(err, inst) {
+              if(err)
+                logger.error("记录呼叫处理过程发生异常：",err);
+            });
           cb('未找到匹配的路由！', 1);
         }
 
@@ -215,6 +244,20 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
           logger.debug("开始执行IVR动作");
           if (!action)
             action = 0;
+
+          schemas.PBXCallProcees.create({
+              callsession: self.sessionnum,
+              caller: vars.agi_callerid,
+              called: args.called,
+              routerline: args.routerline,
+              passargs: 'ivrnum='+ivrnum+'&action='+action,
+              processname: '呼叫自动语音应答处理',
+              doneresults: ''
+            }, function(err, inst) {
+              if(err)
+                logger.error("记录呼叫处理过程发生异常：",err);
+            });
+
           self.ivraction(action, results.getIVRActions, results.getIVRInputs, function(err, result) {
             cb(err, result);
           });
@@ -251,11 +294,28 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
         actargs[kv[0]] = kv[1];
       }
     }*/
+
+     schemas.PBXCallProcees.create({
+              callsession: self.sessionnum,
+              caller: vars.agi_callerid,
+              called: args.called,
+              routerline: args.routerline,
+              passargs: 'actionid='+actionid+'&'+actions[actionid].args,
+              processname: actmode.modename,
+              doneresults: ''
+            }, function(err, inst) {
+              if(err)
+                logger.error("记录呼叫处理过程发生异常：",err);
+            });
+     
     logger.debug("Action 参数:", actargs);
     //async auto 执行action 开始
     async.auto({
       Action: function(cb) {
         if (actmode.modename === '播放语音') {
+
+         
+
           //不允许按键中断
           logger.debug("IVR播放语音");
           if (actargs.interruptible !== 'true') {
@@ -625,6 +685,7 @@ routing.prototype.extension = function(extennum, assign, callback) {
         },
         update: {
           lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          called: extennum,
           lastapp: '拨打分机'
         }
       }, function(err, inst) {
@@ -633,13 +694,18 @@ routing.prototype.extension = function(extennum, assign, callback) {
     },
     //添加被叫弹屏信息
     updateScreenPop: function(cb) {
-      schemas.PBXCdr.update({
+      schemas.PBXScreenPop.update({
         where: {
-          id: self.sessionnum
+          id: extennum
         },
         update: {
-          lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
-          lastapp: '拨打分机'
+          callernumber: vars.agi_callerid,
+          callednumber: extennum,
+          sessionnumber: self.sessionnum,
+          status: 'waite',
+          routerdype: 1,
+          poptype: 'diallocal',
+          updatetime: moment().format("YYYY-MM-DD HH:mm:ss")
         }
       }, function(err, inst) {
         cb(err, inst);
@@ -651,16 +717,34 @@ routing.prototype.extension = function(extennum, assign, callback) {
         var extenproto = localargs.extenproto || 'SIP';
         var timeout = localargs.timeout || '60';
         timeout = parseInt(timeout);
-        context.Dial(extenproto + '/' + extennum, timeout, 'tr', function(err, response) {
-          logger.debug("拨打分机返回结果：", response);
-          if (err) {
-            cb(err, response);
-          } else {
-            context.getVariable('DIALSTATUS', function(err, response) {
-              cb(null, response);
+        //判断分机是否开启呼叫转移
+        if (localargs.transnum && /\d+/.test(localargs.transnum)) {
+          logger.debug("当前呼叫转移参数：", localargs.transway, localargs.transnum);
+          if (localargs.transway && typeof(self[localargs.transway]) === 'function' && self.transferlevel < 10) {
+            logger.debug("当前呼叫转移层数：", self.transferlevel);
+            self.transferlevel++;
+            self[localargs.transway](localargs.transnum, function(err, result) {
+              if (err)
+                logger.error('呼叫转移过程中发生异常', err);
+              cb(null, {
+                result: '1 (TRANSFER)'
+              });
             });
+          } else {
+            cb('呼叫转移方式指定错误或呼叫转移循环层级达到10', -1);
           }
-        });
+        } else {
+          context.Dial(extenproto + '/' + extennum, timeout, 'tr', function(err, response) {
+            logger.debug("拨打分机返回结果：", response);
+            if (err) {
+              cb(err, response);
+            } else {
+              context.getVariable('DIALSTATUS', function(err, response) {
+                cb(null, response);
+              });
+            }
+          });
+        }
       }
     ],
     afterdial: ['dial',
@@ -671,9 +755,26 @@ routing.prototype.extension = function(extennum, assign, callback) {
           anwserstatus = RegExp.$2;
         }
         logger.debug("应答状态：", anwserstatus);
+        //异步更新CDR，不影响流程
+        schemas.PBXCdr.update({
+          where: {
+            id: self.sessionnum
+          },
+          update: {
+            lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+            answerstatus: anwserstatus
+          }
+        }, function(err, inst) {
+          if (err)
+            logger.error("通话结束后更新通话状态发生异常！", err);
+        });
+
         if (anwserstatus === 'CANCEL') {
           logger.debug("主叫叫直接挂机！");
           cb("主叫直接挂机！", -1);
+        } else if (anwserstatus === 'TRANSFER') {
+          logger.debug("被叫开启了呼叫转移！");
+          cb("被叫开启了呼叫转移！", -1);
         }
         /*else if (anwserstatus === 'CONGESTION') {
           logger.debug("被叫直接挂机！");
@@ -698,6 +799,31 @@ routing.prototype.extension = function(extennum, assign, callback) {
 }
 //呼叫坐席分机失败处理
 routing.prototype.dialExtenFail = function(extennum, failstatus, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    getFailOptions: function(cb) {
+      schemas.PBXExtension.find(extennum, function(err, inst) {
+        if (err || inst == null) {
+          cb('呼叫失败处理获取分机信息发生异常！', -1);
+        } else {
+          cb(null, inst);
+        }
+      });
+    },
+    doFail: ['getFailOptions',
+      function(cb, results) {
+
+      }
+    ]
+  }, function(err, results) {
+
+  });
   callback('呼叫失败扩展', -1);
 }
 //拨打电话会议
@@ -807,7 +933,22 @@ routing.prototype.queueAnswered = function() {
     //写入弹屏数据
     updatePop: ['getAnswerMem',
       function(cb, results) {
-        cb(null, 1);
+        schemas.PBXScreenPop.update({
+          where: {
+            id: results.getAnswerMem
+          },
+          update: {
+            callernumber: vars.agi_callerid,
+            callednumber: results.getAnswerMem,
+            sessionnumber: sessionnum,
+            status: 'waite',
+            routerdype: 1,
+            poptype: 'diallocal',
+            updatetime: moment().format("YYYY-MM-DD HH:mm:ss")
+          }
+        }, function(err, inst) {
+          cb(err, inst);
+        });
       }
     ]
   }, function(err, results) {

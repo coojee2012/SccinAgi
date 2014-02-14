@@ -131,7 +131,7 @@ exports.get = function(req, res) {
 					ivrnumber: '200',
 					ordinal: 2,
 					actmode: '5',
-					args: 'maxdigits=3&addbefore=true&varname=testvar&beep=true'
+					args: 'maxdigits=3&addbefore=true&varname=testvar&beep=false'
 				}, {
 					ivrnumber: '200',
 					ordinal: 3,
@@ -209,7 +209,8 @@ exports.get = function(req, res) {
 				{id:'8001',accountcode:'8001',password:'8001',deviceproto:'SIP',devicenumber:'8001',devicestring:'8001'},
 				{id:'8002',accountcode:'8002',password:'8002',deviceproto:'SIP',devicenumber:'8002',devicestring:'8002'},
 				{id:'8003',accountcode:'8003',password:'8003',deviceproto:'SIP',devicenumber:'8003',devicestring:'8003'},
-				{id:'8004',accountcode:'8004',password:'8004',deviceproto:'SIP',devicenumber:'8004',devicestring:'8004'}
+				{id:'8004',accountcode:'8004',password:'8004',deviceproto:'SIP',devicenumber:'8004',devicestring:'8004'},
+				{id:'8801',accountcode:'8801',password:'8801',deviceproto:'IAX2',devicenumber:'8801',devicestring:'8801'}
 				];
 				async.forEach(extensions, function(item, callback) {
 					Schemas['PBXExtension'].create(item, function(err, inst) {
@@ -222,8 +223,8 @@ exports.get = function(req, res) {
 			},
 			setDefaultQueues:function(cb){
 					var queues=[
-				{id:'401',queuename:'测试队列401',members:'8001&8002&8003'},
-				{id:'402',queuename:'测试队列402',members:'8001&8002&8003'}
+				{id:'401',queuename:'测试队列401',members:'8001&8002&8003&8801'},
+				{id:'402',queuename:'测试队列402',members:'8001&8002&8003&8801'}
 				];
 				async.forEach(queues, function(item, callback) {
 					Schemas['PBXQueue'].create(item, function(err, inst) {
@@ -235,15 +236,16 @@ exports.get = function(req, res) {
 
 			},
 			setDefaultTrunk:function(cb){
-
+              cb(null, 1);
 			},
 			setDefaultLocalNumber:function(cb){
 				var localnumbers=[
-				{id:'8001',localtype:'extension',assign:'extenproto=SIP'},
-				{id:'8002',localtype:'extension',assign:'extenproto=SIP'},
-				{id:'8003',localtype:'extension',assign:'extenproto=SIP'},
-				{id:'8004',localtype:'extension',assign:'extenproto=SIP'},
-				{id:'8004',localtype:'extension',assign:'extenproto=SIP'},
+				{id:'8001',localtype:'extension',assign:'extenproto=SIP&timeout=60&transnum=&transway='},
+				{id:'8002',localtype:'extension',assign:'extenproto=SIP&timeout=60&transnum=&transway='},
+				{id:'8003',localtype:'extension',assign:'extenproto=SIP&timeout=60&transnum=200&transway=diallocal'},
+				{id:'8004',localtype:'extension',assign:'extenproto=SIP&timeout=60&transnum=8001&transway=diallocal'},
+				{id:'8802',localtype:'extension',assign:'extenproto=IAX2&timeout=60&transnum=&transway='},
+				{id:'8801',localtype:'extension',assign:'extenproto=IAX2&timeout=60&transnum=&transway='},
 				{id:'200',localtype:'ivr',assign:'0'},
 				{id:'200100',localtype:'ivr',assign:'0'},
 				{id:'200200',localtype:'ivr',assign:'0'},
@@ -268,7 +270,8 @@ exports.get = function(req, res) {
 				{id:'8002'},
 				{id:'8003'},
 				{id:'8004'},
-				{id:'8004'}
+				{id:'8801'},
+				{id:'8802'}
 				];
 				async.forEach(screepops, function(item, callback) {
 					Schemas['PBXScreenPop'].create(item, function(err, inst) {
