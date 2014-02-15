@@ -24,13 +24,14 @@ logger.debug("当前上下文状态："+context.state+'，上下文流是否可�
     vars: null
   });
 
+ server.getConnections(function(err, count) {
+    logger.info('当前服务器连接数：' + count);
+  });
 
   //捕获获取变量事件
   //vars 捕获到的变量
   //访问开始的地方 
-  server.getConnections(function(err, count) {
-    logger.info('当前服务器连接数：' + count);
-  });
+ 
 
   context.on('variables', function(vars) {
     var script = vars.agi_network_script.split("?");
@@ -93,5 +94,6 @@ logger.debug("当前上下文状态："+context.state+'，上下文流是否可�
   //AGI访问关闭
   context.on('close', function(o) {
     logger.info("AGI通道已关闭", o);
+    route=null;
   });
 }).listen(agiconf.port);

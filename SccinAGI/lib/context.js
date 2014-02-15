@@ -364,4 +364,7 @@ Context.prototype.MixMonitor = function(filename, options,command, cb) {
   this.exec('MixMonitor', filename, options, command, cb);
 }
 
+Context.prototype.ChannelStatus=function(channelname,cb){
+  this.send('CHANNEL STATUS ' +channelname+ ENDLINE, cb);
+}
 module.exports = Context;

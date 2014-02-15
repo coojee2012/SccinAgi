@@ -81,7 +81,7 @@ routing.prototype.router = function() {
             logger.debug("呼叫线路组匹配成功");
             match = true;
             var reCaller = new RegExp("^" + results.GetRouters[i].callerid);
-            var reCalled = new RegExp("^" + results.GetRouters[i].callerid);
+            var reCalled = new RegExp("^" + results.GetRouters[i].callednum);
             //匹配主叫以什么号码开头
             if (results.GetRouters[i].callerid !== '' && !reCaller.test(vars.agi_callerid))
               match = false;
@@ -119,34 +119,34 @@ routing.prototype.router = function() {
         }
         if (match) {
           schemas.PBXCallProcees.create({
-              callsession: self.sessionnum,
-              caller: vars.agi_callerid,
-              called: args.called,
-              routerline: args.routerline,
-              passargs: 'processmode='+processmode+'&processdefined='+processdefined,
-              processname: '呼叫路由处理',
-              doneresults: '匹配到呼叫路由'
-            }, function(err, inst) {
-              if(err)
-                logger.error("记录呼叫处理过程发生异常：",err);
-            });
+            callsession: self.sessionnum,
+            caller: vars.agi_callerid,
+            called: args.called,
+            routerline: args.routerline,
+            passargs: 'processmode=' + processmode + '&processdefined=' + processdefined,
+            processname: '呼叫路由处理',
+            doneresults: '匹配到呼叫路由'
+          }, function(err, inst) {
+            if (err)
+              logger.error("记录呼叫处理过程发生异常：", err);
+          });
 
-          self[processmode](processdefined, function(err, result) {            
+          self[processmode](processdefined, function(err, result) {
             cb(err, result);
           });
         } else {
           schemas.PBXCallProcees.create({
-              callsession: self.sessionnum,
-              caller: vars.agi_callerid,
-              called: args.called,
-              routerline: args.routerline,
-              passargs: '',
-              processname: '呼叫路由处理',
-              doneresults: '未找到匹配的路由！'
-            }, function(err, inst) {
-              if(err)
-                logger.error("记录呼叫处理过程发生异常：",err);
-            });
+            callsession: self.sessionnum,
+            caller: vars.agi_callerid,
+            called: args.called,
+            routerline: args.routerline,
+            passargs: '',
+            processname: '呼叫路由处理',
+            doneresults: '未找到匹配的路由！'
+          }, function(err, inst) {
+            if (err)
+              logger.error("记录呼叫处理过程发生异常：", err);
+          });
           cb('未找到匹配的路由！', 1);
         }
 
@@ -246,17 +246,17 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
             action = 0;
 
           schemas.PBXCallProcees.create({
-              callsession: self.sessionnum,
-              caller: vars.agi_callerid,
-              called: args.called,
-              routerline: args.routerline,
-              passargs: 'ivrnum='+ivrnum+'&action='+action,
-              processname: '呼叫自动语音应答处理',
-              doneresults: ''
-            }, function(err, inst) {
-              if(err)
-                logger.error("记录呼叫处理过程发生异常：",err);
-            });
+            callsession: self.sessionnum,
+            caller: vars.agi_callerid,
+            called: args.called,
+            routerline: args.routerline,
+            passargs: 'ivrnum=' + ivrnum + '&action=' + action,
+            processname: '呼叫自动语音应答处理',
+            doneresults: ''
+          }, function(err, inst) {
+            if (err)
+              logger.error("记录呼叫处理过程发生异常：", err);
+          });
 
           self.ivraction(action, results.getIVRActions, results.getIVRInputs, function(err, result) {
             cb(err, result);
@@ -295,26 +295,26 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
       }
     }*/
 
-     schemas.PBXCallProcees.create({
-              callsession: self.sessionnum,
-              caller: vars.agi_callerid,
-              called: args.called,
-              routerline: args.routerline,
-              passargs: 'actionid='+actionid+'&'+actions[actionid].args,
-              processname: actmode.modename,
-              doneresults: ''
-            }, function(err, inst) {
-              if(err)
-                logger.error("记录呼叫处理过程发生异常：",err);
-            });
-     
+    schemas.PBXCallProcees.create({
+      callsession: self.sessionnum,
+      caller: vars.agi_callerid,
+      called: args.called,
+      routerline: args.routerline,
+      passargs: 'actionid=' + actionid + '&' + actions[actionid].args,
+      processname: actmode.modename,
+      doneresults: ''
+    }, function(err, inst) {
+      if (err)
+        logger.error("记录呼叫处理过程发生异常：", err);
+    });
+
     logger.debug("Action 参数:", actargs);
     //async auto 执行action 开始
     async.auto({
       Action: function(cb) {
         if (actmode.modename === '播放语音') {
 
-         
+
 
           //不允许按键中断
           logger.debug("IVR播放语音");
@@ -549,6 +549,24 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
 
         } else if (actmode.modename === '播放音调') {
 
+        } else if (actmode.modename === '通道阀') {
+          async.auto({
+            getActiveChannels: function(cb) {
+
+            },
+            dosth: ['getActiveChannels',
+              function(cb, results) {
+                if (results.getActiveChannels.result >= 10) {
+
+                } else {
+                  cb(null, 1);
+                }
+              }
+            ]
+
+          }, function(err, results) {
+            callback(err, results);
+          });
         }
         //默认挂机
         else {
@@ -667,6 +685,10 @@ routing.prototype.diallocal = function(localnum, callback) {
   });
 
 };
+//当前通道达到预先设定的阀值，播放友情提示并记录到未接来电
+routing.prototype.channelMax=function(){
+
+}
 
 //拨打分机
 routing.prototype.extension = function(extennum, assign, callback) {
@@ -807,24 +829,35 @@ routing.prototype.dialExtenFail = function(extennum, failstatus, callback) {
   var args = self.args;
   var vars = self.vars;
   async.auto({
-    getFailOptions: function(cb) {
-      schemas.PBXExtension.find(extennum, function(err, inst) {
-        if (err || inst == null) {
-          cb('呼叫失败处理获取分机信息发生异常！', -1);
-        } else {
-          cb(null, inst);
+      getFailOptions: function(cb) {
+        schemas.PBXExtension.find(extennum, function(err, inst) {
+          if (err || inst == null) {
+            cb('呼叫失败处理获取分机信息发生异常！', -1);
+          } else {
+            cb(null, inst);
+          }
+        });
+      },
+      doFail: ['getFailOptions',
+        function(cb, results) {
+          var failargs = str2obj(results.getFailOptions.failed);
+          logger.debug('呼叫失败处理:', results.getFailOptions.failed);
+          if (failargs.deailway && failargs.deailway !== '' && typeof(failargs.deailway) === 'function') {
+            self[failargs.deailway](failargs.number, function(err, result) {
+              cb(err, result);
+            });
+          } else {
+            self.hangup('', function(err, result) {
+              cb(err, result);
+            });
+          }
         }
-      });
+      ]
     },
-    doFail: ['getFailOptions',
-      function(cb, results) {
+    function(err, results) {
+      callback(err, -results);
+    });
 
-      }
-    ]
-  }, function(err, results) {
-
-  });
-  callback('呼叫失败扩展', -1);
 }
 //拨打电话会议
 routing.prototype.conference = function(confno, assign, callback) {
@@ -1049,13 +1082,158 @@ routing.prototype.unPauseQueueMember = function(queuenum, assign, callback) {
 };
 
 //拨打外部电话
-routing.prototype.dialout = function(linenum, cb) {
+routing.prototype.dialout = function(linenum, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  async.auto({
+    updateCDR: function(cb) {
+      schemas.PBXCdr.update({
+        where: {
+          id: self.sessionnum
+        },
+        update: {
+          called: args.called,
+          lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          lastapp: '呼叫外部'
+        }
+      }, function(err, inst) {
+        cb(err, inst);
+      });
+    },
+    findLine: ['updateCDR',
+      function(cb, results) {
+        schemas.PBXTrunk.find(linenum, function(err, inst) {
+          if (err || inst == null) {
+            cb('没有找到可以呼出的外线', -1);
+          } else {
+            cb(null, inst);
+          }
+        });
+      }
+    ],
+    updatePopScreen: ['updateCDR',
+      function(cb, results) {
+        schemas.PBXScreenPop.update({
+          where: {
+            id: vars.agi_callerid
+          },
+          update: {
+            callernumber: vars.agi_callerid,
+            callednumber: args.called,
+            sessionnumber: self.sessionnum,
+            status: 'waite',
+            routerdype: 2,
+            poptype: 'dialout',
+            updatetime: moment().format("YYYY-MM-DD HH:mm:ss")
+          }
+        }, function(err, inst) {
+          cb(err, inst);
+        });
+      }
+    ],
+    dial: ['findLine',
+      function(cb, results) {
+        var trunkproto = results.findLine.trunkproto;
+        var trunkdevice = results.findLine.trunkdevice;
+        var called = args.called;
 
+        schemas.PBXCallProcees.create({
+          callsession: self.sessionnum,
+          caller: vars.agi_callerid,
+          called: args.called,
+          routerline: args.routerline,
+          passargs: 'trunkproto=' + trunkproto + '&called=' + called + '&trunkdevice=' + trunkdevice,
+          processname: '呼叫外线',
+          doneresults: ''
+        }, function(err, inst) {
+          if (err)
+            logger.error("记录呼叫处理过程发生异常：", err);
+        });
+        var channele = trunkproto + '/' + trunkdevice;
+        //context.ChannelStatus(channele, function(err, reponse) {
+        //logger.debug('线路状态：', reponse);
+        context.Dial(channele + '/' + called, conf.timeout, conf.dialoptions, function(err, response) {
+          if (err) {
+            cb(err, response);
+          } else {
+            context.getVariable('DIALSTATUS', function(err, response) {
+              cb(null, response);
+            });
+          }
+        });
+        //});
+
+      }
+    ],
+    afterdial: ['dial',
+      function(cb, results) {
+        var re = /(\d+)\s+\((\w+)\)/;
+        var anwserstatus = null;
+        if (re.test(results.dial.result)) {
+          anwserstatus = RegExp.$2;
+        }
+        logger.debug("应答状态：", anwserstatus);
+
+
+        schemas.PBXCallProcees.create({
+          callsession: self.sessionnum,
+          caller: vars.agi_callerid,
+          called: args.called,
+          routerline: args.routerline,
+          passargs: '',
+          processname: '呼叫外线结束',
+          doneresults: 'anwserstatus=' + anwserstatus
+        }, function(err, inst) {
+          if (err)
+            logger.error("记录呼叫处理过程发生异常：", err);
+        });
+
+        schemas.PBXCdr.update({
+          where: {
+            id: self.sessionnum
+          },
+          update: {
+            lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+            answerstatus: anwserstatus
+          }
+        }, function(err, inst) {
+          if (err)
+            logger.error("通话结束后更新通话状态发生异常！", err);
+        });
+
+
+        cb(null, 1);
+      }
+    ]
+
+  }, function(err, results) {
+    callback(err, results);
+  });
 };
 
 //发起录音
-routing.prototype.monitor = function(context, vars) {
-
+routing.prototype.monitor = function(filename, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  context.MixMonitor(filename, '', '', function(err, response) {
+    if (err) {
+      logger.error("自动录音，发生错误：", err);
+      callback('自动录音发生异常.', err);
+    } else {
+      logger.debug("自动录音，完毕。", response);
+      callback(null, response);
+    }
+  });
 
 };
 //调用其它AGI程序
@@ -1070,6 +1248,21 @@ routing.prototype.dodefault = function(context, vars) {
   });
 
 };
+
+//挂机处理程序
+routing.prototype.hangup = function(num, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  context.hangup(function(err, response) {
+    callback(err, response);
+  });
+};
+
 
 //北京专家库自动外呼
 //sccincallout?callRecordsID=
@@ -1269,9 +1462,6 @@ routing.prototype.sccincallout = function() {
 };
 
 
-routing.prototype.hangupcall = function() {
-
-}
 
 //北京专家库自动拨打接通后处理程序
 routing.prototype.calloutback = function() {
