@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-02-17 */
+var Schema=require("jugglingdb").Schema,moment=require("moment"),guid=require("guid"),schema=require("../../database/jdmysql").schema,PBXConference=schema.define("PBXConference",{pincode:{type:String,length:50},playwhenevent:{type:Number,"default":function(){return 0}},mohwhenonlyone:{type:Number,"default":function(){return 0}},cretime:{type:String,length:50,"default":function(){return moment().format("YYYY-MM-DD HH:mm:ss")}}});PBXConference.Name="PBXConference",schema.models.PBXConference,module.exports=PBXConference;

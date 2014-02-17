@@ -1,7 +1,7 @@
 var fs = require('fs');
 var schema = require('./jdmysql').schema;
 var dirname = __dirname;
-var path = dirname + '/../modules/';
+var path = dirname + '/../modules/build/';
 var guid = require('guid');
 var Schemas = {};
 

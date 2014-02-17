@@ -4,8 +4,8 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
+var routes = require('./routes/build');
+var user = require('./routes/build/user');
 var http = require('http');
 var path = require('path');
 var conf = require('node-conf');
@@ -68,7 +68,7 @@ function errorHandler(err, req, res, next) {
   res.render('error', { error: err });
 }
 
-var routings = require(__dirname + '/routes/routing.js');
+var routings = require(__dirname + '/routes/build/routing.js');
 for (var i in routings) {
 	for (var r in routings[i]) {
 		var pf = require(__dirname + routings[i][r].file)[routings[i][r].fn];

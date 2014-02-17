@@ -1,0 +1,2 @@
+/*! 路由处理程序 2014-02-17 */
+exports.get=function(a,b){var c=(require("child_process").spawn,require("child_process").exec),d=c("/usr/bin/java -jar /var/lib/asterisk/agi-bin/VoiceTest_fat.jar 11",function(a,c){a?b.render("index",{title:"执行错误："+a}):b.render("index",{title:"程序输出："+c})});d.stdout.on("data",function(a){console.log("标准输出："+a)}),d.on("exit",function(a){console.log("子进程已关闭，代码："+a)})},exports.post=function(a,b){b.render("index",{title:"Express"})};

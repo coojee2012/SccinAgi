@@ -551,26 +551,57 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
 
         } else if (actmode.modename === '通道阀') {
           async.auto({
-            getActiveChannels: function(cb) {
+            getActiveChannels: function(callback) {
+              var trunkProto = actargs.trunkProto;
+              logger.debug("准备获取通道类型为:" + trunkProto + "的通道信息");
+              if (trunkProto && trunkProto !== '') {
+                trunkProto = trunkProto.toLowerCase();
+                var action = new AsAction.Command();
+                //action.Command='core show codecs';
+                action.Command = trunkProto + ' show channels';
+                if (nami.connected) {
+                  nami.send(action, function(response) {
+                    var lines = response.lines.pop();
+                    callback(null, lines);
+                  });
+                } else {
+                  nami.open();
+                  nami.send(action, function(response) {
+                    callback(null, response);
+                  });
+
+                }
+              } else {
+                callback('无效通道协议。', -1);
+              }
 
             },
             dosth: ['getActiveChannels',
-              function(cb, results) {
-                if (results.getActiveChannels.result >= 10) {
+              function(callback, results) {
+                var lines = results.getActiveChannels;
+                if (lines && lines !== '') {
+                  lines = lines.split('\n');
+                }
+                logger.debug("当前获取到" + actargs.trunkProto + "的通道信息:", lines)
+                if (30 >= actargs.max) {
+                  self.channelMax(function(err, result) {
+                    callback(err, result);
+                  });
 
                 } else {
-                  cb(null, 1);
+                  callback(null, 1);
                 }
+
               }
             ]
 
           }, function(err, results) {
-            callback(err, results);
+            cb(err, results);
           });
         }
         //默认挂机
         else {
-
+          cb('默认处理', -1);
         }
       }
     }, function(err, results) {
@@ -587,6 +618,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
     callback('所有的动作执行完毕', -1);
   }
 }
+
 //响应IVR按键
 routing.prototype.ivrinput = function(key, inputs, callback) {
   var self = this;
@@ -686,8 +718,10 @@ routing.prototype.diallocal = function(localnum, callback) {
 
 };
 //当前通道达到预先设定的阀值，播放友情提示并记录到未接来电
-routing.prototype.channelMax=function(){
-
+routing.prototype.channelMax = function(callback) {
+  async.auto({}, function(err, resluts) {
+    callback(err, resluts);
+  })
 }
 
 //拨打分机

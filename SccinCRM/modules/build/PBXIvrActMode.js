@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-02-17 */
+var Schema=require("jugglingdb").Schema,moment=require("moment"),schema=require("../../database/jdmysql").schema,PBXIvrActMode=schema.define("PBXIvrActMode",{modename:{type:String,length:50},url:{type:String,length:100},iconame:{type:String,length:50},memo:{type:String,length:200}});PBXIvrActMode.Name="PBXIvrActMode",schema.models.PBXIvrActMode,module.exports=PBXIvrActMode;

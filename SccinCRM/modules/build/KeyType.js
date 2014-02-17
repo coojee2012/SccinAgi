@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-02-17 */
+var Schema=require("jugglingdb").Schema,moment=require("moment"),schema=require("../../database/jdmysql").schema,KeyType=schema.define("KeyType",{keyTypeID:{type:String,length:50},KeyTypeName:{type:String,length:50},State:{type:Number,"default":0}});KeyType.Name="KeyType",schema.models.KeyType,module.exports=KeyType;

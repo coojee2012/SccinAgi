@@ -6,6 +6,7 @@ var PBXLostCall=schema.define('PBXLostCall',{
 	id:{type:String,length:100,default:function(){return guid.create();}},	
 	extension:   {type:String,length:50},
 	lostnumber:   {type:String,length:50},
+	lostType:   {type:String,length:50, default: function () { return ''; }},//无应答类型 exten,queue,app
 	reback:   {type: String,length:50, default: function () { return '否'; }},
 	certime:   {type: String,length:50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss");}},
 	backtime:   {type: String,length:50},
