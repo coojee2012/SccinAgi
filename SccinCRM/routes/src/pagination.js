@@ -1,36 +1,7 @@
 var Schemas = require('../../database/schema').Schemas;
 var async = require('async');
 
-exports.list = function(req, res) {
-
-	res.render('PBXExtension/list.html', {
-		username: '',
-		password: '',
-		exten: '',
-		tip: ''
-	});
-}
-
-exports.upsert = function(req, res) {
-	res.render('PBXExtension/upsert.html', {
-		username: '',
-		password: '',
-		exten: '',
-		tip: ''
-	});
-}
-
-exports.create = function(req, res) {
-	res.render('PBXExtension/create.html', {
-		username: '',
-		password: '',
-		exten: '',
-		tip: ''
-	});
-}
-
-
-exports.table = function(req, res) {
+exports.post = function(req, res) {
 	console.log('BODY:', req.body);
 	var dbName=req.body['dbName'];
 	//查询起始页面，第一页是0
@@ -114,9 +85,5 @@ exports.table = function(req, res) {
 		}
 
 	});
-
-}
-
-exports.xls2all=function(req,res){
 
 }

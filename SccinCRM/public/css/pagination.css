@@ -67,3 +67,9 @@
 .pagination-right {
 	text-align: right;
 }
+
+
+
+.row_selected td {
+	background-color: #B0BED9;
+}

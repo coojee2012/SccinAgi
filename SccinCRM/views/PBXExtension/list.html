@@ -2,7 +2,9 @@
  <div class="page_box">
     <div class="column form-column main col form-horizontal">
       <div class="panel panel-default fieldset">
-        <div class="panel-heading"> <a href="PBXExtension/upsert" class="btn btn-primary">新建分机</a> </div>
+        <div class="panel-heading"> 
+        <button data-toggle="modal" data-target="#myModal" class="btn btn-primary">新建分机</button>
+        </div>
         <div class="panel-body ">
           <div class="form-group">
             <label for="accountcode" class="control-label col-sm-2">分机号码</label>
@@ -46,65 +48,209 @@
       </thead>
       <tbody>
 </tbody>
+<tfoot>
+    <tr>
+     <th>分机号</th>
+          <th>分机类型</th>
+          <th>设备号</th>
+          <th class="text-center">创建时间</th>
+          <th class="text-center">操作</th>
+    </tr>
+  </tfoot>
 </table>
 </div>
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">请选择分机类型</h4>
+      </div>
+      <div class="modal-body">
+      <!--弹出内容-->
+        <div class="column form-column main col form-horizontal">
+          <div class="panel-body ">
+          <div class="form-group">
+           <label for="DeviceProto" class="control-label col-sm-3">分机类型</label>
+            <div class="controls  col-sm-7">            
+                    <select name="DeviceProto" id="DeviceProto" class="form-control input-sm">
+                      <option value="SIP">SIP</option>
+                      <option value="IAX2">IAX2</option>
+                      <option value="VIRTUAL">虚拟分机</option>
+                      </select>
+              </div>
+            <label for="ExtenMemo" class="control-label col-sm-3">说&nbsp;&nbsp;&nbsp;&nbsp;明</label>
+            <div class="controls  col-sm-7">            
+            <textarea id="ExtenMemo" rows="3" cols="50" readonly="readonly"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="createexten">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script type="text/javascript">
 $(function(){
-$('#datatable').dataTable({
+var ajaxUrl="/pagination";
+var oTable=$('#datatable').dataTable({
   sDom: "<'row'<'col-sm-4'l><'col-sm-4'f><'col-sm-4'T>r>t<'row'<'col-sm-4'i><'col-sm-8 center'p>>",
   sPaginationType: "bootstrap", 
   //bDestroy:true,
   bInfo: true,
   oLanguage: {
-  sLengthMenu: "每页显示 _MENU_ 条记录",
-    sZeroRecords: "对不起，查询不到任何相关数据",
-    sInfo: "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
-    sInfoEmtpy: "找不到相关数据",
-    //"sInfoFiltered": "数据表中共为 _MAX_ 条记录",  
-    sProcessing: "正在加载中...",
-    sSearch: "搜索",
-    sInfoEmpty: "显示 0 至 0 共 0 项",
-   oPaginate: { "sFirst": "第一页", "sPrevious": "上一页 ", "sNext": "下一页 ", "sLast": "末页 " }
+  "sUrl":"/media/olanguage.json"
   },
     bPaginate: true,
     bFilter:false,
     bProcessing: true,
     bServerSide: true,
-    sAjaxSource: "/PBXExtension/table",
+    sAjaxSource: ajaxUrl,
     sServerMethod: "POST",
-    fnServerParams: function (aoData) {      
-      //gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
-      aoData.push( { name: "whereCount", value:2} );//添加需要查询的条件个数
-      var accountcode=$('#accountcode').val();
-      aoData.push( { "name": "whereCol_0", "value":'accountcode'} );
-      aoData.push( { "name": "whereWay_0", "value":'like'} );
-      aoData.push( { "name": "whereValue_0", "value":accountcode  } );
-      var deviceproto=$('#deviceproto').val();
-      aoData.push( { "name": "whereCol_1", "value":'deviceproto'} );
-      aoData.push( { "name": "whereWay_1", "value":''} );
-      aoData.push( { "name": "whereValue_1", "value":deviceproto  } );
+    fnServerParams: function (aoData) {
+    var where=  getWhere();
+    for(var key in where){
+     aoData.push( { "name": key, "value":where[key]} );
+    }    
     },
-    aoColumnDefs: [
-      { "sName":"accountcode","mData": "accountcode","bSortable": false,"bVisible": true, "aTargets": [0],
-      "mRender": function ( data, type, full ) {
-        return '<a href="'+data+'">Download</a>';
-      } },
-      { "sName":"deviceproto","mData": "deviceproto","bSortable": false,"bVisible": true, "aTargets": [1] },
-      { "sName":"devicenumber","mData": "devicenumber","bSortable": false,"bVisible": true, "aTargets": [2] },
-      { "sName":"cretime","mData": "cretime","bSortable": false,"bVisible": true, "aTargets": [3] },
-      { "sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [4] }
-    ]
+    aoColumnDefs: getColums(),
+     oTableTools: {
+             sSwfPath: "/css/datatable/css/swf/copy_csv_xls_pdf.swf",
+             aButtons: [{
+          "sExtends": "copy",
+          "sButtonText": "复制"
+        },{
+                  "sExtends": "xls",
+                    "sButtonText": "导出该页" ,
+                     "bFooter": false,
+                    "sFileName": "列表.xls" 
+                },
+     { 
+      "sExtends": "extxls", 
+      "sAjaxUrl": ajaxUrl,
+      "sKeys":getToolWhere().sColumns.split(','), 
+      "sButtonText": "导出全部",
+      "bFooter": false,
+      "fnParameters":function(){return getToolWhere();},
+      "sFileName": "列表.xls"  
+     },{ 
+      "sExtends": "download", 
+      "sUrl": '/PBXExtension/table',
+      "sKeys": ['accountcode'], 
+      "sButtonText": "下载",
+      "bFooter": false,
+      "aoPost":[{name:'accountcode',value:8001}],
+      "sFileName": "列表.xls"  
+     },{
+      "sExtends":"print",
+      "sButtonText": "打印该页" ,
+      "sInfo": "<h6>打印本页</h6><p>请使用浏览器的打印功能 " + "打印本页. 按ESC键退出.</p>",
+      "sMessage": "列表",
+      "bShowAll": true
+     } 
+                                
+                                                   
+                              ]
+  },
+    //fnRowCallback fnCreatedRow
+     fnRowCallback: function( nRow, aData, iDataIndex ) {
+      $(nRow).click(function(e){
+        var self=this;
+        if ( $(self).hasClass('row_selected') ) {
+            $(self).removeClass('row_selected');
+        }
+        else {
+            oTable.$('tr.row_selected').removeClass('row_selected');
+            $(self).addClass('row_selected');
+        }
+      });
+    }
    
 });
+
+
 
 $('#search').click(function(){
  var oTable=$('#datatable').dataTable();
  oTable.fnDraw();
 });
+
+$('#createexten').click(function(){
+  var DeviceProto=$('#DeviceProto').val();
+  location.href='/PBXExtension/create?deviceproto='+DeviceProto;
 });
 
-function datatable(){
+}).keydown(function(){ 
+if(event.keyCode == 13) 
+$("#search").click();}
+);
+
+function getWhere(){
+var where={};
+where.dbName='PBXExtension';
+//gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
+where.whereCount=2;//添加需要查询的条件个数
+where.whereCol_0='accountcode';
+where.whereWay_0='like';
+where.whereValue_0='%'+$('#accountcode').val()+'%';
+where.whereCol_1='deviceproto';
+where.whereWay_1='';
+where.whereValue_1=$('#deviceproto').val();
+return where;
+}
+
+function getToolWhere(){
+  var where=getWhere();
+  var toolswhere={};
+for(var key in where){
+  toolswhere[key]=where[key];
+}
+
+toolswhere.sColumns='';
+
+var colums=getColums();
+toolswhere.iSortingCols=0;
+for(var i=0;i<colums.length;i++){
+ if(toolswhere.sColumns!=='')
+  toolswhere.sColumns+=','+colums[i].mData;
+else
+  toolswhere.sColumns=colums[i].mData;
+
+if(colums[i].asSorting && colums[i].asSorting.length>0){
+  toolswhere['iSortCol_'+toolswhere.iSortingCols]=toolswhere.iSortingCols;
+  toolswhere['sSortDir_'+toolswhere.iSortingCols]=colums[i].asSorting[0];
+   toolswhere['bSortable_'+toolswhere.iSortingCols]=colums[i].bSortable;
+  
+  toolswhere.iSortingCols++;
 
 }
+
+}
+
+toolswhere.iDisplayStart=0;
+toolswhere.iDisplayLength=-1;
+return toolswhere;
+}
+
+function getColums(){
+  var colums=[
+      {"asSorting": [ "asc" ], "sClass":'center',"sName":"accountcode","mData": "accountcode","bSortable": true,"bVisible": true, "aTargets": [0] },
+      { "sClass":'center',"sName":"deviceproto","mData": "deviceproto","bSortable": false,"bVisible": true, "aTargets": [1] },
+      { "sClass":'center',"sName":"devicenumber","mData": "devicenumber","bSortable": false,"bVisible": true, "aTargets": [2] },
+      { "sClass":'center',"sName":"cretime","mData": "cretime","bSortable": false,"bVisible": true, "aTargets": [3] },
+      { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [4] ,"mRender": function ( data, type, full ) {
+        var str='<a class="btn btn-primary btn-xs" href="javascript:edit('+data+');">编辑</a>';
+            str+='<a class="btn btn-danger btn-xs" href="javascript:edit('+data+');">删除</a>'
+        return str;
+      }}
+    ];
+    return colums;
+}
+
 </script>

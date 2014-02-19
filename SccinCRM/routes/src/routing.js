@@ -59,6 +59,13 @@ routes.builddbdata = [{
 	fn: 'get'
 }];
 
+routes.pagination=[{
+	urlreg: '/pagination',
+	file: '/pagination',
+	method: 'post',
+	fn: 'post'
+}];
+
 routes.PBXExtension=[{
 	urlreg: '/PBXExtension',
 	file: '/PBXExtension',
@@ -66,10 +73,10 @@ routes.PBXExtension=[{
 	fn: 'list'
 },
 {
-	urlreg: '/PBXExtension/table',
+	urlreg: '/PBXExtension/create',
 	file: '/PBXExtension',
-	method: 'post',
-	fn: 'table'
+	method: 'get',
+	fn: 'create'
 }
 ];
 routes.asami = [{
