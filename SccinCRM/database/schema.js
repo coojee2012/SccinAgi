@@ -1,7 +1,10 @@
 var fs = require('fs');
 var schema = require('./jdmysql').schema;
 var dirname = __dirname;
-var path = dirname + '/../modules/build/';
+var conf = require('node-conf');
+var appconf=conf.load('app');
+var SRCFILE=appconf.debug?'src':'build';
+var path = dirname + '/../modules/'+SRCFILE+'/';
 var guid = require('guid');
 var Schemas = {};
 
@@ -17,25 +20,12 @@ for (var i in files) {
 }
 
 
-
+if(appconf.debug){
 schema.automigrate(function() {
     console.log('创建表');
-    Schemas['CallRecords'].create({
-        id: guid.create(),
-        ProjExpertID: "ProjExpertID"
-    }, function(err, callrecord) {
-        Schemas['VoiceContent'].create({
-            Contents: '111',
-            id: guid.create(),
-            callrecord: callrecord
-        }, function(err, v) {
-            console.log(v);
-        });
-    });
-
-
 
 });
+}
 
 schema.isActual(function(err, actual) {
     if (!actual) {

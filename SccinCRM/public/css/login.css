@@ -1,0 +1,80 @@
+@charset "utf-8";
+/*File Name:login.css*/
+/*Project Name:登陆*/
+/*Version:1.0(2014-1)*/
+/*Author:ChenCixu*/
+body, html { font-size: 12px; font-family: "微软雅黑", "宋体", Arial, Helvetica, sans-serif; }
+html { color: #000; background:url(/images/login/page_bg.png); }
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; }
+table { border-collapse: collapse; }
+button { cursor: pointer; }
+button, input, select { font-family: "微软雅黑", "宋体", Arial, Helvetica, sans-serif; }
+fieldset, img { border: none; }
+em, th { font-style: normal; font-weight: normal; }
+li { list-style: none; }
+h1, h2, h3, h4, h5, h6 { font-size: 100%; }
+h1 { font-size: 18px; }
+h2 { font-size: 16px; }
+h3 { font-size: 14px; }
+h4 { font-size: 12px; }
+a { text-decoration: none; color: #000 }
+a:hover { text-decoration: underline; color: #000 }
+.red a, .red { color: #F30 }
+.red a:hover { color: #F30 }
+.blue, .blue a { color: #16C }
+a.blue:hover { color: #16C }
+.gray, .gray a { color: #999 }
+.green, .green a { color: #066601 }
+.fl { float: left; }
+.fr { float: right }
+.f_bold { font-weight: bold }
+.disNo { display: none }
+/* CSS空白 */
+.blank1, .blank3, .blank6, .blank8, .blank10, .blank16, .blank20 { margin: 0px auto; padding: 0px; font-size: 0px; line-height: 0px; clear: both; }
+.blank1 { height: 1px; }
+.blank3 { height: 3px; }
+.blank6 { height: 6px; }
+.blank8 { height: 8px; }
+.blank10 { height: 10px; }
+.blank16 { height: 16px; }
+.blank20 { height: 20px; }
+.clearfix:after { content: "\0020"; display: block; height: 0; clear: both }
+.clearfix { _zoom: 1 }
+*+html .clearfix { overflow: hidden }
+.h_nav, .h_search { width: 960px; margin: 0 auto; clear: both }
+/*头部*/
+#header { padding: 0; height:77px; margin-top:0px; background:url(/images/login/sys_name.png) center no-repeat; }
+#warp{ background:url(/images/login/box_c_bg.png) repeat-x; height:438px; margin-top:-2px}
+.page_pos{height:500px; position:absolute; top:50%; margin-top:-310px; width:100%;}
+.pageBody { width: 940px; padding:30px 30px 10px 30px; height:388px; margin: 0px auto; clear: both; background:url(/images/login/login_banner.jpg) no-repeat; }
+/*登录页面左侧内容区*/
+.loginLeft { float: left; width: 504px; height: 330px; padding-top: 12px; }
+/*登录页面右侧内容区*/
+.loginRight { float: right; width: 346px; height: 340px; }
+.login { width: 325px; height: 319px; clear: both; background: url(/images/login/login_box_bg.png) 0px 0px no-repeat; }
+
+/*用户名,密码*/
+.login .Contentbox { background-position: -335px 0px; background-repeat: repeat-y; clear: both; padding: 50px 20px 5px 30px; }
+.login_box{ padding-top:10px;}
+.login_box ul{ padding:0px; clear:both}
+.login_box ul li{ clear:both;  height:30px; line-height:30px; padding:10px 0px;}
+.login_box ul li.validation_tip{ height:16px; line-height:16px; padding:0px 0px 0px 60px; color:#FF0000}
+.login_box ul li label{ float:left; width:80px; text-align:left; font-size:14px}
+.login_box ul li input{ float:left; background-color:#FFFFFF; font-size:14px; width:178px; border:1px solid #999; border-color:#AAA #DDD #DDD #AAA; height:28px; line-height:28px; padding:1px 4px;}
+.login_box ul li input.in_focus{ border:2px solid #09C; margin-top:-2px}
+.login_box ul li select{ float:left; font-size:12px; border:1px solid #999;height:24px; line-height:24px; width:178px; padding:1px 0px;}
+.login_box ul li.code input{ width:87px;}
+.login_box ul li.code img { float: left; width: 80px; height: 32px; padding-left: 10px; }
+.login_box ul li.btn{ padding-left:80px;}
+.login_box ul li.btn a{ float:left; margin-left:5px; width:80px; line-height:30px; color:#0066CC}
+.login_go,.login_re,.login_go_hover{ height:33px; width:88px; border:none; line-height:28px; float:left;}
+.login_go{ background:url(/images/login/btn_go.png) no-repeat; margin-right:10px;}
+.login_go:hover,.login_go_hover{background:url(/images/login/btn_go.png) no-repeat 0px -33px;}
+
+/*网站底部信息*/
+.foot { clear: both; padding: 3px; text-align: center; height: 56px; }
+.foot p, .foot p a { font-weight: normal; color:#ACD1F7; line-height: 22px; }
+.foot .police { float: left; padding-left: 320px; height: 56px; }
+.foot .police a { background: url(/images/login/police.gif) no-repeat 0px center; display: inline-block; height: 56px; width: 40px; }
+.foot .copyright { float: left; height: 56px; padding-left: 10px; }
+.foot .copyright a { color: #0066CC; }

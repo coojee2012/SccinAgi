@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title><%= locals.title%></title>
+<link href="/css/login.css" rel="stylesheet"  type="text/css" />
+</head>
+<body>
+<div class="page_pos">
+<div id="header">
+  <div id="site-top">
+    <div id="logo"></div>
+  </div>
+</div>
+<!--网站主体内容区-->
+<div id="warp">
+<div class="pageBody">
+  <div class="loginLeft">
+  <div class="login_banner">
+  
+  </div>
+  </div>
+  <div class="loginRight">
+    <!--用户登录-->
+    <div class="login">
+      <!--<h2>用户登录</h2>-->
+      <form id='form1' method='POST' action='/'>
+      <div class="Contentbox">
+        <div class="login_box">
+      <ul>
+        
+		<li><label>用户账号：</label><input type="text" id="username" name="username" value="<%= username%>" /></li>
+        <li><label>登陆密码：</label><input type="password" id="password" name="password" value="<%= password%>"/></li>
+		<li class="code" ><label>动态分机：</label><input type="text" id="exten" name="exten" value="<%= exten%>" /></li>
+		<li class="validation_tip"><%= tip%></li>
+        <li class="btn"><button type="submit" class="login_go"</button></li>
+      </ul>
+	</div>
+      </div>
+  </form>
+
+    </div>
+  </div>
+</div></div>
+<!--网站底部-->
+<div class="foot">
+  <p>Copyright Reserved &copy; 北京市经济信息中心，2010-2013 版权所有 </p>
+</div>
+</div>
+</body>
+</html>

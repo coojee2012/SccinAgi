@@ -16,146 +16,176 @@ module.exports = routes;
 
 routes.index = [{
 		urlreg: '/',
-		file: '/routes/build/index',
+		file: '/index',
 		method: 'get',
 		fn: 'get'
 	},
-
 	{
 		urlreg: '/',
-		file: '/routes/build/index',
+		file: '/index',
 		method: 'post',
 		fn: 'post'
 	}
 ];
 
-routes.builddbdata = [{
-		urlreg: '/builddata',
-		file: '/routes/build/builddbdata',
+routes.login = [{
+		urlreg: '/login',
+		file: '/login',
 		method: 'get',
 		fn: 'get'
+	},
+	{
+		urlreg: '/login',
+		file: '/login',
+		method: 'post',
+		fn: 'post'
 	}
 ];
 
 
+routes.autoDial = [{
+	urlreg: '/autoDial',
+		file: '/autoDial',
+		method: 'all',
+		fn: 'all'
+	}
+];
+
+
+routes.builddbdata = [{
+	urlreg: '/builddbdata',
+	file: '/builddbdata',
+	method: 'get',
+	fn: 'get'
+}];
+
+routes.PBXExtension=[{
+	urlreg: '/PBXExtension',
+	file: '/PBXExtension',
+	method: 'all',
+	fn: 'list'
+},
+{
+	urlreg: '/PBXExtension/table',
+	file: '/PBXExtension',
+	method: 'post',
+	fn: 'table'
+}
+];
 routes.asami = [{
 		urlreg: '/asami/getconfig',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'getconfig'
-	},
-
-	{
+	},{
 		urlreg: '/asami/getconfigjson',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'getconfigjson'
-	},
-
-	{
+	},{
 		urlreg: '/asami/createconfig',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'createconfig'
 	},
 
 	{
 		urlreg: '/asami/coreshowchannels',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'coreshowchannels'
 	},
 
 	{
 		urlreg: '/asami/extensionstate',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'extensionstate'
 	},
 
 	{
 		urlreg: '/asami/command',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'command'
 	}, {
 		urlreg: '/asami/status',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'status'
 	}, {
 		urlreg: '/asami/hangup',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'hangup'
 	}, {
 		urlreg: '/asami/DadOn',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'DadOn'
 	}, {
 		urlreg: '/asami/transfer',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'transfer'
 	}, {
 		urlreg: '/asami/packCall',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'packCall'
 	}, {
 		urlreg: '/asami/unPark',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'unPark'
 	}, {
 		urlreg: '/asami/checkService',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'checkService'
 	},
 
 	{
 		urlreg: '/asami/GetCallInfo',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'GetCallInfo'
 	},
 
 	{
 		urlreg: '/asami/hangupexten',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'hangupexten'
 	},
 
 	{
 		urlreg: '/asami/ping',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'ping'
 	}, {
 		urlreg: '/asami/dialout',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'dialout'
 	}, {
 		urlreg: '/asami/sippeers',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'sippeers'
 	}, {
 		urlreg: '/asami/autodial',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'autodial'
 
 	}, {
 		urlreg: '/asami/getresult',
-		file: '/routes/build/asami',
+		file: '/asami',
 		method: 'all',
 		fn: 'getresult'
-		
+
 	}
 
 ];
