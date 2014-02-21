@@ -14,7 +14,7 @@
     "guid": "*",
     "mysql": "*",
     "express": "3.4.8",
-    "ejs": "*",
+    "ejs": ">=0.8.5",
     "async": ">=0.2.9",
     "express-partials":"*",
     "moment": "*",

@@ -3,13 +3,13 @@ var async = require('async');
 
 exports.post = function(req, res) {
 	console.log('BODY:', req.body);
-	var dbName=req.body['dbName'];
+	var dbName = req.body['dbName'];
 	//查询起始页面，第一页是0
 	var iDisplayStart = req.body['iDisplayStart'];
 	//每页长度
 	var iDisplayLength = req.body['iDisplayLength'];
-	if(iDisplayLength==-1)
-		iDisplayLength=10000;
+	if (iDisplayLength == -1)
+		iDisplayLength = 10000;
 	var iColumns = parseInt(req.body['iColumns']);
 	var sColumns = req.body['sColumns'].split(',');
 
@@ -54,6 +54,12 @@ exports.post = function(req, res) {
 	}
 	console.log("查询条件:", where);
 
+	var include = new Array();
+	for (var key in Schemas[dbName].relations) {
+		include.push(key);
+	}
+	console.log("具有的关系:", include);
+
 	async.auto({
 		count: function(cb) {
 			Schemas[dbName].count(where, function(err, counts) {
@@ -62,6 +68,7 @@ exports.post = function(req, res) {
 		},
 		search: function(cb) {
 			Schemas[dbName].all({
+				include: include,
 				where: where,
 				order: sOrder,
 				skip: iDisplayStart,
@@ -80,7 +87,40 @@ exports.post = function(req, res) {
 			output.iTotalRecords = results.count;
 			output.iTotalDisplayRecords = results.count;
 			output.sEcho = req.body['sEcho'];
-			output.aaData = results.search;
+			output.aaData=[];
+			for (var i = 0; i < results.search.length; i++) {
+				var tempobj={};
+				for(var j=0;j<sColumns.length;j++){
+					if(results.search[i].__cachedRelations[sColumns[j]] && results.search[i].__cachedRelations[sColumns[j]]!==null){
+						tempobj[sColumns[j]]=results.search[i].__cachedRelations[sColumns[j]];
+					}else{
+						tempobj[sColumns[j]]=results.search[i][sColumns[j]];
+					}
+				}
+				output.aaData[i]=tempobj;
+
+
+			}
+
+			/*async.mapSeries(results.search, function(item,callback) {
+				var newitem={};
+				for(var key in item){
+					console.log(key);
+					newitem[key]=item[key];
+				}
+				//console.log(item.__cachedRelations['extensions']);
+				newitem['extensions'] = item.__cachedRelations['extensions'];
+				console.log(newitem);
+				callback(err,newitem);
+			}, function(err, results) {
+				output.aaData=results;
+				console.log('获取到列表数据：', output);
+				res.send(output);
+			});*/
+
+			//output.aaData = results.search;
+			//console.log(results.search[0].__cachedRelations);
+			console.log('获取到列表数据：', output);
 			res.send(output);
 		}
 

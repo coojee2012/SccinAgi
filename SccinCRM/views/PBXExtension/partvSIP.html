@@ -1,0 +1,32 @@
+<tr>
+ <th>主机地址</th>
+ <td><input type="text" id="str_host" name="str_host" class="form-control input-sm" value='dynamic'>
+<span class="help-block">分机的的IP地址，如果分机不是固定IP，请保留dynamic。</span>
+  </td>
+   </tr>
+          <tr>
+            <th>私网穿透</th>
+            <td>
+              <label class="radio-inline">
+  <input type="radio" id="natyes" name='str_nat' value="yes" >是
+</label>           <label class="radio-inline">
+  <input type="radio" id="natno" name='str_nat' value="no" checked='checked' >否
+</label>
+           
+              <span class="help-block">NAT。可保证处于防火墙后面的分机可以轻松穿透防火墙。</span>
+            </td>
+          </tr>
+          <tr>
+            <th>保活时长</th>
+            <td><input type="text" id="str_keepalive" name="str_keepalive" class="form-control input-sm" value='2000'><span class="input-group-addon">毫秒</span>
+            </td>
+          </tr>
+          <tr>
+            <th>自定义变量</th>
+            <td><input type="text" id='str_setvar' name='str_setvar' class="form-control input-sm"><span class="help-block">用于将指定的参数传递到呼叫流程，实用于二次开发。</span></td>
+          </tr>
+        
+          <tr>
+            <th>最大并发</th>
+            <td><input type="text" id='str_call-limit' name="str_call-limit" class="form-control input-sm"><span class="help-block">允许本机最大同时呼叫量，包括呼入和呼出，默认限制为1。</span></td>
+          </tr>

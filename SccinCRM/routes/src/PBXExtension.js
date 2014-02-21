@@ -1,7 +1,9 @@
 var Schemas = require('../../database/schema').Schemas;
 var async = require('async');
 
+//ajax验证函数集合
 var checkFun = {};
+//分机号验证
 checkFun['accountcode'] = function(accountcode, res) {
 	if (!accountcode || accountcode == '') {
 		res.send({
@@ -32,6 +34,7 @@ checkFun['accountcode'] = function(accountcode, res) {
 	}
 };
 
+//分机列表显示
 exports.list = function(req, res) {
 
 	res.render('PBXExtension/list.html', {
@@ -51,18 +54,68 @@ exports.upsert = function(req, res) {
 	});
 }
 
+//展现新建页面
+//页面传入deviceproto参数，根据deviceproto值表现不同协议的分机新建页面
 exports.create = function(req, res) {
 	var deviceproto = req.query['deviceproto'];
 	if (!deviceproto || deviceproto == '')
 		deviceproto = 'SIP';
-	res.render('PBXExtension/create' + deviceproto + '.html', {
-		username: '',
-		password: '',
-		exten: '',
-		tip: ''
+	res.render('PBXExtension/create.html', {
+		deviceproto: deviceproto,
+		partv: 'partv' + deviceproto + '.html'
+	});
+}
+//展现编辑页面
+exports.edit = function(req, res) {
+	var id = req.query['id'];
+	Schemas['PBXExtension'].find(id, function(err, inst) {
+		if (err)
+			res.redirect(500, '/err/500');
+		else {
+			if (inst != null)
+				res.render('PBXExtension/edit.html', {
+					inst: inst,
+					partv: 'partv' + inst.deviceproto + '.html'
+				});
+			else {
+				res.redirect(404, '/err/404');
+			}
+		}
 	});
 }
 
+exports.delete = function(req, res) {
+	var id = req.body['id'];
+	Schemas['PBXExtension'].find(id, function(err, inst) {
+		var myjson = {};
+		if (err) {
+			myjson.success = 'ERROR';
+			myjson.msg = '查询数据发生异常,请联系管理员！';
+		} else {
+			if (!inst) {
+				myjson.success = 'ERROR';
+				myjson.msg = '没有找到需要删除的数据！';
+			} else {
+
+			}
+			inst.destroy(function(err) {
+				if (err) {
+					myjson.success = 'ERROR';
+					myjson.msg = '删除数据发生异常,请联系管理员！！';
+				} else {
+					myjson.success = 'OK';
+					myjson.msg = '删除成功！';
+				}
+				res.send(myjson);
+
+			});
+
+		}
+
+	});
+}
+
+//保存分机信息（适用于新增和修改）
 exports.save = function(req, res) {
 	var extenObj = {};
 	extenObj.devicestring = '';
@@ -75,29 +128,76 @@ exports.save = function(req, res) {
 		}
 	}
 	extenObj.devicestring += 'secret=' + req.body['password'] + '&';
-	extenObj.devicestring = extenObj.devicestring.toString().substring(0,extenObj.devicestring.length-1);
-
-	extenObj.id = extenObj.accountcode;
+	extenObj.devicestring = extenObj.devicestring.toString().substring(0, extenObj.devicestring.length - 1);
 	extenObj.devicenumber = extenObj.accountcode;
+	async.auto({
+			isHaveCheck: function(cb) {
+				Schemas['PBXExtension'].find(extenObj.id, function(err, inst) {
+					cb(err, inst);
+				});
+			},
+			createNew: ['isHaveCheck',
+				function(cb, results) {
+					if (results.isHaveCheck !== null) { //如果存在本函数什么都不做
+						cb(null, -1);
+					} else {
+						extenObj.id = extenObj.accountcode;
+						Schemas['PBXExtension'].create(extenObj, function(err, inst) {
+							cb(err, inst);
 
-
-	Schemas['PBXExtension'].create(extenObj, function(err, inst) {
-		if (err) {
-			res.send({
-				success: 'ERROR',
-				msg: '保存数据发生异常,请联系管理员！'
-			});
-		} else {
-			res.send({
-				success: 'OK',
-				msg: '保存成功'
-			});
-		}
-	});
-
-
+						});
+					}
+				}
+			],
+			updateOld: ['isHaveCheck',
+				function(cb, results) {
+					if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
+						cb(null, -1);
+					} else {
+						Schemas['PBXExtension'].update({
+							where: {
+								id: extenObj.id
+							},
+							update: extenObj
+						}, function(err, inst) {
+							cb(err, inst);
+						});
+					}
+				}
+			]
+		},
+		function(err, results) {
+			var myjson = {
+				success: '',
+				id: '',
+				msg: ''
+			};
+			if (results.createNew !== -1) {
+				results.createNew.isValid(function(valid) {
+					if (!valid) {
+						myjson.success = 'ERROR';
+						myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
+					} else {
+						myjson.success = 'OK';
+						myjson.msg = '新增成功!';
+						myjson.id = results.createNew.id;
+					}
+				});
+			} else if (results.updateOld !== -1) {
+						myjson.success = 'OK';
+						myjson.msg = '修改成功!';
+						myjson.id = results.updateOld.id;
+					
+			} else if (err) {
+				console.log(err);
+				myjson.success = 'ERROR';
+				myjson.msg = '保存数据发生异常,请联系管理员！';
+			}
+			res.send(myjson);
+		});
 }
 
+//处理页面需要的Ajax验证
 exports.checkAjax = function(req, res) {
 	var param = req.body['param'];
 	var name = req.body['name'];

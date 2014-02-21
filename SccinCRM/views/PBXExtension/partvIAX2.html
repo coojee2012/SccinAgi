@@ -1,0 +1,34 @@
+<tr>
+ <th>主机地址</th>
+ <td><input type="text" id="str_host" name="str_host" class="form-control input-sm" value='dynamic'>
+<span class="help-block">分机使用的IP地址，如果分机不是固定IP，请保留dynamic。</span>
+  </td>
+   </tr>
+    <tr>
+            <th>端口</th>
+            <td><input type="text" id="str_port" name="str_port" class="form-control input-sm" value='4569'>
+              <span class="help-block">分机使用的注册端口。</span>
+            </td>
+          </tr>
+          <tr>
+            <th>转发参数</th>
+            <td>
+              <label class="radio-inline">
+  <input type="radio"  name='str_transfer' value="yes" >是
+</label>           <label class="radio-inline">
+  <input type="radio"  name='str_transfer' value="no" checked='checked' >否
+</label>
+ <label class="radio-inline">
+  <input type="radio"  name='str_transfer' value="mediaonly"  >媒体流
+</label>
+           
+              
+            </td>
+          </tr>
+         
+          <tr>
+            <th>自定义变量</th>
+            <td><input type="text" id='str_setvar' name='str_setvar' class="form-control input-sm"><span class="help-block">用于将指定的参数传递到呼叫流程，实用于二次开发。</span></td>
+          </tr>
+        
+       

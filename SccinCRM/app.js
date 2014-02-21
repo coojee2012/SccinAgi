@@ -1,5 +1,5 @@
 /**
- * Module dependencies.
+ * 模块依赖.
  */
 
 var express = require('express');
@@ -19,7 +19,7 @@ var SRCFILE = appconf.debug ? 'src' : 'build';
 log4js.configure(logconf);
 
 var app = express();
-// all environments
+// 所有环境设置
 app.set('port', process.env.PORT || appconf.hostport);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -41,7 +41,7 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-// development only
+// 开发环境配置
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }

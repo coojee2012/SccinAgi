@@ -79,6 +79,18 @@ routes.PBXExtension=[{
 	fn: 'create'
 },
 {
+	urlreg: '/PBXExtension/edit',
+	file: '/PBXExtension',
+	method: 'get',
+	fn: 'edit'
+},
+{
+	urlreg: '/PBXExtension/delete',
+	file: '/PBXExtension',
+	method: 'post',
+	fn: 'delete'
+},
+{
 	urlreg: '/PBXExtension/save',
 	file: '/PBXExtension',
 	method: 'post',
@@ -91,6 +103,12 @@ routes.PBXExtension=[{
 	fn: 'checkAjax'
 }
 ];
+routes.PBXExtenGroup=[{
+	urlreg: '/PBXExtenGroup',
+	file: '/PBXExtenGroup',
+	method: 'all',
+	fn: 'list'
+}];
 routes.asami = [{
 		urlreg: '/asami/getconfig',
 		file: '/asami',

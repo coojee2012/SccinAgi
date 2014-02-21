@@ -3,23 +3,14 @@
     <div class="column form-column main col form-horizontal">
       <div class="panel panel-default fieldset">
         <div class="panel-heading"> 
-        <button data-toggle="modal" data-target="#myModal" class="btn btn-primary">新建分机</button>
+        <button data-toggle="modal" data-target="#myModal" class="btn btn-primary">新建分机分组</button>
         </div>
         <div class="panel-body ">
           <div class="form-group">
-            <label for="accountcode" class="control-label col-sm-2">分机号码</label>
+            <label for="groupname" class="control-label col-sm-2">分组名称</label>
             <div class="controls  col-sm-3">
-              <input type="text" value="" name="accountcode" id="accountcode"  class="form-control input-sm"> 
+              <input type="text" value="" name="groupname" id="groupname"  class="form-control input-sm"> 
             </div>
-            <label for="deviceproto" class="control-label col-sm-2">分机类型</label>
-            <div class="controls  col-sm-3">            
-                    <select name="deviceproto" id="deviceproto" class="form-control input-sm">
-                      <option value="">全部</option>
-                      <option value="SIP">SIP</option>
-                      <option value="IAX2">IAX2</option>
-                      <option value="VIRTUAL">虚拟分机</option>
-                      </select>
-              </div>
               <div class="controls  col-sm-2">
                 <input type="button" class="btn btn-primary btn-sm" id="search" value="查询">
               </div>             
@@ -33,15 +24,17 @@
       <colgroup>
       <col style="width: 15%;">
       <col style="width: 15%;">
+      <col style="width: 10%;">
       <col style="width: 15%;">
-      <col style="width: 20%;">
-      <col style="width: 35%;">
+      <col style="width: 15%;">
+      <col style="width: 30%;">
       </colgroup>
       <thead>
         <tr>
-          <th>分机号</th>
-          <th>分机类型</th>
-          <th>设备号</th>
+          <th>分组编号</th>
+          <th>分组名称</th>
+          <th>成员(数)</th>
+          <th>备注</th>
           <th class="text-center">创建时间</th>
           <th class="text-center">操作</th>
         </tr>
@@ -49,55 +42,22 @@
       <tbody>
 </tbody>
 <tfoot>
-    <tr>
-     <th>分机号</th>
-          <th>分机类型</th>
-          <th>设备号</th>
+     <tr>
+          <th>分组编号</th>
+          <th>分组名称</th>
+          <th>成员(数)</th>
+          <th>备注</th>
           <th class="text-center">创建时间</th>
           <th class="text-center">操作</th>
-    </tr>
+        </tr>
   </tfoot>
 </table>
-</div>
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">请选择分机类型</h4>
-      </div>
-      <div class="modal-body">
-      <!--弹出内容-->
-        <div class="column form-column main col form-horizontal">
-          <div class="panel-body ">
-          <div class="form-group">
-           <label for="DeviceProto" class="control-label col-sm-3">分机类型</label>
-            <div class="controls  col-sm-7">            
-                    <select name="DeviceProto" id="DeviceProto" class="form-control input-sm">
-                      <option value="SIP">SIP</option>
-                      <option value="IAX2">IAX2</option>
-                      <option value="VIRTUAL">虚拟分机</option>
-                      </select>
-              </div>
-            <label for="ExtenMemo" class="control-label col-sm-3">说&nbsp;&nbsp;&nbsp;&nbsp;明</label>
-            <div class="controls  col-sm-7">            
-            <textarea id="ExtenMemo" rows="3" cols="50" readonly="readonly"></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="createexten">提交</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 
 <script type="text/javascript">
 $(function(){
+  $('#datatable').tooltip();
 var ajaxUrl="/pagination";
 var oTable=$('#datatable').dataTable({
   sDom: "<'row'<'col-sm-4'l><'col-sm-4'f><'col-sm-4'T>r>t<'row'<'col-sm-4'i><'col-sm-8 center'p>>",
@@ -140,14 +100,6 @@ var oTable=$('#datatable').dataTable({
       "sButtonText": "导出全部",
       "bFooter": false,
       "fnParameters":function(){return getToolWhere();},
-      "sFileName": "列表.xls"  
-     },{ 
-      "sExtends": "download", 
-      "sUrl": '/PBXExtension/table',
-      "sKeys": ['accountcode'], 
-      "sButtonText": "下载",
-      "bFooter": false,
-      "aoPost":[{name:'accountcode',value:8001}],
       "sFileName": "列表.xls"  
      },{
       "sExtends":"print",
@@ -195,15 +147,12 @@ $("#search").click();}
 
 function getWhere(){
 var where={};
-where.dbName='PBXExtension';
+where.dbName='PBXExtenGroup';
 //gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
-where.whereCount=2;//添加需要查询的条件个数
-where.whereCol_0='accountcode';
+where.whereCount=1;//添加需要查询的条件个数
+where.whereCol_0='groupname';
 where.whereWay_0='like';
-where.whereValue_0='%'+$('#accountcode').val()+'%';
-where.whereCol_1='deviceproto';
-where.whereWay_1='';
-where.whereValue_1=$('#deviceproto').val();
+where.whereValue_0='%'+$('#groupname').val()+'%';
 return where;
 }
 
@@ -242,11 +191,17 @@ return toolswhere;
 
 function getColums(){
   var colums=[
-      {"asSorting": [ "asc" ], "sClass":'center',"sName":"accountcode","mData": "accountcode","bSortable": true,"bVisible": true, "aTargets": [0] },
-      { "sClass":'center',"sName":"deviceproto","mData": "deviceproto","bSortable": false,"bVisible": true, "aTargets": [1] },
-      { "sClass":'center',"sName":"devicenumber","mData": "devicenumber","bSortable": false,"bVisible": true, "aTargets": [2] },
-      { "sClass":'center',"sName":"cretime","mData": "cretime","bSortable": false,"bVisible": true, "aTargets": [3] },
-      { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [4] ,"mRender": function ( data, type, full ) {
+      {"asSorting": [ "asc" ], "sClass":'center',"sName":"id","mData": "id","bSortable": true,"bVisible": true, "aTargets": [0] },
+      { "sClass":'center',"sName":"groupname","mData": "groupname","bSortable": false,"bVisible": true, "aTargets": [1] },
+      { "sClass":'center',"sName":"extensions","mData": "extensions","bSortable": false,"bVisible": true, "aTargets": [2],"mRender":function(data,type,full){
+        if(data!=null){
+          var str='<div><span data-toggle="tooltip" data-placement="right" title="Tooltip on right">提示</span></div>';
+          return str;
+        }
+      } },
+      { "sClass":'center',"sName":"memo","mData": "memo","bSortable": false,"bVisible": true, "aTargets": [3] },
+      { "sClass":'center',"sName":"cretime","mData": "cretime","bSortable": false,"bVisible": true, "aTargets": [4] },
+      { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [5] ,"mRender": function ( data, type, full ) {
         var str='<a class="btn btn-primary btn-xs" href="/PBXExtension/edit?id='+data+'">编辑</a>';
             str+='<a class="btn btn-danger btn-xs" href="javascript:delexten('+data+');">删除</a>'
         return str;
@@ -273,5 +228,7 @@ function delexten(id){
                 }
             }); 
 }
+
+
 
 </script>

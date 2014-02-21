@@ -262,6 +262,17 @@ exports.get = function(req, res) {
 				});
 
 			},
+			setDefaultExtenGroup:function(cb){
+				var groups=[{id:0,groupname:'技术支持组',memo:'技术支持组'},{id:1,groupname:'客户服务组',memo:'客户服务组'}];
+				async.forEach(groups, function(item, callback) {
+					Schemas['PBXExtenGroup'].create(item, function(err, inst) {
+						callback(err, inst);
+					});
+				}, function(err, result) {
+					cb(err, result);
+				});
+
+			},
 			setDefaultQueues:function(cb){
 					var queues=[
 				{id:'401',queuename:'测试队列401',members:'8001&8002&8003&8801'},

@@ -1,11 +1,12 @@
 <!--页面内容-->
   <div class="page_box">
   <div class="column form-column main col col-sm-9 form-horizontal">
-    <h1> <span class="label label-info">当前正在编辑<%= inst.deviceproto%>分机</span></h1>
+    <h1> <span class="label label-info">当前正在创建<%= deviceproto%>分机</span></h1>
     <div class="panel panel-default fieldset">
     <div class="formStyle">
       <form action='/PBXExtension/save' method='POST' id='form1'>
-        <input type="hidden" id='id' name='id' value="<%= inst.id%>"/>
+        <input type="hidden" id='id' name='id' value=""/>
+        <input type="hidden" id="deviceproto" name="deviceproto" value="<%= deviceproto%>" />
         <table>
           <colgroup>
           <col style="width:20%">
@@ -16,16 +17,16 @@
           <tr>
             <th>分机号码</th>
             <td>   
-            <input type="text" id='accountcode'  name='accountcode' value="<%= inst.accountcode%>" readonly="readonly"  class="form-control input-sm" />
+            <input type="text" id='accountcode'  name='accountcode' class="form-control input-sm" placeholder="只能是4-20位数字" datatype="n4-20" ajaxurl="/PBXExtension/checkAjax" sucmsg="验证通过！" errormsg="当前分机号验证不通过！" />
           </td>
           </tr>
           <tr>
             <th>数字密码</th>
-            <td><input type="password" id='password' name='password' value="<%= inst.password%>" class="form-control input-sm" placeholder="密码为4-15数字" datatype="n4-15" errormsg="密码范围在6~15位之间！" /></td>
+            <td><input type="password" id='password' name='password' class="form-control input-sm" placeholder="密码为4-15数字" datatype="n4-15" errormsg="密码范围在6~15位之间！" /></td>
           </tr>
           <tr>
             <th>密码确认</th>
-            <td><input type="password" value="<%= inst.password%>" class="form-control input-sm" placeholder="密码为4-15数字" datatype="*" recheck="password" errormsg="您两次输入的账号密码不一致！" /></td>
+            <td><input type="password" class="form-control input-sm" placeholder="密码为4-15数字" datatype="*" recheck="password" errormsg="您两次输入的账号密码不一致！" /></td>
           </tr>
           <tr>
            <th colspan="2" align='left'>高级设置</th> 
@@ -34,17 +35,17 @@
           <tr>
             <th>无应答处理方式</th>
             <td><select  class="form-control input-sm" id="failed" name="failed">
-                <option value="default" <%if(inst.failed==='default'){%> selected="selected" <%}%>>系统默认</option>
-                <option value="nothing" <%if(inst.failed==='nothing'){%> selected="selected" <%}%>>不处理</option>
-                <option value="transfer" <%if(inst.failed==='transfer'){%> selected="selected" <%}%>>呼叫转移</option>
-                <option value="ivr" <%if(inst.failed==='ivr'){%> selected="selected" <%}%>>IVR菜单</option>
-                <option value="voicemail" <%if(inst.failed==='voicemail'){%> selected="selected" <%}%>>语音留言</option>
-                <option value="fax" <%if(inst.failed==='fax'){%> selected="selected" <%}%>>数字传真</option>
+                <option value="default">系统默认</option>
+                <option value="nothing">不处理</option>
+                <option value="transfer">呼叫转移</option>
+                <option value="ivr">IVR菜单</option>
+                <option value="voicemail">语音留言</option>
+                <option value="fax">数字传真</option>
               </select></td>
           </tr>
           <tr>
             <th>无应答处理号码</th>
-            <td><input type="text" id="transfernumber" name="transfernumber" value="<%= inst.transfernumber%>" class="form-control input-sm" placeholder="号码格式，数字。" /></td>
+            <td><input type="text" id="transfernumber" name="transfernumber" class="form-control input-sm" placeholder="号码格式，数字。" /></td>
           </tr>         
         </table>
       </form>
@@ -56,13 +57,7 @@
       </div>
   </div>
 <script type='text/javascript'>
-var decivestring="<%- inst.devicestring %>";
 $(function(){
-var extobj=decivestring.split('&');
-extobj.forEach(function(item){
-var items=item.split('=');
-$('#str_'+items[0]).val(items[1]);
-});
 $('#form1').Validform();
 $('#savebtn').click(function(e){
 //href="/PBXExtension/save"
@@ -77,7 +72,11 @@ if($('#form1').Validform().check()){
                    $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
                 },
                 success: function(data) {
-                      $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                  if(data.success==='OK'){
+                    $('#id').val(data.id);
+                    $('#accountcode').attr('readonly','readonly');
+                  }
+                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
                 }
             }); 
 }else{
