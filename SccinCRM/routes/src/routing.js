@@ -77,6 +77,18 @@ routes.PBXExtension=[{
 	file: '/PBXExtension',
 	method: 'get',
 	fn: 'create'
+},
+{
+	urlreg: '/PBXExtension/save',
+	file: '/PBXExtension',
+	method: 'post',
+	fn: 'save'
+},
+{
+	urlreg: '/PBXExtension/checkAjax',
+	file: '/PBXExtension',
+	method: 'post',
+	fn: 'checkAjax'
 }
 ];
 routes.asami = [{

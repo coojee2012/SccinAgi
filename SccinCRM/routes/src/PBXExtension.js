@@ -1,6 +1,37 @@
 var Schemas = require('../../database/schema').Schemas;
 var async = require('async');
 
+var checkFun = {};
+checkFun['accountcode'] = function(accountcode, res) {
+	if (!accountcode || accountcode == '') {
+		res.send({
+			"info": "输入的分机号不能为空！",
+			"status": "n"
+		});
+	} else {
+		Schemas['PBXExtension'].find(accountcode, function(err, inst) {
+			if (err)
+				res.send({
+					"info": "后台验证发生错误！",
+					"status": "n"
+				});
+			else {
+				if (inst != null)
+					res.send({
+						"info": "分机已经存在！",
+						"status": "n"
+					});
+				else {
+					res.send({
+						"info": "验证通过！",
+						"status": "y"
+					});
+				}
+			}
+		});
+	}
+};
+
 exports.list = function(req, res) {
 
 	res.render('PBXExtension/list.html', {
@@ -21,7 +52,10 @@ exports.upsert = function(req, res) {
 }
 
 exports.create = function(req, res) {
-	res.render('PBXExtension/create.html', {
+	var deviceproto = req.query['deviceproto'];
+	if (!deviceproto || deviceproto == '')
+		deviceproto = 'SIP';
+	res.render('PBXExtension/create' + deviceproto + '.html', {
 		username: '',
 		password: '',
 		exten: '',
@@ -29,16 +63,66 @@ exports.create = function(req, res) {
 	});
 }
 
+exports.save = function(req, res) {
+	var extenObj = {};
+	extenObj.devicestring = '';
+	for (var key in req.body) {
+		if (/^str\_(\S+)/.test(key)) {
+			console.log(RegExp.$1);
+			extenObj.devicestring += RegExp.$1 + '=' + req.body[key] + '&';
+		} else {
+			extenObj[key] = req.body[key];
+		}
+	}
+	extenObj.devicestring += 'secret=' + req.body['password'] + '&';
+	extenObj.devicestring = extenObj.devicestring.toString().substring(0,extenObj.devicestring.length-1);
+
+	extenObj.id = extenObj.accountcode;
+	extenObj.devicenumber = extenObj.accountcode;
+
+
+	Schemas['PBXExtension'].create(extenObj, function(err, inst) {
+		if (err) {
+			res.send({
+				success: 'ERROR',
+				msg: '保存数据发生异常,请联系管理员！'
+			});
+		} else {
+			res.send({
+				success: 'OK',
+				msg: '保存成功'
+			});
+		}
+	});
+
+
+}
+
+exports.checkAjax = function(req, res) {
+	var param = req.body['param'];
+	var name = req.body['name'];
+	if (typeof(checkFun[name] === 'function')) {
+		checkFun[name](param, res);
+	} else {
+		res.send({
+			"info": "服务器验证异常:函数不存在！",
+			"status": "n"
+		});
+	}
+
+}
+
+
 
 exports.table = function(req, res) {
 	console.log('BODY:', req.body);
-	var dbName=req.body['dbName'];
+	var dbName = req.body['dbName'];
 	//查询起始页面，第一页是0
 	var iDisplayStart = req.body['iDisplayStart'];
 	//每页长度
 	var iDisplayLength = req.body['iDisplayLength'];
-	if(iDisplayLength==-1)
-		iDisplayLength=10000;
+	if (iDisplayLength == -1)
+		iDisplayLength = 10000;
 	var iColumns = parseInt(req.body['iColumns']);
 	var sColumns = req.body['sColumns'].split(',');
 
@@ -117,6 +201,6 @@ exports.table = function(req, res) {
 
 }
 
-exports.xls2all=function(req,res){
+exports.xls2all = function(req, res) {
 
 }

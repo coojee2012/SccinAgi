@@ -1,0 +1,114 @@
+<!--页面内容-->
+  <div class="page_box">
+  <div class="column form-column main col col-sm-9 form-horizontal">
+    <h1> <span class="label label-info">当前正在创建SIP分机</span></h1>
+    <div class="panel panel-default fieldset">
+    <div class="formStyle">
+      <form action='/PBXExtension/save' method='POST' id='form1'>
+        <input type="hidden" id="deviceproto" name="deviceproto" value="SIP" />
+        <table>
+          <colgroup>
+          <col style="width:20%">
+          </colgroup>
+          <tr>
+           <th colspan="2" align='left'>基本设置</th> 
+          </tr>
+          <tr>
+            <th>分机号码</th>
+            <td>   
+            <input type="text" id='accountcode'  name='accountcode' class="form-control input-sm" placeholder="只能是4-20位数字" datatype="n4-20" ajaxurl="/PBXExtension/checkAjax" sucmsg="验证通过！" errormsg="当前分机号验证不通过！">
+          </td>
+          </tr>
+          <tr>
+            <th>数字密码</th>
+            <td><input type="text" id='password' name='password' class="form-control input-sm" placeholder="密码为4-15数字" datatype="n4-15" errormsg="密码范围在6~15位之间！"></td>
+          </tr>
+          <tr>
+            <th>密码确认</th>
+            <td><input type="text" id='passwordagin' name='passwordagin' class="form-control input-sm" placeholder="密码为4-15数字" datatype="*" recheck="password" errormsg="您两次输入的账号密码不一致！"></td>
+          </tr>
+          <tr>
+           <th colspan="2" align='left'>高级设置</th> 
+          </tr>
+          <tr>
+            <th>主机地址</th>
+            <td><input type="text" id="str_host" name="str_host" class="form-control input-sm" value='dynamic'>
+              <span class="help-block">分机的的IP地址，如果分机不是固定IP，请保留dynamic。</span>
+            </td>
+          </tr>
+          <tr>
+            <th>私网穿透</th>
+            <td>
+              <label class="radio-inline">
+  <input type="radio" id="natyes" name='str_nat' value="yes" >是
+</label>           <label class="radio-inline">
+  <input type="radio" id="natno" name='str_nat' value="no" checked='checked' >否
+</label>
+           
+              <span class="help-block">NAT。可保证处于防火墙后面的分机可以轻松穿透防火墙。</span>
+            </td>
+          </tr>
+          <tr>
+            <th>保活时长</th>
+            <td><input type="text" id="str_keepalive" name="str_keepalive" class="form-control input-sm" value='2000'><span class="input-group-addon">毫秒</span>
+            </td>
+          </tr>
+          <tr>
+            <th>自定义变量</th>
+            <td><input type="text" id='str_setvar' name='str_setvar' class="form-control input-sm"><span class="help-block">用于将指定的参数传递到呼叫流程，实用于二次开发。</span></td>
+          </tr>
+        
+          <tr>
+            <th>最大并发</th>
+            <td><input type="text" id='str_call-limit' name="str_call-limit" class="form-control input-sm"><span class="help-block">允许本机最大同时呼叫量，包括呼入和呼出，默认限制为1。</span></td>
+          </tr>
+          <tr>
+            <th>无应答处理方式</th>
+            <td><select  class="form-control input-sm" id="transfernumber" name="transfernumber">
+                <option value="default">系统默认</option>
+                <option value="nothing">不处理</option>
+                <option value="transfer">呼叫转移</option>
+                <option value="ivr">IVR菜单</option>
+                <option value="voicemail">语音留言</option>
+                <option value="fax">数字传真</option>
+              </select></td>
+          </tr>
+          <tr>
+            <th>无应答处理号码</th>
+            <td><input type="text" id="failed" name="failed" class="form-control input-sm" placeholder="号码格式，数字。"></td>
+          </tr>         
+        </table>
+      </form>
+      </div>
+        <div class="panel-footer text-center">
+        <button  class="btn btn-primary active" id='savebtn'>保存</button>
+        <a href="/PBXExtension" class="btn btn-default" role="button">返回</a>
+        </div>
+      </div>
+  </div>
+<script type='text/javascript'>
+$(function(){
+$('#form1').Validform();
+$('#savebtn').click(function(e){
+//href="/PBXExtension/save"
+if($('#form1').Validform().check()){
+ $.ajax({
+                cache: true,
+                type: "POST",
+                url:'/PBXExtension/save',
+                data:$('#form1').serialize(),// 你的formid
+                async: false,
+                error: function(request) {
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                      $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                }
+            }); 
+}else{
+  $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+}
+
+});
+});
+</script>
