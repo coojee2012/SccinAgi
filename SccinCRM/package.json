@@ -13,9 +13,12 @@
     "log4js": "*",
     "guid": "*",
     "mysql": "*",
+    "mssql":">=0.5.0",
+    "tedious":">=0.1.5",
     "express": "3.4.8",
     "ejs": ">=0.8.5",
     "async": ">=0.2.9",
+    "nodegrass":">=0.0.3",
     "express-partials":"*",
     "moment": "*",
     "stylus": "*"
