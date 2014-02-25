@@ -3,7 +3,7 @@
     <div class="column form-column main col form-horizontal">
       <div class="panel panel-default fieldset">
         <div class="panel-heading"> 
-        <button data-toggle="modal" data-target="#myModal" class="btn btn-primary">新建分机分组</button>
+        <button data-toggle="modal" data-target="#myModal" class="btn btn-primary" id='createnew'>新建分机分组</button>
         </div>
         <div class="panel-body ">
           <div class="form-group">
@@ -23,15 +23,13 @@
    <table class="table table-striped table-hover table-condensed table-bordered" id="datatable">
       <colgroup>
       <col style="width: 15%;">
-      <col style="width: 15%;">
-      <col style="width: 10%;">
+      <col style="width: 25%;">
       <col style="width: 15%;">
       <col style="width: 15%;">
       <col style="width: 30%;">
       </colgroup>
       <thead>
         <tr>
-          <th>分组编号</th>
           <th>分组名称</th>
           <th>成员(数)</th>
           <th>备注</th>
@@ -43,7 +41,6 @@
 </tbody>
 <tfoot>
      <tr>
-          <th>分组编号</th>
           <th>分组名称</th>
           <th>成员(数)</th>
           <th>备注</th>
@@ -54,10 +51,59 @@
 </table>
 </div>
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">添加分机分组</h4>
+      </div>
+      <div class="modal-body">
+      <!--弹出内容-->
+        <div class="column form-column main col form-horizontal">
+          <div class="panel-body ">
+          <div class="form-group">
+           <label for="DeviceProto" class="control-label col-sm-3">分组名称</label>
+            <div class="controls  col-sm-7">
+             <input type="hidden" value="" name="id" id="id"  class="form-control input-sm">             
+             <input type="text" value="" name="groupnameC" id="groupnameC"  class="form-control input-sm"> 
+              </div>
+            <label for="memo" class="control-label col-sm-3">备&nbsp;&nbsp;&nbsp;&nbsp;注</label>
+            <div class="controls  col-sm-7">            
+            <textarea id="memo" rows="3" cols="50"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="save" name="save" class="btn btn-primary" >保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade in" id="confirm_modal" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width:400px">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center">
+          <p class="i_Msg_warn">确认要删除该条记录吗？</p>
+          <input type='hidden' id='deleteid' name='deleteid' value="" />
+        </div>
+      </div>
+      <div class="modal-footer">        
+<button  class="btn btn-danger btn-sm"  data-dismiss="modal" data-action="1" id="suredelete" name="suredelete">确定</button>
+<a class="btn btn-default btn-sm" href="#" data-dismiss="modal">取消</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script type="text/javascript">
 $(function(){
-  $('#datatable').tooltip();
+$('#datatable').tooltip();
 var ajaxUrl="/pagination";
 var oTable=$('#datatable').dataTable({
   sDom: "<'row'<'col-sm-4'l><'col-sm-4'f><'col-sm-4'T>r>t<'row'<'col-sm-4'i><'col-sm-8 center'p>>",
@@ -135,10 +181,58 @@ $('#search').click(function(){
  oTable.fnDraw();
 });
 
-$('#createexten').click(function(){
-  var DeviceProto=$('#DeviceProto').val();
-  location.href='/PBXExtension/create?deviceproto='+DeviceProto;
+$('#createnew').click(function(){
+$('#id').val('');
+$('#memo').val('');
+$('#groupnameC').val('');
 });
+
+$('#save').click(function(){
+  var id=$('#id').val();
+  var memo=$('#memo').val();
+  var groupname=$('#groupnameC').val();
+   $.ajax({
+                type: "POST",
+                url:'/PBXExtenGroup/save',
+                data:{id:id,groupname:groupname,memo:memo},// 你的formid
+                async: false,
+                error: function(request) {
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  $('#myModal').modal('hide');
+                  if(data.success==='OK'){
+                   var oTable=$('#datatable').dataTable();
+                       oTable.fnDraw();
+                  }
+                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                }
+            }); 
+ 
+});
+
+ $('#suredelete').click(function(){
+  var delid= $('#deleteid').val();
+ $.ajax({
+                type: "POST",
+                url:'/PBXExtenGroup/delete',
+                data:{id:delid},// 你的formid
+                async: false,
+                error: function(request) {
+                   $('#confirm_modal').modal('hide');
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  $('#confirm_modal').modal('hide');
+                  if(data.success==='OK'){
+                   var oTable=$('#datatable').dataTable();
+                       oTable.fnDraw();
+                  }
+                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                }
+            }); 
+  });
+  
 
 }).keydown(function(){ 
 if(event.keyCode == 13) 
@@ -191,42 +285,37 @@ return toolswhere;
 
 function getColums(){
   var colums=[
-      {"asSorting": [ "asc" ], "sClass":'center',"sName":"id","mData": "id","bSortable": true,"bVisible": true, "aTargets": [0] },
-      { "sClass":'center',"sName":"groupname","mData": "groupname","bSortable": false,"bVisible": true, "aTargets": [1] },
-      { "sClass":'center',"sName":"extensions","mData": "extensions","bSortable": false,"bVisible": true, "aTargets": [2],"mRender":function(data,type,full){
+      { "sClass":'center',"sName":"groupname","mData": "groupname","bSortable": false,"bVisible": true, "aTargets": [0] },
+      { "sClass":'center',"sName":"extensions","mData": "extensions","bSortable": false,"bVisible": true, "aTargets": [1],"mRender":function(data,type,full){
         if(data!=null){
-          var str='<div><span data-toggle="tooltip" data-placement="right" title="Tooltip on right">提示</span></div>';
+          var tipstr='成员：';
+          for(var i=0;i<data.length;i++){
+            tipstr+=data.id+','
+          }
+          var str='<div><span data-toggle="tooltip" data-placement="right" title="'+tipstr+'">'+data.length+'</span></div>';
           return str;
         }
       } },
-      { "sClass":'center',"sName":"memo","mData": "memo","bSortable": false,"bVisible": true, "aTargets": [3] },
-      { "sClass":'center',"sName":"cretime","mData": "cretime","bSortable": false,"bVisible": true, "aTargets": [4] },
-      { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [5] ,"mRender": function ( data, type, full ) {
-        var str='<a class="btn btn-primary btn-xs" href="/PBXExtension/edit?id='+data+'">编辑</a>';
-            str+='<a class="btn btn-danger btn-xs" href="javascript:delexten('+data+');">删除</a>'
+      { "sClass":'center',"sName":"memo","mData": "memo","bSortable": false,"bVisible": true, "aTargets": [2] },
+      { "sClass":'center',"sName":"cretime","mData": "cretime","bSortable": true,"bVisible": true, "aTargets": [3] },
+      { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [4] ,"mRender": function ( data, type, full ) {
+        var str='<a class="btn btn-primary btn-xs print" href="javascript:edit(\''+full.id+"','"+full.groupname+"','"+full.memo+'\');">编辑</a>';
+            str+='<a class="btn btn-danger btn-xs print" href="javascript:delrow(\''+data+'\');">删除</a>'
         return str;
       }}
     ];
     return colums;
 }
 
-function delexten(id){
-  $.ajax({
-                type: "POST",
-                url:'/PBXExtension/delete',
-                data:{id:id},// 你的formid
-                async: false,
-                error: function(request) {
-                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
-                },
-                success: function(data) {
-                  if(data.success==='OK'){
-                   var oTable=$('#datatable').dataTable();
-                       oTable.fnDraw();
-                  }
-                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
-                }
-            }); 
+function edit(id,groupname,memo){
+$('#id').val(id);
+$('#groupnameC').val(groupname);
+$('#memo').val(memo);
+$('#myModal').modal('show');
+}
+function delrow(id){
+  $('#deleteid').val(id);
+  $('#confirm_modal').modal('show');
 }
 
 

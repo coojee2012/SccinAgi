@@ -2,17 +2,17 @@ var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var schema = require('../../database/jdmysql').schema;
-var PBXExtension=require('./PBXExtension');
+var PBXExtenGroupRelations=require('./PBXExtenGroupRelations');
 
 var PBXExtenGroup=schema.define('PBXExtenGroup',{
-	id:   {type:Number},//分机分组ID		
-	groupname:   {type:String,length:50},//注册密码
-	memo:   {type:String,length:50},//设备协议
+	id:{type:String,length:100,default:function(){return guid.create();}},	
+	groupname:   {type:String,length:50},
+	memo:   {type:String,length:100},
 	cretime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
 });
 
 
-PBXExtenGroup.hasMany(PBXExtension,{as:'extensions',foreignKey:'group'});
+PBXExtenGroup.hasMany(PBXExtenGroupRelations,{as:'extensions',foreignKey:'groupid'});
 PBXExtenGroup.Name='PBXExtenGroup';
 schema.models.PBXExtenGroup;
 module.exports = PBXExtenGroup;

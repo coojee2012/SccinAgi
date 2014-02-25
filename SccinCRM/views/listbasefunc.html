@@ -1,0 +1,43 @@
+<script type='text/javascript'>
+$(function(){
+$('#datatable').tooltip();
+//绑定删除按钮
+ $('#suredelete').click(function(){
+  var delid= $('#deleteid').val();
+ $.ajax({
+                type: "POST",
+                url:'<%= modename%>/delete',
+                data:{id:delid},// 你的formid
+                async: false,
+                error: function(request) {
+                   $('#confirm_modal').modal('hide');
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  $('#confirm_modal').modal('hide');
+                  if(data.success==='OK'){
+                   var oTable=$('#datatable').dataTable();
+                       oTable.fnDraw();
+                  }
+                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                }
+            }); 
+  });
+
+//绑定查询按钮
+ $('#search').click(function(){
+ var oTable=$('#datatable').dataTable();
+ oTable.fnDraw();
+});
+
+
+}).keydown(function(){ 
+if(event.keyCode == 13) 
+$("#search").click();}
+);
+
+function delrow(id){
+  $('#deleteid').val(id);
+  $('#confirm_modal').modal('show');
+}
+</script>

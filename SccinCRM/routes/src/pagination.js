@@ -67,6 +67,7 @@ exports.post = function(req, res) {
 			});
 		},
 		search: function(cb) {
+			console.log('查询的数据库名称：',dbName);
 			Schemas[dbName].all({
 				include: include,
 				where: where,

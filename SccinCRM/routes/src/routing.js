@@ -108,6 +108,48 @@ routes.PBXExtenGroup=[{
 	file: '/PBXExtenGroup',
 	method: 'all',
 	fn: 'list'
+},{
+	urlreg: '/PBXExtenGroup/save',
+	file: '/PBXExtenGroup',
+	method: 'post',
+	fn: 'save'
+},{
+	urlreg: '/PBXExtenGroup/delete',
+	file: '/PBXExtenGroup',
+	method: 'post',
+	fn: 'delete'
+}];
+routes.PBXQueue=[{
+	urlreg: '/PBXQueue',
+	file: '/PBXQueue',
+	method: 'all',
+	fn: 'list'
+},{
+	urlreg: '/PBXQueue/create',
+	file: '/PBXQueue',
+	method: 'get',
+	fn: 'create'
+},{
+	urlreg: '/PBXQueue/edit',
+	file: '/PBXQueue',
+	method: 'get',
+	fn: 'edit'
+},{
+	urlreg: '/PBXQueue/save',
+	file: '/PBXQueue',
+	method: 'post',
+	fn: 'save'
+},{
+	urlreg: '/PBXQueue/delete',
+	file: '/PBXQueue',
+	method: 'post',
+	fn: 'delete'
+},
+{
+	urlreg: '/PBXQueue/checkAjax',
+	file: '/PBXQueue',
+	method: 'post',
+	fn: 'checkAjax'
 }];
 routes.asami = [{
 		urlreg: '/asami/getconfig',

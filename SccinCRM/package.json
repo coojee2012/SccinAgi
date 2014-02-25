@@ -19,6 +19,7 @@
     "ejs": ">=0.8.5",
     "async": ">=0.2.9",
     "nodegrass":">=0.0.3",
+    "excel-export":">=0.3.11",
     "express-partials":"*",
     "moment": "*",
     "stylus": "*"

@@ -1,0 +1,73 @@
+<script type='text/javascript'>
+$(function(){
+var ajaxUrl="/pagination";
+var oTable=$('#datatable').dataTable({
+  sDom: "<'row'<'col-sm-4'l><'col-sm-4'f><'col-sm-4'T>r>t<'row'<'col-sm-4'i><'col-sm-8 center'p>>",
+  sPaginationType: "bootstrap", 
+  //bDestroy:true,
+  bInfo: true,
+  oLanguage: {
+  "sUrl":"/media/olanguage.json"
+  },
+  sScrollX: "100%",
+  bScrollCollapse: true,
+    bPaginate: true,
+    bFilter:false,
+    bProcessing: true,
+    bServerSide: true,
+    sAjaxSource: ajaxUrl,
+    sServerMethod: "POST",
+    fnServerParams: function (aoData) {
+    var where = getWhere();
+    for(var key in where){
+     aoData.push( { "name": key, "value":where[key]} );
+    }    
+    },
+    aoColumnDefs: getColums(),
+     oTableTools: {
+             sSwfPath: "/css/datatable/css/swf/copy_csv_xls_pdf.swf",
+             aButtons: [{
+          "sExtends": "copy",
+          "sButtonText": "复制"
+        },{
+                  "sExtends": "xls",
+                    "sButtonText": "导出该页" ,
+                     "bFooter": false,
+                    "sFileName": "列表.xls" 
+                },
+     { 
+      "sExtends": "extxls", 
+      "sAjaxUrl": ajaxUrl,
+      "sKeys":getToolWhere().sColumns.split(','), 
+      "sButtonText": "导出全部",
+      "bFooter": false,
+      "fnParameters":function(){return getToolWhere();},
+      "sFileName": "列表.xls"  
+     },{
+      "sExtends":"print",
+      "sButtonText": "打印该页" ,
+      "sInfo": "<h6>打印本页</h6><p>请使用浏览器的打印功能 " + "打印本页. 按ESC键退出.</p>",
+      "sMessage": "列表",
+      "bShowAll": true
+     } 
+                                
+                                                   
+                              ]
+  },
+    //fnRowCallback fnCreatedRow
+     fnRowCallback: function( nRow, aData, iDataIndex ) {
+      $(nRow).click(function(e){
+        var self=this;
+        if ( $(self).hasClass('row_selected') ) {
+            $(self).removeClass('row_selected');
+        }
+        else {
+            oTable.$('tr.row_selected').removeClass('row_selected');
+            $(self).addClass('row_selected');
+        }
+      });
+    }
+   
+});
+});
+</script>

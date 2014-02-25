@@ -56,6 +56,7 @@ app.use(errorHandler);
 var routings = require(__dirname + '/routes/' + SRCFILE + '/routing.js');
 for (var i in routings) {
   for (var r in routings[i]) {
+    console.log('teeee:',routings[i][r]);
     var pf = require(__dirname + '/routes/' + SRCFILE + routings[i][r].file)[routings[i][r].fn];
     if (routings[i][r].method == 'get') {
       app.get(routings[i][r].urlreg, pf);

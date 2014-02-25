@@ -247,8 +247,8 @@ function getColums(){
       { "sClass":'center',"sName":"devicenumber","mData": "devicenumber","bSortable": false,"bVisible": true, "aTargets": [2] },
       { "sClass":'center',"sName":"cretime","mData": "cretime","bSortable": false,"bVisible": true, "aTargets": [3] },
       { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [4] ,"mRender": function ( data, type, full ) {
-        var str='<a class="btn btn-primary btn-xs" href="/PBXExtension/edit?id='+data+'">编辑</a>';
-            str+='<a class="btn btn-danger btn-xs" href="javascript:delexten('+data+');">删除</a>'
+        var str='<a class="btn btn-primary btn-xs print" href="/PBXExtension/edit?id='+data+'">编辑</a>';
+            str+='<a class="btn btn-danger btn-xs print" href="javascript:delexten('+data+');">删除</a>'
         return str;
       }}
     ];

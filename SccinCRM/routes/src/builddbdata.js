@@ -4,12 +4,12 @@ var async = require('async');
 
 exports.get = function(req, res) {
 	async.auto({
-		//ÉèÖÃIVRÄ¬ÈÏÁĞ×Ó
+		//è®¾ç½®IVRé»˜è®¤åˆ—å­
 		setDefaultIvr: function(cb) {
 		var ivr=[
-		{id: '200',ivrname: '²âÊÔIVR200',description: 'Ò»¸ö²âÊÔµÄIVR200'},
-		{id: '200100',ivrname: '²âÊÔIVR200100',description: 'Ò»¸ö²âÊÔµÄIVR200100'},
-		{id: '200200',ivrname: '²âÊÔIVR200200',description: 'Ò»¸ö²âÊÔµÄIVR200200'}
+		{id: '200',ivrname: 'æµ‹è¯•IVR200',description: 'ä¸€ä¸ªæµ‹è¯•çš„IVR200'},
+		{id: '200100',ivrname: 'æµ‹è¯•IVR200100',description: 'ä¸€ä¸ªæµ‹è¯•çš„IVR200100'},
+		{id: '200200',ivrname: 'æµ‹è¯•IVR200200',description: 'ä¸€ä¸ªæµ‹è¯•çš„IVR200200'}
 		];
 		async.forEach(ivr, function(item, callback) {
 					Schemas['PBXIvrMenmu'].create(item, function(err, inst) {
@@ -19,27 +19,27 @@ exports.get = function(req, res) {
 					cb(err, results);
 				});
 		},
-		//ÉèÖÃÏµÍ³Ä¬ÈÏIVR´¦Àí·½Ê½
+		//è®¾ç½®ç³»ç»Ÿé»˜è®¤IVRå¤„ç†æ–¹å¼
 		setDefaultIvrMode: function(cb) {
 			var modes = [
-			{id: '1',modename: '²¥·ÅÓïÒô',url: '',iconame: '',memo: ''}, 
-			{id: '2',modename: '¼ì²éºÅÂë¹éÊôµØ',url: '',iconame: '',memo: ''},
-			{id: '3',modename: '·¢ÆğÂ¼Òô',url: '',iconame: '',memo: ''},
-			{id: '4',modename: '²¥·ÅÂ¼Òô',url: '',iconame: '',memo: ''},
-			{id: '5',modename: 'Â¼ÖÆÊı×Ö×Ö·û',url: '',iconame: '',memo: ''},
-			{id: '6',modename: 'Êı×Ö·½Ê½¶Á³ö',url: '',iconame: '',memo: ''},
-			{id: '7',modename: '¶Á³öÈÕÆÚÊ±¼ä',url: '',iconame: '',memo: ''}, 
-			{id: '8',modename: '¼ì²âÈÕÆÚ',url: '',iconame: '',memo: ''}, 
-			{id: '9',modename: 'Ö÷½Ğ±ä»»',url: '',iconame: '',memo: ''}, 
-			{id: '10',modename: '²¦´òºÅÂë',url: '',iconame: '',memo: ''},
-			{id: '11',modename: 'Ìø×ªµ½ÓïÒôĞÅÏä',url: '',iconame: '',memo: ''},
-			{id: '12',modename: 'Ìø×ªµ½IVR²Ëµ¥',url: '',iconame: '',memo: ''},
-			{id: '13',modename: 'WEB½»»¥½Ó¿Ú',url: '',iconame: '',memo: ''},
-			{id: '14',modename: 'AGIÀ©Õ¹½Ó¿Ú',url: '',iconame: '',memo: ''},
-			{id: '15',modename: 'µÈ´ı¼¸Ãë',url: '',iconame: '',memo: ''},
-			{id: '16',modename: '²¥·ÅÒôµ÷',url: '',iconame: '',memo: ''},
-			{id: '17',modename: '¶Á³öÊı×Ö×Ö·û',url: '',iconame: '',memo: ''},
-			{id: '18',modename: 'Í¨µÀ·§',url: '',iconame: '',memo: ''}
+			{id: '1',modename: 'æ’­æ”¾è¯­éŸ³',url: '',iconame: '',memo: ''}, 
+			{id: '2',modename: 'æ£€æŸ¥å·ç å½’å±åœ°',url: '',iconame: '',memo: ''},
+			{id: '3',modename: 'å‘èµ·å½•éŸ³',url: '',iconame: '',memo: ''},
+			{id: '4',modename: 'æ’­æ”¾å½•éŸ³',url: '',iconame: '',memo: ''},
+			{id: '5',modename: 'å½•åˆ¶æ•°å­—å­—ç¬¦',url: '',iconame: '',memo: ''},
+			{id: '6',modename: 'æ•°å­—æ–¹å¼è¯»å‡º',url: '',iconame: '',memo: ''},
+			{id: '7',modename: 'è¯»å‡ºæ—¥æœŸæ—¶é—´',url: '',iconame: '',memo: ''}, 
+			{id: '8',modename: 'æ£€æµ‹æ—¥æœŸ',url: '',iconame: '',memo: ''}, 
+			{id: '9',modename: 'ä¸»å«å˜æ¢',url: '',iconame: '',memo: ''}, 
+			{id: '10',modename: 'æ‹¨æ‰“å·ç ',url: '',iconame: '',memo: ''},
+			{id: '11',modename: 'è·³è½¬åˆ°è¯­éŸ³ä¿¡ç®±',url: '',iconame: '',memo: ''},
+			{id: '12',modename: 'è·³è½¬åˆ°IVRèœå•',url: '',iconame: '',memo: ''},
+			{id: '13',modename: 'WEBäº¤äº’æ¥å£',url: '',iconame: '',memo: ''},
+			{id: '14',modename: 'AGIæ‰©å±•æ¥å£',url: '',iconame: '',memo: ''},
+			{id: '15',modename: 'ç­‰å¾…å‡ ç§’',url: '',iconame: '',memo: ''},
+			{id: '16',modename: 'æ’­æ”¾éŸ³è°ƒ',url: '',iconame: '',memo: ''},
+			{id: '17',modename: 'è¯»å‡ºæ•°å­—å­—ç¬¦',url: '',iconame: '',memo: ''},
+			{id: '18',modename: 'é€šé“é˜€',url: '',iconame: '',memo: ''}
 			
 			];
 			async.forEach(modes, function(item, callback) {
@@ -50,81 +50,81 @@ exports.get = function(req, res) {
 				cb(err, result);
 			});
 		},
-		//ÉèÖÃÏµÍ³Ä¬ÈÏÂ·ÓÉ
+		//è®¾ç½®ç³»ç»Ÿé»˜è®¤è·¯ç”±
 		setDefaultRoute: function(cb) {
 			var routes = [{
 				proirety: 1,
 				routerline: 1,
-				routername: '²âÊÔºôÈë1',
+				routername: 'æµ‹è¯•å‘¼å…¥1',
 				optextra: '',
 				callergroup: 'all',
-				callerid: '', //Æ¥ÅäÖ÷½ĞÒÔÊ²Ã´¿ªÍ·
-				callerlen: -1, //Æ¥ÅäÖ÷½Ğ³¤¶È
-				callednum: '', //Æ¥Åä±»½ĞÒÔÊ²Ã´¿ªÍ·
-				calledlen: 3, //Æ¥Åä±»½Ğ³¤¶È
-				replacecallerid: '', //Æ¥ÅäºóÖ÷½ĞÌæ»»
-				replacecalledtrim: -1, //Æ¥ÅäºóÉ¾³ı±»½ĞÇ°¼¸Î»
-				replacecalledappend: '', //Æ¥Åäºó²¹³ä±»½ĞÇ°¼¸Î»
+				callerid: '', //åŒ¹é…ä¸»å«ä»¥ä»€ä¹ˆå¼€å¤´
+				callerlen: -1, //åŒ¹é…ä¸»å«é•¿åº¦
+				callednum: '', //åŒ¹é…è¢«å«ä»¥ä»€ä¹ˆå¼€å¤´
+				calledlen: 3, //åŒ¹é…è¢«å«é•¿åº¦
+				replacecallerid: '', //åŒ¹é…åä¸»å«æ›¿æ¢
+				replacecalledtrim: -1, //åŒ¹é…ååˆ é™¤è¢«å«å‰å‡ ä½
+				replacecalledappend: '', //åŒ¹é…åè¡¥å……è¢«å«å‰å‡ ä½
 				processmode: 'diallocal',
 				processdefined: ''
 			},{
 				proirety: 2,
 				routerline: 1,
-				routername: '²âÊÔºôÈë2',
+				routername: 'æµ‹è¯•å‘¼å…¥2',
 				optextra: '',
 				callergroup: 'all',
-				callerid: '', //Æ¥ÅäÖ÷½ĞÒÔÊ²Ã´¿ªÍ·
-				callerlen: -1, //Æ¥ÅäÖ÷½Ğ³¤¶È
-				callednum: '200', //Æ¥Åä±»½ĞÒÔÊ²Ã´¿ªÍ·
-				calledlen: 6, //Æ¥Åä±»½Ğ³¤¶È
-				replacecallerid: '', //Æ¥ÅäºóÖ÷½ĞÌæ»»
-				replacecalledtrim: -1, //Æ¥ÅäºóÉ¾³ı±»½ĞÇ°¼¸Î»
-				replacecalledappend: '', //Æ¥Åäºó²¹³ä±»½ĞÇ°¼¸Î»
+				callerid: '', //åŒ¹é…ä¸»å«ä»¥ä»€ä¹ˆå¼€å¤´
+				callerlen: -1, //åŒ¹é…ä¸»å«é•¿åº¦
+				callednum: '200', //åŒ¹é…è¢«å«ä»¥ä»€ä¹ˆå¼€å¤´
+				calledlen: 6, //åŒ¹é…è¢«å«é•¿åº¦
+				replacecallerid: '', //åŒ¹é…åä¸»å«æ›¿æ¢
+				replacecalledtrim: -1, //åŒ¹é…ååˆ é™¤è¢«å«å‰å‡ ä½
+				replacecalledappend: '', //åŒ¹é…åè¡¥å……è¢«å«å‰å‡ ä½
 				processmode: 'diallocal',
 				processdefined: ''
 			},{
 				proirety: 1,
 				routerline: 2,
-				routername: '²âÊÔºô³ö1',
+				routername: 'æµ‹è¯•å‘¼å‡º1',
 				optextra: '',
 				callergroup: 'all',
-				callerid: '', //Æ¥ÅäÖ÷½ĞÒÔÊ²Ã´¿ªÍ·
-				callerlen: -1, //Æ¥ÅäÖ÷½Ğ³¤¶È
-				callednum: '9', //Æ¥Åä±»½ĞÒÔÊ²Ã´¿ªÍ·
-				calledlen: 12, //Æ¥Åä±»½Ğ³¤¶È
-				replacecallerid: '', //Æ¥ÅäºóÖ÷½ĞÌæ»»
-				replacecalledtrim: 1, //Æ¥ÅäºóÉ¾³ı±»½ĞÇ°¼¸Î»
-				replacecalledappend: '', //Æ¥Åäºó²¹³ä±»½ĞÇ°¼¸Î»
+				callerid: '', //åŒ¹é…ä¸»å«ä»¥ä»€ä¹ˆå¼€å¤´
+				callerlen: -1, //åŒ¹é…ä¸»å«é•¿åº¦
+				callednum: '9', //åŒ¹é…è¢«å«ä»¥ä»€ä¹ˆå¼€å¤´
+				calledlen: 12, //åŒ¹é…è¢«å«é•¿åº¦
+				replacecallerid: '', //åŒ¹é…åä¸»å«æ›¿æ¢
+				replacecalledtrim: 1, //åŒ¹é…ååˆ é™¤è¢«å«å‰å‡ ä½
+				replacecalledappend: '', //åŒ¹é…åè¡¥å……è¢«å«å‰å‡ ä½
 				processmode: 'dialout',
 				processdefined: '1'
 			},{
 				proirety: 2,
 				routerline: 2,
-				routername: '²âÊÔºô³ö2',
+				routername: 'æµ‹è¯•å‘¼å‡º2',
 				optextra: '',
 				callergroup: 'all',
-				callerid: '', //Æ¥ÅäÖ÷½ĞÒÔÊ²Ã´¿ªÍ·
-				callerlen: -1, //Æ¥ÅäÖ÷½Ğ³¤¶È
-				callednum: '0', //Æ¥Åä±»½ĞÒÔÊ²Ã´¿ªÍ·
-				calledlen: 12, //Æ¥Åä±»½Ğ³¤¶È
-				replacecallerid: '', //Æ¥ÅäºóÖ÷½ĞÌæ»»
-				replacecalledtrim: -1, //Æ¥ÅäºóÉ¾³ı±»½ĞÇ°¼¸Î»
-				replacecalledappend: '', //Æ¥Åäºó²¹³ä±»½ĞÇ°¼¸Î»
+				callerid: '', //åŒ¹é…ä¸»å«ä»¥ä»€ä¹ˆå¼€å¤´
+				callerlen: -1, //åŒ¹é…ä¸»å«é•¿åº¦
+				callednum: '0', //åŒ¹é…è¢«å«ä»¥ä»€ä¹ˆå¼€å¤´
+				calledlen: 12, //åŒ¹é…è¢«å«é•¿åº¦
+				replacecallerid: '', //åŒ¹é…åä¸»å«æ›¿æ¢
+				replacecalledtrim: -1, //åŒ¹é…ååˆ é™¤è¢«å«å‰å‡ ä½
+				replacecalledappend: '', //åŒ¹é…åè¡¥å……è¢«å«å‰å‡ ä½
 				processmode: 'dialout',
 				processdefined: '2'
 			},{
 				proirety: 3,
 				routerline: 2,
-				routername: '²âÊÔºô³ö3',
+				routername: 'æµ‹è¯•å‘¼å‡º3',
 				optextra: '',
 				callergroup: 'all',
-				callerid: '', //Æ¥ÅäÖ÷½ĞÒÔÊ²Ã´¿ªÍ·
-				callerlen: -1, //Æ¥ÅäÖ÷½Ğ³¤¶È
-				callednum: '', //Æ¥Åä±»½ĞÒÔÊ²Ã´¿ªÍ·
-				calledlen: 8, //Æ¥Åä±»½Ğ³¤¶È
-				replacecallerid: '', //Æ¥ÅäºóÖ÷½ĞÌæ»»
-				replacecalledtrim: -1, //Æ¥ÅäºóÉ¾³ı±»½ĞÇ°¼¸Î»
-				replacecalledappend: '', //Æ¥Åäºó²¹³ä±»½ĞÇ°¼¸Î»
+				callerid: '', //åŒ¹é…ä¸»å«ä»¥ä»€ä¹ˆå¼€å¤´
+				callerlen: -1, //åŒ¹é…ä¸»å«é•¿åº¦
+				callednum: '', //åŒ¹é…è¢«å«ä»¥ä»€ä¹ˆå¼€å¤´
+				calledlen: 8, //åŒ¹é…è¢«å«é•¿åº¦
+				replacecallerid: '', //åŒ¹é…åä¸»å«æ›¿æ¢
+				replacecalledtrim: -1, //åŒ¹é…ååˆ é™¤è¢«å«å‰å‡ ä½
+				replacecalledappend: '', //åŒ¹é…åè¡¥å……è¢«å«å‰å‡ ä½
 				processmode: 'dialout',
 				processdefined: '3'
 			}];
@@ -136,7 +136,7 @@ exports.get = function(req, res) {
 				cb(err, result);
 			});
 		},
-		//ÉèÖÃÄ¬ÈÏIVR¶¯×÷
+		//è®¾ç½®é»˜è®¤IVRåŠ¨ä½œ
 		setIvrActions: function(cb) {
 				var actions = [
 				{
@@ -184,7 +184,7 @@ exports.get = function(req, res) {
 					cb(err, result);
 				});
 			},
-		//ÉèÖÃÄ¬ÈÏIVR°´¼üÊäÈë
+		//è®¾ç½®é»˜è®¤IVRæŒ‰é”®è¾“å…¥
 		setIvrInputs: function(cb, results) {
 				var inputs = [{
 					ivrnumber: '200',
@@ -263,7 +263,7 @@ exports.get = function(req, res) {
 
 			},
 			setDefaultExtenGroup:function(cb){
-				var groups=[{id:0,groupname:'¼¼ÊõÖ§³Ö×é',memo:'¼¼ÊõÖ§³Ö×é'},{id:1,groupname:'¿Í»§·şÎñ×é',memo:'¿Í»§·şÎñ×é'}];
+				var groups=[{id:0,groupname:'æŠ€æœ¯æ”¯æŒç»„',memo:'æŠ€æœ¯æ”¯æŒç»„'},{id:1,groupname:'å®¢æˆ·æœåŠ¡ç»„',memo:'å®¢æˆ·æœåŠ¡ç»„'}];
 				async.forEach(groups, function(item, callback) {
 					Schemas['PBXExtenGroup'].create(item, function(err, inst) {
 						callback(err, inst);
@@ -273,10 +273,31 @@ exports.get = function(req, res) {
 				});
 
 			},
+			setDefaultExtenGroupRelations:function(cb){
+				var groups=[{groupid:0,extenid:'8001'}
+				,{groupid:0,extenid:'8002'}
+				,{groupid:0,extenid:'8003'}
+				,{groupid:0,extenid:'8004'}
+				,{groupid:0,extenid:'8005'}
+				,{groupid:1,extenid:'8001'}
+				,{groupid:1,extenid:'8002'}
+				,{groupid:1,extenid:'8003'}
+				,{groupid:1,extenid:'8004'}
+				,{groupid:1,extenid:'8005'}
+				];
+				async.forEach(groups, function(item, callback) {
+					Schemas['PBXExtenGroupRelations'].create(item, function(err, inst) {
+						callback(err, inst);
+					});
+				}, function(err, result) {
+					cb(err, result);
+				});
+
+			},
 			setDefaultQueues:function(cb){
 					var queues=[
-				{id:'401',queuename:'²âÊÔ¶ÓÁĞ401',members:'8001&8002&8003&8801'},
-				{id:'402',queuename:'²âÊÔ¶ÓÁĞ402',members:'8001&8002&8003&8801'}
+				{id:'401',queuename:'æµ‹è¯•é˜Ÿåˆ—401',members:'8001,8002,8003,8801'},
+				{id:'402',queuename:'æµ‹è¯•é˜Ÿåˆ—402',members:'8001,8002,8003,8801'}
 				];
 				async.forEach(queues, function(item, callback) {
 					Schemas['PBXQueue'].create(item, function(err, inst) {
@@ -289,9 +310,9 @@ exports.get = function(req, res) {
 			},
 			setDefaultTrunk:function(cb){
 				var trunks=[
-				{id:'1',trunkname:'²âÊÔÍâÏßDAHDI',trunkproto:'DADHI',trunkdevice:'g0'},
-				{id:'2',trunkname:'²âÊÔÍâÏßSIP',trunkproto:'SIP',trunkdevice:'testsip'},
-				{id:'3',trunkname:'²âÊÔÍâÏßIAX2',trunkproto:'IAX2',trunkdevice:'testiax'}
+				{id:'1',trunkname:'æµ‹è¯•å¤–çº¿DAHDI',trunkproto:'DADHI',trunkdevice:'g0'},
+				{id:'2',trunkname:'æµ‹è¯•å¤–çº¿SIP',trunkproto:'SIP',trunkdevice:'testsip'},
+				{id:'3',trunkname:'æµ‹è¯•å¤–çº¿IAX2',trunkproto:'IAX2',trunkdevice:'testiax'}
 				];
               async.forEach(trunks, function(item, callback) {
 					Schemas['PBXTrunk'].create(item, function(err, inst) {

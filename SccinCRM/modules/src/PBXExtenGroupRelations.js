@@ -4,8 +4,8 @@ var guid = require('guid');
 var schema = require('../../database/jdmysql').schema;
 
 var PBXExtenGroupRelations=schema.define('PBXExtenGroupRelations',{
-	id:   {type:Number},//分机分组ID		
-	groupid:   {type:String,length:50},//注册密码
+	id:{type:String,length:100,default:function(){return guid.create();}},		
+	groupid:   {type:Number},
 	extenid:   {type:String,length:50}	
 });
 
