@@ -92,7 +92,7 @@ exports.edit = function(req, res) {
 		},
 		findMembers: ['findQueue',
 			function(cb, results) {
-				var yyMembers = results.findQueue.members.toString().split('\,');
+				var yyMembers = !results.findQueue.members?[]:results.findQueue.members.toString().split('\,');
 				console.log(yyMembers);
 				Schemas['PBXExtension'].all({}, function(err, dbs) {
 					if (err) {

@@ -12,11 +12,13 @@ var oTable=$('#datatable').dataTable({
   sScrollX: "100%",
   bScrollCollapse: true,
     bPaginate: true,
+    bAutoWidth:false,
     bFilter:false,
     bProcessing: true,
     bServerSide: true,
     sAjaxSource: ajaxUrl,
     sServerMethod: "POST",
+    aaSorting: getaaSorting(),
     fnServerParams: function (aoData) {
     var where = getWhere();
     for(var key in where){

@@ -151,6 +151,38 @@ routes.PBXQueue=[{
 	method: 'post',
 	fn: 'checkAjax'
 }];
+routes.PBXTrunk=[{
+	urlreg: '/PBXTrunk',
+	file: '/PBXTrunk',
+	method: 'all',
+	fn: 'list'
+},{
+	urlreg: '/PBXTrunk/create',
+	file: '/PBXTrunk',
+	method: 'get',
+	fn: 'create'
+},{
+	urlreg: '/PBXTrunk/edit',
+	file: '/PBXTrunk',
+	method: 'get',
+	fn: 'edit'
+},{
+	urlreg: '/PBXTrunk/save',
+	file: '/PBXTrunk',
+	method: 'post',
+	fn: 'save'
+},{
+	urlreg: '/PBXTrunk/delete',
+	file: '/PBXTrunk',
+	method: 'post',
+	fn: 'delete'
+},
+{
+	urlreg: '/PBXTrunk/checkAjax',
+	file: '/PBXTrunk',
+	method: 'post',
+	fn: 'checkAjax'
+}];
 routes.asami = [{
 		urlreg: '/asami/getconfig',
 		file: '/asami',
