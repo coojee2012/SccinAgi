@@ -10,6 +10,9 @@ var PBXTrunk=schema.define('PBXTrunk',{
 	cretime:     {type: String, length: 50, default: function () {return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	args:    {type:String,length:100,default: function () { return ''; }}
 });
+
+PBXTrunk.validatesPresenceOf('trunkname', 'trunkproto');//验证非空
+
 PBXTrunk.Name='PBXTrunk';
 schema.models.PBXTrunk;
 module.exports = PBXTrunk;

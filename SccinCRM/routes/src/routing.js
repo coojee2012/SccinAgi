@@ -183,6 +183,24 @@ routes.PBXTrunk=[{
 	method: 'post',
 	fn: 'checkAjax'
 }];
+
+routes.PBXCard=[{
+	urlreg: '/PBXCard',
+	file: '/PBXCard',
+	method: 'all',
+	fn: 'list'
+},{
+	urlreg: '/PBXCard/save',
+	file: '/PBXCard',
+	method: 'post',
+	fn: 'save'
+},{
+	urlreg: '/PBXCard/delete',
+	file: '/PBXCard',
+	method: 'post',
+	fn: 'delete'
+}];
+
 routes.asami = [{
 		urlreg: '/asami/getconfig',
 		file: '/asami',

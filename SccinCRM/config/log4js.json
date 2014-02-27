@@ -1,13 +1,20 @@
 {
 	"appenders": [{
 			"type": "console"
-		}, //控制台输出
+		},
 		{
-			"type": "file", //文件输出
-			"filename": "web.log",
+			"type": "file",
+			"filename": "normal.log",
 			"maxLogSize": 10240000,
 			"backups": 3,
 			"category": "normal"
+		}, 
+		{
+			"type": "file",
+			"filename": "web.log",
+			"maxLogSize": 10240000,
+			"backups": 3,
+			"category": "web"
 		}
 	],
 	"replaceConsole": true

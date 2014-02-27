@@ -1,7 +1,7 @@
 var Schemas = require('../../database/schema').Schemas;
 var guid = require('guid');
 var async = require('async');
-
+var logger = require('../../lib/logger').logger('web');
 //ajax验证函数集合
 var checkFun = {};
 
@@ -33,80 +33,65 @@ exports.create = function(req, res) {
 	var trunkproto = req.query['trunkproto'];
 	if (!trunkproto || trunkproto == '')
 		trunkproto = 'SIP';
-	var hasChannels="";
-	var yyChannels="";
-	res.render('PBXTrunk/create.html', {
-		trunkproto: trunkproto,
-		hasChannels:hasChannels,
-		yyChannels:yyChannels,
-		partv: 'part' + trunkproto + '.html'
+	async.auto({
+		getHasChannels: function(cb) {
+			getHasChannels(trunkproto, function(err, result) {
+				cb(err, result);
+			})
+		}
+	}, function(err, results) {
+		if (err) {
+			logger.error(err);
+
+		} else {
+			res.render('PBXTrunk/create.html', {
+				trunkproto: trunkproto,
+				hasChannels: results.getHasChannels,
+				yyChannels: "",
+				partv: 'part' + trunkproto + '.html'
+			});
+		}
 	});
+
 
 }
 //编辑
 exports.edit = function(req, res) {
 	var id = req.query["id"];
 	async.auto({
-		findQueue: function(cb) {
-			Schemas['PBXTrunk'].find(id, function(err, inst) {
-				if (err || inst == null)
-					cb('编辑查找队列发生错误或队列不存在！', inst);
-				else
-					cb(err, inst);
-			});
-		},
-		findMembers: ['findQueue',
-			function(cb, results) {
-				var yyMembers = !results.findQueue.members ? [] : results.findQueue.members.toString().split('\,');
-				console.log(yyMembers);
-				Schemas['PBXExtension'].all({}, function(err, dbs) {
-					if (err) {
-						cb('编辑队列查询分机发生错误！', -1);
-					} else {
-						//var totalMembers = [];
-						var hasMembers = [];
-						for (var i = 0; i < dbs.length; i++) {
-							//totalMembers.push(dbs[i].id);
-							var isHave = false;
-							for (var k = 0; k < yyMembers.length; k++) {
-								if (dbs[i].id === yyMembers[k]) {
-									isHave = true;
-									break;
-								}
-							}
-							if (!isHave) {
-								hasMembers.push(dbs[i].id);
-							}
-							//str += '<option value="' + dbs[i].id + '">' + dbs[i].id + ' "' + dbs[i].accountcode + '" </option>';
-						}
-
-						var hasExtens = "";
-						var yyExtens = "";
-						for (var ii = 0; ii < hasMembers.length; ii++) {
-
-							hasExtens += '<option value="' + hasMembers[ii] + '">' + hasMembers[ii] + ' "' + hasMembers[ii] + '" </option>';
-						}
-						for (var kk = 0; kk < yyMembers.length; kk++) {
-
-							yyExtens += '<option value="' + yyMembers[kk] + '">' + yyMembers[kk] + ' "' + yyMembers[kk] + '" </option>';
-						}
-
+			findTrunk: function(cb) {
+				Schemas['PBXTrunk'].find(id, function(err, inst) {
+					if (err || inst == null)
+						cb('编辑查找发生错误或数据不存在！', inst);
+					else
+						cb(err, inst);
+				});
+			},
+			findMembers: ['findTrunk',
+				function(cb, results) {
+					var args = results.findTrunk.args;
+					var hasExtens = "";
+					var yyExtens = "";
+					getHasChannels(results.findTrunk.trunkproto, function(err, result) {
 						cb(null, {
 							hasExtens: hasExtens,
 							yyExtens: yyExtens
 						});
-					}
-				});
-			}
-		]
+					});
 
-	}, function(err, results) {
-		res.render('PBXTrunk/edit.html', {
-			hasExtens: results.findMembers.hasExtens,
-			yyExtens: results.findMembers.yyExtens,
-			inst: results.findQueue
+				}
+			]
+
+		},
+
+		function(err, results) {
+
+			res.render('PBXTrunk/edit.html', {
+				hasExtens: results.findMembers.hasExtens,
+				yyExtens: results.findMembers.yyExtens,
+				inst: results.findTrunk
+			});
 		});
-	});
 
 
 }
@@ -118,7 +103,7 @@ exports.save = function(req, res) {
 	Obj.args = '';
 	for (var key in req.body) {
 		if (/^str\_(\S+)/.test(key)) {
-			console.log(RegExp.$1);
+			//console.log(RegExp.$1);
 			Obj.args += RegExp.$1 + '=' + req.body[key] + '&';
 		} else {
 			Obj[key] = req.body[key];
@@ -141,11 +126,27 @@ exports.save = function(req, res) {
 						Obj.id = guid.create();
 						setTrunkDev(Obj, function(err, devstr) {
 							if (err)
-								cb(err, devstr);
+								cb(err, -1);
 							else {
 								Obj.trunkdevice = devstr;
 								Schemas['PBXTrunk'].create(Obj, function(err, inst) {
-									cb(err, inst);
+									if (err)
+										cb(err, -1);
+									else {
+										if (inst.trunkproto === 'PRI' || inst.trunkproto === 'FXO') {
+											var linestr = inst.args.split('=');
+											var lines = [];
+											if (linestr[1] && linestr[1] !== '')
+												lines = linestr[1].split(',');
+											updateChannels(lines,devstr, function(err, result) {
+												cb(err, inst);
+											});
+										} else {
+											cb(err, inst);
+										}
+
+									}
+
 								});
 							}
 
@@ -240,11 +241,11 @@ function setTrunkDev(Obj, callback) {
 	if (Obj.trunkproto === 'SIP' || Obj.trunkproto === 'IAX2') {
 		trunkdevice = getRandomStr(10);
 		callback(null, trunkdevice);
-	} else if(Obj.trunkproto === 'PRI' || Obj.trunkproto === 'FXO')  {
+	} else if (Obj.trunkproto === 'PRI' || Obj.trunkproto === 'FXO') {
 		Schemas['PBXTrunk'].all({
 			where: {
 				trunkproto: {
-					'in': ['PRI', 'FXO']
+					'inq': ['PRI', 'FXO']
 				}
 			}
 		}, function(err, dbs) {
@@ -253,9 +254,8 @@ function setTrunkDev(Obj, callback) {
 				count = dbs.length;
 			callback(err, count);
 		});
-	}
-	else{
-	callback(null, Obj.trunkdevice);	
+	} else {
+		callback(null, Obj.trunkdevice);
 	}
 }
 
@@ -266,4 +266,44 @@ function getRandomStr(len) {
 		str += x.charAt(Math.ceil(Math.random() * 100000000) % x.length);
 	}
 	return str;
+}
+
+function getHasChannels(trunkproto, callback) {
+	var hasChannels = "";
+	Schemas['PBXCard'].all({
+		where: {
+			trunkproto: trunkproto,
+			dataline: {
+				'neq': '是'
+			},
+			group: '-1'
+		},
+		order: ['cardname asc', 'line asc']
+	}, function(err, dbs) {
+		if (err) {
+			callback(err, null);
+		} else {
+			for (var i = 0; i < dbs.length; i++) {
+				hasChannels += '<option value="' + dbs[i].line + '">[' + dbs[i].cardname + ']' + trunkproto + ' - ' + dbs[i].line + ' </option>';
+			}
+			callback(null, hasChannels);
+		}
+	});
+}
+
+function updateChannels(lines,group, callback) {
+	async.each(lines, function(item, cb) {
+		Schemas['PBXCard'].update({
+			where: {
+				line:item
+			},
+			update: {
+				group:group
+			}
+		}, function(err, result) {
+			cb(err, result);
+		});
+	}, function(err, results) {
+		callback(err, results);
+	});
 }
