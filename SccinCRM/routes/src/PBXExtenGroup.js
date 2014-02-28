@@ -1,22 +1,17 @@
 var Schemas = require('../../database/schema').Schemas;
 var guid = require('guid');
 var async = require('async');
+var logger = require('../../lib/logger').logger('web');
 //分机列表显示
-exports.list = function(req, res) {
-
-	res.render('PBXExtenGroup/list.html', {
-		username: '',
-		password: '',
-		exten: '',
-		tip: ''
-	});
+exports.list = function(req, res, next) {
+	res.render('PBXExtenGroup/list.html', {});
 }
 
 //保存（适用于新增和修改）
-exports.save = function(req, res) {
+exports.save = function(req, res, next) {
 	var Obj = {};
 	for (var key in req.body) {
-			Obj[key] = req.body[key];
+		Obj[key] = req.body[key];
 	}
 	async.auto({
 			isHaveCheck: function(cb) {
@@ -72,12 +67,12 @@ exports.save = function(req, res) {
 					}
 				});
 			} else if (results.updateOld !== -1) {
-						myjson.success = 'OK';
-						myjson.msg = '修改成功!';
-						myjson.id = results.updateOld.id;
-					
+				myjson.success = 'OK';
+				myjson.msg = '修改成功!';
+				myjson.id = results.updateOld.id;
+
 			} else if (err) {
-				console.log(err);
+				logger.error(err);
 				myjson.success = 'ERROR';
 				myjson.msg = '保存数据发生异常,请联系管理员！';
 			}
@@ -86,11 +81,12 @@ exports.save = function(req, res) {
 }
 
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res, next) {
 	var id = req.body['id'];
 	Schemas['PBXExtenGroup'].find(id, function(err, inst) {
 		var myjson = {};
 		if (err) {
+			logger.error(err);
 			myjson.success = 'ERROR';
 			myjson.msg = '查询数据发生异常,请联系管理员！';
 		} else {
@@ -102,6 +98,7 @@ exports.delete = function(req, res) {
 			}
 			inst.destroy(function(err) {
 				if (err) {
+					logger.error(err);
 					myjson.success = 'ERROR';
 					myjson.msg = '删除数据发生异常,请联系管理员！！';
 				} else {

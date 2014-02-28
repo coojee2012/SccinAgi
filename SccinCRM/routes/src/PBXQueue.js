@@ -1,6 +1,7 @@
 var Schemas = require('../../database/schema').Schemas;
 var guid = require('guid');
 var async = require('async');
+var logger = require('../../lib/logger').logger('web');
 
 //ajax验证函数集合
 var checkFun = {};
@@ -36,7 +37,7 @@ checkFun['id'] = function(id, res) {
 };
 
 //处理页面需要的Ajax验证
-exports.checkAjax = function(req, res) {
+exports.checkAjax = function(req, res,next) {
 	var param = req.body['param'];
 	var name = req.body['name'];
 	if (typeof(checkFun[name] === 'function')) {
@@ -51,21 +52,17 @@ exports.checkAjax = function(req, res) {
 }
 
 //分机列表显示
-exports.list = function(req, res) {
+exports.list = function(req, res,next) {
 
 	res.render('PBXQueue/list.html', {
-		modename: 'PBXQueue',
-		password: '',
-		exten: '',
-		tip: ''
 	});
 }
 
 //新建
-exports.create = function(req, res) {
+exports.create = function(req, res,next) {
 	Schemas['PBXExtension'].all({}, function(err, dbs) {
 		if (err) {
-			res.redirect(500, '/err/500');
+			next(err);
 		} else {
 			var str = "";
 			for (var i = 0; i < dbs.length; i++) {
@@ -79,7 +76,7 @@ exports.create = function(req, res) {
 
 }
 //编辑
-exports.edit = function(req, res) {
+exports.edit = function(req, res,next) {
 	var id = req.query["id"];
 	async.auto({
 		findQueue: function(cb) {
@@ -148,7 +145,7 @@ exports.edit = function(req, res) {
 
 
 //保存（适用于新增和修改）
-exports.save = function(req, res) {
+exports.save = function(req, res,next) {
 	var Obj = {};
 	for (var key in req.body) {
 		Obj[key] = req.body[key];
@@ -226,7 +223,7 @@ exports.save = function(req, res) {
 }
 
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res,next) {
 	var id = req.body['id'];
 	Schemas['PBXQueue'].find(id, function(err, inst) {
 		var myjson = {};

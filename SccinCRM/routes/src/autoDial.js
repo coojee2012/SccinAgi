@@ -1,3 +1,4 @@
+var logger = require('../../lib/logger').logger('web');
 
 /*
  * GET home page.
@@ -5,7 +6,7 @@
 
 
 
-exports.all = function(req, res){
+exports.all = function(req, res,next){
 	var spawn = require('child_process').spawn;
     //free  = spawn('dir');
 

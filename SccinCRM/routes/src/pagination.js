@@ -1,8 +1,9 @@
 var Schemas = require('../../database/schema').Schemas;
 var async = require('async');
+var logger = require('../../lib/logger').logger('web');
 
-exports.post = function(req, res) {
-	console.log('BODY:', req.body);
+exports.post = function(req, res, next) {
+	logger.debug('BODY:', req.body);
 	var dbName = req.body['dbName'];
 	//查询起始页面，第一页是0
 	var iDisplayStart = req.body['iDisplayStart'];
@@ -67,7 +68,7 @@ exports.post = function(req, res) {
 			});
 		},
 		search: function(cb) {
-			console.log('查询的数据库名称：',dbName);
+			console.log('查询的数据库名称：', dbName);
 			Schemas[dbName].all({
 				include: include,
 				where: where,
@@ -79,26 +80,27 @@ exports.post = function(req, res) {
 			});
 		}
 	}, function(err, results) {
-		if (err)
+		if (err) {
+			logger.error(err);
 			res.send({
 				error: err
 			});
-		else {
+		} else {
 			var output = {};
 			output.iTotalRecords = results.count;
 			output.iTotalDisplayRecords = results.count;
 			output.sEcho = req.body['sEcho'];
-			output.aaData=[];
+			output.aaData = [];
 			for (var i = 0; i < results.search.length; i++) {
-				var tempobj={};
-				for(var j=0;j<sColumns.length;j++){
-					if(results.search[i].__cachedRelations[sColumns[j]] && results.search[i].__cachedRelations[sColumns[j]]!==null){
-						tempobj[sColumns[j]]=results.search[i].__cachedRelations[sColumns[j]];
-					}else{
-						tempobj[sColumns[j]]=results.search[i][sColumns[j]];
+				var tempobj = {};
+				for (var j = 0; j < sColumns.length; j++) {
+					if (results.search[i].__cachedRelations[sColumns[j]] && results.search[i].__cachedRelations[sColumns[j]] !== null) {
+						tempobj[sColumns[j]] = results.search[i].__cachedRelations[sColumns[j]];
+					} else {
+						tempobj[sColumns[j]] = results.search[i][sColumns[j]];
 					}
 				}
-				output.aaData[i]=tempobj;
+				output.aaData[i] = tempobj;
 
 
 			}

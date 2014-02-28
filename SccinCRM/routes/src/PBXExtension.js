@@ -1,5 +1,6 @@
 var Schemas = require('../../database/schema').Schemas;
 var async = require('async');
+var logger = require('../../lib/logger').logger('web');
 
 //ajax验证函数集合
 var checkFun = {};
@@ -35,28 +36,18 @@ checkFun['accountcode'] = function(accountcode, res) {
 };
 
 //分机列表显示
-exports.list = function(req, res) {
+exports.list = function(req, res, next) {
 
-	res.render('PBXExtension/list.html', {
-		username: '',
-		password: '',
-		exten: '',
-		tip: ''
-	});
+	res.render('PBXExtension/list.html', {});
 }
 
-exports.upsert = function(req, res) {
-	res.render('PBXExtension/upsert.html', {
-		username: '',
-		password: '',
-		exten: '',
-		tip: ''
-	});
+exports.upsert = function(req, res, next) {
+	res.render('PBXExtension/upsert.html', {});
 }
 
 //展现新建页面
 //页面传入deviceproto参数，根据deviceproto值表现不同协议的分机新建页面
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
 	var deviceproto = req.query['deviceproto'];
 	if (!deviceproto || deviceproto == '')
 		deviceproto = 'SIP';
@@ -66,7 +57,7 @@ exports.create = function(req, res) {
 	});
 }
 //展现编辑页面
-exports.edit = function(req, res) {
+exports.edit = function(req, res, next) {
 	var id = req.query['id'];
 	Schemas['PBXExtension'].find(id, function(err, inst) {
 		if (err)
@@ -84,7 +75,7 @@ exports.edit = function(req, res) {
 	});
 }
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res, next) {
 	var id = req.body['id'];
 	Schemas['PBXExtension'].find(id, function(err, inst) {
 		var myjson = {};
@@ -116,7 +107,7 @@ exports.delete = function(req, res) {
 }
 
 //保存分机信息（适用于新增和修改）
-exports.save = function(req, res) {
+exports.save = function(req, res, next) {
 	var extenObj = {};
 	extenObj.devicestring = '';
 	for (var key in req.body) {
@@ -198,7 +189,7 @@ exports.save = function(req, res) {
 }
 
 //处理页面需要的Ajax验证
-exports.checkAjax = function(req, res) {
+exports.checkAjax = function(req, res, next) {
 	var param = req.body['param'];
 	var name = req.body['name'];
 	if (typeof(checkFun[name] === 'function')) {
@@ -214,7 +205,7 @@ exports.checkAjax = function(req, res) {
 
 
 
-exports.table = function(req, res) {
+exports.table = function(req, res, next) {
 	console.log('BODY:', req.body);
 	var dbName = req.body['dbName'];
 	//查询起始页面，第一页是0
@@ -301,6 +292,6 @@ exports.table = function(req, res) {
 
 }
 
-exports.xls2all = function(req, res) {
+exports.xls2all = function(req, res, next) {
 
 }

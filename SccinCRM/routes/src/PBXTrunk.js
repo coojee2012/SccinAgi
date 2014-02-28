@@ -6,7 +6,7 @@ var logger = require('../../lib/logger').logger('web');
 var checkFun = {};
 
 //处理页面需要的Ajax验证
-exports.checkAjax = function(req, res) {
+exports.checkAjax = function(req, res,next) {
 	var param = req.body['param'];
 	var name = req.body['name'];
 	if (typeof(checkFun[name] === 'function')) {
@@ -21,7 +21,7 @@ exports.checkAjax = function(req, res) {
 }
 
 //分机列表显示
-exports.list = function(req, res) {
+exports.list = function(req, res,next) {
 
 	res.render('PBXTrunk/list.html', {
 		modename: 'PBXTrunk'
@@ -29,7 +29,7 @@ exports.list = function(req, res) {
 }
 
 //新建
-exports.create = function(req, res) {
+exports.create = function(req, res,next) {
 	var trunkproto = req.query['trunkproto'];
 	if (!trunkproto || trunkproto == '')
 		trunkproto = 'SIP';
@@ -56,7 +56,7 @@ exports.create = function(req, res) {
 
 }
 //编辑
-exports.edit = function(req, res) {
+exports.edit = function(req, res,next) {
 	var id = req.query["id"];
 	async.auto({
 			findTrunk: function(cb) {
@@ -98,7 +98,7 @@ exports.edit = function(req, res) {
 
 
 //保存（适用于新增和修改）
-exports.save = function(req, res) {
+exports.save = function(req, res,next) {
 	var Obj = {};
 	Obj.args = '';
 	for (var key in req.body) {
@@ -204,7 +204,7 @@ exports.save = function(req, res) {
 }
 
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res,next) {
 	var id = req.body['id'];
 	Schemas['PBXTrunk'].find(id, function(err, inst) {
 		var myjson = {};

@@ -5,8 +5,9 @@ var nami = require('../../asterisk/asmanager').nami,
 
 var Schemas = require('../../database/schema').Schemas;
 var guid = require('guid');
+var logger = require('../../lib/logger').logger('web');
 
-exports.sippeers = function(req, res) {
+exports.sippeers = function(req, res,next) {
 	nami.send(new AsAction.SipPeers(), function(response) {
 		console.log(response);
 		//res.render('nami/index', { title: 'NAMI测试',response:util.inspect(response,true,null) });
@@ -15,7 +16,7 @@ exports.sippeers = function(req, res) {
 	});
 }
 
-exports.ping = function(req, res) {
+exports.ping = function(req, res,next) {
 	nami.send(new AsAction.Ping(), function(response) {
 		console.log(response);
 		//res.render('nami/index', { title: 'NAMI测试',response:util.inspect(response,true,null) });
@@ -24,7 +25,7 @@ exports.ping = function(req, res) {
 	});
 }
 
-exports.hangup = function(req, res) {
+exports.hangup = function(req, res,next) {
 	var action = new AsAction.Hangup();
 	action.Channel = 'sip/abcd';
 	nami.send(action, function(response) {
@@ -35,7 +36,7 @@ exports.hangup = function(req, res) {
 	});
 }
 
-exports.status = function(req, res) {
+exports.status = function(req, res,next) {
 	var action = new AsAction.Status();
 	//Status.Channel='sip/abcd';
 	nami.send(action, function(response) {
@@ -46,7 +47,7 @@ exports.status = function(req, res) {
 	});
 }
 
-exports.command = function(req, res) {
+exports.command = function(req, res,next) {
 	var cmd = req.body['cmd'] || req.query['cmd'];
 	var action = new AsAction.Command();
 	action.Command = cmd;
@@ -58,7 +59,7 @@ exports.command = function(req, res) {
 	});
 }
 
-exports.extensionstate = function(req, res) {
+exports.extensionstate = function(req, res,next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var context = req.body['context'] || req.query['context'];
 	var action = new AsAction.ExtensionState();
@@ -72,7 +73,7 @@ exports.extensionstate = function(req, res) {
 	});
 }
 
-exports.getconfig = function(req, res) {
+exports.getconfig = function(req, res,next) {
 	var filename = req.body['filename'] || req.query['filename'];
 	var category = req.body['category'] || req.query['category'];
 	var action = new AsAction.GetConfig();
@@ -86,7 +87,7 @@ exports.getconfig = function(req, res) {
 	});
 }
 
-exports.createconfig = function(req, res) {
+exports.createconfig = function(req, res,next) {
 	var filename = req.body['filename'] || req.query['filename'];
 	var action = new AsAction.CreateConfig();
 	action.Filename = filename;
@@ -99,7 +100,7 @@ exports.createconfig = function(req, res) {
 	});
 }
 
-exports.getconfigjson = function(req, res) {
+exports.getconfigjson = function(req, res,next) {
 	var filename = req.body['filename'] || req.query['filename'];
 	var action = new AsAction.GetConfigJson();
 	action.Filename = filename;
@@ -112,7 +113,7 @@ exports.getconfigjson = function(req, res) {
 	});
 }
 
-exports.DAHDIShowChannels=function(req,res){
+exports.DAHDIShowChannels=function(req,res,next){
 var action = new AsAction.DahdiShowChannels();
 	nami.send(action, function(response) {
 		console.log(response);
@@ -120,7 +121,7 @@ var action = new AsAction.DahdiShowChannels();
 	});
 }
 
-exports.coreshowchannels = function(req, res) {
+exports.coreshowchannels = function(req, res,next) {
 	var action = new AsAction.CoreShowChannels();
 	nami.send(action, function(response) {
 		console.log(response);
@@ -130,7 +131,7 @@ exports.coreshowchannels = function(req, res) {
 	});
 }
 
-exports.hangupexten = function(req, res) {
+exports.hangupexten = function(req, res,next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	if (!type) {
@@ -146,7 +147,7 @@ exports.hangupexten = function(req, res) {
 	});
 }
 
-exports.transfer = function(req, res) {
+exports.transfer = function(req, res,next) {
 	var extenfrom = req.body['extenfrom'] || req.query['extenfrom'];
 	var extento = req.body['extento'] || req.query['extento'];
 	var fromtype = req.body['fromtype'] || req.query['fromtype'];
@@ -182,7 +183,7 @@ exports.transfer = function(req, res) {
  * @property {String} Codecs Codecs
  * @augments Action
  */
-exports.dialout = function(req, res) {
+exports.dialout = function(req, res,next) {
 	var variable = req.body['variable'] || req.query['variable'];
 	var outnumber = req.body['outnumber'] || req.query['outnumber'];
 	var exten = req.body['exten'] || req.query['exten'];
@@ -218,7 +219,7 @@ exports.dialout = function(req, res) {
  *
  *
  **/
-exports.autodial = function(req, res) {
+exports.autodial = function(req, res,next) {
 	var ProjExpertID = req.body['ProjExpertID'] || req.query['ProjExpertID'];
 	var NoticeContent = req.body['NoticeContent'] || req.query['NoticeContent'];
 	var SureContent = req.body['SureContent'] || req.query['SureContent'];
@@ -420,7 +421,7 @@ exports.autodial = function(req, res) {
 
 
 
-exports.getresult=function(req,res){
+exports.getresult=function(req,res,next){
 	var ProjExpertID = req.body['ProjExpertID'] || req.query['ProjExpertID'];
 	if(!ProjExpertID || ProjExpertID==""){
 	res.send({
@@ -455,7 +456,7 @@ exports.getresult=function(req,res){
 
 }
 
-exports.packCall = function(req, res) {
+exports.packCall = function(req, res,next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	if (!type) {
@@ -474,7 +475,7 @@ exports.packCall = function(req, res) {
 	});
 }
 
-exports.unPark = function(req, res) {
+exports.unPark = function(req, res,next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	if (!type) {
@@ -513,7 +514,7 @@ exports.unPark = function(req, res) {
 	});
 }
 
-exports.checkService = function(req, res) {
+exports.checkService = function(req, res,next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	if (!type) {
@@ -531,7 +532,7 @@ exports.checkService = function(req, res) {
 
 }
 
-exports.GetCallInfo = function(req, res) {
+exports.GetCallInfo = function(req, res,next) {
 	var exten = req.body['fromexten'] || req.query['fromexten'];
 	if (exten == null || exten == '') {
 		res.send({
@@ -590,7 +591,7 @@ exports.GetCallInfo = function(req, res) {
 
 }
 
-exports.DadOn = function(req, res) {
+exports.DadOn = function(req, res,next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	var extDB = require('../modules/ippbx/extension.js');

@@ -1,7 +1,7 @@
 var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
-var schema = require('../../database/jdmysql').schema;
+var schema = require('../database/jdmysql').schema;
 var CRMUserRole=require('./CRMUserRole');
 var CRMDepartments=require('./CRMDepartments');
 
@@ -27,11 +27,6 @@ var CRMUserInfo=schema.define('CRMUserInfo',{
 
 CRMUserInfo.belongsTo(CRMUserRole, {as: 'role', foreignKey: 'roleId'});
 CRMUserInfo.belongsTo(CRMDepartments, {as: 'department', foreignKey: 'depId'});
-
-CRMUserInfo.validatesPresenceOf('uName', 'uPass','uExten');//验证非空
-CRMUserInfo.validatesLengthOf('uPass', {min: 4, message: {min: '注册密码必须4位以上'}});//验证长度
-//CRMUserInfo.validatesInclusionOf('deviceproto', {in: ['SIP', 'IAX2','VIRTUAL']});//验证是否在给定几个值
-//CRMUserInfo.validatesNumericalityOf('uPhone','uExten', {int: true});//验证未数字
 
 CRMUserInfo.Name='CRMUserInfo';
 schema.models.CRMUserInfo;

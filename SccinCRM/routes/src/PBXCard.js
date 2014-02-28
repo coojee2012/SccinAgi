@@ -3,14 +3,14 @@ var logger=require('../../lib/logger').logger('web');
 var guid = require('guid');
 var async = require('async');
 //分机列表显示
-exports.list = function(req, res) {
+exports.list = function(req, res,next) {
 	res.render('PBXCard/list.html', {
 		modename: 'PBXCard'
 	});
 }
 
 //保存（适用于新增和修改）
-exports.save = function(req, res) {
+exports.save = function(req, res,next) {
 	var Obj = {};
 	for (var key in req.body) {
 		Obj[key] = req.body[key];
@@ -69,7 +69,7 @@ exports.save = function(req, res) {
 }
 
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res,next) {
 	var cardname = req.body['cardname'];
 	Schemas['PBXCard'].all({
 		where: {

@@ -377,6 +377,54 @@ exports.get = function(req, res) {
 				}, function(err, result) {
 					cb(err, result);
 				});
+			},
+			setDefaultDepartments:function(cb){
+				var depts=[
+				{id:'1',depName:'技术部',memo:'负责产品开发及系统维护！'},
+				{id:'2',depName:'市场部',memo:'负责市场开拓及销售！'},
+				{id:'3',depName:'客服部',memo:'负责客服服务！'}
+				];
+				async.forEach(depts, function(item, callback) {
+					Schemas['CRMDepartments'].create(item, function(err, inst) {
+						callback(err, inst);
+					});
+				}, function(err, result) {
+					cb(err, result);
+				});
+			},
+			setDefaultUserRole:function(cb){
+				var roles=[
+				{id:'0',roleName:'系统管理员',isAgent:1,memo:'拥有最大权限！'},
+				{id:'1',roleName:'坐席员',isAgent:1,memo:'负责产品开发及系统维护！'},
+				{id:'2',roleName:'销售员',isAgent:1,memo:'负责市场开拓及销售！'},
+				{id:'3',roleName:'技术员',memo:'负责客服服务！'},
+				{id:'4',roleName:'产品经理',memo:'负责客服服务！'},
+				{id:'5',roleName:'销售经理',memo:'负责客服服务！'}
+				];
+				async.forEach(roles, function(item, callback) {
+					Schemas['CRMUserRole'].create(item, function(err, inst) {
+						callback(err, inst);
+					});
+				}, function(err, result) {
+					cb(err, result);
+				});
+			},
+			setDefaultUserInfo:function(cb){
+				var crypto =require('crypto');
+				var md5 = crypto.createHash('md5');
+	            var hexpassword = md5.update('password').digest('hex').toUpperCase();
+				var users=[
+				{id:'0',uName:'系统管理员',uLogin:'admin',uPass:hexpassword,uExten:'8801',uPhone:'13588668866',readOnly:1,roleId:'0',depId:'1'},
+				{id:'1',uName:'坐席员',uLogin:'agent',uPass:hexpassword,uExten:'8001',uPhone:'13588668866',roleId:'1',depId:'3'},
+				{id:'2',uName:'销售员',uLogin:'sale',uPass:hexpassword,uExten:'8002',uPhone:'13588668866',roleId:'2',depId:'2'}
+				];
+				async.forEach(users, function(item, callback) {
+					Schemas['CRMUserInfo'].create(item, function(err, inst) {
+						callback(err, inst);
+					});
+				}, function(err, result) {
+					cb(err, result);
+				});
 			}
 
 		

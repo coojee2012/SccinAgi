@@ -14,7 +14,7 @@ var CRMUserRole=schema.define('CRMUserRole',{
 	memo:    {type:String,length:200}
 });
 
-//CRMUserRole.hasMany(CRMUserInfo, {as: 'users',foreignKey:'roleId'});
+CRMUserRole.hasMany(CRMUserInfo, {as: 'users', foreignKey: 'id'});
 
 
 CRMUserRole.validatesPresenceOf('roleName');//验证非空

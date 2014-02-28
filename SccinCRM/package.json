@@ -8,6 +8,7 @@
   "dependencies": {
     "jugglingdb": ">=0.2.12",
     "jugglingdb-mysql": ">=0.0.8",
+    "connect-jugglingdb":">=0.0.3",
     "nami": ">=0.5",
     "node-conf": "*",
     "log4js": "*",

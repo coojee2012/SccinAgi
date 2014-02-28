@@ -43,7 +43,7 @@ a.blue:hover { color: #16C }
 *+html .clearfix { overflow: hidden }
 .h_nav, .h_search { width: 960px; margin: 0 auto; clear: both }
 /*头部*/
-#header { padding: 0; height:77px; margin-top:0px; background:url(/images/login/sys_name.png) center no-repeat; }
+#header { padding: 0; height:77px; margin-top:0px; line-height: 77px; text-align: center; font-size:34px; color: #FFFFFF; font-family: "微软雅黑", "宋体", }
 #warp{ background:url(/images/login/box_c_bg.png) repeat-x; height:438px; margin-top:-2px}
 .page_pos{height:500px; position:absolute; top:50%; margin-top:-310px; width:100%;}
 .pageBody { width: 940px; padding:30px 30px 10px 30px; height:388px; margin: 0px auto; clear: both; background:url(/images/login/login_banner.jpg) no-repeat; }

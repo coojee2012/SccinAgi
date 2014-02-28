@@ -20,12 +20,12 @@ for (var i in files) {
 }
 
 
-if(appconf.debug){
+/*if(appconf.debug){
 schema.automigrate(function() {
     console.log('创建表');
 
 });
-}
+}*/
 
 schema.isActual(function(err, actual) {
     if (!actual) {

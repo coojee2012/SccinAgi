@@ -5,5 +5,6 @@
 	"appname" : "北京市评标专家库呼叫中心系统",
 	"phone" : "root",
 	"email" : "12345678",
+	"env":"development",
 	"debug":true
 }

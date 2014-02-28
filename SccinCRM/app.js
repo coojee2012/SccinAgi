@@ -1,7 +1,7 @@
 /**
  * 模块依赖.
  */
-
+var cluster = require('cluster');
 var express = require('express');
 var partials = require('express-partials');
 var routes = require('./routes/build');
@@ -10,19 +10,25 @@ var http = require('http');
 var path = require('path');
 var conf = require('node-conf');
 var nami = require(__dirname + '/asterisk/asmanager').nami;
-var conn = require(__dirname + '/database/mysqlconn').connection;
+
+var JugglingStore = require('connect-jugglingdb')(express);
+var schema = require('./database/jdmysql').schema;
 var Schemas = require(__dirname + '/database/schema').Schemas;
+
+
 var appconf = conf.load('app');
 var SRCFILE = appconf.debug ? 'src' : 'build';
 
 var logger = require('./lib/logger').logger('web');
-
+var log4js = require('./lib/logger').log4js;
 
 var app = express();
 // 所有环境设置
 app.set('port', process.env.PORT || appconf.hostport);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('env', appconf.env);
+
 
 app.engine('html', require('ejs').renderFile);
 
@@ -30,23 +36,51 @@ app.engine('html', require('ejs').renderFile);
 app.use(partials());
 app.use(express.favicon());
 //app.use(express.logger('web'));
+app.use(log4js.connectLogger(logger, {
+  level: log4js.levels.DEBUG,
+  format: ':method :url'
+}));
 app.use(express.bodyParser({
   uploadDir: './uploads'
 }));
+app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
-app.use(express.session());
+app.use(express.cookieParser());
 
-app.use(require('stylus').middleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.session({
+  secret: 'keyboard cat',
+  store: new JugglingStore(schema, {
+    table: 'sessions', // 存session的表名
+    maxAge: 1000 * 60 * 60 * 24 * 14 // 默认持续时间：毫秒
+  })
+}));
 
+
+
+ //记录长时间没有返回结果的访问
+  app.use(function(req, res, next) {
+    setTimeout(function() {
+      if (!res.finished) {
+        res.end();
+        logger.error('访问%s超时，访问方式：%s。', req.url, req.method);
+      }
+    }, 10000);
+    next();
+  });
 
 // 开发环境配置
 if ('development' == app.get('env')) {
-  //app.use(express.errorHandler({ showStack: true, dumpExceptions: true }));
+  logger.info("当前运行于开发环境！");
+
+  app.use(express.errorHandler({
+    showStack: true,
+    dumpExceptions: true
+  }));
+ 
 }
 
 // 生产环境配置
@@ -54,19 +88,7 @@ if ('production' == app.get('env')) {
 
 }
 
-
-//记录长时间没有返回结果的访问
-app.use(function(req, res, next) {
-  setTimeout(function() {
-    if (!res.finished) {
-      res.end();
-      logger.error('访问%s超时，访问方式：%s。', req.url, req.method);
-    }
-  }, 10000);
-  next();
-});
-
-
+app.use(authentication);
 
 //路由处理
 app.use(app.router);
@@ -99,20 +121,54 @@ app.locals({
 
 
 var count = 0;
-var server = http.createServer(app).listen(app.get('port'), function() {
-  console.log('成功启动四川建设网语音拨打服务: ' + app.get('port'));
-});
 
-server.maxHeadersCount = 0;
 
-server.on('connection', function() {
-  count++;
-  console.log('当前有效连接: ' + count);
-});
 
-server.on('error', function(error) {
-  console.log('发生错误: ', error);
-});
+/*if (cluster.isMaster) {
+  logger.info('[主进程] ' + "开启主进程...");
+
+  for (var i = 0; i < 2; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('listening', function(worker, address) {
+    logger.debug('[主进程] ' + '监听:ID' + worker.id + ',pid:' + worker.process.pid + ', Address:' + address.address + ":" + address.port);
+  });
+
+} else if (cluster.isWorker) {
+  logger.debug('[子进程] ' + "开启子进程：ID" + cluster.worker.id);
+  var server = http.createServer(app).listen(app.get('port'), function() {
+    logger.info('成功启动四川建设网语音拨打服务: ' + app.get('port') + '子进程编号：' + cluster.worker.id);
+  });
+  server.maxHeadersCount = 0;
+  server.on('connection', function() {
+    count++;
+    logger.debug('当前有效连接: ' + count+'子进程编号：'+ cluster.worker.id);
+  });
+  server.on('error', function(error) {
+    logger.error('发生错误: ', error);
+  });
+}*/
+
+
+if (!module.parent) {
+  var server = http.createServer(app).listen(app.get('port'), function() {
+    logger.info('成功启动四川建设网语音拨打服务: ' + app.get('port') );
+  });
+  server.maxHeadersCount = 0;
+  server.on('connection', function() {
+    count++;
+    logger.debug('当前有效连接: ' + count);
+  });
+  server.on('error', function(error) {
+    logger.error('发生错误: ', error);
+  });
+}
+
+module.exports = app;
+
+
+
 
 
 //通常logErrors用来纪录诸如stderr, loggly, 或者类似服务的错误信息：
@@ -125,7 +181,7 @@ function logErrors(err, req, res, next) {
 //clientErrorHandler 定义如下，注意错误非常明确的向后传递了。
 
 function clientErrorHandler(err, req, res, next) {
-  logger.error(err);
+  //logger.error(err);
   if (req.xhr) {
     res.send(500, {
       error: '服务器发生异常!'
@@ -138,9 +194,27 @@ function clientErrorHandler(err, req, res, next) {
 //下面的errorHandler "捕获所有" 的异常， 定义为:
 
 function errorHandler(err, req, res, next) {
-  logger.error(err);
+  //logger.error(err);
   res.status(500);
-  res.render('error', {
+  res.render('error.html', {
     error: err
   });
+}
+
+function authentication(req, res, next) {
+  logger.debug(req.url);
+  if (!req.session.user && req.url!=='/login') {
+    logger.error('session验证失败！')
+    req.session.error = '请先登陆';
+    return res.redirect('/login');
+  }
+  next();
+}
+
+function notAuthentication(req, res, next) {
+  if (req.session.user) {
+    req.session.error = '已登陆';
+    return res.redirect('/');
+  }
+  next();
 }

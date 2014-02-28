@@ -8,6 +8,7 @@ exports.logger=function(name){
   logger.setLevel('INFO');
   return logger;
 };
+exports.log4js=log4js;
 
 /**
 log4js的输出级别6个: trace, debug, info, warn, error, fatal

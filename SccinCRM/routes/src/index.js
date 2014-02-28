@@ -1,21 +1,22 @@
 var Schemas = require('../../database/schema').Schemas;
+var logger = require('../../lib/logger').logger('web');
+var async = require('async');
 var util=require('util');
 var crypto=require('crypto');
-var async=require('async');
+
 
 /*var inld=new Array();
 for(var key in UserInfo.relations){
 	inld.push(key);
 }*/
 
-exports.get = function(req, res){
-	req.session.user=null;
-	res.redirect('login')  ;  
-  //res.render('index.html',{title:'四川建设网呼叫中心',layout:false,umenmus:[]});
+exports.get = function(req, res,next){ 
+  logger.debug(req.session);
+  res.render('index.html',{title:'四川建设网呼叫中心',layout:false,umenmus:[]});
 };
 
-exports.post = function(req, res){
-	res.send("ddd");
+exports.post = function(req, res,next){
+	
 	/*
 	  var EventProxy = require('eventproxy');
 	  var proxy = new EventProxy();
