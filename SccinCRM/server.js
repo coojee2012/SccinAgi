@@ -91,7 +91,11 @@ if (cluster.isMaster) {
 		logger.err(' WORKER ERROR' , err);
 	});
 
-	// 工作进程分支，启动服务器
+	process.on('uncaughtException', function(err){
+		logger.err(' WORKER ERROR' , err);
+	});
+
+	/*// 工作进程分支，启动服务器
 	var app = require('./app');
 	var server = http.createServer(app).listen(app.get('port'), function() {
 		logger.info('成功启动四川建设网语音拨打服务: ' + app.get('port'));
@@ -103,7 +107,13 @@ if (cluster.isMaster) {
 	});
 	server.on('error', function(error) {
 		logger.error('发生错误: ', error);
-	});
+	});*/
+
+var server = require('./app');
+server.listen('3001', function() {
+    logger.info('成功启动四川建设网语音拨打服务!');
+  });
+
 } else {
 	logger.error('启动发生意外！');
 }
