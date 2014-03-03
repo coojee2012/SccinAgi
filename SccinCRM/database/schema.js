@@ -10,22 +10,22 @@ var Schemas = {};
 
 var files = fs.readdirSync(path);
 
-console.log(files);
+//console.log(files);
 for (var i in files) {
     var file = path + files[i];
-    console.log(file);
+    //console.log(file);
     var mod = require(file);
-    console.log(mod);
+    //console.log(mod);
     Schemas[mod.Name] = mod;
 }
 
 
-/*if(appconf.debug){
-schema.automigrate(function() {
+if(appconf.debug){
+/*schema.automigrate(function() {
     console.log('创建表');
 
-});
-}*/
+});*/
+}
 
 schema.isActual(function(err, actual) {
     if (!actual) {

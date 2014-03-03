@@ -1,8 +1,8 @@
 var Schemas = require('../../database/schema').Schemas;
 var logger = require('../../lib/logger').logger('web');
 var async = require('async');
-var util=require('util');
-var crypto=require('crypto');
+var util = require('util');
+var crypto = require('crypto');
 
 
 /*var inld=new Array();
@@ -10,187 +10,168 @@ for(var key in UserInfo.relations){
 	inld.push(key);
 }*/
 
-exports.get = function(req, res,next){ 
-  logger.debug(req.session);
-  res.render('index.html',{title:'四川建设网呼叫中心',layout:false,umenmus:[]});
-};
+exports.get = function(req, res, next) {
+	logger.debug(req.session);
+	var user = req.session.user;
+	var exten = req.session.exten;
+	var department = req.session.department;
+	var role = req.session.role;
 
-exports.post = function(req, res,next){
-	
-	/*
-	  var EventProxy = require('eventproxy');
-	  var proxy = new EventProxy();
-	  
-	  var ulogin=req.body.username;
-	  var upass=req.body.password;
-	  
-	  var usexten=req.body.usexten;
-	  var md5 = crypto.createHash('md5');
-	  var password = md5.update(upass).digest('hex').toUpperCase();
-	  
-	  console.log("MD5:"+password+" upass:"+upass);
-	  
-	  UserInfo.findOne({include:inld,where: {uLogin: ulogin,uPass:password}, order: 'id DESC'}, function(e,db){
-		  try{
-			if(db==null)
-			{
-				res.redirect('login?msg=err1')  ; 
-				return;
+	async.auto({
+		getRoleMenmus: function(cb) {
+			var include = new Array();
+			for (var key in Schemas['CRMUserRole'].relations) {
+				include.push(key);
 			}
-				
-		    if(usexten=='')
-		    	usexten=db.uExten;
-		    Extension.findOne({where:{accountcode:usexten}},function(err,extenold){
-		    	if(err) {
-		    		res.redirect('login?msg=err4')  ;  
-		    		return;
-		    	}
-		    	if(extenold==null){
-		    		res.redirect('login?msg=err5')  ;  
-		    		return;
-		    	}
-		    	
-		    	
-		    	req.session.user=ulogin;
-		    	req.session.username=db.uName;
-		    	req.session.exten=usexten;
-		    	req.session.deptid=db.uDepId;
-		    	req.session.deptname=db.__cachedRelations.DepInfo.depName;
-		    	req.session.userid=db.id;
-		    	req.session.roleid=db.uRolyId;
-		    	//console.log(req.session);
-		    	
-		    	extenold.doymicaccount=db.uExten;
-		    	Extension.updateOrCreate(extenold,function(err,exten){
-			    RoelMenmuRlations.all({where:{roleID:db.uRolyId}},function(e,dbs1){
-				  if(dbs1==null || dbs1.length<1){
-					  res.redirect('login?msg=err2')  ;  
-					  return;
-				  }
-				 
-				  var ids=new Array();
-				  for(var mr in dbs1){
-					 
-					  ids.push(dbs1[mr].menmuID);
-				  }
-				  //console.log(ids.join(','));
-				  Menmus.all({where:{id:{inq: ids.join(',')}}},function(e,dbs2){
-					  if(dbs2==null || dbs2.length<1){
-						  res.redirect('login?msg=err3')  ;  
-						  return;
-					  }
-					var usermenmus={};
-					var startmenmus={};
-					startmenmus.starmenmu_grsz={
-							title: '个人设置',
-							url: '/UserManager/EditSelf',
-							winWidth: 600,
-							winHeight: 400,
-							apptype: 'appwin',
-							postdata: {}};
-					startmenmus.starmenmu_syzn={
-							title: '使用指南',
-							url: '/RoleAdmin/Index',
-							winWidth: 1100,
-							winHeight: 650,
-							apptype: 'appwin',
-							postdata: {}};
-					startmenmus.starmenmu_gywm={
-							title: '关于我们',
-							url: 'http://www.chinatelecom.com.cn/corp/lsqdcs/index.html',
-							winWidth: 1100,
-							winHeight: 650,
-							apptype: 'appwin',
-							postdata: {}};
-					startmenmus.starmenmu_tcxt={
-							title: '退出系统',
-							url: '/Login/Index',
-							winWidth: 1100,
-							winHeight: 650,
-							apptype: 'loginout',
-							postdata: {}};
-					var is7 = false;
-	                var is8 = false;
-					//console.log(dbs2);
-					for(var menmu in dbs2){
-						if(dbs2[menmu].mgID==7 ){
-							 if (!is7) {
-								 startmenmus.starmenmu_xtsz={
-										 title: dbs2[menmu].mgName,
-										 url:'#',
-										 apptype:'haschild',
-										 postdata:{},
-										 winWidth:dbs2[menmu].width,
-										 winHeight:dbs2[menmu].height
-								 }; 
-								 is7=true;
-							 }
-							 else{
-								 startmenmus['sub_item_xtsz_'+dbs2[menmu].id]={
-										 title: dbs2[menmu].mgName,
-										 url:dbs2[menmu].menURL,
-										 apptype:'appwin',
-										 postdata:{},
-										 winWidth:dbs2[menmu].width,
-										 winHeight:dbs2[menmu].height
-								 }; 	 
-								 
-							 }
-						}
-						else if(dbs2[menmu].mgID==8){
-							 if (!is8) {
-								// startmenmus.starmenmu_pbx={
-										 startmenmus['sub_item_pbx_'+dbs2[menmu].id]={
-										 title: dbs2[menmu].menName,
-										 url:dbs2[menmu].menURL,
-										 apptype:'appwin',
-										 postdata:{},
-										 winWidth:dbs2[menmu].width,
-										 winHeight:dbs2[menmu].height
-								 }; 
-								 is8=true;
-							 }
-							 else{
-								 startmenmus['sub_item_pbx_'+dbs2[menmu].id]={
-										 title: dbs2[menmu].menName,
-										 url:dbs2[menmu].menURL,
-										 apptype:'appwin',
-										 postdata:{},
-										 winWidth:dbs2[menmu].width,
-										 winHeight:dbs2[menmu].height
-								 }; 	 
-								 
-							 }
-						}
-						else{
-						usermenmus["menmu_"+dbs2[menmu].id]={
-								title:dbs2[menmu].menName,
-								url:dbs2[menmu].menURL,
-								winWidth:dbs2[menmu].width,
-								winHeight:dbs2[menmu].height
-							}	
+			logger.info("具有的关系:", include);
+			if (role.id === '0') {
+				cb(null, '*')
+			} else {
+				Schemas['CRMUserRole'].findOne({
+					include: include,
+					where: {
+						id: role.id
+					}
+
+				}, function(err, inst) {
+					logger.info(inst);
+					cb(err, inst.__cachedRelations['users']);
+				});
+			}
+		},
+		getMenmus: ['getRoleMenmus',
+			function(cb, results) {
+				var where = {};
+				if (util.isArray(results.getRoleMenmus)) {
+
+				} else {
+					where.id = {'neq':''};
+				}
+				Schemas['CRMMenmus'].all({
+					include: [],
+					where: where
+				}, function(err, dbs) {
+					cb(err, dbs);
+				});
+
+			}
+		],
+		setMenmus: ['getMenmus',
+			function(cb, results) {
+				var startmenmus = {};
+				var menmus = {};
+				startmenmus.starmenmu_grsz = {
+					title: '个人设置',
+					url: '/UserManager/EditSelf',
+					winWidth: 600,
+					winHeight: 400,
+					apptype: 'appwin',
+					postdata: {}
+				};
+				startmenmus.starmenmu_syzn = {
+					title: '使用指南',
+					url: '/RoleAdmin/Index',
+					winWidth: 1100,
+					winHeight: 650,
+					apptype: 'appwin',
+					postdata: {}
+				};
+				startmenmus.starmenmu_gywm = {
+					title: '关于我们',
+					url: 'http://www.chinatelecom.com.cn/corp/lsqdcs/index.html',
+					winWidth: 1100,
+					winHeight: 650,
+					apptype: 'appwin',
+					postdata: {}
+				};
+				startmenmus.starmenmu_tcxt = {
+					title: '退出系统',
+					url: '/Login/Index',
+					winWidth: 1100,
+					winHeight: 650,
+					apptype: 'loginout',
+					postdata: {}
+				};
+				/*startmenmus.starmenmu_xtsz = {
+					title: '系统设置',
+					url: '#',
+					apptype: 'haschild',
+					postdata: {},
+					winWidth: 1024,
+					winHeight: 768
+				};*/
+
+				if (results.getMenmus.length > 0) {
+					for (var i = 0; i < results.getMenmus.length; i++) {
+						if (results.getMenmus[i].mgID === 7) {
+							startmenmus['sub_item_xtsz_' + results.getMenmus[i].id] = {
+								title: results.getMenmus[i].mgName,
+								url: results.getMenmus[i].menURL,
+								apptype: 'appwin',
+								postdata: {},
+								//winWidth: results.getMenmus[i].width,
+								//winHeight: results.getMenmus[i].height
+							};
+						} else if (results.getMenmus[i].mgID === 8) {
+							startmenmus['sub_item_pbx_' + results.getMenmus[i].id] = {
+								title: results.getMenmus[i].menName,
+								url: results.getMenmus[i].menURL,
+								apptype: 'appwin',
+								postdata: {},
+								//winWidth: results.getMenmus[i].width,
+								//winHeight: results.getMenmus[i].height
+							};
+						} else {
+							menmus["menmu_" + results.getMenmus[i].id] = {
+								title: results.getMenmus[i].menName,
+								url: results.getMenmus[i].menURL,
+								//winWidth: results.getMenmus[i].width,
+								//winHeight: results.getMenmus[i].height
+							}
 						}
 					}
-					//console.log(usermenmus);
-					res.render('index.html', { title: '宜宾市清源水务客服服务系统',layout:false,umenmus:dbs2,user:db,exten:exten,menmus:util.inspect(usermenmus,false,null),startmenmus:util.inspect(startmenmus,false,null) });  
-				  });  //查找菜单结束
-			 
-			});//获取角色和菜单关系结束
-		    });//更新动态分机
-		    }); //查找分机结束
-			   
-		  
-		
-		  }
-		  catch(e){
-			  
-			  res.redirect('login?msg='+e)  ;  
-		  }
-		  
-		    
-	  });//查找用户信息结束
-*/
-	  
+				}
+				cb(null, {
+					startmenmus: startmenmus,
+					menmus: menmus
+				});
+			}
+		]
+
+	}, function(err, results) {
+		if (err)
+			next(err);
+		else {
+			res.render('index.html', {
+				layout: false,
+				user: {
+					id: user.id,
+					name: user.uName
+				},
+				department: {
+					id: department.id,
+					name: department.depName
+				},
+				role: {
+					id: role.id,
+					name: role.roleName,
+					isAgent: role.isAgent
+				},
+				exten: {
+					number: exten.id,
+					proto: exten.deviceproto
+				},
+				umenmus: results.getMenmus,
+				menmus: util.inspect(results.setMenmus.startmenmus),
+				startmenmus: util.inspect(results.setMenmus.startmenmus)
+			});
+		}
+	});
+
+};
+
+exports.post = function(req, res, next) {
+
 };
 
 //module.exports=route;

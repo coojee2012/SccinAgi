@@ -2,7 +2,7 @@ var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var schema = require('../../database/jdmysql').schema;
-var CRMUserInfo=require('./CRMUserInfo');
+//var CRMUserInfo=require('./CRMUserInfo');
 
 var CRMDepartments=schema.define('CRMDepartments',{
 	id:{type:String,length:100,default:function(){return guid.create();}},

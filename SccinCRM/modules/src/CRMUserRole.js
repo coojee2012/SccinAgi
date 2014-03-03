@@ -2,7 +2,7 @@ var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var schema = require('../../database/jdmysql').schema;
-var CRMUserInfo=require('./CRMUserInfo');
+var CRMMenmuRoleRelations=require('./CRMMenmuRoleRelations');
 
 var CRMUserRole=schema.define('CRMUserRole',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
@@ -14,7 +14,7 @@ var CRMUserRole=schema.define('CRMUserRole',{
 	memo:    {type:String,length:200}
 });
 
-//CRMUserRole.hasMany(CRMUserInfo, {as: 'users',foreignKey:'roleId'});
+CRMUserRole.hasMany(CRMMenmuRoleRelations, {as: 'users',foreignKey:'roleId'});
 
 
 CRMUserRole.validatesPresenceOf('roleName');//验证非空

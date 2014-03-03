@@ -131,18 +131,13 @@ app.locals({
 });
 
 
-var count = 0;
 
-
-server.on('request', app);
-server.maxHeadersCount = 0;
-server.on('connection', function() {
-  count++;
-  logger.debug('当前有效连接: ' + count);
-});
-server.on('error', function(error) {
-  logger.error('发生错误: ', error);
-});
+  server.maxHeadersCount = 0;
+  server.on('request',app);
+  
+  server.on('error', function(error) {
+    logger.error('发生错误: ', error);
+  });
 
 
 if (!module.parent) {
@@ -155,7 +150,7 @@ module.exports = server;
 
 
 process.on('uncaughtException', function(err) {
-  logger.error(err);
+  logger.error('uncaughtException:',err);
 });
 
 
@@ -163,7 +158,7 @@ process.on('uncaughtException', function(err) {
 //通常logErrors用来纪录诸如stderr, loggly, 或者类似服务的错误信息：
 
 function logErrors(err, req, res, next) {
-  logger.error(err.stack);
+ // logger.error('logErrors:',err.stack);
   next(err);
 }
 
@@ -183,7 +178,7 @@ function clientErrorHandler(err, req, res, next) {
 //下面的errorHandler "捕获所有" 的异常， 定义为:
 
 function errorHandler(err, req, res, next) {
-  //logger.error(err);
+  logger.error('errorHandler:',err);
   res.status(500);
   res.render('error.html', {
     error: err

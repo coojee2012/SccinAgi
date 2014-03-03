@@ -409,6 +409,32 @@ exports.get = function(req, res) {
 					cb(err, result);
 				});
 			},
+			/*setDefaultUserMenmus:function(cb){
+				var umenmus=[{id:'0',roleid:'0',menmuid:''}];
+
+			},*/
+			setDefaultMenmus:function(cb){
+				var menmus=[
+				{id:'80',menName:'分机管理',mgID:8,menURL:'/PBXExtension',iconName:'pc.png'},
+				{id:'81',menName:'分机分组管理',mgID:8,menURL:'/PBXExtenGroup',iconName:'pc.png'},
+                {id:'82',menName:'队列管理',mgID:8,menURL:'/PBXQueue',iconName:'pc.png'},
+                {id:'83',menName:'设备管理',mgID:8,menURL:'/PBXCard',iconName:'pc.png'},
+                {id:'84',menName:'中继管理',mgID:8,menURL:'/PBXTrunk',iconName:'pc.png'},
+                {id:'70',menName:'菜单管理',mgID:7,menURL:'/CRMMenmus',iconName:'pc.png'},
+                {id:'71',menName:'菜单分组管理',mgID:7,menURL:'/CRMMenmuGroup',iconName:'pc.png'},
+                {id:'72',menName:'用户管理',mgID:7,menURL:'/CRMUserinfo',iconName:'pc.png'},
+                {id:'73',menName:'角色管理',mgID:7,menURL:'/CRMUserRole',iconName:'pc.png'},
+                {id:'74',menName:'部门管理',mgID:7,menURL:'/CRMDepartments',iconName:'pc.png'}
+				];
+				async.forEach(menmus, function(item, callback) {
+					Schemas['CRMMenmus'].create(item, function(err, inst) {
+						callback(err, inst);
+					});
+				}, function(err, result) {
+					cb(err, result);
+				});
+
+			},
 			setDefaultUserInfo:function(cb){
 				var crypto =require('crypto');
 				var md5 = crypto.createHash('md5');
