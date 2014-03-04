@@ -2,11 +2,12 @@ var Schemas = require('../../database/schema').Schemas;
 var guid = require('guid');
 var async = require('async');
 var logger = require('../../lib/logger').logger('web');
+var _ = require('lodash');
 //ajax验证函数集合
 var checkFun = {};
 
 //处理页面需要的Ajax验证
-exports.checkAjax = function(req, res,next) {
+exports.checkAjax = function(req, res, next) {
 	var param = req.body['param'];
 	var name = req.body['name'];
 	if (typeof(checkFun[name] === 'function')) {
@@ -21,7 +22,7 @@ exports.checkAjax = function(req, res,next) {
 }
 
 //分机列表显示
-exports.list = function(req, res,next) {
+exports.list = function(req, res, next) {
 
 	res.render('PBXTrunk/list.html', {
 		modename: 'PBXTrunk'
@@ -29,7 +30,7 @@ exports.list = function(req, res,next) {
 }
 
 //新建
-exports.create = function(req, res,next) {
+exports.create = function(req, res, next) {
 	var trunkproto = req.query['trunkproto'];
 	if (!trunkproto || trunkproto == '')
 		trunkproto = 'SIP';
@@ -56,7 +57,7 @@ exports.create = function(req, res,next) {
 
 }
 //编辑
-exports.edit = function(req, res,next) {
+exports.edit = function(req, res, next) {
 	var id = req.query["id"];
 	async.auto({
 			findTrunk: function(cb) {
@@ -67,28 +68,36 @@ exports.edit = function(req, res,next) {
 						cb(err, inst);
 				});
 			},
-			findMembers: ['findTrunk',
+			getHasChannels: ['findTrunk',
 				function(cb, results) {
-					var args = results.findTrunk.args;
-					var hasExtens = "";
-					var yyExtens = "";
-					getHasChannels(results.findTrunk.trunkproto, function(err, result) {
-						cb(null, {
-							hasExtens: hasExtens,
-							yyExtens: yyExtens
+					if (_.contains(['FXO', 'PRI'], results.findTrunk.trunkproto)) {
+						getHasChannels(results.findTrunk.trunkproto, function(err, result) {
+							cb(null, result);
 						});
-					});
+					} else {
+						cb(null, "");
+					}
+				}
+			],
+			getyyChannels: ['findTrunk',
+				function(cb, results) {
+					if (_.contains(['FXO', 'PRI'], results.findTrunk.trunkproto)) {
+						getyyChannels(results.findTrunk.args, function(err, result) {
+							cb(null, result);
+						});
+					} else {
+						cb(null, "");
+					}
 
 				}
 			]
 
 		},
-
 		function(err, results) {
-
 			res.render('PBXTrunk/edit.html', {
-				hasExtens: results.findMembers.hasExtens,
-				yyExtens: results.findMembers.yyExtens,
+				hasChannels: results.getHasChannels,
+				yyChannels: results.getyyChannels,
+				partv: 'part' + results.findTrunk.trunkproto + '.html',
 				inst: results.findTrunk
 			});
 		});
@@ -98,7 +107,7 @@ exports.edit = function(req, res,next) {
 
 
 //保存（适用于新增和修改）
-exports.save = function(req, res,next) {
+exports.save = function(req, res, next) {
 	var Obj = {};
 	Obj.args = '';
 	for (var key in req.body) {
@@ -138,7 +147,7 @@ exports.save = function(req, res,next) {
 											var lines = [];
 											if (linestr[1] && linestr[1] !== '')
 												lines = linestr[1].split(',');
-											updateChannels(lines,devstr, function(err, result) {
+											updateChannels(lines, devstr, function(err, result) {
 												cb(err, inst);
 											});
 										} else {
@@ -166,7 +175,24 @@ exports.save = function(req, res,next) {
 							},
 							update: Obj
 						}, function(err, inst) {
-							cb(err, inst);
+							if (results.isHaveCheck.trunkproto === 'PRI' || results.isHaveCheck.trunkproto === 'FXO') {
+								var oldargs = results.isHaveCheck.args;
+								var oldlinestr = oldargs.split('=');
+								var oldlines = [];
+								if (oldlinestr[1] && oldlinestr[1] !== '')
+									oldlines = oldlinestr[1].split(',');
+								var linestr = Obj.args.split('=');
+								var lines = [];
+								if (linestr[1] && linestr[1] !== '')
+									lines = linestr[1].split(',');
+								updateChannels(oldlines, '-1', function(err, result) {
+									updateChannels(lines, results.isHaveCheck.trunkdevice, function(err, result) {
+										cb(err, inst);
+									});
+								});
+							} else {
+								cb(err, inst);
+							}
 						});
 					}
 				}
@@ -185,13 +211,13 @@ exports.save = function(req, res,next) {
 						myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
 					} else {
 						myjson.success = 'OK';
-						myjson.msg = '新增成功!';
+						myjson.msg = '新增成功,请及时同步到服务器，使其生效！';
 						myjson.id = results.createNew.id;
 					}
 				});
 			} else if (results.updateOld !== -1) {
 				myjson.success = 'OK';
-				myjson.msg = '修改成功!';
+				myjson.msg = '修改成功,请及时同步到服务器，使其生效！';
 				myjson.id = results.updateOld.id;
 
 			} else if (err) {
@@ -204,7 +230,7 @@ exports.save = function(req, res,next) {
 }
 
 
-exports.delete = function(req, res,next) {
+exports.delete = function(req, res, next) {
 	var id = req.body['id'];
 	Schemas['PBXTrunk'].find(id, function(err, inst) {
 		var myjson = {};
@@ -216,22 +242,42 @@ exports.delete = function(req, res,next) {
 				myjson.success = 'ERROR';
 				myjson.msg = '没有找到需要删除的数据！';
 			} else {
+				async.auto({
+					updateDahdi: function(cb) {
+						if (_.contains(['FXO', 'PRI'], inst.trunkproto)) {
+							var oldargs = inst.args;
+							var oldlinestr = oldargs.split('=');
+							var oldlines = [];
+							if (oldlinestr[1] && oldlinestr[1] !== '')
+								oldlines = oldlinestr[1].split(',');
+							updateChannels(oldlines, '-1', function(err, result) {
+								cb(err, result);
+							});
+						} else {
+							cb(null, 1);
+						}
+					},
+					destory: function(cb) {
+						inst.destroy(function(err) {
+							cb(err, 1);
+						});
+					}
+
+				}, function(err, results) {
+					if (err) {
+						myjson.success = 'ERROR';
+						myjson.msg = '删除数据发生异常,请联系管理员！！';
+					} else {
+						myjson.success = 'OK';
+						myjson.msg = '删除成功,请及时同步到服务器，使其生效！';
+					}
+					res.send(myjson);
+				});
+
 
 			}
-			inst.destroy(function(err) {
-				if (err) {
-					myjson.success = 'ERROR';
-					myjson.msg = '删除数据发生异常,请联系管理员！！';
-				} else {
-					myjson.success = 'OK';
-					myjson.msg = '删除成功！';
-				}
-				res.send(myjson);
-
-			});
 
 		}
-
 	});
 }
 
@@ -250,8 +296,11 @@ function setTrunkDev(Obj, callback) {
 			}
 		}, function(err, dbs) {
 			var count = 0;
-			if (dbs !== null)
-				count = dbs.length;
+			if (dbs !== null) {
+				var tmparr = _.range(dbs.length+1);//根据记录的长度创建一个相当长度的数组
+				var hasgroup=_.map(dbs, function(item) { return _.parseInt(item.trunkdevice); });
+				 count = _.chain(tmparr).difference(hasgroup).min();
+			}
 			callback(err, count);
 		});
 	} else {
@@ -291,14 +340,54 @@ function getHasChannels(trunkproto, callback) {
 	});
 }
 
-function updateChannels(lines,group, callback) {
+function getyyChannels(args, callback) {
+	var yyChannels = "";
+	if (!args || args == '') {
+		callback(null, "");
+		return;
+	}
+	var channels = "";
+	var extobj = args.split('&');
+	extobj.forEach(function(item) {
+		var items = item.split('=');
+		if (items[0] === 'channel')
+			channels = items[1];
+	});
+	if (!channels || channels === '') {
+		callback(null, "");
+		return;
+	}
+	var chans = channels.split(',');
+	chans = _.map(chans, function(item) {
+		return _.parseInt(item);
+	});
+	Schemas['PBXCard'].all({
+		where: {
+			line: {
+				'inq': chans
+			}
+		},
+		order: ['cardname asc', 'line asc']
+	}, function(err, dbs) {
+		if (err) {
+			callback(err, null);
+		} else {
+			_.forEach(dbs, function(item) {
+				yyChannels += '<option value="' + item.line + '">[' + item.cardname + ']' + item.trunkproto + ' - ' + item.line + ' </option>';
+			});
+			callback(null, yyChannels);
+		}
+	});
+}
+
+function updateChannels(lines, group, callback) {
 	async.each(lines, function(item, cb) {
 		Schemas['PBXCard'].update({
 			where: {
-				line:item
+				line: item
 			},
 			update: {
-				group:group
+				group: group
 			}
 		}, function(err, result) {
 			cb(err, result);

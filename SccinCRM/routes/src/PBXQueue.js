@@ -53,8 +53,8 @@ exports.checkAjax = function(req, res,next) {
 
 //分机列表显示
 exports.list = function(req, res,next) {
-
 	res.render('PBXQueue/list.html', {
+		modename:'PBXQueue'
 	});
 }
 

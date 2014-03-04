@@ -13,6 +13,7 @@
     "nami": ">=0.5",
     "node-conf": "*",
     "log4js": "*",
+    "lodash":">=2.4.1",
     "guid": "*",
     "mysql": "*",
     "mssql":">=0.5.0",

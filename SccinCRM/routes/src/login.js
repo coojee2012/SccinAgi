@@ -2,6 +2,7 @@ var Schemas = require('../../database/schema').Schemas;
 var logger = require('../../lib/logger').logger('web');
 var async = require('async');
 var crypto = require('crypto');
+var _ = require('lodash');
 exports.get = function(req, res, next) {
 	res.render('login.html', {
 		layout: false,
@@ -24,14 +25,16 @@ exports.post = function(req, res, next) {
 		authentication: function(cb) {
 			authentication(username, hexpassword, cb);
 		},
-		findUseExten: ['authentication',function(cb,results) {
-			if(exten==='')
-				exten=results.authentication.uExten;
-			findexten(exten, cb);
-		}],
+		findUseExten: ['authentication',
+			function(cb, results) {
+				if (exten === '')
+					exten = results.authentication.uExten;
+				findexten(exten, cb);
+			}
+		],
 		setsession: ['findUseExten',
 			function(cb, results) {
-				setsession(results.authentication,results.findUseExten, req, cb);
+				setsession(results.authentication, results.findUseExten, req, cb);
 			}
 		]
 	}, function(err, results) {
@@ -45,6 +48,19 @@ exports.post = function(req, res, next) {
 			});
 		} else {
 			res.redirect('/');
+		}
+	});
+}
+
+/*
+退出系统
+*/
+exports.logout = function(req, res, next) {
+	req.session.destroy(function(err) {
+		if (err)
+			next(err);
+		else {
+			res.redirect('/login');
 		}
 	});
 }
@@ -85,10 +101,10 @@ function setsession(user, exten, req, callback) {
 		callback('传入非法用户！', null);
 	} else {
 		try {
-			req.session.user=user;
-			req.session.department=user.__cachedRelations['department'];
-			req.session.role=user.__cachedRelations['role'];
-			req.session.exten=exten;
+			req.session.user = user;
+			req.session.department = user.__cachedRelations['department'];
+			req.session.role = user.__cachedRelations['role'];
+			req.session.exten = exten;
 			callback(null, req.session);
 		} catch (err) {
 			logger.error(err);

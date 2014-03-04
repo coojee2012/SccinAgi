@@ -4,6 +4,7 @@
       <div class="panel panel-default fieldset">
         <div class="panel-heading">
           <button data-toggle="modal" data-target="#myModal" class="btn btn-primary">新建中继</button>
+          <button data-toggle="modal" data-target="#syncconfig" data-backdrop="static" class="btn btn-warning">配置同步</button>
         </div>
         <div class="panel-body ">
           <div class="form-group">
@@ -122,6 +123,8 @@
 </div>
 
 <%- include ../listsuredelmodal.html %>
+<%- include ../listsyncmodal.html %>
+<%- include ../listprogressbar.html %>
 <%- include ../listtable.html %>
 <%- include ../listbasefunc.html %>
 

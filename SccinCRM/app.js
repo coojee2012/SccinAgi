@@ -63,7 +63,7 @@ app.use(express.session({
   secret: 'keyboard cat',
   store: new JugglingStore(schema, {
     table: 'sessions', // 存session的表名
-    maxAge: 1000 * 60 * 60 * 24 * 14 // 默认持续时间：毫秒
+    maxAge: 1000 * 60 * 10   // 默认持续时间：毫秒,10分钟
   })
 }));
 
@@ -164,9 +164,9 @@ function logErrors(err, req, res, next) {
 
 //clientErrorHandler 定义如下，注意错误非常明确的向后传递了。
 
-function clientErrorHandler(err, req, res, next) {
-  //logger.error(err);
+function clientErrorHandler(err, req, res, next) { 
   if (req.xhr) {
+    logger.error(err);
     res.send(500, {
       error: '服务器发生异常!'
     });

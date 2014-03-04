@@ -709,7 +709,7 @@ myLib.desktop.lrBar = {
                 } else if (data.apptype == 'dialog') {
                     $("#" + data.dialogname).dialog("open");
                 } else if (data.apptype == 'loginout') {
-                    window.location.href = "/";
+                    window.location.href = "/logout";
                 } else {
                     myLib.desktop.win.newWin({
                         WindowTitle: data.title,
@@ -807,7 +807,7 @@ myLib.desktop.lrBar = {
             var data = $(this).data("iconData"),
                 id = this.id;
             if (data.apptype == 'haschild') {} else if (data.apptype == 'loginout') {
-                window.location.href = "/";
+                window.location.href = "/logout";
             } else {
                 myLib.desktop.win.newWin({
                     WindowTitle: data.title,
@@ -991,6 +991,12 @@ myLib.desktop.taskBar = {
 
                         $(this).removeClass('defaultTab').addClass('selectTab'); //当只有一个窗口时
                         myLib.desktop.win.switchZindex(win);
+                    }else {
+                        if ($(this).hasClass('selectTab')) {
+                            myLib.desktop.win.minimize(win);
+                        } else {
+                            myLib.desktop.win.switchZindex(win);
+                        }
                     }
                     $navTab.eq(i).trigger("click");
                 }
@@ -1376,7 +1382,7 @@ myLib.desktop.deskIcon = {
             [{
                 text: "退出系统",
                 func: function() {
-                    window.location.href = "/";
+                    window.location.href = "/logout";
                 }
             }]
 

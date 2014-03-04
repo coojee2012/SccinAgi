@@ -24,6 +24,22 @@ $(".tipmsg").tooltip();
             }); 
   });
 
+//进度条
+$('#suresync').click(function(){
+$('#syncconfig').modal('hide');
+$('.progress-bar').css({'width':'1%'}).find('span').html('1%');
+$('#processbar_modal').modal({backdrop:'static', keyboard: false,show:true});
+setTimeout(function(){
+  $('.progress-bar').css({'width':'30%'}).find('span').html('30%');
+}, 3000);
+setTimeout(function(){
+  $('.progress-bar').css({'width':'60%'}).find('span').html('60%');
+}, 6000);
+setTimeout(function(){
+  $('.progress-bar').css({'width':'100%'}).find('span').html('100%');
+  $('#processbar_modal').modal('hide');
+}, 9000);
+});
 //绑定查询按钮
  $('#search').click(function(){
  var oTable=$('#datatable').dataTable();

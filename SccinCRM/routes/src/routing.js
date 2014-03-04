@@ -4,7 +4,7 @@ function authentication(req, res, next) {
 
 	/*	if (!req.session.user) {
 
-		req.session.error = 'è¯·å…ˆç™»é™†';
+		req.session.error = 'ÇëÏÈµÇÂ½';
 
 		return res.redirect('/login');
 	}*/
@@ -39,6 +39,12 @@ routes.login = [{
 		file: '/login',
 		method: 'post',
 		fn: 'post'
+	},
+	{
+		urlreg: '/logout',
+		file: '/login',
+		method: 'get',
+		fn: 'logout'
 	}
 ];
 

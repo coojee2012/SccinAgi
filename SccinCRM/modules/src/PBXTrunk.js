@@ -8,7 +8,7 @@ var PBXTrunk=schema.define('PBXTrunk',{
 	trunkdevice:{type:String,length:50,default: function () { return ''; }},
 	memo: {type:String,length:100,default: function () { return ''; }},
 	cretime:     {type: String, length: 50, default: function () {return moment().format("YYYY-MM-DD HH:mm:ss"); }},
-	args:    {type:String,length:100,default: function () { return ''; }}
+	args:    {type:String,length:300,default: function () { return ''; }}
 });
 
 PBXTrunk.validatesPresenceOf('trunkname', 'trunkproto');//验证非空
