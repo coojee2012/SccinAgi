@@ -1,11 +1,12 @@
 /**
  * 模块依赖.
  */
+var _ = require('lodash');
+var fs = require("fs");
+var path = require("path");
 var cluster = require('cluster');
 var express = require('express');
 var partials = require('express-partials');
-var routes = require('./routes/build');
-var user = require('./routes/build/user');
 var http = require('http');
 var path = require('path');
 var conf = require('node-conf');
@@ -63,7 +64,7 @@ app.use(express.session({
   secret: 'keyboard cat',
   store: new JugglingStore(schema, {
     table: 'sessions', // 存session的表名
-    maxAge: 1000 * 60 * 10   // 默认持续时间：毫秒,10分钟
+    maxAge: 1000 * 60 * 10 // 默认持续时间：毫秒,10分钟
   })
 }));
 
@@ -99,24 +100,23 @@ if ('production' == app.get('env')) {
 
 }
 
-app.use(authentication);
+//app.use(authentication);
 
 //路由处理
 app.use(app.router);
+app.get('/', function(req, res, next) {
+  res.redirect('/index');
+});
 
-var routings = require(__dirname + '/routes/' + SRCFILE + '/routing.js');
-for (var i in routings) {
-  for (var r in routings[i]) {
-    var pf = require(__dirname + '/routes/' + SRCFILE + routings[i][r].file)[routings[i][r].fn];
-    if (routings[i][r].method == 'get') {
-      app.get(routings[i][r].urlreg, pf);
-    } else if (routings[i][r].method == 'post')
-      app.post(routings[i][r].urlreg, pf);
-    else
-      app.all(routings[i][r].urlreg, pf);
-  }
+readroutes(__dirname + '/routes/' + SRCFILE + '/');
 
-}
+
+app.use(function(req, res, next) {
+  res.render('404.html', {
+    status: 404,
+    title: '',
+  });
+});
 
 //错误及异常处理
 app.use(logErrors);
@@ -132,16 +132,16 @@ app.locals({
 
 
 
-  server.maxHeadersCount = 0;
-  server.on('request',app);
-  
-  server.on('error', function(error) {
-    logger.error('发生错误: ', error);
-  });
+server.maxHeadersCount = 0;
+server.on('request', app);
+
+server.on('error', function(error) {
+  logger.error('发生错误: ', error);
+});
 
 
 if (!module.parent) {
-server.listen(app.get('port'), function() {
+  server.listen(app.get('port'), function() {
     logger.info('成功启动四川建设网语音拨打服务: ' + app.get('port'));
   })
 }
@@ -150,7 +150,7 @@ module.exports = server;
 
 
 process.on('uncaughtException', function(err) {
-  logger.error('uncaughtException:',err);
+  logger.error('uncaughtException:', err);
 });
 
 
@@ -158,13 +158,13 @@ process.on('uncaughtException', function(err) {
 //通常logErrors用来纪录诸如stderr, loggly, 或者类似服务的错误信息：
 
 function logErrors(err, req, res, next) {
- // logger.error('logErrors:',err.stack);
+  // logger.error('logErrors:',err.stack);
   next(err);
 }
 
 //clientErrorHandler 定义如下，注意错误非常明确的向后传递了。
 
-function clientErrorHandler(err, req, res, next) { 
+function clientErrorHandler(err, req, res, next) {
   if (req.xhr) {
     logger.error(err);
     res.send(500, {
@@ -178,10 +178,11 @@ function clientErrorHandler(err, req, res, next) {
 //下面的errorHandler "捕获所有" 的异常， 定义为:
 
 function errorHandler(err, req, res, next) {
-  logger.error('errorHandler:',err);
+  logger.error('errorHandler:', err);
+  var util=require('util');
   res.status(500);
   res.render('error.html', {
-    error: err
+    error:util.inspect(err)
   });
 }
 
@@ -201,4 +202,63 @@ function notAuthentication(req, res, next) {
     return res.redirect('/');
   }
   next();
+}
+
+
+function readroutes(dir, routeflag) {
+  var files = fs.readdirSync(dir);
+  var len = files.length;
+  var file = null;
+  if (!routeflag || routeflag === '')
+    routeflag = '/';
+
+  for (var i = 0; i < len; i++) {
+    file = files[i];
+
+    setroute(dir + "\\" + file, routeflag);
+  }
+
+}
+
+function setroute(filepath, routeflag) {
+  fs.stat(filepath, function(err, stats) {
+    if (stats.isFile()) {
+      var filename = path.basename(filepath, '.js');
+      var parentDir = path.dirname(filepath);
+      var parentDirname = path.basename(path.dirname(filepath));
+      var thisFilename = path.basename(__filename, '.js');
+      if (filename != thisFilename && filename.indexOf(parentDirname) < 0) {
+        app.all(routeflag + filename, function(req, res, next) {
+          var ooo = 'index';
+          var routemod = require(filepath);
+          if (routemod && routemod[req.route.method] && typeof(routemod[req.route.method][ooo]) === 'function') {
+            routemod[req.route.method][ooo](req, res, next, routeflag + filename);
+          } else {
+            res.render('404.html');;
+          }
+        });
+        app.all(routeflag + filename + '/:ooo', function(req, res, next) {
+          var ooo = 'index';
+          if (req.param('ooo') && req.param('ooo') != '')
+            ooo = req.param('ooo');
+          var routemod = require(filepath);
+          if (routemod && routemod[req.route.method] && typeof(routemod[req.route.method][ooo]) === 'function') {
+            routemod[req.route.method][ooo](req, res, next, routeflag + filename);
+          } else {
+            res.render('404.html');
+          }
+
+        });
+        //logger.info(app.routes);
+      }
+
+    } else if (stats.isDirectory()) {
+      var dirname = path.basename(filepath);
+      var parentDir = path.dirname(filepath);
+      var parentDirname = path.basename(path.dirname(filepath));
+      readroutes(filepath, routeflag + dirname + '/');
+    } else {
+      logger.error("unknow type of file");
+    }
+  });
 }

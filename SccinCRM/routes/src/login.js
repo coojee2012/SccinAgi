@@ -1,9 +1,16 @@
-var Schemas = require('../../database/schema').Schemas;
-var logger = require('../../lib/logger').logger('web');
+var conf = require('node-conf');
+var basedir = conf.load('app').appbase;
+
+var Schemas = require(basedir+'/database/schema').Schemas;
+var logger = require(basedir+'/lib/logger').logger('web');
 var async = require('async');
 var crypto = require('crypto');
 var _ = require('lodash');
-exports.get = function(req, res, next) {
+
+var gets = {};
+var posts = {};
+
+gets.index = function(req, res, next) {
 	res.render('login.html', {
 		layout: false,
 		username: '',
@@ -13,7 +20,7 @@ exports.get = function(req, res, next) {
 	});
 }
 
-exports.post = function(req, res, next) {
+posts.index = function(req, res, next) {
 	var username = req.body['username'] || '';
 	var password = req.body['password'] || '';
 	var exten = req.body['exten'] || '';
@@ -52,18 +59,11 @@ exports.post = function(req, res, next) {
 	});
 }
 
-/*
-退出系统
-*/
-exports.logout = function(req, res, next) {
-	req.session.destroy(function(err) {
-		if (err)
-			next(err);
-		else {
-			res.redirect('/login');
-		}
-	});
-}
+
+module.exports = {
+	get: gets,
+	post: posts
+};
 
 function authentication(uname, upass, callback) {
 	var include = new Array();

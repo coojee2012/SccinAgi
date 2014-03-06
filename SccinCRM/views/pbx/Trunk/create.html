@@ -1,0 +1,28 @@
+<!--页面内容-->
+  <div class="page_box">
+  <div class="column form-column main col col-sm-9 form-horizontal">
+    <h1> <span class="label label-info">
+      <img src="/images/audio-card.png"/>当前正在创建<%= trunkproto%>中继外线</span></h1>
+    <div class="panel panel-default fieldset">
+    <div class="formStyle">
+      <form action='<%- baseurl%>/save' method='POST' id='form1'>
+        <input type="hidden" name="trunkproto" id="trunkproto" value="<%= trunkproto%>" />
+        <input type="hidden" name="id" id="id" value="" />
+        <table>
+          <colgroup>
+          <col style="width:20%">
+          </colgroup>
+          <tr>
+           <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">基本设置</th> 
+          </tr>
+          <tr>
+            <th>中继名称</th>
+            <td><input type="text" id='trunkname' name='trunkname' class="form-control input-sm" placeholder="给中继起一个名字，方便记忆。" datatype="*" errormsg="不能为空！" /></td>
+          </tr>
+
+          <tr>
+            <th>备&nbsp;&nbsp;&nbsp;&nbsp;注</th>
+            <td><textarea id="memo" name="memo" rows="3" cols="50"></textarea></td>
+          </tr>
+          <%- include partv %>          
+      

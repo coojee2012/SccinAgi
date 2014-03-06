@@ -6,7 +6,7 @@ $(".tipmsg").tooltip();
   var delid= $('#deleteid').val();
  $.ajax({
                 type: "POST",
-                url:'<%= modename%>/delete',
+                url:'<%- baseurl%>/delete',
                 data:{id:delid},// 你的formid
                 async: false,
                 error: function(request) {

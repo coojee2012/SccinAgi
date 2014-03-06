@@ -1,5 +1,7 @@
-var Schemas = require('../../database/schema').Schemas;
-var logger = require('../../lib/logger').logger('web');
+var conf = require('node-conf');
+var basedir = conf.load('app').appbase;
+var Schemas = require(basedir+'/database/schema').Schemas;
+var logger = require(basedir+'/lib/logger').logger('web');
 var async = require('async');
 var util = require('util');
 var crypto = require('crypto');
@@ -10,7 +12,10 @@ for(var key in UserInfo.relations){
 	inld.push(key);
 }*/
 
-exports.get = function(req, res, next) {
+var gets = {};
+var posts = {}
+
+gets.index = function(req, res, next) {
 	logger.debug(req.session);
 	var user = req.session.user;
 	var exten = req.session.exten;
@@ -45,7 +50,9 @@ exports.get = function(req, res, next) {
 				if (util.isArray(results.getRoleMenmus)) {
 
 				} else {
-					where.id = {'neq':''};
+					where.id = {
+						'neq': ''
+					};
 				}
 				Schemas['CRMMenmus'].all({
 					include: [],
@@ -170,8 +177,11 @@ exports.get = function(req, res, next) {
 
 };
 
-exports.post = function(req, res, next) {
+posts.index = function(req, res, next) {
 
 };
 
-//module.exports=route;
+module.exports = {
+	get: gets,
+	post: posts
+};

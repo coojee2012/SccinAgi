@@ -1,0 +1,290 @@
+<div class="layout_main">
+  <div class="page_box">
+    <div class="column form-column main col form-horizontal">
+      <div class="panel panel-default fieldset">
+        <div class="panel-heading">
+          <button data-toggle="modal" data-target="#myModal" class="btn btn-primary">添加设备</button>
+          <button data-toggle="modal" data-target="#myModal1" class="btn btn-danger">卸载设备</button>
+        </div>
+        <div class="panel-body ">
+          <div class="form-group">
+
+            <label for="cardname" class="control-label col-sm-2">设备名称</label>
+            <div class="controls  col-sm-3">
+              <input type="text" value="" name="cardname" id="cardname"  class="form-control input-sm"></div>
+            <label for="trunkproto" class="control-label col-sm-2">协议类型</label>
+            <div class="controls  col-sm-3">
+              <select name="trunkproto" id="trunkproto" class="form-control input-sm">
+                <option value="">全部</option>
+                <option value="PRI">30B+D(PRI)</option>
+                <option value="FXO">模拟中继</option>
+                <option value="SS7">中国7号</option>
+              </select>
+            </div>
+
+            <div class="controls  col-sm-2">
+              <input type="button" class="btn btn-primary btn-sm" id="search" value="查询"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<table class="table table-striped table-hover table-condensed table-bordered" id="datatable">
+  <thead>
+    <tr>
+      <th class="text-center">设备名称</th>
+      <th class="text-center">协议类型</th>
+      <th class="text-center">驱动类型</th>
+      <th class="text-center">线路分组</th>
+      <th class="text-center">通道编号</th>
+      <th class="text-center">信令通道</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+  <tfoot>
+    <tr>
+      <th class="text-center">设备名称</th>
+      <th class="text-center">协议类型</th>
+      <th class="text-center">驱动类型</th>
+      <th class="text-center">线路分组</th>
+      <th class="text-center">通道编号</th>
+      <th class="text-center">信令通道</th>
+    </tr>
+  </tfoot>
+</table>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">添加设备</h4>
+      </div>
+      <div class="modal-body">
+        <!--弹出内容-->
+        <div class="column form-column main col form-horizontal">
+          <div class="panel-body ">
+            <div class="form-group">
+              <label for="cardnameC" class="control-label col-sm-3">设备名称</label>
+              <div class="controls  col-sm-7">
+                <input type="text" value="" name="cardnameC" id="cardnameC"  class="form-control input-sm"></div>
+              <label for="lines" class="control-label col-sm-3">并发容量</label>
+              <div class="controls  col-sm-7">
+                <input type="text" value="" datatype="n" name="lines" id="lines"  class="form-control input-sm tipmsg" title="数字线路须考虑信令通道，比如每1E1，即30路语音并发需要添加1路信令通道，即31."></div>
+              <label for="datalines" class="control-label col-sm-3">信令通道</label>
+              <div class="controls  col-sm-7">
+                <input type="text" value=""  name="datalines" id="datalines"  class="form-control input-sm tipmsg" title="数字中继需要指定。须向电信运营商了解具体信令通道是第几时隙，通常为16，默认为16."></div>
+              <label for="trunkprotoC" class="control-label col-sm-3">协议类型</label>
+              <div class="controls  col-sm-7">
+                <select name="trunkprotoC" id="trunkprotoC" class="form-control input-sm">
+                  <option value="PRI">30B+D(PRI)</option>
+                  <option value="FXO">模拟中继</option>
+                  <option value="SS7">中国7号</option>
+                </select>
+              </div>
+              <label for="driverC" class="control-label col-sm-3">驱动类型</label>
+              <div class="controls  col-sm-7">
+                <select name="driverC" id="driverC" class="form-control input-sm">
+                  <option value="DAHDI">DAHDI</option>
+                  <option value="SS7">SS7</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button  id="save" name="save" class="btn btn-primary" >保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModal1" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">卸载设备</h4>
+      </div>
+      <div class="modal-body">
+        <!--弹出内容-->
+        <div class="column form-column main col form-horizontal">
+          <div class="panel-body ">
+            <div class="form-group">
+              <label for="cardnameD" class="control-label col-sm-3">设备名称</label>
+              <div class="controls  col-sm-7">
+                <input type="text" value="" name="cardnameD" id="cardnameD"  class="form-control input-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button  id="delsth" name="delsth" class="btn btn-primary" onclick="javascript:delsth();" >卸载</button>
+        <a class="btn btn-default btn-sm" href="#" data-dismiss="modal">取消</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade in" id="confirm_modal" tabindex="-3" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width:400px">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center">
+          <p class="i_Msg_warn">
+            <img src="/images/exclamation.png" />
+            设备卸载，将导致中继无法使用，影响电话的正常呼入和呼出。确认要卸载该设备吗？
+          </p>
+          <input type='hidden' id='deletename' name='deletename' value="" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button  class="btn btn-danger btn-sm"  data-dismiss="modal" data-action="1" id="suredelete" name="suredelete">确定</button>
+        <a class="btn btn-default btn-sm" href="#" data-dismiss="modal">取消</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include ../../listtable.html %>
+
+<script type='text/javascript'>
+$(function(){
+$(".tipmsg").tooltip();
+//绑定删除按钮
+ $('#suredelete').click(function(){
+  var cardname= $('#cardnameD').val();
+ $.ajax({
+                type: "POST",
+                url:'<%- baseurl%>delete',
+                data:{cardname:cardname},// 你的formid
+                async: false,
+                error: function(request) {
+                   $('#confirm_modal').modal('hide');
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  $('#confirm_modal').modal('hide');
+                  if(data.success==='OK'){
+                   var oTable=$('#datatable').dataTable();
+                       oTable.fnDraw();
+                  }
+                  $.scojs_message(data.msg || '服务器捕获到异常，请联系管理员！', $.scojs_message['TYPE_'+data.success||'ERROR']);                  
+                }
+            }); 
+  });
+
+//绑定查询按钮
+ $('#search').click(function(){
+ var oTable=$('#datatable').dataTable();
+ oTable.fnDraw();
+});
+
+$('#save').click(function(){
+  var cardname=$('#cardnameC').val();
+  var lines=$('#lines').val();
+  var driver=$('#driverC').val();
+  var trunkproto=$('#trunkprotoC').val();
+  var datalines=$('#datalines').val();
+   $.ajax({
+                type: "POST",
+                url:'<%- baseurl%>save',
+                data:{cardname:cardname,lines:lines,driver:driver,trunkproto:trunkproto,datalines:datalines},// 你的formid
+                async: false,
+                error: function(request) {
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  $('#myModal').modal('hide');
+                  if(data.success==='OK'){
+                   var oTable=$('#datatable').dataTable();
+                       oTable.fnDraw();
+                  }
+                    $.scojs_message(data.msg || '服务器捕获到异常，请联系管理员！', $.scojs_message['TYPE_'+data.success||'ERROR']); 
+               
+                }
+            }); 
+ 
+});
+
+
+
+}).keydown(function(){ 
+if(event.keyCode == 13) 
+$("#search").click();}
+);
+
+function delsth(){
+  $('#myModal1').modal('hide');
+  $('#confirm_modal').modal('show');
+};
+
+</script>
+
+<script type="text/javascript">
+function getWhere(){
+var where={};
+where.dbName='<%= modename%>';
+//gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
+where.whereCount=2;//添加需要查询的条件个数
+where.whereCol_0='cardname';
+where.whereWay_0='like';
+where.whereValue_0='%'+$('#cardname').val()+'%';
+where.whereCol_1='trunkproto';
+where.whereWay_1='';
+where.whereValue_1=$('#trunkproto').val();
+return where;
+}
+
+function getToolWhere(){
+  var where=getWhere();
+  var toolswhere={};
+for(var key in where){
+  toolswhere[key]=where[key];
+}
+
+toolswhere.sColumns='';
+
+var colums=getColums();
+toolswhere.iSortingCols=0;
+for(var i=0;i<colums.length;i++){
+ if(toolswhere.sColumns!=='')
+  toolswhere.sColumns+=','+colums[i].mData;
+else
+  toolswhere.sColumns=colums[i].mData;
+
+if(colums[i].asSorting && colums[i].asSorting.length>0){
+  toolswhere['iSortCol_'+toolswhere.iSortingCols]=toolswhere.iSortingCols;
+  toolswhere['sSortDir_'+toolswhere.iSortingCols]=colums[i].asSorting[0];
+   toolswhere['bSortable_'+toolswhere.iSortingCols]=colums[i].bSortable;
+  
+  toolswhere.iSortingCols++;
+
+}
+
+}
+
+toolswhere.iDisplayStart=0;
+toolswhere.iDisplayLength=-1;
+return toolswhere;
+}
+
+function getaaSorting(){
+  return [[0,'asc'],[4,'asc']];
+//return [[0,'asc'],[3,'asc'],[4,'asc']];
+}
+
+function getColums(){
+  var colums=[
+      { "asSorting": [ "asc" ],"sClass":'center',"sName":"cardname","mData": "cardname","bSortable": true,"bVisible": true, "aTargets": [0] },
+      { "sClass":'center',"sName":"trunkproto","mData": "trunkproto","bSortable": false,"bVisible": true, "aTargets": [1] },
+      { "sClass":'center',"sName":"driver","mData": "driver","bSortable": false,"bVisible": true, "aTargets": [2] },
+        {"asSorting": [ "asc" ],"sClass":'center',"sName":"group","mData": "group","bSortable": true,"bVisible": true, "aTargets": [3] },
+      {"asSorting": [ "asc" ], "sClass":'center',"sName":"line","mData": "line","bSortable": true,"bVisible": true, "aTargets": [4] },
+      { "sClass":'center',"sName":"dataline","mData": "dataline","bSortable": false,"bVisible": true, "aTargets": [5]}
+    ];
+    return colums;
+}
+</script>

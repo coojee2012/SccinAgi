@@ -6,5 +6,6 @@
 	"phone" : "root",
 	"email" : "12345678",
 	"env":"development",
+	"appbase":"D:\\GitHub\\SccinAgi\\SccinCRM\\",
 	"debug":true
 }
