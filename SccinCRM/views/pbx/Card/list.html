@@ -158,7 +158,7 @@ $(".tipmsg").tooltip();
   var cardname= $('#cardnameD').val();
  $.ajax({
                 type: "POST",
-                url:'<%- baseurl%>delete',
+                url:'<%- baseurl%>/delete',
                 data:{cardname:cardname},// 你的formid
                 async: false,
                 error: function(request) {
@@ -190,7 +190,7 @@ $('#save').click(function(){
   var datalines=$('#datalines').val();
    $.ajax({
                 type: "POST",
-                url:'<%- baseurl%>save',
+                url:'<%- baseurl%>/save',
                 data:{cardname:cardname,lines:lines,driver:driver,trunkproto:trunkproto,datalines:datalines},// 你的formid
                 async: false,
                 error: function(request) {

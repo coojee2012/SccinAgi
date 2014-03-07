@@ -19,7 +19,7 @@ checkFun['accountcode'] = function(accountcode, res) {
 			"status": "n"
 		});
 	} else {
-		Schemas['PBXExtension'].find(accountcode, function(err, inst) {
+		Schemas['pbxExtension'].find(accountcode, function(err, inst) {
 			if (err)
 				res.send({
 					"info": "后台验证发生错误！",
@@ -43,37 +43,37 @@ checkFun['accountcode'] = function(accountcode, res) {
 };
 
 //分机列表显示
-gets.index = function(req, res, next) {
+gets.index = function(req, res, next,baseurl) {
 
-	res.render('pbx/Extension/list.html', {baseurl:req.path});
+	res.render('pbx/Extension/list.html', {baseurl:baseurl});
 }
 
-gets.upsert = function(req, res, next) {
-	res.render('pbx/Extension/upsert.html', {baseurl:req.path});
+gets.upsert = function(req, res, next,baseurl) {
+	res.render('pbx/Extension/upsert.html', {baseurl:baseurl});
 }
 
 //展现新建页面
 //页面传入deviceproto参数，根据deviceproto值表现不同协议的分机新建页面
-gets.create = function(req, res, next) {
+gets.create = function(req, res, next,baseurl) {
 	var deviceproto = req.query['deviceproto'];
 	if (!deviceproto || deviceproto == '')
 		deviceproto = 'SIP';
 	res.render('pbx/Extension/create.html', {
-		baseurl:req.path,
+		baseurl:baseurl,
 		deviceproto: deviceproto,
 		partv: 'partv' + deviceproto + '.html'
 	});
 }
 //展现编辑页面
-gets.edit = function(req, res, next) {
+gets.edit = function(req, res, next,baseurl) {
 	var id = req.query['id'];
-	Schemas['PBXExtension'].find(id, function(err, inst) {
+	Schemas['pbxExtension'].find(id, function(err, inst) {
 		if (err)
 			res.redirect(500, '/err/500');
 		else {
 			if (inst != null)
 				res.render('pbx/Extension/edit.html', {
-					baseurl:req.path,
+					baseurl:baseurl,
 					inst: inst,
 					partv: 'partv' + inst.deviceproto + '.html'
 				});
@@ -84,9 +84,9 @@ gets.edit = function(req, res, next) {
 	});
 }
 
-posts.delete = function(req, res, next) {
+posts.delete = function(req, res, next,baseurl) {
 	var id = req.body['id'];
-	Schemas['PBXExtension'].find(id, function(err, inst) {
+	Schemas['pbxExtension'].find(id, function(err, inst) {
 		var myjson = {};
 		if (err) {
 			myjson.success = 'ERROR';
@@ -116,7 +116,7 @@ posts.delete = function(req, res, next) {
 }
 
 //保存分机信息（适用于新增和修改）
-posts.save = function(req, res, next) {
+posts.save = function(req, res, next,baseurl) {
 	var extenObj = {};
 	extenObj.devicestring = '';
 	for (var key in req.body) {
@@ -132,7 +132,7 @@ posts.save = function(req, res, next) {
 	extenObj.devicenumber = extenObj.accountcode;
 	async.auto({
 			isHaveCheck: function(cb) {
-				Schemas['PBXExtension'].find(extenObj.id, function(err, inst) {
+				Schemas['pbxExtension'].find(extenObj.id, function(err, inst) {
 					cb(err, inst);
 				});
 			},
@@ -142,7 +142,7 @@ posts.save = function(req, res, next) {
 						cb(null, -1);
 					} else {
 						extenObj.id = extenObj.accountcode;
-						Schemas['PBXExtension'].create(extenObj, function(err, inst) {
+						Schemas['pbxExtension'].create(extenObj, function(err, inst) {
 							cb(err, inst);
 
 						});
@@ -154,7 +154,7 @@ posts.save = function(req, res, next) {
 					if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
 						cb(null, -1);
 					} else {
-						Schemas['PBXExtension'].update({
+						Schemas['pbxExtension'].update({
 							where: {
 								id: extenObj.id
 							},
@@ -198,7 +198,7 @@ posts.save = function(req, res, next) {
 }
 
 //处理页面需要的Ajax验证
-posts.checkAjax = function(req, res, next) {
+posts.checkAjax = function(req, res, next,baseurl) {
 	var param = req.body['param'];
 	var name = req.body['name'];
 	if (typeof(checkFun[name] === 'function')) {
@@ -214,7 +214,7 @@ posts.checkAjax = function(req, res, next) {
 
 
 
-posts.table = function(req, res, next) {
+posts.table = function(req, res, next,baseurl) {
 	console.log('BODY:', req.body);
 	var dbName = req.body['dbName'];
 	//查询起始页面，第一页是0
@@ -301,6 +301,6 @@ posts.table = function(req, res, next) {
 
 }
 
-posts.xls2all = function(req, res, next) {
+posts.xls2all = function(req, res, next,baseurl) {
 
 }

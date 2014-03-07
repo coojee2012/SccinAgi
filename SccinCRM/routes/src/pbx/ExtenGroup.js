@@ -11,19 +11,19 @@ module.exports = {
 	post: posts
 };
 //分机列表显示
-gets.index = function(req, res, next) {
-	res.render('pbx/ExtenGroup/list.html', {baseurl:req.path});
+gets.index = function(req, res, next,baseurl) {
+	res.render('pbx/ExtenGroup/list.html', {baseurl:baseurl});
 }
 
 //保存（适用于新增和修改）
-posts.save = function(req, res, next) {
+posts.save = function(req, res, next,baseurl) {
 	var Obj = {};
 	for (var key in req.body) {
 		Obj[key] = req.body[key];
 	}
 	async.auto({
 			isHaveCheck: function(cb) {
-				Schemas['PBXExtenGroup'].find(Obj.id, function(err, inst) {
+				Schemas['pbxExtenGroup'].find(Obj.id, function(err, inst) {
 					cb(err, inst);
 				});
 			},
@@ -33,7 +33,7 @@ posts.save = function(req, res, next) {
 						cb(null, -1);
 					} else {
 						Obj.id = guid.create();
-						Schemas['PBXExtenGroup'].create(Obj, function(err, inst) {
+						Schemas['pbxExtenGroup'].create(Obj, function(err, inst) {
 							cb(err, inst);
 
 						});
@@ -45,7 +45,7 @@ posts.save = function(req, res, next) {
 					if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
 						cb(null, -1);
 					} else {
-						Schemas['PBXExtenGroup'].update({
+						Schemas['pbxExtenGroup'].update({
 							where: {
 								id: Obj.id
 							},
@@ -89,9 +89,9 @@ posts.save = function(req, res, next) {
 }
 
 
-posts.delete = function(req, res, next) {
+posts.delete = function(req, res, next,baseurl) {
 	var id = req.body['id'];
-	Schemas['PBXExtenGroup'].find(id, function(err, inst) {
+	Schemas['pbxExtenGroup'].find(id, function(err, inst) {
 		var myjson = {};
 		if (err) {
 			logger.error(err);

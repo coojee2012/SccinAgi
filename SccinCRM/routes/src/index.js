@@ -25,14 +25,14 @@ gets.index = function(req, res, next) {
 	async.auto({
 		getRoleMenmus: function(cb) {
 			var include = new Array();
-			for (var key in Schemas['CRMUserRole'].relations) {
+			for (var key in Schemas['manageUserRole'].relations) {
 				include.push(key);
 			}
 			logger.info("具有的关系:", include);
 			if (role.id === '0') {
 				cb(null, '*')
 			} else {
-				Schemas['CRMUserRole'].findOne({
+				Schemas['manageUserRole'].findOne({
 					include: include,
 					where: {
 						id: role.id
@@ -54,7 +54,7 @@ gets.index = function(req, res, next) {
 						'neq': ''
 					};
 				}
-				Schemas['CRMMenmus'].all({
+				Schemas['manageMenmus'].all({
 					include: [],
 					where: where
 				}, function(err, dbs) {
@@ -85,7 +85,7 @@ gets.index = function(req, res, next) {
 				};
 				startmenmus.starmenmu_gywm = {
 					title: '关于我们',
-					url: 'http://www.chinatelecom.com.cn/corp/lsqdcs/index.html',
+					url: 'http://zjk.sccin.com/zhinan.html',
 					winWidth: 1100,
 					winHeight: 650,
 					apptype: 'appwin',

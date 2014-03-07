@@ -4,7 +4,7 @@
     <h1> <span class="label label-info">当前正在编辑<%= inst.deviceproto%>分机</span></h1>
     <div class="panel panel-default fieldset">
     <div class="formStyle">
-      <form action='<%- baseurl%>save' method='POST' id='form1'>
+      <form action='<%- baseurl%>/save' method='POST' id='form1'>
         <input type="hidden" id='id' name='id' value="<%= inst.id%>"/>
         <table>
           <colgroup>
@@ -70,7 +70,7 @@ if($('#form1').Validform().check()){
  $.ajax({
                 cache: true,
                 type: "POST",
-                url:'<%- baseurl%>save',
+                url:'<%- baseurl%>/save',
                 data:$('#form1').serialize(),// 你的formid
                 async: false,
                 error: function(request) {
