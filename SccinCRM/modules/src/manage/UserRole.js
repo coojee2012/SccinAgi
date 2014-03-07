@@ -9,7 +9,7 @@ var manageMenmuRoleRelations=require('./MenmuRoleRelations');
 var manageUserRole=schema.define('manageUserRole',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
 	roleName:   {type:String,length:50},
-	isAgent:{type: Number, default: function () { return 0 }},
+	isAgent:{type: String,length:10, default: function () { return '否' }},
 	hasPtions:   {type: Number, default: function () { return 0 }},
 	crtTime:   {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	lastModify:  {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
