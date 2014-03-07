@@ -2,7 +2,7 @@ var path = require("path");
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-
+var async = require('async');
 var Schemas = require(basedir+'/database/schema').Schemas;
 
 var logger = require(basedir+'/lib/logger').logger('web');
@@ -23,7 +23,7 @@ checkFun['id'] = function(id, res) {
 			"status": "n"
 		});
 	} else {
-		Schemas['PBXQueue'].find(id, function(err, inst) {
+		Schemas['pbxQueue'].find(id, function(err, inst) {
 			if (err)
 				res.send({
 					"info": "后台验证发生错误！",
@@ -47,7 +47,7 @@ checkFun['id'] = function(id, res) {
 };
 
 //处理页面需要的Ajax验证
-posts.checkAjax = function(req, res,next) {
+posts.checkAjax = function(req, res,next,baseurl) {
 	var param = req.body['param'];
 	var name = req.body['name'];
 	if (typeof(checkFun[name] === 'function')) {
@@ -62,16 +62,16 @@ posts.checkAjax = function(req, res,next) {
 }
 
 //分机列表显示
-gets.index = function(req, res,next) {
+gets.index = function(req, res,next,baseurl) {
 	res.render('pbx/Queue/list.html', {
-		baseurl:req.path,
-		modename:'PBXQueue'
+		baseurl:baseurl,
+		modename:'pbxQueue'
 	});
 }
 
 //新建
-gets.create = function(req, res,next) {
-	Schemas['PBXExtension'].all({}, function(err, dbs) {
+gets.create = function(req, res,next,baseurl) {
+	Schemas['pbxExtension'].all({}, function(err, dbs) {
 		if (err) {
 			next(err);
 		} else {
@@ -80,7 +80,7 @@ gets.create = function(req, res,next) {
 				str += '<option value="' + dbs[i].id + '">' + dbs[i].id + ' "' + dbs[i].accountcode + '" </option>';
 			}
 			res.render('pbx/Queue/create.html', {
-				baseurl:req.path,
+				baseurl:baseurl,
 				hasExtens: str
 			});
 		}
@@ -88,11 +88,11 @@ gets.create = function(req, res,next) {
 
 }
 //编辑
-gets.edit = function(req, res,next) {
+gets.edit = function(req, res,next,baseurl) {
 	var id = req.query["id"];
 	async.auto({
 		findQueue: function(cb) {
-			Schemas['PBXQueue'].find(id, function(err, inst) {
+			Schemas['pbxQueue'].find(id, function(err, inst) {
 				if (err || inst == null)
 					cb('编辑查找队列发生错误或队列不存在！', inst);
 				else
@@ -103,7 +103,7 @@ gets.edit = function(req, res,next) {
 			function(cb, results) {
 				var yyMembers = !results.findQueue.members?[]:results.findQueue.members.toString().split('\,');
 				console.log(yyMembers);
-				Schemas['PBXExtension'].all({}, function(err, dbs) {
+				Schemas['pbxExtension'].all({}, function(err, dbs) {
 					if (err) {
 						cb('编辑队列查询分机发生错误！', -1);
 					} else {
@@ -146,7 +146,7 @@ gets.edit = function(req, res,next) {
 
 	}, function(err, results) {
 		res.render('pbx/Queue/edit.html', {
-			baseurl:req.path,
+			baseurl:baseurl,
 			hasExtens: results.findMembers.hasExtens,
 			yyExtens: results.findMembers.yyExtens,
 			inst: results.findQueue
@@ -158,7 +158,7 @@ gets.edit = function(req, res,next) {
 
 
 //保存（适用于新增和修改）
-posts.save = function(req, res,next) {
+posts.save = function(req, res,next,baseurl) {
 	var Obj = {};
 	for (var key in req.body) {
 		Obj[key] = req.body[key];
@@ -169,7 +169,7 @@ posts.save = function(req, res,next) {
 				if (!Obj.id || Obj.id === '') {
 					cb('队列号不能为空', -1);
 				} else {
-					Schemas['PBXQueue'].find(Obj.id, function(err, inst) {
+					Schemas['pbxQueue'].find(Obj.id, function(err, inst) {
 						cb(err, inst);
 					});
 				}
@@ -180,7 +180,7 @@ posts.save = function(req, res,next) {
 					if (results.isHaveCheck !== null) { //如果存在本函数什么都不做
 						cb(null, -1);
 					} else {
-						Schemas['PBXQueue'].create(Obj, function(err, inst) {
+						Schemas['pbxQueue'].create(Obj, function(err, inst) {
 							cb(err, inst);
 
 						});
@@ -192,7 +192,7 @@ posts.save = function(req, res,next) {
 					if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
 						cb(null, -1);
 					} else {
-						Schemas['PBXQueue'].update({
+						Schemas['pbxQueue'].update({
 							where: {
 								id: Obj.id
 							},
@@ -236,9 +236,9 @@ posts.save = function(req, res,next) {
 }
 
 
-posts.delete = function(req, res,next) {
+posts.delete = function(req, res,next,baseurl) {
 	var id = req.body['id'];
-	Schemas['PBXQueue'].find(id, function(err, inst) {
+	Schemas['pbxQueue'].find(id, function(err, inst) {
 		var myjson = {};
 		if (err) {
 			myjson.success = 'ERROR';

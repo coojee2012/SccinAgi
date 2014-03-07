@@ -24,7 +24,6 @@ posts.index = function(req, res, next) {
 	var username = req.body['username'] || '';
 	var password = req.body['password'] || '';
 	var exten = req.body['exten'] || '';
-	var Schemas = require('../../database/schema').Schemas;
 
 	var md5 = crypto.createHash('md5');
 	var hexpassword = md5.update(password).digest('hex').toUpperCase();
@@ -67,12 +66,12 @@ module.exports = {
 
 function authentication(uname, upass, callback) {
 	var include = new Array();
-	for (var key in Schemas['CRMUserInfo'].relations) {
+	for (var key in Schemas['manageUserInfo'].relations) {
 		include.push(key);
 	}
 	logger.debug("具有的关系:", include);
 	try {
-		Schemas['CRMUserInfo'].findOne({
+		Schemas['manageUserInfo'].findOne({
 			include: include,
 			where: {
 				uLogin: uname,
@@ -114,7 +113,7 @@ function setsession(user, exten, req, callback) {
 }
 
 function findexten(exten, callback) {
-	Schemas['PBXExtension'].find(exten, function(err, inst) {
+	Schemas['pbxExtension'].find(exten, function(err, inst) {
 		if (err) {
 			callback('查找分机发生异常!', null);
 		} else if (inst === null) {

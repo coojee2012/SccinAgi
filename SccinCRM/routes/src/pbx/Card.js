@@ -1,7 +1,7 @@
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var Schemas = require(basedir+'/database/schema').Schemas;
-var logger=require(basedir+'/lib/logger').logger('web');
+var Schemas = require(basedir + '/database/schema').Schemas;
+var logger = require(basedir + '/lib/logger').logger('web');
 var guid = require('guid');
 var async = require('async');
 
@@ -13,22 +13,22 @@ module.exports = {
 };
 
 //分机列表显示
-gets.index = function(req, res,next) {
+gets.index = function(req, res, next) {
 	res.render('pbx/Card/list.html', {
-		baseurl:req.path,
-		modename: 'PBXCard'
+		baseurl: req.path,
+		modename: 'pbxCard'
 	});
 }
 
 //保存（适用于新增和修改）
-posts.save = function(req, res,next) {
+posts.save = function(req, res, next) {
 	var Obj = {};
 	for (var key in req.body) {
 		Obj[key] = req.body[key];
 	}
 	async.auto({
 			isHaveCheck: function(cb) {
-				Schemas['PBXCard'].findOne({
+				Schemas['pbxCard'].findOne({
 					where: {
 						cardname: Obj.cardname
 					}
@@ -37,7 +37,7 @@ posts.save = function(req, res,next) {
 				});
 			},
 			lastLineNumber: function(cb) {
-				Schemas['PBXCard'].findOne({
+				Schemas['pbxCard'].findOne({
 					order: 'line desc'
 				}, function(err, inst) {
 					cb(err, inst);
@@ -80,9 +80,9 @@ posts.save = function(req, res,next) {
 }
 
 
-posts.delete = function(req, res,next) {
+posts.delete = function(req, res, next) {
 	var cardname = req.body['cardname'];
-	Schemas['PBXCard'].all({
+	Schemas['pbxCard'].all({
 		where: {
 			cardname: cardname
 		},
@@ -100,7 +100,6 @@ posts.delete = function(req, res,next) {
 				myjson.msg = '没有找到需要删除的数据！';
 				res.send(myjson);
 			} else {
-
 				async.auto({
 					deleterows: function(cb) {
 						async.each(dbs, function(item, callback) {
@@ -111,11 +110,8 @@ posts.delete = function(req, res,next) {
 							cb(err, results);
 						})
 					},
-					updateRows: function(cb) {					
-						var PBXCard=require('../../modules/src/PBXCard.js');
-						logger.info(PBXCard);
-						Schemas['PBXCard'].query('update `PBXCard` set `line`=`line`-'+dbs.length+' where `line`>'+dbs[0].line, function(err, result) {
-
+					updateRows: function(cb) {
+						Schemas['pbxCard'].query('update `pbxCard` set `line`=`line`-' + dbs.length + ' where `line`>' + dbs[0].line, function(err, result) {
 							cb(err, result);
 						});
 					}
@@ -135,8 +131,8 @@ posts.delete = function(req, res,next) {
 			}
 
 		}
-		
-		
+
+
 	}); //find all
 }
 
@@ -191,7 +187,7 @@ function addTline(obj, lines, callback) {
 		newobj.cardname = obj.cardname;
 		newobj.driver = obj.driver;
 		newobj.trunkproto = obj.trunkproto;
-		Schemas['PBXCard'].create(newobj, function(err, inst) {
+		Schemas['pbxCard'].create(newobj, function(err, inst) {
 			cb(err, inst);
 		});
 	}, function(err, results) {
@@ -207,7 +203,7 @@ function addDline(obj, datalines, callback) {
 		newobj.driver = obj.driver;
 		newobj.dataline = '是';
 		newobj.trunkproto = obj.trunkproto;
-		Schemas['PBXCard'].create(newobj, function(err, inst) {
+		Schemas['pbxCard'].create(newobj, function(err, inst) {
 			cb(err, inst);
 		});
 	}, function(err, results) {

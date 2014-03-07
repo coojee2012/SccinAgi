@@ -30,18 +30,11 @@
     </div>
   </div>
    <table class="table table-striped table-hover table-condensed table-bordered" id="datatable">
-<!--       <colgroup>
-<col style="width: 15%;">
-<col style="width: 15%;">
-<col style="width: 15%;">
-<col style="width: 20%;">
-<col style="width: 35%;">
-</colgroup> -->
       <thead>
         <tr>
-          <th>分机号</th>
-          <th>分机类型</th>
-          <th>设备号</th>
+          <th class="text-center">分机号</th>
+          <th class="text-center">分机类型</th>
+          <th class="text-center">设备号</th>
           <th class="text-center">创建时间</th>
           <th class="text-center"><span class="print">操作</span></th>
         </tr>
@@ -50,9 +43,9 @@
 </tbody>
 <tfoot>
     <tr>
-     <th>分机号</th>
-          <th>分机类型</th>
-          <th>设备号</th>
+     <th class="text-center">分机号</th>
+          <th class="text-center">分机类型</th>
+          <th class="text-center">设备号</th>
           <th class="text-center">创建时间</th>
           <th class="text-center"><span class="print">操作</span></th>
     </tr>
@@ -195,7 +188,7 @@ $("#search").click();}
 
 function getWhere(){
 var where={};
-where.dbName='PBXExtension';
+where.dbName='pbxExtension';
 //gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
 where.whereCount=2;//添加需要查询的条件个数
 where.whereCol_0='accountcode';

@@ -4,7 +4,7 @@
     <h1> <span class="label label-info">当前正在创建<%= deviceproto%>分机</span></h1>
     <div class="panel panel-default fieldset">
     <div class="formStyle">
-      <form action='<%- baseurl%>save' method='POST' id='form1'>
+      <form action='<%- baseurl%>/save' method='POST' id='form1'>
         <input type="hidden" id='id' name='id' value=""/>
         <input type="hidden" id="deviceproto" name="deviceproto" value="<%= deviceproto%>" />
         <table>
@@ -17,7 +17,7 @@
           <tr>
             <th>分机号码</th>
             <td>   
-            <input type="text" id='accountcode'  name='accountcode' class="form-control input-sm" placeholder="只能是4-20位数字" datatype="n4-20" ajaxurl="/PBXExtension/checkAjax" sucmsg="验证通过！" errormsg="当前分机号验证不通过！" />
+            <input type="text" id='accountcode'  name='accountcode' class="form-control input-sm" placeholder="只能是4-20位数字" datatype="n4-20" ajaxurl="<%- baseurl%>/checkAjax" sucmsg="验证通过！" errormsg="当前分机号验证不通过！" />
           </td>
           </tr>
           <tr>
@@ -65,7 +65,7 @@ if($('#form1').Validform().check()){
  $.ajax({
                 cache: true,
                 type: "POST",
-                url:'<%- baseurl%>save',
+                url:'<%- baseurl%>/save',
                 data:$('#form1').serialize(),// 你的formid
                 async: false,
                 error: function(request) {

@@ -34,13 +34,12 @@ posts.checkAjax = function(req, res, next,baseurl) {
 gets.index = function(req, res, next,baseurl) {
 	res.render('.'+baseurl+'/list.html', {
 		baseurl:baseurl,
-		modename: 'PBXTrunk'
+		modename: 'pbxTrunk'
 	});
 }
 
 //新建
 gets.create = function(req, res, next,baseurl) {
-	console.log('req.path',req.path);
 	var trunkproto = req.query['trunkproto'];
 	if (!trunkproto || trunkproto == '')
 		trunkproto = 'SIP';
@@ -72,7 +71,7 @@ gets.edit = function(req, res, next,baseurl) {
 	var id = req.query["id"];
 	async.auto({
 			findTrunk: function(cb) {
-				Schemas['PBXTrunk'].find(id, function(err, inst) {
+				Schemas['pbxTrunk'].find(id, function(err, inst) {
 					if (err || inst == null)
 						cb('编辑查找发生错误或数据不存在！', inst);
 					else
@@ -135,7 +134,7 @@ posts.save = function(req, res, next,baseurl) {
 		Obj.args = Obj.args.toString().substring(0, Obj.args.length - 1);
 	async.auto({
 			isHaveCheck: function(cb) {
-				Schemas['PBXTrunk'].find(Obj.id, function(err, inst) {
+				Schemas['pbxTrunk'].find(Obj.id, function(err, inst) {
 					cb(err, inst);
 				});
 			},
@@ -150,7 +149,7 @@ posts.save = function(req, res, next,baseurl) {
 								cb(err, -1);
 							else {
 								Obj.trunkdevice = devstr;
-								Schemas['PBXTrunk'].create(Obj, function(err, inst) {
+								Schemas['pbxTrunk'].create(Obj, function(err, inst) {
 									if (err)
 										cb(err, -1);
 									else {
@@ -181,7 +180,7 @@ posts.save = function(req, res, next,baseurl) {
 					if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
 						cb(null, -1);
 					} else {
-						Schemas['PBXTrunk'].update({
+						Schemas['pbxTrunk'].update({
 							where: {
 								id: Obj.id
 							},
@@ -244,7 +243,7 @@ posts.save = function(req, res, next,baseurl) {
 
 posts.delete = function(req, res, next,baseurl) {
 	var id = req.body['id'];
-	Schemas['PBXTrunk'].find(id, function(err, inst) {
+	Schemas['pbxTrunk'].find(id, function(err, inst) {
 		var myjson = {};
 		if (err) {
 			myjson.success = 'ERROR';
@@ -300,7 +299,7 @@ function setTrunkDev(Obj, callback) {
 		trunkdevice = getRandomStr(10);
 		callback(null, trunkdevice);
 	} else if (Obj.trunkproto === 'PRI' || Obj.trunkproto === 'FXO') {
-		Schemas['PBXTrunk'].all({
+		Schemas['pbxTrunk'].all({
 			where: {
 				trunkproto: {
 					'inq': ['PRI', 'FXO']
@@ -331,7 +330,7 @@ function getRandomStr(len) {
 
 function getHasChannels(trunkproto, callback) {
 	var hasChannels = "";
-	Schemas['PBXCard'].all({
+	Schemas['pbxCard'].all({
 		where: {
 			trunkproto: trunkproto,
 			dataline: {
@@ -373,7 +372,7 @@ function getyyChannels(args, callback) {
 	chans = _.map(chans, function(item) {
 		return _.parseInt(item);
 	});
-	Schemas['PBXCard'].all({
+	Schemas['pbxCard'].all({
 		where: {
 			line: {
 				'inq': chans
@@ -394,7 +393,7 @@ function getyyChannels(args, callback) {
 
 function updateChannels(lines, group, callback) {
 	async.each(lines, function(item, cb) {
-		Schemas['PBXCard'].update({
+		Schemas['pbxCard'].update({
 			where: {
 				line: item
 			},

@@ -6,7 +6,7 @@
       <img src="/images/queue.png"/>当前正在创建新队列</span></h1>
     <div class="panel panel-default fieldset">
     <div class="formStyle">
-      <form action='<%- baseurl%>save' method='POST' id='form1'>
+      <form action='<%- baseurl%>/save' method='POST' id='form1'>
         <table>
           <colgroup>
           <col style="width:20%">
@@ -17,7 +17,7 @@
           <tr>
             <th>队列号码</th>
             <td>   
-            <input type="text" id='id'  name='id' class="form-control input-sm" placeholder="只能是3-20位数字" datatype="n3-20" ajaxurl="/PBXQueue/checkAjax" sucmsg="验证通过！" errormsg="验证不通过！" />
+            <input type="text" id='id'  name='id' class="form-control input-sm" placeholder="只能是3-20位数字" datatype="n3-20" ajaxurl="<%- baseurl%>/checkAjax" sucmsg="验证通过！" errormsg="验证不通过！" />
           </td>
           </tr>
           <tr>

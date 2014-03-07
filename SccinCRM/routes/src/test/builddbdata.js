@@ -20,7 +20,7 @@ gets.index = function(req, res) {
 		{id: '200200',ivrname: '测试IVR200200',description: '一个测试的IVR200200'}
 		];
 		async.forEach(ivr, function(item, callback) {
-					Schemas['PBXIvrMenmu'].create(item, function(err, inst) {
+					Schemas['pbxIvrMenmu'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, results) {
@@ -51,7 +51,7 @@ gets.index = function(req, res) {
 			
 			];
 			async.forEach(modes, function(item, callback) {
-				Schemas['PBXIvrActMode'].create(item, function(err, inst) {
+				Schemas['pbxIvrActMode'].create(item, function(err, inst) {
 					callback(err, inst);
 				});
 			}, function(err, result) {
@@ -137,7 +137,7 @@ gets.index = function(req, res) {
 				processdefined: '3'
 			}];
 			async.forEach(routes, function(item, callback) {
-				Schemas['PBXRouter'].create(item, function(err, inst) {
+				Schemas['pbxRouter'].create(item, function(err, inst) {
 					callback(err, inst);
 				});
 			}, function(err, result) {
@@ -185,7 +185,7 @@ gets.index = function(req, res) {
 					args: 'varname=&digits=402&dialway=diallocal'
 				}];
 				async.forEach(actions, function(item, callback) {
-					Schemas['PBXIvrActions'].create(item, function(err, inst) {
+					Schemas['pbxIvrActions'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -228,7 +228,7 @@ gets.index = function(req, res) {
 					gotoivractid: 1
 				}];
 				async.forEach(inputs, function(item, callback) {
-					Schemas['PBXIvrInputs'].create(item, function(err, inst) {
+					Schemas['pbxIvrInputs'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -262,7 +262,7 @@ gets.index = function(req, res) {
 				{id:'8601',accountcode:'8601',password:'8601',deviceproto:'VIRTUAL',devicenumber:'8601',devicestring:'8601'}
 				];
 				async.forEach(extensions, function(item, callback) {
-					Schemas['PBXExtension'].create(item, function(err, inst) {
+					Schemas['pbxExtension'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -273,7 +273,7 @@ gets.index = function(req, res) {
 			setDefaultExtenGroup:function(cb){
 				var groups=[{id:0,groupname:'技术支持组',memo:'技术支持组'},{id:1,groupname:'客户服务组',memo:'客户服务组'}];
 				async.forEach(groups, function(item, callback) {
-					Schemas['PBXExtenGroup'].create(item, function(err, inst) {
+					Schemas['pbxExtenGroup'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -294,7 +294,7 @@ gets.index = function(req, res) {
 				,{groupid:1,extenid:'8005'}
 				];
 				async.forEach(groups, function(item, callback) {
-					Schemas['PBXExtenGroupRelations'].create(item, function(err, inst) {
+					Schemas['pbxExtenGroupRelations'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -308,7 +308,7 @@ gets.index = function(req, res) {
 				{id:'402',queuename:'测试队列402',members:'8001,8002,8003,8801'}
 				];
 				async.forEach(queues, function(item, callback) {
-					Schemas['PBXQueue'].create(item, function(err, inst) {
+					Schemas['pbxQueue'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -323,7 +323,7 @@ gets.index = function(req, res) {
 				{id:'3',trunkname:'测试外线IAX2',trunkproto:'IAX2',trunkdevice:'testiax'}
 				];
               async.forEach(trunks, function(item, callback) {
-					Schemas['PBXTrunk'].create(item, function(err, inst) {
+					Schemas['pbxTrunk'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -349,7 +349,7 @@ gets.index = function(req, res) {
 				{id:'502',localtype:'unPauseQueueMember',assign:'1'}
 				];
 				async.forEach(localnumbers, function(item, callback) {
-					Schemas['PBXLocalNumber'].create(item, function(err, inst) {
+					Schemas['pbxLocalNumber'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -366,7 +366,7 @@ gets.index = function(req, res) {
 				{id:'8802'}
 				];
 				async.forEach(screepops, function(item, callback) {
-					Schemas['PBXScreenPop'].create(item, function(err, inst) {
+					Schemas['pbxScreenPop'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -379,7 +379,7 @@ gets.index = function(req, res) {
 				{id:'302',pincode:'302'}
 				];
 				async.forEach(conference, function(item, callback) {
-					Schemas['PBXConference'].create(item, function(err, inst) {
+					Schemas['pbxConference'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -393,7 +393,7 @@ gets.index = function(req, res) {
 				{id:'3',depName:'客服部',memo:'负责客服服务！'}
 				];
 				async.forEach(depts, function(item, callback) {
-					Schemas['CRMDepartments'].create(item, function(err, inst) {
+					Schemas['manageDepartments'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -410,7 +410,7 @@ gets.index = function(req, res) {
 				{id:'5',roleName:'销售经理',memo:'负责客服服务！'}
 				];
 				async.forEach(roles, function(item, callback) {
-					Schemas['CRMUserRole'].create(item, function(err, inst) {
+					Schemas['manageUserRole'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -435,7 +435,7 @@ gets.index = function(req, res) {
                 {id:'74',menName:'部门管理',mgID:7,menURL:'/crm/Departments',iconName:'pc.png'}
 				];
 				async.forEach(menmus, function(item, callback) {
-					Schemas['CRMMenmus'].create(item, function(err, inst) {
+					Schemas['manageMenmus'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
@@ -453,7 +453,7 @@ gets.index = function(req, res) {
 				{id:'2',uName:'销售员',uLogin:'sale',uPass:hexpassword,uExten:'8002',uPhone:'13588668866',roleId:'2',depId:'2'}
 				];
 				async.forEach(users, function(item, callback) {
-					Schemas['CRMUserInfo'].create(item, function(err, inst) {
+					Schemas['manageUserInfo'].create(item, function(err, inst) {
 						callback(err, inst);
 					});
 				}, function(err, result) {
