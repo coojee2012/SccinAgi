@@ -1,0 +1,119 @@
+<!--页面内容-->
+  <div class="page_box">
+  <div class="column form-column main col col-sm-9 form-horizontal">
+    <h1> <span class="label label-info">
+      <img src="/images/man.png"/>
+      <img src="/images/queue.png"/>当前正在创建新用户</span></h1>
+    <div class="panel panel-default fieldset">
+    <div class="formStyle">
+      <form action='<%- baseurl%>/save' method='POST' id='form1'>
+        <table>
+          <colgroup>
+          <col style="width:20%">
+          </colgroup>
+          <tr>
+           <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">基本设置</th> 
+          </tr>
+          <tr>
+            <th>登陆帐号</th>
+              <td>
+                  <input type="hidden" name="id" id="id" value="" />
+                  <input type="text" id='uLogin' name='uLogin' class="form-control input-sm" placeholder="输入方便记忆的登陆帐号。" datatype="*" errormsg="不能为空！" />
+              </td>
+          </tr>  
+            <tr>
+            <th>用户姓名</th>
+            <td><input type="text" id='uName' name='uName' class="form-control input-sm"  datatype="*" /></td>
+            </tr>  
+            <tr>
+            <th>用户密码</th>
+            <td><input type="text" id='uPass' name='uPass' class="form-control input-sm" placeholder="输入密码。" datatype="*" errormsg="不能为空！" /></td>
+            </tr> 
+             <tr>
+            <th>手机号码</th>
+            <td><input type="text" id='uPhone' name='uPhone' class="form-control input-sm" placeholder="输入手机号码。" datatype="*" errormsg="不能为空！" /></td>
+          </tr> 
+        </table>
+      </form>
+      </div>
+        <div class="panel-footer text-center">
+        <button  class="btn btn-primary active" id='savebtn'>保存</button>
+        <a href="javascript:history.go(-1);" class="btn btn-default" role="button">返回</a>
+        </div>
+      </div>
+  </div>
+<script type='text/javascript'>
+$(function(){
+$(".tipmsg").tooltip({placement:'auto'});
+$('#form1').Validform();
+$('#savebtn').click(function(e){
+//href="/PBXQueue/save"
+if($('#form1').Validform().check()){
+
+$("#members option").each(function(){
+      $(this).attr('selected',true);
+    });
+
+ $.ajax({
+                cache: true,
+                type: "POST",
+                url:'<%- baseurl%>/save',
+                data:$('#form1').serialize(),// 你的formid
+                async: false,
+                error: function(request) {
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  if(data.success==='OK'){
+                    $('#id').val(data.id);
+                    $('#accountcode').attr('readonly','readonly');
+                  }
+                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                }
+            }); 
+}else{
+  $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+}
+
+});
+
+
+  //增加成员
+  $("#addmem").click(function(){
+      $("#extensions option:selected").clone().appendTo("#members");
+      $("#extensions option:selected").remove();
+  });
+  $("#extensions").dblclick(function(){
+    $("option:selected",this).clone().appendTo("#members");
+    $("option:selected",this).remove();
+  });
+  //减少成员
+  $("#removemem").click(function(){
+      $("#members option:selected").clone().appendTo("#extensions");
+      $("#members option:selected").remove();
+  });
+  $("#members").dblclick(function(){
+    $("option:selected",this).clone().appendTo("#extensions");
+    $("option:selected",this).remove();
+  });
+  //成员上移
+  $("#moveup").click(function(){
+    var so = $("#members option:selected");
+    if(so.get(0) && so.get(0).index!=0){
+      so.each(function(){
+        $(this).prev().before($(this));
+      });
+    }
+  });
+  //成员下移
+  $("#movdown").click(function(){
+    var so = $("#members option:selected");
+    if(so.get(0) && so.get(0).index!=($("#members option").length-1)){
+      so.each(function(){
+        $(this).next().after($(this));
+      });
+    }
+  });
+
+});
+</script>

@@ -41,7 +41,7 @@ gets.index = function(req, res,next,baseurl) {
 
 //新建
 gets.create = function(req, res,next,baseurl) {
-	Schemas['pbxExtension'].all({}, function(err, dbs) {
+    Schemas['manageUserInfo'].all({}, function (err, dbs) {
 		if (err) {
 			next(err);
 		} else {
@@ -49,7 +49,7 @@ gets.create = function(req, res,next,baseurl) {
 			for (var i = 0; i < dbs.length; i++) {
 				str += '<option value="' + dbs[i].id + '">' + dbs[i].id + ' "' + dbs[i].accountcode + '" </option>';
 			}
-			res.render('pbx/Queue/create.html', {
+			res.render('manage/UserInfo/create.html', {
 				baseurl:baseurl,
 				hasExtens: str
 			});
@@ -133,13 +133,13 @@ posts.save = function(req, res,next,baseurl) {
 	for (var key in req.body) {
 		Obj[key] = req.body[key];
 	}
-	console.log(Obj);
+	//console.log(Obj);
 	async.auto({
 			isHaveCheck: function(cb) {
 				if (!Obj.id || Obj.id === '') {
-					cb('队列号不能为空', -1);
+					cb('用户ID不能为空', -1);
 				} else {
-					Schemas['pbxQueue'].find(Obj.id, function(err, inst) {
+					Schemas['manageUserInfo'].find(Obj.id, function(err, inst) {
 						cb(err, inst);
 					});
 				}
@@ -150,7 +150,7 @@ posts.save = function(req, res,next,baseurl) {
 					if (results.isHaveCheck !== null) { //如果存在本函数什么都不做
 						cb(null, -1);
 					} else {
-						Schemas['pbxQueue'].create(Obj, function(err, inst) {
+						Schemas['manageUserInfo'].create(Obj, function(err, inst) {
 							cb(err, inst);
 
 						});
@@ -162,7 +162,7 @@ posts.save = function(req, res,next,baseurl) {
 					if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
 						cb(null, -1);
 					} else {
-						Schemas['pbxQueue'].update({
+						Schemas['manageUserInfo'].update({
 							where: {
 								id: Obj.id
 							},
@@ -208,7 +208,7 @@ posts.save = function(req, res,next,baseurl) {
 
 posts.delete = function(req, res,next,baseurl) {
 	var id = req.body['id'];
-	Schemas['pbxQueue'].find(id, function(err, inst) {
+	Schemas['manageUserInfo'].find(id, function(err, inst) {
 		var myjson = {};
 		if (err) {
 			myjson.success = 'ERROR';
