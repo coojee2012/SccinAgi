@@ -1,8 +1,8 @@
 var MSSQL=require('./mssqltds.js');
 var config = {
-  server: '192.168.1.2',
+  server: '127.0.0.1',
   userName: 'sa',
-  password: 'sa',
+  password: '123',
   options: {
     debug: {
       packet: false,
@@ -11,8 +11,8 @@ var config = {
       token: false,
       log: false
     },
-    tdsVersion: '7_1',
-    database: 'hbposv7' //'bjexpert' //
+    tdsVersion: '7_2',
+    database: 'hbpos7'//'hbposv7' //'bjexpert' //
   }
 
 };
