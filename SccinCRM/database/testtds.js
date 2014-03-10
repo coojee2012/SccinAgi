@@ -26,51 +26,72 @@ var config = {
 **/
 
 
-var sql2000 = function(config1) {
+var sql2000 = function(conf) {
   EventEmitter.call(this);
-  var config = config1;
-  var connected = false;
-  var connection = null;
-  async.auto({
-    connect:function(cb){connect(config,cb);}
-
-  },function(err,resluts){
-    var self=this;
-    self.connection=resluts;
-
+  this.config = conf;
+  this.connected = false;
+  this.connection = null;
+  this.connect(function(msg) {
+    console.log('message:',msg);
   });
-  //this.connect();
-} 
+}
 
 util.inherits(sql2000, EventEmitter);
-module.exports=sql2000;
+module.exports = sql2000;
 
-//sql2000.prototype.connect = 
+sql2000.prototype.connect = function(callback) {
+  var self = this;
+  self.connection = new Connection(self.config);
+  self.connection.on('connect', function(err) {
 
-function connect(config,callback) {
-  //var self = this;
-  var connection = new Connection(config);
-  connection.on('connect', function(err) {
-    console.log(err);
-    
-    //self.connected = true;
-    callback(null,connection)
+    if (err) {
+      console.log('连接发生错误：', err);
+      callback(err);
+    } else {
+      self.connected = true;
+      request('select top 2 * from  t_rm_vip_info', function(err, dbs) {
+        console.log('我的执行结果1', dbs);
+      });
+      callback('连接成功！');
+    }
+
     //executeStatement();
 
   });
-  connection.on('end', function() {
+  self.connection.on('end', function() {
     console.log('Connection closed');
-    //self.connected = false;
+    self.connected = false;
   });
-   connection.on('debug', function(text) {
+  self.connection.on('debug', function(text) {
     //console.log(text);
   });
 
 }
 
 
-sql2000.prototype.query=function(sql, callback) {
+sql2000.prototype.query = function(sql, callback) {
   var self = this;
+
+
+  // In SQL Server 2000 you may need: connection.execSqlBatch(request);
+  //connection.execSql(request);
+  //connection.execSqlBatch(request);
+  if (self.connection == null) {
+    console.log('还没有连接！');
+    self.connect(function() {
+      self.connection.execSql(request(sql, callback));
+    });
+  } else {
+    console.log('有连接！');
+    self.connection.execSql(request(sql, callback));
+  }
+
+
+
+}
+
+
+function request(sql, callback) {
   var results = [];
   //var sql="select top 2 * from  t_rm_vip_info";
   var request = new Request(sql, function(err, rowCount) {
@@ -105,10 +126,5 @@ sql2000.prototype.query=function(sql, callback) {
     console.log(rowCount + ' rows returned');
     callback(null, results);
   });
-
-  // In SQL Server 2000 you may need: connection.execSqlBatch(request);
-  //connection.execSql(request);
-  self.connection.execSqlBatch(request);
+  return request;
 }
-
-
