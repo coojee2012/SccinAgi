@@ -1,0 +1,24 @@
+1、在ORM中添加QUERY方法可以手写sql
+AbstractClass.query = function(sql, cb) {
+    if (stillConnecting(this.schema, this, arguments)) return;
+    var constr = this;
+    this.schema.adapter.query(sql, function (err, data) {
+         if (data && data.forEach) {
+             data.forEach(function (d, i) {
+                 //var obj = new constr;
+                 //obj._initProperties(d, false);
+                 
+                     data[i] = d;
+                 
+             });
+             if (data && data.countBeforeLimit) {
+                 data.countBeforeLimit = data.countBeforeLimit;
+             }
+             cb(err, data);
+         }
+         else
+             cb(err, []);
+    });
+};
+2、修改connect-jugglingdb
+添加自定义的ID，用以支持系统更默认采用Number的id

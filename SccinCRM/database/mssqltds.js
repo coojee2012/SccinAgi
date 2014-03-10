@@ -5,41 +5,98 @@ var MSSQL = function(config) {
   this.config = config;
   this.connected = false;
   this.connection = null;
-  this.connect();
+  this.connect(function() {
+    console.log('连接数据库成功！');
+  });
 };
 
 MSSQL.prototype.connect = function(callback) {
   var self = this;
-  console.log('message');
-   var connection = new Connection(self.config);
-
-      connection.on('connect', function(err) {
-        callback(err,connection);
-      });
-      connection.on('end', end);
-      connection.on('debug', debug); 
-}
-
-MSSQL.prototype.exec = function(sql,callback) {
-  var self = this;
-  sql = sql.toString();
-  request = new Request(sql, statementComplete)
-  request.on('columnMetadata', columnMetadata);
-  request.on('row', function(cloums){
-    callback(null,cloums);
+  self.connection = new Connection(self.config);
+  self.connection.on('connect', function(err) {
+    if (err) {
+      console.log('连接错误:', err);
+    } else {
+      self.connected = true;
+      callback();
+    }
   });
-  request.on('done', requestDone);
-  if(!self.connected){
-    self.connect();
-  }
-  //connection.execSql(request);
-  //self.connection.execSqlBatch(request);
+  self.connection.on('end', function(err) {
+    console.log('Connection closed');
+    process.exit(0);
+  });
+  self.connection.on('debug', function(message) {
+     console.log(message);
+  });
 }
 
-var config = {
-  server: '192.168.1.2',
+MSSQL.prototype.exec = function(sql, callback) {
+  var self = this;
+  var dbs = [];
+  sql = sql.toString();
+  request = new Request(sql, function(err, rowCount) {
+    if (err) {
+      console.log('Statement failed: ' + err);
+    } else {
+      console.log('执行完毕，共影响:' + rowCount + ' 行！');
+      callback(null, dbs);
+    }
+  });
+
+  request.on('columnMetadata', function(columnsMetadata) {
+    columnsMetadata.forEach(function(column) {
+      console.log(column);
+    });
+  });
+  request.on('row', function(columns) {
+    var row = {};
+    columns.forEach(function(column) {
+      if (column.value === null) {
+        row[column.metadata.colName] = "";
+      } else {
+        row[column.metadata.colName] = column.value;
+      }
+
+    });
+    dbs.push(row);
+  });
+
+  request.on('done', function(rowCount, more) {
+    // console.log('执行完毕，共影响:' + rowCount + ' 行！');
+    // callback(null, dbs);
+  });
+
+  if (!self.connected) {
+    self.connect(function(err) {
+      self.exec(sql, callback);
+    });
+  } else {
+    if (self.config && self.config.options && self.config.options.tdsVersion === '7_1') {
+      console.log('当前使用的是sqlserver2000');
+      self.connection.execSqlBatch(request);
+    } else {
+       console.log('当前使用的是sqlserver2000++');
+      self.connection.execSql(request);
+    }
+  }
+
+}
+
+MSSQL.prototype.end=function(){
+  var self=this;
+  if(self.connected){
+    self.connected=false;
+    self.connection.close();
+  }else{
+    console.log('连接已断开！');
+  }
+}
+module.exports = MSSQL;
+
+/*var config = {
+  server: '192.168.7.234',
   userName: 'sa',
-  password: 'sa',
+  password: '123456Aa',
   options: {
     debug: {
       packet: true,
@@ -48,60 +105,14 @@ var config = {
       token: false,
       log: true
     },
-    tdsVersion: '7_1',
-    database: 'hbposv7'
+    tdsVersion: '7_2',
+    database: 'bjexpert' //hbposv7'
   }
 
-};
+};*/
 
-var mssql = new MSSQL(config);
-mssql.exec('select top 2 * from  t_rm_vip_info');
+/*var mssql = new MSSQL(config);
 
-
-
-function requestDone(rowCount, more) {
-  // console.log(rowCount + ' rows');
-}
-
-function statementComplete(err, rowCount) {
-  if (err) {
-    console.log('Statement failed: ' + err);
-  } else {
-    console.log(rowCount + ' rows');
-  }
-}
-
-function end() {
-  console.log('Connection closed');
-  process.exit(0);
-}
-
-function infoError(info) {
-  // console.log(info.number + ' : ' + info.message);
-}
-
-function debug(message) {
-  // console.log(message);
-}
-
-function columnMetadata(columnsMetadata) {
-  columnsMetadata.forEach(function(column) {
-    console.log(column);
-  });
-}
-
-function row(columns) {
-  var values = '';
-
-  columns.forEach(function(column) {
-    if (column.value === null) {
-      value = 'NULL';
-    } else {
-      value = column.value;
-    }
-
-    values += value + '\t';
-  });
-
-  console.log('获取到的结果：', values);
-}
+mssql.exec('select * from ContinueContractMessage', function(err, dbs) {
+  console.log('获取到的结果：', dbs);
+});*/
