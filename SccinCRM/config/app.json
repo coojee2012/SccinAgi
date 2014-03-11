@@ -6,6 +6,6 @@
 	"phone" : "root",
 	"email" : "12345678",
 	"env":"development",
-	"appbase":"D:\\北京专家库\\北京二期专家库\\SccinAgi\\SccinCRM\\",
+	"appbase":"D:\\GitHub\\SccinAgi\\SccinCRM\\",
 	"debug":true
 }
