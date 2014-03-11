@@ -30,7 +30,7 @@ var manageUserInfo=schema.define('manageUserInfo',{
 manageUserInfo.belongsTo(manageUserRole, {as: 'role', foreignKey: 'roleId'});
 manageUserInfo.belongsTo(manageDepartments, {as: 'department', foreignKey: 'depId'});
 
-manageUserInfo.validatesPresenceOf('uName', 'uPass','uExten');//验证非空
+manageUserInfo.validatesPresenceOf('uLogin','uName', 'uPass','uExten');//验证非空
 manageUserInfo.validatesLengthOf('uPass', {min: 4, message: {min: '注册密码必须4位以上'}});//验证长度
 //manageUserInfo.validatesInclusionOf('deviceproto', {in: ['SIP', 'IAX2','VIRTUAL']});//验证是否在给定几个值
 //manageUserInfo.validatesNumericalityOf('uPhone','uExten', {int: true});//验证未数字

@@ -16,6 +16,42 @@ module.exports = {
 //ajax验证函数集合
 var checkFun = {};
 
+//登陆帐号验证
+checkFun['uLogin'] = function(uLogin, res) {
+	//console.log(uLogin);
+	if (!uLogin || uLogin == '') {
+		res.send({
+			"info": "输入不能为空！",
+			"status": "n"
+		});
+	} else {
+		Schemas['manageUserInfo'].findOne({
+					where: {
+						uLogin: uLogin
+					}
+				}, function(err, inst) {
+			if (err)
+				res.send({
+					"info": "后台验证发生错误！",
+					"status": "n"
+				});
+			else {
+				if (inst != null)
+					res.send({
+						"info": "已经存在！",
+						"status": "n"
+					});
+				else {
+					res.send({
+						"info": "验证通过！",
+						"status": "y"
+					});
+				}
+			}
+		});
+	}
+};
+
 //处理页面需要的Ajax验证
 posts.checkAjax = function(req, res,next,baseurl) {
 	var param = req.body['param'];
@@ -31,7 +67,7 @@ posts.checkAjax = function(req, res,next,baseurl) {
 
 }
 
-//分机列表显示
+//用户列表显示
 gets.index = function(req, res,next,baseurl) {
 	res.render('manage/UserInfo/list.html', {
 		baseurl:baseurl,
@@ -41,89 +77,28 @@ gets.index = function(req, res,next,baseurl) {
 
 //新建
 gets.create = function(req, res,next,baseurl) {
-    Schemas['manageUserInfo'].all({}, function (err, dbs) {
-		if (err) {
-			next(err);
-		} else {
-			var str = "";
-			for (var i = 0; i < dbs.length; i++) {
-				str += '<option value="' + dbs[i].id + '">' + dbs[i].id + ' "' + dbs[i].accountcode + '" </option>';
-			}
-			res.render('manage/UserInfo/create.html', {
-				baseurl:baseurl,
-				hasExtens: str
-			});
-		}
+	res.render('manage/UserInfo/create.html', {
+		baseurl:baseurl
 	});
-
 }
 //编辑
 gets.edit = function(req, res,next,baseurl) {
 	var id = req.query["id"];
 	async.auto({
-		findQueue: function(cb) {
-			Schemas['pbxQueue'].find(id, function(err, inst) {
+		findUser: function(cb) {
+			Schemas['manageUserInfo'].find(id, function(err, inst) {
 				if (err || inst == null)
-					cb('编辑查找队列发生错误或队列不存在！', inst);
+					cb('编辑查找用户发生错误或用户不存在！', inst);
 				else
 					cb(err, inst);
 			});
-		},
-		findMembers: ['findQueue',
-			function(cb, results) {
-				var yyMembers = !results.findQueue.members?[]:results.findQueue.members.toString().split('\,');
-				console.log(yyMembers);
-				Schemas['pbxExtension'].all({}, function(err, dbs) {
-					if (err) {
-						cb('编辑队列查询分机发生错误！', -1);
-					} else {
-						//var totalMembers = [];
-						var hasMembers = [];
-						for (var i = 0; i < dbs.length; i++) {
-							//totalMembers.push(dbs[i].id);
-							var isHave = false;
-							for (var k = 0; k < yyMembers.length; k++) {
-								if (dbs[i].id === yyMembers[k]) {
-									isHave = true;
-									break;
-								}
-							}
-							if (!isHave) {
-								hasMembers.push(dbs[i].id);
-							}
-							//str += '<option value="' + dbs[i].id + '">' + dbs[i].id + ' "' + dbs[i].accountcode + '" </option>';
-						}
-
-						var hasExtens = "";
-						var	yyExtens = "";
-						for (var ii = 0; ii < hasMembers.length; ii++) {
-							
-							hasExtens += '<option value="' + hasMembers[ii] + '">' + hasMembers[ii] + ' "' + hasMembers[ii] + '" </option>';
-						}
-						for (var kk = 0; kk < yyMembers.length; kk++) {
-							
-							yyExtens += '<option value="' + yyMembers[kk] + '">' + yyMembers[kk] + ' "' + yyMembers[kk] + '" </option>';
-						}
-						
-						cb(null, {
-							hasExtens: hasExtens,
-							yyExtens: yyExtens
-						});
-					}
-				});
-			}
-		]
-
+		}
 	}, function(err, results) {
-		res.render('pbx/Queue/edit.html', {
+		res.render('manage/UserInfo/edit.html', {
 			baseurl:baseurl,
-			hasExtens: results.findMembers.hasExtens,
-			yyExtens: results.findMembers.yyExtens,
-			inst: results.findQueue
+			inst: results.findUser
 		});
 	});
-
-
 }
 
 
@@ -137,13 +112,12 @@ posts.save = function(req, res,next,baseurl) {
 	async.auto({
 			isHaveCheck: function(cb) {
 				if (!Obj.id || Obj.id === '') {
-					cb('用户ID不能为空', -1);
+					cb('登陆用户不能为空', -1);
 				} else {
 					Schemas['manageUserInfo'].find(Obj.id, function(err, inst) {
 						cb(err, inst);
 					});
 				}
-
 			},
 			createNew: ['isHaveCheck',
 				function(cb, results) {
@@ -152,7 +126,6 @@ posts.save = function(req, res,next,baseurl) {
 					} else {
 						Schemas['manageUserInfo'].create(Obj, function(err, inst) {
 							cb(err, inst);
-
 						});
 					}
 				}
@@ -162,6 +135,9 @@ posts.save = function(req, res,next,baseurl) {
 					if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
 						cb(null, -1);
 					} else {
+
+						Obj.lastChangeTime = moment().format("YYYY-MM-DD HH:mm:ss");
+
 						Schemas['manageUserInfo'].update({
 							where: {
 								id: Obj.id
