@@ -1,0 +1,89 @@
+<!--页面内容-->
+  <div class="page_box">
+  <div class="column form-column main col col-sm-9 form-horizontal">
+    <h1> <span class="label label-info">
+      <img src="/images/man.png"/>
+      <img src="/images/queue.png"/>当前正在编辑角色<%= inst.roleName%></span></h1>
+    <div class="panel panel-default fieldset">
+    <div class="formStyle">
+      <form action='<%- baseurl%>/save' method='POST' id='form1'>
+        <table>
+          <colgroup>
+          <col style="width:20%">
+          </colgroup>
+          <tr>
+           <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">登陆设置</th> 
+          </tr>
+          <tr>
+            <th>角色名称</th>
+              <td>
+                  <input type="text" id='roleName' name='roleName' value="<%= inst.roleName%>" class="form-control input-sm" readonly="readonly" />
+                  <input type="hidden" id="id" name="id" value="<%= inst.id%>">
+              </td>
+          </tr>
+          <tr>
+            <th>是否坐席</th>
+            <td>
+            <label class="radio-inline tipmsg">
+      <input type="radio" id="isAgent1" name='isAgent' value="是" <%if(inst.isAgent==='是'){%>checked='checked'<%}%> >是</label>
+    <label class="radio-inline tipmsg" title="">
+      <input type="radio" id="isAgent2" name='isAgent' value="否" <%if(inst.isAgent==='否'){%>checked='checked'<%}%> >否</label>
+            </td>
+          </tr>
+          <tr>
+            <th>操作权限</th>
+            <td>
+            <label class="radio-inline tipmsg">
+      <input type="radio" id="hasPtions1" name='hasPtions' value="1" <%if(inst.hasPtions===1){%>checked='checked'<%}%> >只读</label>
+    <label class="radio-inline tipmsg" title="">
+      <input type="radio" id="hasPtions2" name='hasPtions' value="2" <%if(inst.hasPtions===2){%>checked='checked'<%}%> >只写</label>
+      <label class="radio-inline tipmsg" title="">
+      <input type="radio" id="hasPtions3" name='hasPtions' value="3" <%if(inst.hasPtions===3){%>checked='checked'<%}%> >读写</label>
+      <label class="radio-inline tipmsg" title="">
+      <input type="radio" id="hasPtions4" name='hasPtions' value="6" <%if(inst.hasPtions===6){%>checked='checked'<%}%> >删除</label>
+            </td>
+          </tr>
+          <tr>
+            <th>备注</th>
+            <td><textarea id="memo" name="memo" rows="3" class="form-control input-sm" cols="50"><%= inst.memo%></textarea>
+            </td>
+          </tr>
+        </table>
+      </form>
+      </div>
+        <div class="panel-footer text-center">
+        <button  class="btn btn-primary active" id='savebtn'>保存</button>
+        <a href="javascript:history.go(-1);" class="btn btn-default" role="button">返回</a>
+        </div>
+      </div>
+  </div>
+<script type='text/javascript'>
+$(function(){
+$(".tipmsg").tooltip({placement:'auto'});
+$('#form1').Validform();
+$('#savebtn').click(function(e){
+if($('#form1').Validform().check()){
+
+ $.ajax({
+                cache: true,
+                type: "POST",
+                url:'<%- baseurl%>/save',
+                data:$('#form1').serialize(),// 你的formid
+                async: false,
+                error: function(request) {
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  if(data.success==='OK'){
+                    $('#id').val(data.id);
+                  }
+                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                }
+            }); 
+}else{
+  $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+}
+
+});
+});
+</script>

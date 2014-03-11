@@ -1,0 +1,65 @@
+<!--页面内容-->
+  <div class="page_box">
+  <div class="column form-column main col col-sm-9 form-horizontal">
+    <h1> <span class="label label-info">
+      <img src="/images/man.png"/>
+      <img src="/images/queue.png"/>当前正在创建新部门</span></h1>
+    <div class="panel panel-default fieldset">
+    <div class="formStyle">
+      <form action='<%- baseurl%>/save' method='POST' id='form1'>
+        <table>
+          <colgroup>
+          <col style="width:20%">
+          </colgroup>
+          <tr>
+           <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">基本设置</th> 
+          </tr>
+          <tr>
+            <th>部门名称</th>
+              <td>
+                  <input type="text" id='depName' name='depName' class="form-control input-sm" placeholder="输入部门名称。" datatype="*" errormsg="不能为空！" ajaxurl="<%- baseurl%>/checkAjax" sucmsg="验证通过！" errormsg="验证不通过！" />
+              </td>
+          </tr>
+          <tr>
+            <th>备注</th>
+            <td><textarea id="memo" name="memo" rows="3" class="form-control input-sm" cols="50"></textarea>
+            </td>
+          </tr> 
+        </table>
+      </form>
+      </div>
+        <div class="panel-footer text-center">
+        <button  class="btn btn-primary active" id='savebtn'>保存</button>
+        <a href="javascript:history.go(-1);" class="btn btn-default" role="button">返回</a>
+        </div>
+      </div>
+  </div>
+<script type='text/javascript'>
+$(function(){
+$(".tipmsg").tooltip({placement:'auto'});
+$('#form1').Validform();
+$('#savebtn').click(function(e){
+if($('#form1').Validform().check()){
+ $.ajax({
+                cache: true,
+                type: "POST",
+                url:'<%- baseurl%>/save',
+                data:$('#form1').serialize(),// 你的formid
+                async: false,
+                error: function(request) {
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  if(data.success==='OK'){
+                    $('#id').val(data.id);
+                  }
+                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                }
+            }); 
+}else{
+  $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+}
+
+});
+});
+</script>

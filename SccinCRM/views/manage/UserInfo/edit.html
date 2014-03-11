@@ -28,11 +28,19 @@
           </tr>
           <tr>
             <th>部    门</th>
-            <td><input type="text" id='depId' name='depId' value="<%= inst.depId%>" class="form-control input-sm"  /></td>
+            <td>
+              <select name="depId" id="depId" class="form-control input-sm" style='width: 100%;'>
+                <%- departments%>
+              </select>
+            </td>
           </tr>
           <tr>
             <th>角    色</th>
-            <td><input type="text" id='roleId' name='roleId' value="<%= inst.roleId%>" class="form-control input-sm"  /></td>
+            <td>
+            <select name="roleId" id="roleId" class="form-control input-sm" style='width: 100%;'>
+                <%- roles%>
+              </select>
+              </td>
           </tr>
           <tr>
            <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">信息设置</th> 
@@ -75,6 +83,11 @@
       <input type="radio" id="readOnly2" name='readOnly' value="否" <%if(inst.readOnly==='否'){%>checked='checked'<%}%>  >否</label>
             </td>
           </tr> 
+          <tr>
+            <th>备注</th>
+            <td><textarea id="uMemo" name="uMemo" rows="3" class="form-control input-sm" cols="50"><%= inst.uMemo%></textarea>
+            </td>
+          </tr>
         </table>
       </form>
       </div>

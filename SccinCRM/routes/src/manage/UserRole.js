@@ -4,7 +4,6 @@ var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var async = require('async');
 var Schemas = require(basedir+'/database/schema').Schemas;
-var crypto = require('crypto');
 var moment = require('moment');
 
 var logger = require(basedir+'/lib/logger').logger('web');
@@ -18,18 +17,17 @@ module.exports = {
 //ajax验证函数集合
 var checkFun = {};
 
-//登陆帐号验证
-checkFun['uLogin'] = function(uLogin, res) {
-	//console.log(uLogin);
-	if (!uLogin || uLogin == '') {
+//角色名验证
+checkFun['roleName'] = function(roleName, res) {
+	if (!roleName || roleName == '') {
 		res.send({
 			"info": "输入不能为空！",
 			"status": "n"
 		});
 	} else {
-		Schemas['manageUserInfo'].findOne({
+		Schemas['manageUserRole'].findOne({
 					where: {
-						uLogin: uLogin
+						roleName: roleName
 					}
 				}, function(err, inst) {
 			if (err)
@@ -69,41 +67,18 @@ posts.checkAjax = function(req, res,next,baseurl) {
 
 }
 
-//用户列表显示
+//角色列表显示
 gets.index = function(req, res,next,baseurl) {
-	res.render('manage/UserInfo/list.html', {
+	res.render('manage/UserRole/list.html', {
 		baseurl:baseurl,
-		modename:'manageUserInfo'
+		modename:'manageUserRole'
 	});
 }
 
 //新建
 gets.create = function(req, res,next,baseurl) {
-	Schemas['manageDepartments'].all({}, function(err, dbs) {
-		if (err) {
-			next(err);
-		} else {
-			var str = "";
-			for (var i = 0; i < dbs.length; i++) {
-				str += '<option value="' + dbs[i].id + '"> ' + dbs[i].depName + ' </option>';
-			}
-
-			Schemas["manageUserRole"].all({},function(roleerr,roledbs){
-				if(roleerr){next(roleerr);}
-				else
-				{
-					var rolestr = "";
-					for (var i = 0; i< roledbs.length; i++) {
-						rolestr += '<option value="' + roledbs[i].id + '"> ' + roledbs[i].roleName + ' </option>';
-					};
-					res.render('manage/UserInfo/create.html', {
-				baseurl:baseurl,
-				departments: str,
-				roles:rolestr
-			});
-				}
-			});
-		}
+	res.render('manage/UserRole/create.html', {
+		baseurl:baseurl
 	});
 }
 //编辑
@@ -111,54 +86,17 @@ gets.edit = function(req, res,next,baseurl) {
 	var id = req.query["id"];
 	async.auto({
 		findUser: function(cb) {
-			Schemas['manageUserInfo'].find(id, function(err, inst) {
+			Schemas['manageUserRole'].find(id, function(err, inst) {
 				if (err || inst == null)
-					cb('编辑查找用户发生错误或用户不存在！', inst);
+					cb('编辑查找角色发生错误或角色不存在！', inst);
 				else
 					cb(err, inst);
 			});
-		},
-		findDepartment: ['findUser',
-			function(cb,results){
-			Schemas['manageDepartments'].all({}, function(err, dbs) {
-				if (err) {
-					cb('编辑用户查找部门发生错误', -1);
-				} else {
-					var str = "";
-					for (var i = 0; i < dbs.length; i++) {
-						if(dbs[i].id === results.findUser.depId)
-							str += '<option selected="selected" value="' + dbs[i].id + '"> ' + dbs[i].depName + ' </option>';
-						else
-							str += '<option value="' + dbs[i].id + '"> ' + dbs[i].depName + ' </option>';
-					}
-					Schemas["manageUserRole"].all({},function(roleerr,roledbs){
-						if(roleerr){cb('编辑用户查找角色发生错误', -1);}
-						else
-						{
-							var rolestr = "";
-							for (var i = 0; i< roledbs.length; i++) {
-								if(roledbs[i].id === results.findUser.roleId)
-									rolestr += '<option selected="selected" value="' + roledbs[i].id + '"> ' + roledbs[i].roleName + ' </option>';
-								else
-									rolestr += '<option value="' + roledbs[i].id + '"> ' + roledbs[i].roleName + ' </option>';
-							};
-							cb(null, {
-								departments: str,
-								roles: rolestr
-							});
-						}
-					});
-				}
-			});
 		}
-	]
-	},
-	 function(err, results) {
-		res.render('manage/UserInfo/edit.html', {
+	}, function(err, results) {
+		res.render('manage/UserRole/edit.html', {
 			baseurl:baseurl,
-			inst: results.findUser,
-			departments: results.findDepartment.departments,
-			roles:results.findDepartment.roles
+			inst: results.findUser
 		});
 	});
 }
@@ -173,10 +111,10 @@ posts.save = function(req, res,next,baseurl) {
 	//console.log(Obj);
 	async.auto({
 			isHaveCheck: function(cb) {
-				if (!Obj.uLogin || Obj.uLogin === '') {
-					cb('登陆用户不能为空', -1);
+				if (!Obj.roleName || Obj.roleName === '') {
+					cb('角色不能为空', -1);
 				} else {
-					Schemas['manageUserInfo'].find(Obj.id, function(err, inst) {
+					Schemas['manageUserRole'].find(Obj.id, function(err, inst) {
 						cb(err, inst);
 					});
 				}
@@ -187,10 +125,7 @@ posts.save = function(req, res,next,baseurl) {
 						cb(null, -1);
 					} else {
 
-						var md5 = crypto.createHash('md5');
-						Obj.uPass = md5.update(Obj.uPass).digest('hex').toUpperCase();
-
-						Schemas['manageUserInfo'].create(Obj, function(err, inst) {
+						Schemas['manageUserRole'].create(Obj, function(err, inst) {
 							cb(err, inst);
 						});
 					}
@@ -202,9 +137,9 @@ posts.save = function(req, res,next,baseurl) {
 						cb(null, -1);
 					} else {
 
-						Obj.lastChangeTime = moment().format("YYYY-MM-DD HH:mm:ss");
+						Obj.lastModify = moment().format("YYYY-MM-DD HH:mm:ss");
 
-						Schemas['manageUserInfo'].update({
+						Schemas['manageUserRole'].update({
 							where: {
 								id: Obj.id
 							},
@@ -250,7 +185,7 @@ posts.save = function(req, res,next,baseurl) {
 
 posts.delete = function(req, res,next,baseurl) {
 	var id = req.body['id'];
-	Schemas['manageUserInfo'].find(id, function(err, inst) {
+	Schemas['manageUserRole'].find(id, function(err, inst) {
 		var myjson = {};
 		if (err) {
 			myjson.success = 'ERROR';
