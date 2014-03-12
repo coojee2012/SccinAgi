@@ -428,11 +428,11 @@ gets.index = function(req, res) {
                 {id:'82',menName:'队列管理',mgID:8,menURL:'/pbx/Queue',iconName:'pc.png'},
                 {id:'83',menName:'设备管理',mgID:8,menURL:'/pbx/Card',iconName:'pc.png'},
                 {id:'84',menName:'中继管理',mgID:8,menURL:'/pbx/Trunk',iconName:'pc.png'},
-                {id:'70',menName:'菜单管理',mgID:7,menURL:'/crm/Menmus',iconName:'pc.png'},
-                {id:'71',menName:'菜单分组管理',mgID:7,menURL:'/crm/MenmuGroup',iconName:'pc.png'},
-                {id:'72',menName:'用户管理',mgID:7,menURL:'/crm/Userinfo',iconName:'pc.png'},
-                {id:'73',menName:'角色管理',mgID:7,menURL:'/crm/UserRole',iconName:'pc.png'},
-                {id:'74',menName:'部门管理',mgID:7,menURL:'/crm/Departments',iconName:'pc.png'}
+                {id:'70',menName:'菜单管理',mgID:7,menURL:'/manage/Menmus',iconName:'pc.png'},
+                {id:'71',menName:'菜单分组管理',mgID:7,menURL:'/manage/MenmuGroup',iconName:'pc.png'},
+                {id:'72',menName:'用户管理',mgID:7,menURL:'/manage/UserInfo',iconName:'pc.png'},
+                {id:'73',menName:'角色管理',mgID:7,menURL:'/manage/UserRole',iconName:'pc.png'},
+                {id:'74',menName:'部门管理',mgID:7,menURL:'/manage/Departments',iconName:'pc.png'}
 				];
 				async.forEach(menmus, function(item, callback) {
 					Schemas['manageMenmus'].create(item, function(err, inst) {

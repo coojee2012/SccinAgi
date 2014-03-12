@@ -112,7 +112,7 @@ gets.index = function(req, res, next) {
 					for (var i = 0; i < results.getMenmus.length; i++) {
 						if (results.getMenmus[i].mgID === 7) {
 							startmenmus['sub_item_xtsz_' + results.getMenmus[i].id] = {
-								title: results.getMenmus[i].mgName,
+								title: results.getMenmus[i].menName,
 								url: results.getMenmus[i].menURL,
 								apptype: 'appwin',
 								postdata: {},
