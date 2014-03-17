@@ -3,21 +3,15 @@
     <div class="column form-column main col form-horizontal">
       <div class="panel panel-default fieldset">
         <div class="panel-heading"> 
-        <a href="<%- baseurl%>/create" class="btn btn-primary">新建用户</a>
+        <a href="<%- baseurl%>/create" class="btn btn-primary">增加新的拨号规则</a>
         </div>
         <div class="panel-body ">
-          <div class="form-group">
-            <label for="uLogin" class="control-label col-sm-2">登陆帐号</label>
-            <div class="controls  col-sm-3">
+          <div class="form-group form-inline">
+            <label class="control-label col-sm-2">当遇到没有被叫时,将以号码</label>
             <input type="text" value="" name="uLogin" id="uLogin"  class="form-control input-sm"> 
-            </div>
-            <label for="uName" class="control-label col-sm-2">用户姓名</label>
-             <div class="controls  col-sm-3">
-          <input type="text" value="" name="uName" id="uName"  class="form-control input-sm"> 
-            </div>
-            
+            <label class="control-label col-sm-2">作为被叫使用.</label>            
               <div class="controls  col-sm-2">
-                <input type="button" class="btn btn-primary btn-sm" id="search" value="查询">
+                <input type="button" class="btn btn-primary btn-sm" id="saveDefault" value="保存">
               </div>             
             </div>
           </div>
@@ -35,12 +29,11 @@
     </colgroup> -->
       <thead>
         <tr>
-          <th class="text-center">登陆帐号</th>
-          <th class="text-center">用户姓名</th>
-          <th class="text-center">分机号</th>
-          <th class="text-center">工号</th>
-          <th class="text-center">手机号码</th>
-          <th class="text-center">创建时间</th>
+          <th class="text-center">优先</th>
+          <th class="text-center">名称</th>
+          <th class="text-center">呼叫来自</th>
+          <th class="text-center">表达式</th>
+          <th class="text-center">处理方式</th>
           <th class="text-center"><span class="print">操作</span></th>
         </tr>
       </thead>
@@ -48,12 +41,11 @@
 </tbody>
 <tfoot>
     <tr>
-          <th class="text-center">登陆帐号</th>
-          <th class="text-center">用户姓名</th>
-          <th class="text-center">分机号</th>
-          <th class="text-center">工号</th>
-          <th class="text-center">手机号码</th>
-          <th class="text-center">创建时间</th>
+          <th class="text-center">优先</th>
+          <th class="text-center">名称</th>
+          <th class="text-center">呼叫来自</th>
+          <th class="text-center">表达式</th>
+          <th class="text-center">处理方式</th>
           <th class="text-center"><span class="print">操作</span></th>
     </tr>
   </tfoot>
@@ -64,19 +56,60 @@
 <%- include ../../listtable.html %>
 <%- include ../../listbasefunc.html %>
 
+<script src="/js/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript">
+
+var fixHelper = function(e, ui) { 
+      ui.children().each(function() { 
+      $(this).width($(this).width());
+    }); 
+  return ui; 
+}; 
+  $(function() {
+    $("#datatable tbody").sortable({
+      helper: fixHelper,
+      axis:"y", 
+                start:function(e, ui){ 
+                    ui.helper.css({"background":"#fff"})     //拖动时的行，要用ui.helper  
+                    return ui; 
+                },
+                stop:function(e, ui){ 
+                    sortRouter();
+                    return ui; 
+                }
+    });
+    $("#sortable").disableSelection();
+  });
+function sortRouter()
+{
+  var ids = "";
+  $("input[name='id']").each(function(){
+      ids+=$(this).val()+"|";
+  });
+  $.ajax({
+                cache: true,
+                type: "POST",
+                url:'<%- baseurl%>/sortRouter',
+                data:{ids:ids},
+                async: true,
+                error: function(request) {
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  if(data.success==='OK'){
+                    location.href = "index";
+                  }
+                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                }
+            }); 
+}
+
 
 function getWhere(){
 var where={};
 where.dbName='<%= modename%>';
 //gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
-where.whereCount=2;//添加需要查询的条件个数
-where.whereCol_1='uName';
-where.whereWay_1='like';
-where.whereValue_1='%'+$('#uName').val()+'%';
-where.whereCol_0='uLogin';
-where.whereWay_0='';
-where.whereValue_0=$('#uLogin').val();
+where.whereCount=0;//添加需要查询的条件个数
 return where;
 }
 
@@ -115,19 +148,18 @@ return toolswhere;
 
 //设置默认排序列
 function getaaSorting(){
-return [[5,'desc']];
+return [[0,'asc']];
 }
 
 function getColums(){
   var colums=[
-      { "sClass":'center',"sName":"uLogin","mData": "uLogin","bSortable": false,"bVisible": true, "aTargets": [0] },
-      { "sClass":'center',"sName":"uName","mData": "uName","bSortable": false,"bVisible": true, "aTargets": [1] },
-      { "sClass":'center',"sName":"uExten","mData": "uExten","bSortable": false,"bVisible": true, "aTargets": [2] },
-      { "sClass":'center',"sName":"uWorkNum","mData": "uWorkNum","bSortable": false,"bVisible": true, "aTargets": [3] },
-      { "sClass":'center',"sName":"uPhone","mData": "uPhone","bSortable": false,"bVisible": true, "aTargets": [4] },
-      {"asSorting": [ "desc" ], "sClass":'center',"sName":"crtTime","mData": "crtTime","bSortable": true,"bVisible": true, "aTargets": [5] },
-      { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [6] ,"mRender": function ( data, type, full ) {
-        var str='<a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id='+data+'">编辑</a>';
+      { "asSorting": [ "asc" ],"sClass":'center',"sName":"proirety","mData": "proirety","bSortable": true,"bVisible": true, "aTargets": [0] },
+      { "sClass":'center',"sName":"routername","mData": "routername","bSortable": false,"bVisible": true, "aTargets": [1] },
+      { "sClass":'center',"sName":"callergroup","mData": "callergroup","bSortable": false,"bVisible": true, "aTargets": [2] },
+      { "sClass":'center',"sName":"callerid","mData": "callerid","bSortable": false,"bVisible": true, "aTargets": [3] },
+      { "sClass":'center',"sName":"processmode","mData": "processmode","bSortable": false,"bVisible": true, "aTargets": [4] },
+      { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [5] ,"mRender": function ( data, type, full ) {
+        var str='<input type="hidden" name="id" value="'+data+'"><a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id='+data+'">编辑</a>';
             str+='<a class="btn btn-danger btn-xs print" href="javascript:delrow(\''+data+'\');">删除</a>'
         return str;
       }}
