@@ -2,10 +2,10 @@
 	"hostip" : "127.0.0.1",
 	"hostname" : "www.baidu.com",
 	"hostport" : 3001,
-	"appname" : "北京市评标专家库呼叫中心系统",
+	"appname" : "Asterisk Fast AGI with Node.",
 	"phone" : "root",
 	"email" : "12345678",
 	"env":"development",
-	"appbase":"D:\\GitHub\\SccinAgi\\SccinCRM",
+	"appbase":"D:\\GitHub\\SccinAgi\\SccinAGI",
 	"debug":true
 }

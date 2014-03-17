@@ -19,5 +19,3 @@ var routing = function(v) {
 };
 
 module.exports = routing;
-
-

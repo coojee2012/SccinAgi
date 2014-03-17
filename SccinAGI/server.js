@@ -4,19 +4,19 @@ var conf = require('node-conf');
 var logconf = conf.load('log4js');
 var agiconf = conf.load('fastagi');
 var moment = require('moment');
-var routing = require('./routing');
+var routing = require('./smartAgi/src/Routings');
 var Schemas = require('./database/schema').Schemas;
 var log4js = require('log4js');
 log4js.configure(logconf, agiconf);
 var logger = log4js.getLogger('agi');
 logger.setLevel('DEBUG');
+
 var server = AGI.createServer(function(context) {
-
-logger.debug("当前上下文状态："+context.state+'，上下文流是否可读：'+context.stream.readable);
-
+  logger.debug("当前上下文状态：" + context.state + '，上下文流是否可读：' + context.stream.readable);
+  var Schemaslocal = require('./database/schema').Schemas;
   var route = new routing({
     context: context,
-    Schemas: Schemas,
+    Schemas: Schemaslocal,
     agiconf: agiconf,
     nami: nami,
     args: null,
@@ -24,27 +24,27 @@ logger.debug("当前上下文状态："+context.state+'，上下文流是否可�
     vars: null
   });
 
- server.getConnections(function(err, count) {
+  server.getConnections(function(err, count) {
     logger.info('当前服务器连接数：' + count);
   });
 
   //捕获获取变量事件
   //vars 捕获到的变量
   //访问开始的地方 
- 
+
 
   context.on('variables', function(vars) {
     var script = vars.agi_network_script.split("?");
     var router = script[0];
     var args = {};
-    if (script[1] && script[1] != "") {
+    if (script[1] && script[1] !== "") {
       var tmp = script[1].split('&');
       for (var i in tmp) {
         var kv = tmp[i].split('=');
         args[kv[0]] = kv[1];
       }
     }
-    logger.debug(vars);
+   // logger.debug(vars);
     route.args = args;
     route.vars = vars;
     if (typeof(route[router]) === 'function') {
@@ -67,7 +67,7 @@ logger.debug("当前上下文状态："+context.state+'，上下文流是否可�
     logger.info("发生挂机事件.");
     if (route.args.routerline) {
       logger.info("正常呼叫中心流程，记录挂机时间.");
-      Schemas.PBXCdr.update({
+      Schemaslocal.pbxCdr.update({
         where: {
           id: route.sessionnum
         },
@@ -75,7 +75,7 @@ logger.debug("当前上下文状态："+context.state+'，上下文流是否可�
           endtime: moment().format("YYYY-MM-DD HH:mm:ss")
         }
       }, function(err, inst) {
-        if(err)
+        if (err)
           logger.error(err);
 
         context.end();
@@ -94,6 +94,12 @@ logger.debug("当前上下文状态："+context.state+'，上下文流是否可�
   //AGI访问关闭
   context.on('close', function(o) {
     logger.info("AGI通道已关闭", o);
-    route=null;
+    route = null;
   });
-}).listen(agiconf.port);
+});
+
+if (!module.parent) {
+  server.listen(agiconf.port);
+}
+
+module.exports = server;
