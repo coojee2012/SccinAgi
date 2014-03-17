@@ -19,7 +19,16 @@
               <td>
                   <input type="text" id='routername' name='routername' class="form-control input-sm" placeholder="输入方便记忆的规则名称。" />
               </td>
-          </tr>  
+          </tr>
+          <tr>
+            <th>系统默认</th>
+            <td>
+            <label class="radio-inline tipmsg">
+      <input type="radio" id="createmode1" name='createmode' value="是" >是</label>
+    <label class="radio-inline tipmsg" title="">
+      <input type="radio" id="createmode2" name='createmode' value="否" checked='checked' >否</label>
+            </td>
+          </tr>
           <tr>
             <th>呼叫来自</th>
             <td>
@@ -31,7 +40,7 @@
           <tr>
             <th>匹配规则</th>
             <td>
-            <div class="">当外线送入的被叫号码以<input type="text" style="width:20px;" id='callerid' name='callerid' class="form-control input-sm" /></div><div>开头且长度为<input type="text" id='callerlen' style="width:20px;" name='callerlen' class="form-control input-sm" />位时,从头开始删掉<input type="text" id='replacecalledtrim' style="width:20px;" name='replacecalledtrim' class="form-control input-sm" />位且补充信息<input type="text" id='replacecalledappend' style="width:20px;" name='replacecalledappend' class="form-control input-sm" />到该号码上.
+            <div class="form-inline">当外线送入的被叫号码以<input type="text" style="width:45px;" id='callerid' name='callerid' class="form-control input-sm" />开头且长度为<input type="text" id='callerlen' style="width:30px;" name='callerlen' class="form-control input-sm" />位时,从头开始删掉<input type="text" id='replacecalledtrim' style="width:30px;" name='replacecalledtrim' class="form-control input-sm" />位且补充信息<input type="text" id='replacecalledappend' style="width:50px;" name='replacecalledappend' class="form-control input-sm" />到该号码上.
             </div>
             </td>
           </tr>
@@ -47,20 +56,9 @@
             </td>
           </tr>
           <tr>
-            <th>本地类型</th>
-            <td>
-             <select name="lastwhendone" id="lastwhendone" class="form-control input-sm" style='width: 100%;'>
-                <option value="黑名单">黑名单</option>
-                <option value="VIP">VIP</option>
-                <option value="本地处理">本地处理</option>
-                <option value="拨打外线">拨打外线</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
            <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">高级参数</th> 
           </tr>
-          <tr>s
+          <tr>
             <th>最终规则</th>
             <td>
             <label class="radio-inline tipmsg">
@@ -68,14 +66,6 @@
     <label class="radio-inline tipmsg" title="">
       <input type="radio" id="lastwhendone2" name='lastwhendone' value="否" >否</label>
             </td>
-          </tr>  
-          <tr>
-            <th>匹配主叫号码</th>
-            <td><input type="text" id='callerid' name='callerid' class="form-control input-sm" /></td>
-          </tr>
-          <tr>
-            <th>匹配主叫长度</th>
-            <td><input type="text" id='callerlen' name='callerlen' class="form-control input-sm"  /></td>
           </tr>
           <tr>
             <th>主叫替换</th>
