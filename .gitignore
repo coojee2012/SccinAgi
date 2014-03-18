@@ -1,6 +1,8 @@
 .externalToolBuilders
 .settings
 *.log
+.svn
+.svn/
 *.log*
 web.log
 *.dll
