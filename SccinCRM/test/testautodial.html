@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../public/js/jquery-2.1.0.js"></script>
+		<script type="text/javascript">
+$(function(){
+ $.ajax({
+                type: "POST",
+                url:'http://192.168.0.114:3001/base/asami/autodial',
+                data:{id:'delid'},// 你的formid
+                async: false,
+                error: function(request) {
+                	$("#div1").append('222'); 
+                },
+                success: function(data) {  
+                $("#div1").append('1111');              
+                }
+            }); 
+});
+		</script>
+	</head>
+	<body>
+		<div id="div1"></div>
+	</body>
+</html>
