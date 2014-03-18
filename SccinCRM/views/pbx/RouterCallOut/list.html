@@ -3,7 +3,7 @@
     <div class="column form-column main col form-horizontal">
       <div class="panel panel-default fieldset">
         <div class="panel-heading"> 
-        <a href="<%- baseurl%>/create" class="btn btn-primary">增加新的拨号规则</a>
+        <a href="<%- baseurl%>/create" class="btn btn-primary">增加新的呼出规则</a>
         </div>
         <div class="panel-body ">
           <div class="form-group form-inline">
@@ -31,7 +31,7 @@
         <tr>
           <th class="text-center">优先</th>
           <th class="text-center">名称</th>
-          <th class="text-center">呼叫来自</th>
+          <th class="text-center">分机分组</th>
           <th class="text-center">表达式</th>
           <th class="text-center">处理方式</th>
           <th class="text-center"><span class="print">操作</span></th>
@@ -43,7 +43,7 @@
     <tr>
           <th class="text-center">优先</th>
           <th class="text-center">名称</th>
-          <th class="text-center">呼叫来自</th>
+          <th class="text-center">分机分组</th>
           <th class="text-center">表达式</th>
           <th class="text-center">处理方式</th>
           <th class="text-center"><span class="print">操作</span></th>
@@ -97,7 +97,7 @@ function sortRouter()
                 },
                 success: function(data) {
                   if(data.success==='OK'){
-                    location.href = "/pbx/RouterCallIn";
+                    location.href = "/pbx/RouterCallOut";
                   }
                   $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
                 }
@@ -156,7 +156,7 @@ function getColums(){
       { "asSorting": [ "asc" ],"sClass":'center',"sName":"proirety","mData": "proirety","bSortable": true,"bVisible": true, "aTargets": [0] },
       { "sClass":'center',"sName":"routername","mData": "routername","bSortable": false,"bVisible": true, "aTargets": [1] },
       { "sClass":'center',"sName":"callergroup","mData": "callergroup","bSortable": false,"bVisible": true, "aTargets": [2] },
-      { "sClass":'center',"sName":"callerid","mData": "callerid","bSortable": false,"bVisible": true, "aTargets": [3] },
+      { "sClass":'center',"sName":"callednum","mData": "callednum","bSortable": false,"bVisible": true, "aTargets": [3] },
       { "sClass":'center',"sName":"processmode","mData": "processmode","bSortable": false,"bVisible": true, "aTargets": [4] },
       { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [5] ,"mRender": function ( data, type, full ) {
         var str='<input type="hidden" name="id" value="'+data+'"><a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id='+data+'">编辑</a>';

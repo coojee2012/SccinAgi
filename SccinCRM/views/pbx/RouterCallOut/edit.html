@@ -31,7 +31,7 @@
             </td>
           </tr>
           <tr>
-            <th>呼叫来自</th>
+            <th>分机分组</th>
             <td>
             <select name="callergroup" id="callergroup" value="<%= inst.callergroup%>" class="form-control input-sm" style='width: 100%;'>
                 <option value="0">任意</option>
@@ -41,7 +41,7 @@
           <tr>
             <th>匹配规则</th>
             <td>
-            <div class="form-inline">当外线送入的被叫号码以<input type="text" style="width:45px;" id='callerid' value="<%= inst.callerid%>" name='callerid' class="form-control input-sm" />开头且长度为<input type="text" id='callerlen' value="<%= inst.callerlen%>" style="width:30px;" name='callerlen' class="form-control input-sm" />位时,从头开始删掉<input type="text" id='replacecalledtrim' value="<%= inst.replacecalledtrim%>"  style="width:30px;" name='replacecalledtrim' class="form-control input-sm" />位且补充信息<input type="text" id='replacecalledappend' value="<%= inst.replacecalledappend%>" style="width:50px;" name='replacecalledappend' class="form-control input-sm" />到该号码上.
+            <div class="form-inline">用户拨打的号码是以<input type="text" style="width:45px;" id='callednum' value="<%= inst.callednum%>" name='callednum' class="form-control input-sm" />开头,长度为<input type="text" id='calledlen' value="<%= inst.calledlen%>" style="width:30px;" name='calledlen' class="form-control input-sm" />位.从头删除掉<input type="text" value="<%= inst.replacecalledtrim%>" id='replacecalledtrim' style="width:30px;" name='replacecalledtrim' class="form-control input-sm" />位数字,同时补充<input type="text" id='replacecalledappend' style="width:60px;" value="<%= inst.replacecalledappend%>" name='replacecalledappend' class="form-control input-sm" />到该号码上.
             </div>
             </td>
           </tr>

@@ -3,7 +3,7 @@
   <div class="column form-column main col col-sm-9 form-horizontal">
     <h1> <span class="label label-info">
       <img src="/images/man.png"/>
-      <img src="/images/queue.png"/>当前正在编辑规则<%= inst.routername%></span></h1>
+      <img src="/images/queue.png"/>增加分机拨号规则</span></h1>
     <div class="panel panel-default fieldset">
     <div class="formStyle">
       <form action='<%- baseurl%>/save' method='POST' id='form1'>
@@ -17,23 +17,22 @@
           <tr>
             <th>规则名称</th>
               <td>
-                  <input type="text" id='routername' name='routername' value="<%= inst.routername%>"  class="form-control input-sm" placeholder="输入方便记忆的规则名称。" />
-                  <input type="hidden" id="id" name="id" value="<%= inst.id%>">
+                  <input type="text" id='routername' name='routername' class="form-control input-sm" placeholder="输入方便记忆的规则名称。" />
               </td>
           </tr>
           <tr>
             <th>系统默认</th>
             <td>
             <label class="radio-inline tipmsg">
-      <input type="radio" id="createmode1" name='createmode' value="是" <%if(inst.createmode==='是'){%>checked='checked'<%}%> >是</label>
+      <input type="radio" id="createmode1" name='createmode' value="是" >是</label>
     <label class="radio-inline tipmsg" title="">
-      <input type="radio" id="createmode2" name='createmode' value="否" <%if(inst.createmode==='否'){%>checked='checked'<%}%> >否</label>
+      <input type="radio" id="createmode2" name='createmode' value="否" checked='checked' >否</label>
             </td>
           </tr>
           <tr>
-            <th>呼叫来自</th>
+            <th>分机分组</th>
             <td>
-            <select name="callergroup" id="callergroup" value="<%= inst.callergroup%>" class="form-control input-sm" style='width: 100%;'>
+            <select name="callergroup" id="callergroup" class="form-control input-sm" style='width: 100%;'>
                 <option value="0">任意</option>
               </select>
             </td>
@@ -41,7 +40,7 @@
           <tr>
             <th>匹配规则</th>
             <td>
-            <div class="form-inline">当外线送入的被叫号码以<input type="text" style="width:45px;" id='callerid' value="<%= inst.callerid%>" name='callerid' class="form-control input-sm" />开头且长度为<input type="text" id='callerlen' value="<%= inst.callerlen%>" style="width:30px;" name='callerlen' class="form-control input-sm" />位时,从头开始删掉<input type="text" id='replacecalledtrim' value="<%= inst.replacecalledtrim%>"  style="width:30px;" name='replacecalledtrim' class="form-control input-sm" />位且补充信息<input type="text" id='replacecalledappend' value="<%= inst.replacecalledappend%>" style="width:50px;" name='replacecalledappend' class="form-control input-sm" />到该号码上.
+            <div class="form-inline">用户拨打的号码是以<input type="text" style="width:45px;" id='callednum' name='callednum' class="form-control input-sm" />开头,长度为<input type="text" id='calledlen' style="width:30px;" name='calledlen' class="form-control input-sm" />位.从头删除掉<input type="text" id='replacecalledtrim' style="width:30px;" name='replacecalledtrim' class="form-control input-sm" />位数字,同时补充<input type="text" id='replacecalledappend' style="width:60px;" name='replacecalledappend' class="form-control input-sm" />到该号码上.
             </div>
             </td>
           </tr>
@@ -49,10 +48,10 @@
             <th>处理方式</th>
             <td>
               <select name="processmode" id="processmode" class="form-control input-sm" style='width: 100%;'>
-                <option value="黑名单" <%if(inst.processmode==='黑名单'){%>selected='selected'<%}%>>黑名单</option>
-                <option value="VIP" <%if(inst.processmode==='VIP'){%>selected='selected'<%}%>>VIP</option>
-                <option value="本地处理" <%if(inst.processmode==='本地处理'){%>selected='selected'<%}%>>本地处理</option>
-                <option value="拨打外线" <%if(inst.processmode==='拨打外线'){%>selected='selected'<%}%>>拨打外线</option>
+                <option value="黑名单">黑名单</option>
+                <option value="VIP">VIP</option>
+                <option value="本地处理">本地处理</option>
+                <option value="拨打外线">拨打外线</option>
               </select>
             </td>
           </tr>
@@ -63,15 +62,15 @@
             <th>最终规则</th>
             <td>
             <label class="radio-inline tipmsg">
-      <input type="radio" id="lastwhendone1" name='lastwhendone' value="是" <%if(inst.lastwhendone==='是'){%>checked='checked'<%}%> >是</label>
+      <input type="radio" id="lastwhendone1" name='lastwhendone' value="是" checked='checked'  >是</label>
     <label class="radio-inline tipmsg" title="">
-      <input type="radio" id="lastwhendone2" name='lastwhendone' value="否" <%if(inst.lastwhendone==='否'){%>checked='checked'<%}%>>否</label>
+      <input type="radio" id="lastwhendone2" name='lastwhendone' value="否" >否</label>
             </td>
           </tr>
           <tr>
             <th>主叫替换</th>
             <td>
-              <input type="text" id='replacecallerid' name='replacecallerid' value="<%= inst.replacecallerid%>" class="form-control input-sm"  />
+              <input type="text" id='replacecallerid' name='replacecallerid' class="form-control input-sm"  />
             </td>
           </tr> 
         </table>
@@ -89,7 +88,6 @@ $(".tipmsg").tooltip({placement:'auto'});
 $('#form1').Validform();
 $('#savebtn').click(function(e){
 if($('#form1').Validform().check()){
-
  $.ajax({
                 cache: true,
                 type: "POST",
