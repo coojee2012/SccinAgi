@@ -1,55 +1,67 @@
- <div class="layout_main"> 
- <div class="page_box">
-    <div class="column form-column main col form-horizontal">
-      <div class="panel panel-default fieldset">
-        <div class="panel-heading"> 
-         <h1> <span class="label label-info">
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                    <h1> <span class="label label-info">
       <img src="/images/man.png"/>
       <img src="/images/queue.png"/>当前正在创建IVR</span></h1>
+                </div>
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <label for="id" class="control-label col-sm-2">IVR号码</label>
+
+                        <div class="controls  col-sm-4">
+                            <input type="text" value="" name="id" id="id" placeholder="只能是3-20位数字" datatype="n3-20"
+                                   ajaxurl="<%- baseurl%>/checkAjax" sucmsg="验证通过！" errormsg="验证不通过！"
+                                   class="form-control input-sm">
+                        </div>
+                        <label for="ivrname" class="control-label col-sm-2">IVR名称</label>
+
+                        <div class="controls  col-sm-4">
+                            <input type="text" value="" name="ivrname" id="ivrname" class="form-control input-sm"
+                                   placeholder="给IVR起一个名字，方便记忆，不能为空！" datatype="*" errormsg="不能为空！">
+                        </div>
+                        <label for="description" class="control-label col-sm-2">IVR描述</label>
+
+                        <div class="controls  col-sm-8">
+                            <input type="text" value="" name="description" id="description"
+                                   class="form-control input-sm">
+                        </div>
+                        <div class="controls  col-sm-2">
+                            <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
+                        </div>
+                        <div class="controls col-sm-12">
+                            <hr/>
+                        </div>
+                        <label for="" class="control-label col-sm-5">IVR菜单中每一个环节都属于一个动作,您可以创建新的动作或修改已有动作的优先关系.</label>
+
+                        <div class="controls col-sm-1">
+                            <input type="button" class="btn btn-primary btn-sm" id="setaction" value="设置动作">
+                        </div>
+                        <label for=""
+                               class="control-label col-sm-5">在所有动作都完成后,系统将接受一定按键选择,可以帮助你的用户跳转到你希望的其他IVR菜单中.</label>
+
+                        <div class="controls col-sm-1">
+                            <input type="button" class="btn btn-primary btn-sm" id="setinput" value="设置用户输入">
+                        </div>
+                        <div class="controls col-sm-5">
+                            <iframe src="<%- baseurl%>/ivrtree" id="ivrtree" name="ivrtree"
+                                    style="width:100%;height:400px;">
+
+                            </iframe>
+                        </div>
+                        <div class="controls col-sm-1" style="bakground:black;">
+                        </div>
+                        <div class="controls col-sm-6">
+                            <iframe src="<%- baseurl%>/ivrtree" id="ivrtree" name="ivrtree"
+                                    style="width:100%;height:400px;">
+
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="panel-body ">
-          <div class="form-group">
-            <label for="id" class="control-label col-sm-2">IVR号码</label>
-            <div class="controls  col-sm-4">
-            <input type="text" value="" name="id" id="id" placeholder="只能是3-20位数字" datatype="n3-20" ajaxurl="<%- baseurl%>/checkAjax" sucmsg="验证通过！" errormsg="验证不通过！"  class="form-control input-sm"> 
-            </div>
-            <label for="ivrname" class="control-label col-sm-2">IVR名称</label>
-             <div class="controls  col-sm-4">
-          <input type="text" value="" name="ivrname" id="ivrname"  class="form-control input-sm" placeholder="给IVR起一个名字，方便记忆，不能为空！" datatype="*" errormsg="不能为空！"> 
-            </div>
-            <label for="description" class="control-label col-sm-2">IVR描述</label>
-             <div class="controls  col-sm-8">
-          <input type="text" value="" name="description" id="description"  class="form-control input-sm"> 
-            </div>
-              <div class="controls  col-sm-2">
-                <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
-              </div>  
-              <div class="controls col-sm-12">
-                <hr/>
-              </div> 
-              <label for="" class="control-label col-sm-5">IVR菜单中每一个环节都属于一个动作,您可以创建新的动作或修改已有动作的优先关系.</label>
-              <div class="controls col-sm-1">
-                <input type="button" class="btn btn-primary btn-sm" id="setaction" value="设置动作">
-              </div>
-              <label for="" class="control-label col-sm-5">在所有动作都完成后,系统将接受一定按键选择,可以帮助你的用户跳转到你希望的其他IVR菜单中.</label>
-              <div class="controls col-sm-1">
-                <input type="button" class="btn btn-primary btn-sm" id="setinput" value="设置用户输入">
-              </div>
-              <div class="controls col-sm-5">
-                <iframe src="<%- baseurl%>/ivrtree" id="ivrtree" name="ivrtree" style="width:100%;height:400px;">
-                  
-                </iframe>
-              </div>
-               <div class="controls col-sm-1" style="bakground:black;">
-              </div>
-<div class="controls col-sm-6">
-  <iframe src="<%- baseurl%>/ivrtree" id="ivrtree" name="ivrtree" style="width:100%;height:400px;">
-                  
-                </iframe>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
