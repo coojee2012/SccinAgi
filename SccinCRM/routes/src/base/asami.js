@@ -412,6 +412,8 @@ posts.autodial = function(req, res,next) {
 		]
 
 	}, function(err, results) {
+		//res.set('Access-Control-Allow-Origin', '*');
+		res.header('Access-Control-Allow-Origin', '*')
 		if (err) {
 			res.send({
 				"success": false,

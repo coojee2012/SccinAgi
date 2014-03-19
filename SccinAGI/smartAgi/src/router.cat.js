@@ -9,6 +9,7 @@ routing.prototype.router = function() {
   var logger = self.logger;
   var args = self.args;
   var vars = self.vars;
+  self.routerline = args.routerline;
   async.auto({
     AddCDR: function(cb) {
       schemas.pbxCdr.create({
@@ -26,17 +27,7 @@ routing.prototype.router = function() {
     },
     MixMonitor: ['AddCDR',
       function(cb, results) {
-        logger.debug("发起自动录音。");
-        var filename = self.sessionnum + '.wav';
-        context.MixMonitor(filename, '', '', function(err, response) {
-          if (err) {
-            logger.error("自动录音，发生错误：", err);
-            cb('自动录音发生异常.', err);
-          } else {
-            logger.debug("自动录音，完毕。", response);
-            cb(null, response);
-          }
-        });
+        self.sysmonitor(cb);
       }
     ],
     GetRouters: ['AddCDR',
@@ -63,18 +54,22 @@ routing.prototype.router = function() {
             match = true;
             var reCaller = new RegExp("^" + results.GetRouters[i].callerid);
             var reCalled = new RegExp("^" + results.GetRouters[i].callednum);
-            //匹配主叫以什么号码开头
-            if (results.GetRouters[i].callerid !== '' && !reCaller.test(vars.agi_callerid))
-              match = false;
-            //匹配主叫长度
-            if (results.GetRouters[i].callerlen !== -1 && vars.agi_callerid.length !== results.GetRouters[i].callerlen)
-              match = false;
-            //匹配被叫以什么号码开头
-            if (results.GetRouters[i].callednum !== '' && !reCalled.test(args.called))
-              match = false;
-            //匹配被叫长度
-            if (results.GetRouters[i].calledlen !== -1 && args.called.length !== results.GetRouters[i].calledlen)
-              match = false;
+            if (results.GetRouters[i].routerline === '呼入') {
+              //匹配主叫以什么号码开头
+              if (results.GetRouters[i].callerid !== '' && !reCaller.test(vars.agi_callerid))
+                match = false;
+              //匹配主叫长度
+              if (results.GetRouters[i].callerlen !== -1 && vars.agi_callerid.length !== results.GetRouters[i].callerlen)
+                match = false;
+            } else if (results.GetRouters[i].routerline === '呼出') {
+              //匹配被叫以什么号码开头
+              if (results.GetRouters[i].callednum !== '' && !reCalled.test(args.called))
+                match = false;
+              //匹配被叫长度
+              if (results.GetRouters[i].calledlen !== -1 && args.called.length !== results.GetRouters[i].calledlen)
+                match = false;
+            } else {}
+
             //匹配成功后，对主叫和被叫进行替换
             if (match) {
               //主叫替换

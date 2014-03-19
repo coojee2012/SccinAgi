@@ -10,7 +10,7 @@ module.exports = {
   get: gets,
   post: posts
 };
-
+//gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
 posts.pagination = function(req, res, next) {
 	logger.debug('BODY:', req.body);
 	var dbName = req.body['dbName'];

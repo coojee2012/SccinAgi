@@ -15,6 +15,7 @@ var routing = function(v) {
   this.ivrlevel = 0;
   this.transferlevel = 0; //防止呼叫转移死循环
   this.lastinputkey = '';
+  this.routerline='';
   this.activevar = {}; //用户存储用户输入的临时变量
 };
 

@@ -15,6 +15,7 @@ var routing = function(v) {
   this.ivrlevel = 0;
   this.transferlevel = 0; //防止呼叫转移死循环
   this.lastinputkey = '';
+  this.routerline='';
   this.activevar = {}; //用户存储用户输入的临时变量
 };
 
@@ -114,7 +115,97 @@ routing.prototype.NoCome = function(callrecordid, cb) {
   }, function(err, results) {
     cb(err, results);
   });
-};;//动态添加指定队列坐席成员
+};//确定参加评标后处理
+
+routing.prototype.SureCome = function(callrecordid, phone, key, cb) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var logger = self.logger;
+  async.auto({
+    saveDialResult: function(callback) {
+      schemas.DialResult.update({
+        where: {
+          id: callrecordid
+        },
+        update: {
+          Result: 1,
+          State: 1
+        }
+      }, function(err, inst) {
+        callback(err, inst);
+      });
+    },
+    voiceNotice: ['saveDialResult',
+      function(callback, results) {
+        var Notice = function(count) {
+          async.auto({
+            playvoice: function(callback) {
+              context.GetData('b_you_have_joined_please_bring_cert', 5000, 1, function(err, response) {
+                callback(err, response);
+              });
+            },
+            checkInput: ['playvoice',
+              function(callback, results) {
+                var key = results.playvoice.result;
+                key.replace(/\s+/, "");
+                //记录用户按键到按键记录表
+                schemas.UserKeysRecord.create({
+                  id: guid.create(),
+                  Key: key,
+                  keyTypeID: '111111',
+                  callLogID: phone.id
+                }, function(err, inst) {
+                  switch (key) {
+                    case "9":
+                      count++;
+                      callback(err, {
+                        count: count,
+                        key: key
+                      });
+                      break;
+                    default:
+                      context.Playback('b_error', function(err, response2) {
+                        count++;
+                        callback(err, {
+                          count: count,
+                          key: key
+                        });
+                      });
+                      break;
+                  }
+                });
+              }
+            ]
+
+
+          }, function(err, results) {
+            if (results.checkInput.key === '-1') {
+              callback(null, -1);
+            } else if (results.checkInput.count < 3) {
+              Notice(results.checkInput.count);
+            } else {
+              context.Playback('b_timeout&b_bye', function(err, response) {
+                context.hangup(function(err, response) {
+                  context.end();
+                });
+
+              });
+            }
+
+          });
+        }
+
+        var count = 0;
+        Notice(count);
+
+
+      }
+    ]
+  }, function(err, results) {
+    cb(err, results);
+  });
+};//动态添加指定队列坐席成员
 //queuenum-队列名称
 //agent-坐席
 routing.prototype.addQueueMember = function() {
@@ -1230,12 +1321,15 @@ routing.prototype.monitor = function(filename, callback) {
   var logger = self.logger;
   var args = self.args;
   var vars = self.vars;
+  if (typeof(filename) === 'function') {
+    callback = filename;
+    filename = self.sessionnum + '.wav';
+  }
   context.MixMonitor(filename, '', '', function(err, response) {
     if (err) {
       logger.error("自动录音，发生错误：", err);
       callback('自动录音发生异常.', err);
     } else {
-      logger.debug("自动录音，完毕。", response);
       callback(null, response);
     }
   });
@@ -1419,6 +1513,7 @@ routing.prototype.router = function() {
   var logger = self.logger;
   var args = self.args;
   var vars = self.vars;
+  self.routerline = args.routerline;
   async.auto({
     AddCDR: function(cb) {
       schemas.pbxCdr.create({
@@ -1436,17 +1531,7 @@ routing.prototype.router = function() {
     },
     MixMonitor: ['AddCDR',
       function(cb, results) {
-        logger.debug("发起自动录音。");
-        var filename = self.sessionnum + '.wav';
-        context.MixMonitor(filename, '', '', function(err, response) {
-          if (err) {
-            logger.error("自动录音，发生错误：", err);
-            cb('自动录音发生异常.', err);
-          } else {
-            logger.debug("自动录音，完毕。", response);
-            cb(null, response);
-          }
-        });
+        self.sysmonitor(cb);
       }
     ],
     GetRouters: ['AddCDR',
@@ -1473,18 +1558,22 @@ routing.prototype.router = function() {
             match = true;
             var reCaller = new RegExp("^" + results.GetRouters[i].callerid);
             var reCalled = new RegExp("^" + results.GetRouters[i].callednum);
-            //匹配主叫以什么号码开头
-            if (results.GetRouters[i].callerid !== '' && !reCaller.test(vars.agi_callerid))
-              match = false;
-            //匹配主叫长度
-            if (results.GetRouters[i].callerlen !== -1 && vars.agi_callerid.length !== results.GetRouters[i].callerlen)
-              match = false;
-            //匹配被叫以什么号码开头
-            if (results.GetRouters[i].callednum !== '' && !reCalled.test(args.called))
-              match = false;
-            //匹配被叫长度
-            if (results.GetRouters[i].calledlen !== -1 && args.called.length !== results.GetRouters[i].calledlen)
-              match = false;
+            if (results.GetRouters[i].routerline === '呼入') {
+              //匹配主叫以什么号码开头
+              if (results.GetRouters[i].callerid !== '' && !reCaller.test(vars.agi_callerid))
+                match = false;
+              //匹配主叫长度
+              if (results.GetRouters[i].callerlen !== -1 && vars.agi_callerid.length !== results.GetRouters[i].callerlen)
+                match = false;
+            } else if (results.GetRouters[i].routerline === '呼出') {
+              //匹配被叫以什么号码开头
+              if (results.GetRouters[i].callednum !== '' && !reCalled.test(args.called))
+                match = false;
+              //匹配被叫长度
+              if (results.GetRouters[i].calledlen !== -1 && args.called.length !== results.GetRouters[i].calledlen)
+                match = false;
+            } else {}
+
             //匹配成功后，对主叫和被叫进行替换
             if (match) {
               //主叫替换
@@ -1521,7 +1610,8 @@ routing.prototype.router = function() {
             if (err)
               logger.error("记录呼叫处理过程发生异常：", err);
           });
-
+          //processmode,路由处理方式，即本地的一个AGI程式
+          //processdefined，传递到AGI的参数
           self[processmode](processdefined, function(err, result) {
             cb(err, result);
           });
@@ -1755,7 +1845,159 @@ routing.prototype.sccincallout = function() {
   });
 
 };
-;
+;//发起系统录音
+routing.prototype.sysmonitor = function(monitype, callback) {
+  var self = this;
+  var context = self.context;
+  var schemas = self.schemas;
+  var nami = self.nami;
+  var logger = self.logger;
+  var args = self.args;
+  var vars = self.vars;
+  if (typeof(monitype) === 'function') {
+    callback = monitype;
+    monitype = '';
+  }
+  async.auto({
+    //检查录音方式
+    checkMonitorWay: function(cb) {
+      var where = {id:{'neq':''}};
+      if (monitype === '呼入') {
+        where.recordin = '是';
+        where.members = {
+          'like': '%' + args.called + '%'
+        };
+      } else if (monitype === '呼出') {
+        where.recordout = '是';
+        where.members = {
+          'like': '%' + vars.agi_callerid + '%'
+        };
+      } else if (monitype === '队列') {
+        where.recordqueue = '是';
+        where.members = {
+          'like': '%' + args.called + '%'
+        };
+      } else {
+        cb(null, {
+          wayName: '系统自动',
+          keepfortype: '按时间',
+          keepforargs: 90
+        });
+      }
+      if (where && where.members !== null) {
+        schemas.pbxAutoMonitorWays.findOne({
+          where: where
+        }, function(err, inst) {
+          cb(err, inst);
+        });
+      }
+
+    },
+    //创建录音目录
+    buildForder: ['checkMonitorWay',
+      function(cb, results) {
+        if (results.checkMonitorWay !== null) {
+          var fs = require('fs');
+          var wayname = results.checkMonitorWay.wayName;
+          var path = '/var/spool/asterisk/monitor/' + wayname + '/';
+          if (fs.existsSync(path)) {
+
+          } else {
+            fs.mkdirSync(path);
+          }
+          cb(null, path);
+        } else {
+          cb('不需要录音！', null);
+        }
+      }
+    ],
+    //查找已有的录音
+    findHasRecords: ['checkMonitorWay',
+      function(cb, results) {
+        if (results.checkMonitorWay !== null) {
+          if (results.checkMonitorWay.keepfortype === '按时间') {
+            var where = {};
+            var olddate = moment().subtract('days', results.checkMonitorWay.keepforargs).format("YYYY-MM-DD");
+            where.cretime = {
+              'lte': olddate
+            };
+            schemas.pbxRcordFile.all({
+              where: where
+            }, function(err, dbs) {
+              cb(err, dbs);
+            });
+          } else if (results.checkMonitorWay.keepfortype === '按条数') {
+            schemas.pbxRcordFile.count({}, function(err, counts) {
+              if (err) {
+                cb(err, []);
+              } else if (counts > results.checkMonitorWay.keepforargs) {
+                schemas.pbxRcordFile.all({
+                  skip: 0,
+                  limit: counts - results.checkMonitorWay.keepforargs
+                }, function(err, dbs) {
+                  cb(err, dbs);
+                });
+              } else {
+                cb(null, []);
+              }
+            });
+          } else {
+            cb(null, []);
+          }
+
+        } else {
+          cb('不需要录音！', []);
+        }
+      }
+    ],
+    //处理已有录音
+    handleHasRecords: ['findHasRecords',
+      function(cb, results) {
+        cb(null, null);
+      }
+    ],
+    //开始录音
+    monitor: ['buildForder',
+      function(cb, results) {
+        var filename = self.sessionnum + '.wav';
+        context.MixMonitor(results.buildForder + filename, '', '', function(err, response) {
+          if (err) {
+            cb('自动录音发生异常.', err);
+          } else {
+            cb(null, response);
+          }
+        });
+      }
+    ],
+    //添加一条录音记录
+    addRecords: ['buildForder',
+      function(cb, results) {
+        var filename = self.sessionnum + '.wav';
+        var  extennum=self.routerline==='呼入'?args.called:vars.agi_callerid;
+        var  callnumber=self.routerline==='呼出'?args.called:vars.agi_callerid;
+        schemas.pbxRcordFile.create({
+          id:self.sessionnum,
+          filename:filename,
+          extname:'wav',
+          calltype:self.routerline,
+          extennum:extennum,
+          folder:results.buildForder,
+          callnumber:callnumber
+        }, function(err, inst) {
+          cb(err, inst);
+        });
+      }
+    ]
+  }, function(err, results) {
+    if (err) {
+      logger.error("自动录音，发生错误：", err);
+      callback('自动录音发生异常.', err);
+    } else {
+      callback(null, response);
+    }
+  });
+
+};;
 //取消示忙指定队列坐席成员
 //queuenum-队列名称，留空所有队列里面的该坐席都取消示忙
 //agent-坐席

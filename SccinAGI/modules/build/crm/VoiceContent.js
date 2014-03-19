@@ -1,2 +1,2 @@
-/*! 数据库表结构 2014-03-17 */
+/*! 数据库表结构 2014-03-18 */
 var Schema=require("jugglingdb").Schema,moment=require("moment"),conf=require("node-conf"),basedir=conf.load("app").appbase,schema=require(basedir+"/database/jdmysql").schema,crmCallRecords=require("./CallRecords"),crmVoiceContent=schema.define("crmVoiceContent",{Contents:{type:Schema.Text},State:{type:Number,"default":0}});crmVoiceContent.Name="crmVoiceContent",crmVoiceContent.belongsTo(crmCallRecords,{as:"callrecord",foreignKey:"id"}),schema.models.crmVoiceContent,module.exports=crmVoiceContent;
