@@ -3,20 +3,38 @@
 		<script type="text/javascript" src="../public/js/jquery-2.1.0.js"></script>
 		<script type="text/javascript">
 $(function(){
- $.ajax({
+for(var i =0;i<1;i++){
+    var d=new Date();
+    var s=d.getTime();
+    var datas={};
+    datas.ProjExpertID=s;
+    datas.NoticeContent='专家您好，这里是北京市发改委专家库系统，2013年12月31日在北京天安门有一评标项目。';
+    datas.SureContent='您已确定参加评标，请携带有效证件于2013年12月31日12点30分前到。';
+    datas.QueryContent='铲鲟信息';
+    datas.Phones='15308098290,15528239099';
+    datas.KeyNum=2;
+
+   $.ajax({
                 type: "POST",
                 url:'http://192.168.0.114:3001/base/asami/autodial',
-                data:{id:'delid'},// 你的formid
+                data:datas,// 你的formid
                 async: false,
+               /* headers:{
+                    "User-key":"BjExpert"
+                },*/
+                beforeSend: function(xhr){xhr.setRequestHeader('User-key', 'BjExpert');},
                 error: function(request) {
-                	$("#div1").append('222'); 
+                    $("#div1").append(d.toString()+'服务器发生异常！'+'<br/>'); 
                 },
                 success: function(data) {  
-                $("#div1").append('1111');              
+                $("#div1").append(d.toString()+'结果：'+data.result+'<br/>');              
                 }
             }); 
+   }
 });
-		</script>
+      
+
+	</script>
 	</head>
 	<body>
 		<div id="div1"></div>

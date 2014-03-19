@@ -1,14 +1,14 @@
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 
-var nami = require(basedir+'/asterisk/asmanager').nami,
+var nami = require(basedir + '/asterisk/asmanager').nami,
 	util = require('util'),
 	async = require('async'),
 	AsAction = require("nami").Actions;
 
-var Schemas = require(basedir+'/database/schema').Schemas;
+var Schemas = require(basedir + '/database/schema').Schemas;
 var guid = require('guid');
-var logger = require(basedir+'/lib/logger').logger('web');
+var logger = require(basedir + '/lib/logger').logger('web');
 
 var gets = {};
 var posts = {};
@@ -18,7 +18,7 @@ module.exports = {
 };
 
 
-posts.sippeers = function(req, res,next) {
+posts.sippeers = function(req, res, next) {
 	nami.send(new AsAction.SipPeers(), function(response) {
 		console.log(response);
 		//res.render('nami/index', { title: 'NAMI测试',response:util.inspect(response,true,null) });
@@ -27,7 +27,7 @@ posts.sippeers = function(req, res,next) {
 	});
 }
 
-posts.ping = function(req, res,next) {
+posts.ping = function(req, res, next) {
 	nami.send(new AsAction.Ping(), function(response) {
 		console.log(response);
 		//res.render('nami/index', { title: 'NAMI测试',response:util.inspect(response,true,null) });
@@ -36,7 +36,7 @@ posts.ping = function(req, res,next) {
 	});
 }
 
-posts.hangup = function(req, res,next) {
+posts.hangup = function(req, res, next) {
 	var action = new AsAction.Hangup();
 	action.Channel = 'sip/abcd';
 	nami.send(action, function(response) {
@@ -47,7 +47,7 @@ posts.hangup = function(req, res,next) {
 	});
 }
 
-posts.status = function(req, res,next) {
+posts.status = function(req, res, next) {
 	var action = new AsAction.Status();
 	//Status.Channel='sip/abcd';
 	nami.send(action, function(response) {
@@ -58,7 +58,7 @@ posts.status = function(req, res,next) {
 	});
 }
 
-posts.command = function(req, res,next) {
+posts.command = function(req, res, next) {
 	var cmd = req.body['cmd'] || req.query['cmd'];
 	var action = new AsAction.Command();
 	action.Command = cmd;
@@ -70,7 +70,7 @@ posts.command = function(req, res,next) {
 	});
 }
 
-posts.extensionstate = function(req, res,next) {
+posts.extensionstate = function(req, res, next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var context = req.body['context'] || req.query['context'];
 	var action = new AsAction.ExtensionState();
@@ -84,7 +84,7 @@ posts.extensionstate = function(req, res,next) {
 	});
 }
 
-posts.getconfig = function(req, res,next) {
+posts.getconfig = function(req, res, next) {
 	var filename = req.body['filename'] || req.query['filename'];
 	var category = req.body['category'] || req.query['category'];
 	var action = new AsAction.GetConfig();
@@ -98,7 +98,7 @@ posts.getconfig = function(req, res,next) {
 	});
 }
 
-posts.createconfig = function(req, res,next) {
+posts.createconfig = function(req, res, next) {
 	var filename = req.body['filename'] || req.query['filename'];
 	var action = new AsAction.CreateConfig();
 	action.Filename = filename;
@@ -111,7 +111,7 @@ posts.createconfig = function(req, res,next) {
 	});
 }
 
-posts.getconfigjson = function(req, res,next) {
+posts.getconfigjson = function(req, res, next) {
 	var filename = req.body['filename'] || req.query['filename'];
 	var action = new AsAction.GetConfigJson();
 	action.Filename = filename;
@@ -124,15 +124,15 @@ posts.getconfigjson = function(req, res,next) {
 	});
 }
 
-posts.DAHDIShowChannels=function(req,res,next){
-var action = new AsAction.DahdiShowChannels();
+posts.DAHDIShowChannels = function(req, res, next) {
+	var action = new AsAction.DahdiShowChannels();
 	nami.send(action, function(response) {
 		console.log(response);
 		res.send(response);
 	});
 }
 
-posts.coreshowchannels = function(req, res,next) {
+posts.coreshowchannels = function(req, res, next) {
 	var action = new AsAction.CoreShowChannels();
 	nami.send(action, function(response) {
 		console.log(response);
@@ -142,7 +142,7 @@ posts.coreshowchannels = function(req, res,next) {
 	});
 }
 
-posts.hangupexten = function(req, res,next) {
+posts.hangupexten = function(req, res, next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	if (!type) {
@@ -158,7 +158,7 @@ posts.hangupexten = function(req, res,next) {
 	});
 }
 
-posts.transfer = function(req, res,next) {
+posts.transfer = function(req, res, next) {
 	var extenfrom = req.body['extenfrom'] || req.query['extenfrom'];
 	var extento = req.body['extento'] || req.query['extento'];
 	var fromtype = req.body['fromtype'] || req.query['fromtype'];
@@ -194,7 +194,7 @@ posts.transfer = function(req, res,next) {
  * @property {String} Codecs Codecs
  * @augments Action
  */
-posts.dialout = function(req, res,next) {
+posts.dialout = function(req, res, next) {
 	var variable = req.body['variable'] || req.query['variable'];
 	var outnumber = req.body['outnumber'] || req.query['outnumber'];
 	var exten = req.body['exten'] || req.query['exten'];
@@ -230,76 +230,89 @@ posts.dialout = function(req, res,next) {
  *
  *
  **/
-posts.autodial = function(req, res,next) {
-	var ProjExpertID = req.body['ProjExpertID'] || req.query['ProjExpertID'];
-	var NoticeContent = req.body['NoticeContent'] || req.query['NoticeContent'];
-	var SureContent = req.body['SureContent'] || req.query['SureContent'];
-	var QueryContent = req.body['QueryContent'] || req.query['QueryContent'];
-	var Phones = req.body['Phones'] || req.query['Phones'];
-	var KeyNum=req.body['KeyNum'] || req.query['KeyNum'] || 1;
+posts.autodial = function(req, res, next) {
+	//res.set('Access-Control-Allow-Origin', '*');
+	//res.header('Access-Control-Allow-Origin', '*')
+	var Userkey=req.get('User-key');
+	var UserAgent=req.get('User-Agent');
+	console.log('获取到的头信息：',Userkey,UserAgent);
+	res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+	var CallInfoID = req.body['CallInfoID'];
+	var NoticeContent = req.body['NoticeContent'];
+	var SureContent = req.body['SureContent'];
+	var QueryContent = req.body['QueryContent'];
+	var Phones = req.body['Phones'];
+	var KeyNum = req.body['KeyNum'];
 
-	if(!ProjExpertID || ProjExpertID==""){
-	res.send({
-				"success": false,
-				"result": '抽取编号不能为空'
-			});	
-	return;
+	if (!CallInfoID || CallInfoID == "") {
+		res.send({
+			"success": false,
+			"result": '抽取编号不能为空'
+		});
+		return;
 	}
 
-	if(!NoticeContent || NoticeContent==""){
-	res.send({
-				"success": false,
-				"result": '合成通知评标专家语音类容不能为空'
-			});	
-	return;
+	if (!NoticeContent || NoticeContent == "") {
+		res.send({
+			"success": false,
+			"result": '合成通知评标专家语音类容不能为空'
+		});
+		return;
 	}
 
-	if(!SureContent || SureContent==""){
-	res.send({
-				"success": false,
-				"result": '合成确认参加评标提示语音类容不能为空'
-			});	
-	return;
+	if (!SureContent || SureContent == "") {
+		res.send({
+			"success": false,
+			"result": '合成确认参加评标提示语音类容不能为空'
+		});
+		return;
 	}
 
-	if(!QueryContent || QueryContent==""){
-	res.send({
-				"success": false,
-				"result": '合成自动查询语音类容不能为空'
-			});	
-	return;
+	if (!QueryContent || QueryContent == "") {
+		res.send({
+			"success": false,
+			"result": '合成自动查询语音类容不能为空'
+		});
+		return;
 	}
 
 
-	if(!Phones || Phones==""){
-	res.send({
-				"success": false,
-				"result": '拨打电话不能为空'
-			});	
-	return;
+	if (!Phones || Phones == "") {
+		res.send({
+			"success": false,
+			"result": '拨打电话不能为空'
+		});
+		return;
 	}
 
 
 	async.auto({
 		//保存初始化数据到拨打记录表
 		addCallRecords: function(callback) {
-			Schemas['CallRecords'].create({
-				id: guid.create(),
-				ProjExpertID: ProjExpertID
-			}, function(err, callrecord) {
-				callback(err, callrecord);
-			});
+			try {
+				Schemas['crmCallRecords'].create({
+					id: guid.create(),
+					CallInfoID: CallInfoID
+				}, function(err, callrecord) {
+					callback(err, callrecord);
+				});
+			} catch (ex) {
+				callback(ex, null);
+			}
 		},
 		//保存初始化数据到语音内容表
 		addVoiceContent: ['addCallRecords',
 			function(callback, results) {
-
-				Schemas['VoiceContent'].create({
-					Contents: NoticeContent,
-					callrecord: results.addCallRecords
-				}, function(err, inst) {
-					callback(err, inst);
-				});
+				try {
+					Schemas['crmVoiceContent'].create({
+						Contents: NoticeContent,
+						callrecord: results.addCallRecords
+					}, function(err, inst) {
+						callback(err, inst);
+					});
+				} catch (ex) {
+					callback(ex, null);
+				}
 			}
 		],
 		//保存初始化数据到拨打电话表
@@ -313,17 +326,17 @@ posts.autodial = function(req, res,next) {
 					},
 					function(cb) {
 
-					count++;
-					Schemas['CallPhone'].create({
-						id: guid.create(),
-						Phone: phones[count-1],
-						PhoneSequ: count-1,
-						callrecord: results.addCallRecords
-					}, function(err, inst) {
-						cb(err, inst);
-					});
+						count++;
+						Schemas['crmCallPhone'].create({
+							id: guid.create(),
+							Phone: phones[count - 1],
+							PhoneSequ: count - 1,
+							callrecord: results.addCallRecords
+						}, function(err, inst) {
+							cb(err, inst);
+						});
 					},
-					function(err,results) {
+					function(err, results) {
 						callback(err, results);
 
 					}
@@ -335,8 +348,8 @@ posts.autodial = function(req, res,next) {
 		//保存初始化数据到拨打结果表
 		addDialResult: ['addCallRecords',
 			function(callback, results) {
-				Schemas['DialResult'].create({
-					ProjExpertID:ProjExpertID,
+				Schemas['crmDialResult'].create({
+					CallInfoID: CallInfoID,
 					callrecord: results.addCallRecords
 				}, function(err, inst) {
 					callback(err, inst);
@@ -347,6 +360,7 @@ posts.autodial = function(req, res,next) {
 		voiceMixNotice: ['addCallRecords',
 			function(callback, results) {
 				//处理语音合成
+				//合成的语音文件名字  results.addCallRecords.id + -notice.wav
 				var exec = require('child_process').exec,
 					last = exec('dir', function(error, stdout, stderr) {
 						callback(error, stdout);
@@ -357,6 +371,7 @@ posts.autodial = function(req, res,next) {
 		voiceMixSure: ['addCallRecords',
 			function(callback, results) {
 				//处理语音合成
+				//合成的语音文件名字  results.addCallRecords.id + -sure.wav
 				var exec = require('child_process').exec,
 					last = exec('dir', function(error, stdout, stderr) {
 						callback(error, stdout);
@@ -367,6 +382,7 @@ posts.autodial = function(req, res,next) {
 		voiceMixQuery: ['addCallRecords',
 			function(callback, results) {
 				//处理语音合成
+				//合成的语音文件名字  results.addCallRecords.id + -query.wav
 				var exec = require('child_process').exec,
 					last = exec('dir', function(error, stdout, stderr) {
 						callback(error, stdout);
@@ -374,20 +390,24 @@ posts.autodial = function(req, res,next) {
 			}
 		],
 		//更新合成状态
-		updateVoiceContent: ['voiceMixNotice','voiceMixSure','voiceMixQuery','addVoiceContent',
+		updateVoiceContent: ['voiceMixNotice', 'voiceMixSure', 'voiceMixQuery', 'addVoiceContent',
 			function(callback, results) {
-				var voc = new Schemas['VoiceContent'](results.addVoiceContent);
+				try{
+				var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
 				voc.State = 1;
 				voc.save(function(err, inst) {
 					callback(err, inst);
 				});
+			}catch(ex){
+				callback('更新合成状态时发生错误！', null);
+			}
 
 			}
 		],
 		//开始拨打
 		callDial: ['updateVoiceContent',
 			function(callback, results) {
-				//var Variable = "CHANNEL(language)=cn,Content=" + Content + "ProjExpertID=" + ProjExpertID;
+				//var Variable = "CHANNEL(language)=cn,Content=" + Content + "CallInfoID=" + CallInfoID;
 				var channel = "LOCAL/" + 200 + "@sub-outgoing";
 				var Context = 'sub-outgoing-callback';
 				//var Context='app-exten';
@@ -398,7 +418,7 @@ posts.autodial = function(req, res,next) {
 				action.Account = results.addCallRecords.id;
 				action.CallerID = 200;
 				action.Context = Context;
-				action.Variable='callrecordid='+results.addCallRecords.id+',keynum='+KeyNum;
+				action.Variable = 'callrecordid=' + results.addCallRecords.id + ',keynum=' + KeyNum;
 				action.Exten = 200;
 				if (nami.connected) {
 					nami.send(action, function(response) {
@@ -412,17 +432,22 @@ posts.autodial = function(req, res,next) {
 		]
 
 	}, function(err, results) {
-		//res.set('Access-Control-Allow-Origin', '*');
-		res.header('Access-Control-Allow-Origin', '*')
+
 		if (err) {
+			var errmsg = "";
+			if (typeof(err) === 'object') {
+				errmsg += err.TypeError;
+			}else{
+				errmsg=err;
+			}
 			res.send({
 				"success": false,
-				"result": "服务器发生内部异常"
+				"result": "服务器发生内部异常:"+errmsg+",请联系系统管理员！"
 			});
 		} else {
 			res.send({
 				"success": true,
-				"result": ""
+				"result": "调用成功！"
 			});
 		}
 
@@ -434,34 +459,36 @@ posts.autodial = function(req, res,next) {
 
 
 
-posts.getresult=function(req,res,next){
-	var ProjExpertID = req.body['ProjExpertID'] || req.query['ProjExpertID'];
-	if(!ProjExpertID || ProjExpertID==""){
-	res.send({
-				"success": false,
-				"result": '抽取编号不能为空'
-			});	
-	return;
+posts.getresult = function(req, res, next) {
+	res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+	var CallInfoID = req.body['CallInfoID'];
+	if (!CallInfoID || CallInfoID == "") {
+		res.send({
+			"success": false,
+			"result": '抽取编号不能为空'
+		});
+		return;
 	}
-	Schemas['DialResult'].findOne({where:{ProjExpertID:ProjExpertID}},function(err,inst){
-		if(err){
+	Schemas['crmDialResult'].findOne({
+		where: {
+			CallInfoID: CallInfoID
+		}
+	}, function(err, inst) {
+		if (err) {
 			res.send({
 				"success": false,
 				"result": '获取拨打结果时服务器发生异常'
-			});	
-		}
-
-		else if(inst==null){
-		res.send({
+			});
+		} else if (inst == null) {
+			res.send({
 				"success": false,
 				"result": '在服务器上没有找到该数据'
-			});		
-		}
-		else{
+			});
+		} else {
 			res.send({
 				"success": true,
-				"result": ""+inst.Result+""
-			});	
+				"result": "" + inst.Result + ""
+			});
 		}
 
 
@@ -469,7 +496,7 @@ posts.getresult=function(req,res,next){
 
 }
 
-posts.packCall = function(req, res,next) {
+posts.packCall = function(req, res, next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	if (!type) {
@@ -488,7 +515,7 @@ posts.packCall = function(req, res,next) {
 	});
 }
 
-posts.unPark = function(req, res,next) {
+posts.unPark = function(req, res, next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	if (!type) {
@@ -527,7 +554,7 @@ posts.unPark = function(req, res,next) {
 	});
 }
 
-posts.checkService = function(req, res,next) {
+posts.checkService = function(req, res, next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	if (!type) {
@@ -545,7 +572,7 @@ posts.checkService = function(req, res,next) {
 
 }
 
-posts.GetCallInfo = function(req, res,next) {
+posts.GetCallInfo = function(req, res, next) {
 	var exten = req.body['fromexten'] || req.query['fromexten'];
 	if (exten == null || exten == '') {
 		res.send({
@@ -604,7 +631,7 @@ posts.GetCallInfo = function(req, res,next) {
 
 }
 
-posts.DadOn = function(req, res,next) {
+posts.DadOn = function(req, res, next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
 	var extDB = require('../modules/ippbx/extension.js');
@@ -703,4 +730,10 @@ function getconnectchannel(type, exten, cb) {
 	});
 
 
+}
+
+function safekey(userkey){
+	var crypto = require('crypto');
+    var fs = require('fs');
+    
 }

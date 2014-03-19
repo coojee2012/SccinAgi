@@ -12,67 +12,86 @@ routing.prototype.sccincallout = function() {
   async.auto({
     //获取呼叫记录编号
     getCallrcordsId: function(cb) {
-      context.getVariable('callrecordid', function(err, response) {
-        logger.debug("获取呼叫记录编号：", response);
-        var reg = /(\d+)\s+\((.*)\)/;
-        var c = null,
-          id = null;
-        if (reg.test(response.result)) {
-          c = RegExp.$1;
-          callRecordsID = RegExp.$2;
-        }
-        cb(err, callRecordsID);
-      });
-    },
-    //通过通道变量获取有效按键
-    getKeyNum: ['getCallrcordsId',
-      function(cb) {
-        context.getVariable('keynum', function(err, response) {
-          logger.debug("获取有效按键：", response);
+      try {
+        context.getVariable('callrecordid', function(err, response) {
+          logger.debug("获取呼叫记录编号：", response);
           var reg = /(\d+)\s+\((.*)\)/;
           var c = null,
             id = null;
           if (reg.test(response.result)) {
             c = RegExp.$1;
-            keyNum = parseInt(RegExp.$2);
+            callRecordsID = RegExp.$2;
           }
-          cb(err, keyNum);
+          cb(err, callRecordsID);
         });
+      } catch (ex) {
+        logger.error(ex);
+        cb('获取呼叫记录编号发生异常！', null);
+      }
+    },
+    //通过通道变量获取有效按键
+    getKeyNum: ['getCallrcordsId',
+      function(cb) {
+        try {
+          context.getVariable('keynum', function(err, response) {
+            logger.debug("获取有效按键：", response);
+            var reg = /(\d+)\s+\((.*)\)/;
+            var c = null,
+              id = null;
+            if (reg.test(response.result)) {
+              c = RegExp.$1;
+              keyNum = RegExp.$2;
+            }
+            cb(err, keyNum);
+          });
+        } catch (ex) {
+          logger.error(ex);
+          cb('通道变量获取有效按键发生异常！', null);
+        }
       }
     ],
     //获取需要拨打的电话号码,倒序取出第一个电话作为需要拨打的电话
     getPhones: ['getKeyNum',
       function(cb, results) {
-        schemas.CallPhone.all({
-          where: {
-            callRecordsID: callRecordsID,
-            State: 0
-          },
-          order: ['PhoneSequ asc']
-        }, function(err, insts) {
-          cb(err, insts);
-
-        });
+        try {
+          schemas.crmCallPhone.all({
+            where: {
+              callRecordsID: callRecordsID,
+              State: 0
+            },
+            order: ['PhoneSequ asc']
+          }, function(err, insts) {
+            cb(err, insts);
+          });
+        } catch (ex) {
+          logger.error(ex);
+          cb('获取需要拨打的电话号码发生异常！', null);
+        }
       }
     ],
     //更新呼叫记录表
     updateCallRecords: ['getPhones',
       function(cb, results) {
-        if (results.getPhones && results.getPhones.length > 0) {
-          schemas.CallRecords.update({
-            where: {
-              id: callRecordsID,
-            },
-            update: {
-              CallState: 1
-            }
-          }, function(err, inst) {
-            cb(err, inst);
+        try {
+          if (results.getPhones && results.getPhones.length > 0) {
+            schemas.crmCallRecords.update({
+              where: {
+                id: callRecordsID,
+              },
+              update: {
+                CallState: 1
+              }
+            }, function(err, inst) {
+              cb(err, inst);
 
-          });
+            });
 
-        } else {
-          cb('未有找到电话号码', results);
+          } else {
+            cb('未有找到电话号码', results);
+          }
+        } catch (ex) {
+          logger.error('更新呼叫记录表发生异常:', ex);
+          cb('更新呼叫记录表发生异常！', null);
         }
 
       }
@@ -80,21 +99,26 @@ routing.prototype.sccincallout = function() {
     //更新呼叫结果表
     updateDialResult: ['getPhones',
       function(cb, results) {
-        if (results.getPhones && results.getPhones.length > 0) {
-          schemas.DialResult.update({
-            where: {
-              id: callRecordsID
-            },
-            update: {
-              State: 1
-            }
-          }, function(err, inst) {
-            cb(err, inst);
+        try {
+          if (results.getPhones && results.getPhones.length > 0) {
+            schemas.crmDialResult.update({
+              where: {
+                id: callRecordsID
+              },
+              update: {
+                State: 1
+              }
+            }, function(err, inst) {
+              cb(err, inst);
 
-          });
+            });
 
-        } else {
-          cb('未有找到电话号码', results);
+          } else {
+            cb('未有找到电话号码', results);
+          }
+        } catch (ex) {
+          logger.error('更新呼叫结果表发生异常:', ex);
+          cb('更新呼叫结果表发生异常！', null);
         }
       }
     ],
@@ -105,59 +129,79 @@ routing.prototype.sccincallout = function() {
           async.auto({
             //更新电话记录表
             updateCallPhone: function(cb) {
-              schemas.CallPhone.update({
-                where: {
-                  id: results.getPhones[0].id
-                },
-                update: {
-                  State: 1
-                }
+              try {
+                schemas.crmCallPhone.update({
+                  where: {
+                    id: results.getPhones[0].id
+                  },
+                  update: {
+                    State: 1
+                  }
 
-              }, function(err, inst) {
-                cb(err, inst);
-              });
+                }, function(err, inst) {
+                  cb(err, inst);
+                });
+              } catch (ex) {
+                logger.error('更新电话记录表发生异常:', ex);
+                cb('更新电话记录表发生异常！', null);
+              }
             },
             //添加呼叫日志
             addCallLog: function(cb) {
-              schemas.CallLog.create({
-                Phone: results.getPhones[0].Phone,
-                PhoneSequ: results.getPhones[0].PhoneSequ,
-                callphone: results.getPhones[0]
-              }, function(err, inst) {
-                cb(err, inst);
-              });
+              try {
+                schemas.crmCallLog.create({
+                  Phone: results.getPhones[0].Phone,
+                  PhoneSequ: results.getPhones[0].PhoneSequ,
+                  callphone: results.getPhones[0]
+                }, function(err, inst) {
+                  cb(err, inst);
+                });
+              } catch (ex) {
+                logger.error('添加呼叫日志发生异常:', ex);
+                cb('添加呼叫日志发生异常！', null);
+              }
             },
             //产生拨打
             dial: ['addCallLog', 'updateCallPhone',
               function(cb) {
-                context.Dial(conf.line + results.getPhones[0].Phone, conf.timeout, conf.dialoptions, function(err, response) {
-                  if (err) {
-                    cb(err, response);
-                  } else {
-                    context.getVariable('DIALSTATUS', function(err, response2) {
-                      cb(null, response2);
+                try {
+                  context.Dial(conf.line + results.getPhones[0].Phone, conf.timeout, conf.dialoptions, function(err, response) {
+                    if (err) {
+                      cb(err, response);
+                    } else {
+                      context.getVariable('DIALSTATUS', function(err, response2) {
+                        cb(null, response2);
 
-                    });
-                  }
-                });
+                      });
+                    }
+                  });
+                } catch (ex) {
+                  logger.error('产生拨打发生异常:', ex);
+                  cb('产生拨打发生异常！', null);
+                }
               }
             ],
             //获取拨打状态并记录在callog表里面
             dialStatus: ['dial',
               function(cb, results) {
-                var re = /(\d+)\s+\((\w+)\)/;
-                var anwserstatus = null;
-                if (re.test(results.dial.result)) {
-                  anwserstatus = RegExp.$2;
+                try {
+                  var re = /(\d+)\s+\((\w+)\)/;
+                  var anwserstatus = null;
+                  if (re.test(results.dial.result)) {
+                    anwserstatus = RegExp.$2;
+                  }
+                  schemas.crmUserKeysRecord.create({
+                    id: guid.create(),
+                    Key: anwserstatus,
+                    keyTypeID: '111111',
+                    calllog: results.addCallLog
+                  }, function(err, inst) {
+                    cb(err, inst);
+                  });
+                } catch (ex) {
+                  logger.error('获取拨打状态发生异常:', ex);
+                  cb('获取拨打状态发生异常！', null);
                 }
-                schemas.UserKeysRecord.create({
-                  id: guid.create(),
-                  Key: anwserstatus,
-                  keyTypeID: '111111',
-                  calllog: results.addCallLog
-                }, function(err, inst) {
-                  cb(err, inst);
-                });
               }
             ]
           }, function(err, results) {
@@ -170,7 +214,7 @@ routing.prototype.sccincallout = function() {
     ]
   }, function(err, results) {
     if (err) {
-      logger.error(err);
+      logger.error('外呼程序发生异常：',err);
       context.hangup(function(err, response) {
         logger.error("没有找到需要拨打的号码，挂机！");
       });

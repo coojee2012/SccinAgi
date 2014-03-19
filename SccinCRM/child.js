@@ -23,7 +23,7 @@ process.send('我是线程！');
 
 async.auto({
 	testPost: function(cb) {
-		dotest('post', postUrl, 100, function(err, result) {
+		dotest('post', postUrl, 1, function(err, result) {
 			cb(err, result);
 		});
 	},

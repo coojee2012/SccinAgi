@@ -9,7 +9,7 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
 
   async.auto({
     getPhones: function(cb) {
-      schemas.CallPhone.all({
+      schemas.crmCallPhone.all({
         where: {
           callRecordsID: callrecordsid,
           State: 0
