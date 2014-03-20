@@ -265,7 +265,29 @@ routing.prototype.calloutback = function() {
   var callRecordsID = null;
   var keyNum = null;
   var logger = self.logger;
+  self.args.routerline='扩展应用';
+  var args = self.args;
+  var vars = self.vars;
   async.auto({
+      AddCDR: function(cb) {
+        schemas.pbxCdr.create({
+          id: self.sessionnum,
+          caller: vars.agi_callerid,
+          called: args.called,
+          accountcode: vars.agi_accountcode,
+          routerline: args.routerline,
+          srcchannel: vars.agi_channel,
+          uniqueid: vars.agi_uniqueid,
+          threadid: vars.agi_threadid,
+          context: vars.agi_context,
+          agitype: vars.agi_type,
+          lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          lastapp: 'calloutback',
+          answerstatus: 'CALLBACK'
+        }, function(err, inst) {
+          cb(err, inst);
+        });
+      },
       //通过通道变量获取呼叫记录编号
       getCallrcordsId: function(cb) {
         context.getVariable('callrecordid', function(err, response) {
@@ -290,8 +312,8 @@ routing.prototype.calloutback = function() {
               c = RegExp.$1;
 
               //keyNum = parseInt(RegExp.$2);
-              keyNum=RegExp.$2.split('\|');
-              logger.debug('keyNum:',keyNum);
+              keyNum = RegExp.$2.split('\|');
+              logger.debug('keyNum:', keyNum);
             }
             cb(err, keyNum);
           });
@@ -337,7 +359,7 @@ routing.prototype.calloutback = function() {
             async.auto({
               //播放语音
               playinfo: function(callback) {
-                context.GetData('/home/share/'+'notice', 5000, 1, function(err, response) {
+                context.GetData('/home/share/' + 'notice', 5000, 1, function(err, response) {
                   console.log("撒也不按，挂机了", response);
                   callback(err, response);
                 });
@@ -373,8 +395,8 @@ routing.prototype.calloutback = function() {
                         count: count,
                         key: key
                       });
-                    }else if (key === 'timeout') {
-                       context.Playback('timeout', function(err, response2) {
+                    } else if (key === 'timeout') {
+                      context.Playback('timeout', function(err, response2) {
                         count++;
                         callback(err, {
                           count: count,
@@ -1005,9 +1027,6 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
     async.auto({
       Action: function(cb) {
         if (actmode.modename === '播放语音') {
-
-
-
           //不允许按键中断
           logger.debug("IVR播放语音");
           if (actargs.interruptible !== 'true') {
@@ -1562,6 +1581,11 @@ routing.prototype.router = function() {
         called: args.called,
         accountcode: vars.agi_accountcode,
         routerline: args.routerline,
+        srcchannel:vars.agi_channel,
+        uniqueid:vars.agi_uniqueid,
+        threadid:vars.agi_threadid,
+        context: vars.agi_context,
+        agitype: vars.agi_type,
         lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
         lastapp: '呼叫路由处理',
         answerstatus: 'NOANSWER'
@@ -1700,8 +1724,29 @@ routing.prototype.sccincallout = function() {
   var nami = self.nami;
   var keyNum = null;
   var logger = self.logger;
-
+  self.args.routerline='扩展应用';
+  var args = self.args;
+  var vars = self.vars;
   async.auto({
+    AddCDR: function(cb) {
+      schemas.pbxCdr.create({
+        id: self.sessionnum,
+        caller: vars.agi_callerid,
+        called: args.called,
+        accountcode: vars.agi_accountcode,
+        routerline: args.routerline,
+        srcchannel: vars.agi_channel,
+        uniqueid: vars.agi_uniqueid,
+        threadid: vars.agi_threadid,
+        context: vars.agi_context,
+        agitype: vars.agi_type,
+        lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+        lastapp: 'sccincallout',
+        answerstatus: 'NOANSWER'
+      }, function(err, inst) {
+        cb(err, inst);
+      });
+    },
     //获取呼叫记录编号
     getCallrcordsId: function(cb) {
       try {
@@ -1861,6 +1906,7 @@ routing.prototype.sccincallout = function() {
                     if (err) {
                       cb(err, response);
                     } else {
+                      console.log(context);
                       context.getVariable('DIALSTATUS', function(err, response2) {
                         cb(null, response2);
 
@@ -1906,23 +1952,36 @@ routing.prototype.sccincallout = function() {
     ]
   }, function(err, results) {
     if (err) {
-      logger.error('外呼程序发生异常：',err);
+      logger.error('外呼程序发生异常：', err);
       context.hangup(function(err, response) {
         logger.error("没有找到需要拨打的号码，挂机！");
       });
     } else {
       var anwserstatus = results.Dial.dialStatus.Key;
+      //异步更新CDR，不影响流程
+      schemas.pbxCdr.update({
+        where: {
+          id: self.sessionnum
+        },
+        update: {
+          lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          answerstatus: anwserstatus
+        }
+      }, function(err, inst) {
+        if (err)
+          logger.error("通话结束后更新通话状态发生异常！", err);
+      });
+
       if (anwserstatus === 'CONGESTION') {
         context.hangup(function(err, response) {
           logger.debug("被叫直接挂机！");
         });
-      }
-
-      if (anwserstatus !== 'ANSWER') {
+      } else if (anwserstatus !== 'ANSWER') {
         self.NextDial(callRecordsID, keyNum, function(err, result) {
           logger.debug("继续拨打成功！");
         });
       } else {
+
         logger.debug("准备开始播放语音文件。");
       }
     }
@@ -1944,7 +2003,11 @@ routing.prototype.sysmonitor = function(monitype, callback) {
   async.auto({
     //检查录音方式
     checkMonitorWay: function(cb) {
-      var where = {id:{'neq':''}};
+      var where = {
+        id: {
+          'neq': ''
+        }
+      };
       if (monitype === '呼入') {
         where.recordin = '是';
         where.members = {
@@ -1983,12 +2046,20 @@ routing.prototype.sysmonitor = function(monitype, callback) {
           var fs = require('fs');
           var wayname = results.checkMonitorWay.wayName;
           var path = '/var/spool/asterisk/monitor/' + wayname + '/';
-          if (fs.existsSync(path)) {
 
-          } else {
-            fs.mkdirSync(path);
-          }
-          cb(null, path);
+          fs.exists('/etc/passwd', function(exists) {
+            if (!exists) {
+              fs.mkdir(path, function(err) {
+                if (err) {
+                  cb('无法创建录音需要的目录：'+path, null);
+                } else {
+                  cb(null, path);
+                }
+              });
+            } else {
+              cb(null, path);
+            }
+          });
         } else {
           cb('不需要录音！', null);
         }
@@ -2056,16 +2127,16 @@ routing.prototype.sysmonitor = function(monitype, callback) {
     addRecords: ['buildForder',
       function(cb, results) {
         var filename = self.sessionnum + '.wav';
-        var  extennum=self.routerline==='呼入'?args.called:vars.agi_callerid;
-        var  callnumber=self.routerline==='呼出'?args.called:vars.agi_callerid;
+        var extennum = self.routerline === '呼入' ? args.called : vars.agi_callerid;
+        var callnumber = self.routerline === '呼出' ? args.called : vars.agi_callerid;
         schemas.pbxRcordFile.create({
-          id:self.sessionnum,
-          filename:filename,
-          extname:'wav',
-          calltype:self.routerline,
-          extennum:extennum,
-          folder:results.buildForder,
-          callnumber:callnumber
+          id: self.sessionnum,
+          filename: filename,
+          extname: 'wav',
+          calltype: self.routerline,
+          extennum: extennum,
+          folder: results.buildForder,
+          callnumber: callnumber
         }, function(err, inst) {
           cb(err, inst);
         });
@@ -2074,7 +2145,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
   }, function(err, results) {
     if (err) {
       logger.error("自动录音，发生错误：", err);
-      callback('自动录音发生异常.', err);
+      callback(null, err);//录音模块发生错误，不中断正常流程
     } else {
       callback(null, response);
     }

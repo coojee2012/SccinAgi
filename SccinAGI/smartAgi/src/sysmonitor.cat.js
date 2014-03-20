@@ -14,7 +14,11 @@ routing.prototype.sysmonitor = function(monitype, callback) {
   async.auto({
     //检查录音方式
     checkMonitorWay: function(cb) {
-      var where = {id:{'neq':''}};
+      var where = {
+        id: {
+          'neq': ''
+        }
+      };
       if (monitype === '呼入') {
         where.recordin = '是';
         where.members = {
@@ -53,12 +57,20 @@ routing.prototype.sysmonitor = function(monitype, callback) {
           var fs = require('fs');
           var wayname = results.checkMonitorWay.wayName;
           var path = '/var/spool/asterisk/monitor/' + wayname + '/';
-          if (fs.existsSync(path)) {
 
-          } else {
-            fs.mkdirSync(path);
-          }
-          cb(null, path);
+          fs.exists(path, function(exists) {
+            if (!exists) {
+              fs.mkdir(path, function(err) {
+                if (err) {
+                  cb('无法创建录音需要的目录：'+path, null);
+                } else {
+                  cb(null, path);
+                }
+              });
+            } else {
+              cb(null, path);
+            }
+          });
         } else {
           cb('不需要录音！', null);
         }
@@ -126,16 +138,16 @@ routing.prototype.sysmonitor = function(monitype, callback) {
     addRecords: ['buildForder',
       function(cb, results) {
         var filename = self.sessionnum + '.wav';
-        var  extennum=self.routerline==='呼入'?args.called:vars.agi_callerid;
-        var  callnumber=self.routerline==='呼出'?args.called:vars.agi_callerid;
+        var extennum = self.routerline === '呼入' ? args.called : vars.agi_callerid;
+        var callnumber = self.routerline === '呼出' ? args.called : vars.agi_callerid;
         schemas.pbxRcordFile.create({
-          id:self.sessionnum,
-          filename:filename,
-          extname:'wav',
-          calltype:self.routerline,
-          extennum:extennum,
-          folder:results.buildForder,
-          callnumber:callnumber
+          id: self.sessionnum,
+          filename: filename,
+          extname: 'wav',
+          calltype: self.routerline,
+          extennum: extennum,
+          folder: results.buildForder,
+          callnumber: callnumber
         }, function(err, inst) {
           cb(err, inst);
         });
@@ -144,7 +156,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
   }, function(err, results) {
     if (err) {
       logger.error("自动录音，发生错误：", err);
-      callback('自动录音发生异常.', err);
+      callback(null, err);//录音模块发生错误，不中断正常流程
     } else {
       callback(null, response);
     }

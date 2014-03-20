@@ -467,9 +467,10 @@ posts.getresult = function(req, res, next) {
 			"success": false,
 			"result": '抽取编号不能为空'
 		});
-		return;
-	}
-	Schemas['crmDialResult'].findOne({
+		
+	}else{
+		try{
+		Schemas['crmDialResult'].findOne({
 		where: {
 			CallInfoID: CallInfoID
 		}
@@ -485,6 +486,7 @@ posts.getresult = function(req, res, next) {
 				"result": '在服务器上没有找到该数据'
 			});
 		} else {
+			console.log(inst);
 			res.send({
 				"success": true,
 				"result": "" + inst.Result + ""
@@ -493,6 +495,16 @@ posts.getresult = function(req, res, next) {
 
 
 	});
+	}catch(ex){
+		logger.error("获取拨打结果发生异常：",ex);
+		res.send({
+				"success": false,
+				"result": '获取拨打结果时服务器发生异常'
+			});
+
+	}
+	}
+	
 
 }
 

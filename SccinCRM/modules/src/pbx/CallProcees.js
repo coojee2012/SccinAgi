@@ -13,7 +13,7 @@ var pbxCallProcees=schema.define('pbxCallProcees',{
 	processname:{type:String,length:50},
 	passargs:   {type:String,length:50},
 	doneresults:   {type:String,length:50},
-	routerline:   {type: Number, default: function () { return 1; }},
+	routerline:   {type: String, length:10},
 	cretime:   {type: String,length:50, default: function () {return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	
 });

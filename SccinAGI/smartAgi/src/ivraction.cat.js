@@ -43,9 +43,6 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
     async.auto({
       Action: function(cb) {
         if (actmode.modename === '播放语音') {
-
-
-
           //不允许按键中断
           logger.debug("IVR播放语音");
           if (actargs.interruptible !== 'true') {
@@ -137,6 +134,40 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
 
 
         } else if (actmode.modename === '发起录音') {
+          var maxduration = actargs.maxduration || 60; //默认最多可以录制1小时，0表示随便录好久
+          var options = actargs.options || 'sy'; //默认如果没应答就跳过录音
+          var format = actargs.format || 'wav'; //默认文件后缀名
+          var silence = actargs.silence || 10; //如果持续了超过X秒的沉默，将停止录音，默认10秒,0表示不判断
+          var filename = "";
+          if (/\<\%(\w+)\%\>(\S+)/.test(actargs.varname)) {
+            var hans = RegExp.$1;
+            var extname = RegExp.$2;
+            if (hans !== '' && typeof(commonfun[hans]) === 'function') {
+              filename += commonfun[hans]();
+              filename += '-' + extname;
+            } else {
+              filename = extname;
+            }
+          } else {
+            filename = actargs.varname;
+          }
+          var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
+
+          async.auto({
+            buildDir: function(cb) {
+              commonfun.mkdir(filepath, function(err, path) {
+                if (err)
+                  cb(null, '/var/spool/asterisk/monitor/');
+                else
+                  cb(null, patch);
+              });
+            },
+            createFile:function(cb){
+              
+            }
+          }, function(err, results) {
+
+          });
 
         } else if (actmode.modename === '播放录音') {
 

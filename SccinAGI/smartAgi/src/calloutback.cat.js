@@ -6,7 +6,29 @@ routing.prototype.calloutback = function() {
   var callRecordsID = null;
   var keyNum = null;
   var logger = self.logger;
+  self.args.routerline='扩展应用';
+  var args = self.args;
+  var vars = self.vars;
   async.auto({
+      AddCDR: function(cb) {
+        schemas.pbxCdr.create({
+          id: self.sessionnum,
+          caller: vars.agi_callerid,
+          called: args.called,
+          accountcode: vars.agi_accountcode,
+          routerline: args.routerline,
+          srcchannel: vars.agi_channel,
+          uniqueid: vars.agi_uniqueid,
+          threadid: vars.agi_threadid,
+          context: vars.agi_context,
+          agitype: vars.agi_type,
+          lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          lastapp: 'calloutback',
+          answerstatus: 'CALLBACK'
+        }, function(err, inst) {
+          cb(err, inst);
+        });
+      },
       //通过通道变量获取呼叫记录编号
       getCallrcordsId: function(cb) {
         context.getVariable('callrecordid', function(err, response) {
@@ -31,8 +53,8 @@ routing.prototype.calloutback = function() {
               c = RegExp.$1;
 
               //keyNum = parseInt(RegExp.$2);
-              keyNum=RegExp.$2.split('\|');
-              logger.debug('keyNum:',keyNum);
+              keyNum = RegExp.$2.split('\|');
+              logger.debug('keyNum:', keyNum);
             }
             cb(err, keyNum);
           });
@@ -78,7 +100,7 @@ routing.prototype.calloutback = function() {
             async.auto({
               //播放语音
               playinfo: function(callback) {
-                context.GetData('/home/share/'+'notice', 5000, 1, function(err, response) {
+                context.GetData('/home/share/' + 'notice', 5000, 1, function(err, response) {
                   console.log("撒也不按，挂机了", response);
                   callback(err, response);
                 });
@@ -114,8 +136,8 @@ routing.prototype.calloutback = function() {
                         count: count,
                         key: key
                       });
-                    }else if (key === 'timeout') {
-                       context.Playback('timeout', function(err, response2) {
+                    } else if (key === 'timeout') {
+                      context.Playback('timeout', function(err, response2) {
                         count++;
                         callback(err, {
                           count: count,
