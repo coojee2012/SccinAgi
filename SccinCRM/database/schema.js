@@ -7,30 +7,35 @@ var SRCFILE = appconf.debug ? 'src' : 'build';
 var path = require('path');
 var dbdir = dirname + '/../modules/' + SRCFILE + '/';
 var guid = require('guid');
-var async=require('async');
-var Schemas = {};
+var async = require('async');
 
-worker(dbdir, function() {
-    console.log('我的工作完成了');
-/*    if (appconf.debug) {
+/*var util = require("util");
+var events = require("events");*/
+
+function Schemas() {
+    //events.EventEmitter.call(this);
+    worker(dbdir, function() {
+        console.log('我的工作完成了');
+        /*    if (appconf.debug) {
     schema.automigrate(function() {
         console.log('创建表');
 
     });
 }*/
 
-schema.isActual(function(err, actual) {
-    if (!actual) {
-        schema.autoupdate(function(err) {
-            console.log('更新表！');
+        schema.isActual(function(err, actual) {
+            if (!actual) {
+                schema.autoupdate(function(err) {
+                    console.log('更新表！');
+                });
+            }
         });
-    }
-});
+    });
+};
 
-exports.Schemas = Schemas;
+//util.inherits(Schemas, events.EventEmitter);
 
-});
-
+exports.Schemas = new Schemas();
 
 
 
@@ -38,7 +43,7 @@ function worker(dir, callback) {
     var files = fs.readdirSync(dir);
     //console.log(files);
     async.each(files, function(filepath, cb) {
-        filepath=dir + "\\" +filepath;
+        filepath = dir + "\\" + filepath;
         //console.log('========',filepath);
         fs.stat(filepath, function(err, stats) {
             if (stats.isFile()) {
@@ -48,7 +53,7 @@ function worker(dir, callback) {
                 var thisFilename = path.basename(__filename, '.js');
                 if (filename != thisFilename && filename.indexOf(parentDirname) < 0) {
                     var mod = require(filepath);
-                    Schemas[mod.Name] = mod;
+                    Schemas.prototype[mod.Name] = mod;
                     cb(null);
                 }
             } else if (stats.isDirectory()) {
@@ -62,4 +67,3 @@ function worker(dir, callback) {
         callback();
     });
 }
-

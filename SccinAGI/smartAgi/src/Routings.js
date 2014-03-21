@@ -19,6 +19,7 @@ var routing = function(v) {
   this.activevar = {}; //用户存储用户输入的临时变量
 };
 
+var commonfun={};
 module.exports = routing;
 ;//发起拨打下一个电话
 
@@ -45,7 +46,6 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
     startnewdial: ['getPhones',
       function(cb, results) {
         if (results.getPhones && results.getPhones.length > 0) {
-
           var channel = "LOCAL/" + 200 + "@sub-outgoing";
           var Context = 'sub-outgoing-callback';
           var action = new AsAction.Originate();
@@ -53,7 +53,7 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
           //action.Timeout=30;
           action.Async = true;
           action.Account = callrecordsid;
-          action.CallerID = 200;
+          action.CallerID = 66899866;
           action.Context = Context;
           action.Variable = 'callrecordid=' + callrecordsid + ',keynum=' + keyNum;
           action.Exten = 200;
@@ -71,8 +71,7 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
 
 
         } else {
-          cb();
-
+          cb(null,'over');
         }
       }
     ]
@@ -95,7 +94,7 @@ routing.prototype.NoCome = function(callrecordid, cb) {
             id: callrecordid
           },
           update: {
-            Result: 3,
+            Result: 2,
             State: 1
           }
         }, function(err, inst) {
@@ -447,7 +446,7 @@ routing.prototype.calloutback = function() {
                   cb(err, results);
                 });
               }
-              //播放三次无反应
+              //播放三次无反应或按键错误超过3次
               else {
 
                 schemas.crmDialResult.update({
@@ -508,7 +507,33 @@ routing.prototype.channelMax = function(callback) {
     }
   }
   return obj;
-};//拨打电话会议
+}
+
+commonfun.guid=function(){
+	return guid.create();
+}
+commonfun.unixtime=function(){
+	var d=new Date();
+	var unixtime=d.getTime();
+	var random = Math.random()*100;
+	return unixtime.toString()+'-'+random.toString();
+}
+commonfun.mkdir=function(path,cb){
+	 fs.exists(path, function(exists) {
+            if (!exists) {
+              fs.mkdir(path, function(err) {
+                if (err) {
+                  cb('无法创建需要的目录：'+path, null);
+                } else {
+                  cb(null, path);
+                }
+              });
+            } else {
+              cb(null, path);
+            }
+          });
+}
+;//拨打电话会议
 routing.prototype.conference = function(confno, assign, callback) {
 
 };//呼叫坐席分机失败处理
@@ -1118,6 +1143,42 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
 
 
         } else if (actmode.modename === '发起录音') {
+          var maxduration = actargs.maxduration || 60; //默认最多可以录制1小时，0表示随便录好久
+          var options = actargs.options || 'sy'; //默认如果没应答就跳过录音
+          var format = actargs.format || 'wav'; //默认文件后缀名
+          var silence = actargs.silence || 10; //如果持续了超过X秒的沉默，将停止录音，默认10秒,0表示不判断
+          var filename = "";
+          if (/\<\%(\w+)\%\>(\S+)/.test(actargs.varname)) {
+            var hans = RegExp.$1;
+            var extname = RegExp.$2;
+            if (hans !== '' && typeof(commonfun[hans]) === 'function') {
+              filename += commonfun[hans]();
+              filename += '-' + extname;
+            } else {
+              filename = extname;
+            }
+          } else {
+            filename = actargs.varname;
+          }
+          var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
+
+          async.auto({
+            buildDir: function(cb) {
+              commonfun.mkdir(filepath, function(err, path) {
+                if (err)
+                  cb(null, '/var/spool/asterisk/monitor/');
+                else
+                  cb(null, path);
+              });
+            },
+            createFile:['buildDir',function(cb){
+
+            }],
+            recording:[],
+            addRecord:[]
+          }, function(err, results) {
+
+          });
 
         } else if (actmode.modename === '播放录音') {
 
@@ -1724,7 +1785,7 @@ routing.prototype.sccincallout = function() {
   var nami = self.nami;
   var keyNum = null;
   var logger = self.logger;
-  self.args.routerline='扩展应用';
+  self.args.routerline = '扩展应用';
   var args = self.args;
   var vars = self.vars;
   async.auto({
@@ -1847,11 +1908,10 @@ routing.prototype.sccincallout = function() {
               }
             }, function(err, inst) {
               cb(err, inst);
-
             });
 
           } else {
-            cb('未有找到电话号码', results);
+            cb(null, null);
           }
         } catch (ex) {
           logger.error('更新呼叫结果表发生异常:', ex);
@@ -1946,13 +2006,45 @@ routing.prototype.sccincallout = function() {
             cb(err, results);
           });
         } else {
-          cb('未有找到电话号码', results);
+          try {
+            schemas.crmDialResult.update({
+              where: {
+                id: callRecordsID
+              },
+              update: {
+                Result: 109, //未找到需要拨打的号码
+                State: 1
+              }
+            }, function(err, inst) {
+              cb(err, inst);
+            });
+          } catch (ex) {
+            logger.error('保存拨打结果发生异常:', ex);
+            cb(ex, null);
+          }
         }
       }
     ]
   }, function(err, results) {
+    var upDialResult = function(Result) {
+      try {
+        schemas.crmDialResult.update({
+          where: {
+            id: callRecordsID
+          },
+          update: {
+            Result: Result,
+            State: 1
+          }
+        }, function(err, inst) {});
+      } catch (ex) {
+        logger.error('保存拨打结果发生异常:', ex);
+      }
+    };
+
     if (err) {
       logger.error('外呼程序发生异常：', err);
+      upDialResult(110);
       context.hangup(function(err, response) {
         logger.error("没有找到需要拨打的号码，挂机！");
       });
@@ -1973,17 +2065,77 @@ routing.prototype.sccincallout = function() {
       });
 
       if (anwserstatus === 'CONGESTION') {
+        upDialResult(100);
         context.hangup(function(err, response) {
-          logger.debug("被叫直接挂机！");
+          logger.debug("被叫拒绝接听！");
+        });
+      } else if (anwserstatus === 'CHANUNAVAIL') {
+        upDialResult(101);
+        context.hangup(function(err, response) {
+          logger.debug("号码无效！");
+        });
+      } else if (anwserstatus === 'NOANSWER') {
+        upDialResult(102);
+        context.hangup(function(err, response) {
+          logger.debug("无应答！");
+        });
+      } else if (anwserstatus === 'BUSY') {
+        upDialResult(103);
+        context.hangup(function(err, response) {
+          logger.debug("电话忙！");
+        });
+      } else if (anwserstatus === 'DONTCALL') {
+        upDialResult(104);
+        context.hangup(function(err, response) {
+          logger.debug("被叫转移电话1！");
+        });
+      } else if (anwserstatus === 'TORTURE') {
+        upDialResult(105);
+        context.hangup(function(err, response) {
+          logger.debug("被叫转移电话2");
+        });
+      } else if (anwserstatus === 'INVALIDARGS') {
+        upDialResult(106);
+        context.hangup(function(err, response) {
+          logger.debug("无效的呼叫参数！");
+        });
+      } else if (anwserstatus === 'CANCEL') {
+        upDialResult(107);
+        context.hangup(function(err, response) {
+          logger.debug("呼叫取消");
         });
       } else if (anwserstatus !== 'ANSWER') {
-        self.NextDial(callRecordsID, keyNum, function(err, result) {
-          logger.debug("继续拨打成功！");
+        upDialResult(108);
+        context.hangup(function(err, response) {
+          logger.debug("其他");
         });
       } else {
-
+        //upDialResult(10);
         logger.debug("准备开始播放语音文件。");
       }
+      //以下是多路拨打
+      /* if (anwserstatus !== 'ANSWER') {
+          self.NextDial(callRecordsID, keyNum, function(err, result) {
+            if (err) {
+              logger.error(err);
+              context.hangup(function(err, response) {
+                logger.debug("呼叫下一个电话发生异常，挂机！");
+              });
+            } else if (result === 'over') {
+              context.hangup(function(err, response) {
+                logger.debug("所有电话已经呼叫完毕，挂机！");
+              });
+            } else {
+              context.hangup(function(err, response) {
+                logger.debug("本轮呼叫完毕，挂机！");
+              });
+            }
+          });
+        } else {
+          logger.debug("准备开始播放语音文件。");
+        }*/
+
+
     }
   });
 
@@ -2047,7 +2199,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
           var wayname = results.checkMonitorWay.wayName;
           var path = '/var/spool/asterisk/monitor/' + wayname + '/';
 
-          fs.exists('/etc/passwd', function(exists) {
+          fs.exists(path, function(exists) {
             if (!exists) {
               fs.mkdir(path, function(err) {
                 if (err) {

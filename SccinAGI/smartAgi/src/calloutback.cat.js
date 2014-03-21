@@ -188,7 +188,7 @@ routing.prototype.calloutback = function() {
                   cb(err, results);
                 });
               }
-              //播放三次无反应
+              //播放三次无反应或按键错误超过3次
               else {
 
                 schemas.crmDialResult.update({

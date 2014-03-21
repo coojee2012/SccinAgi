@@ -16,8 +16,7 @@ var domainMiddleware = require('domain-middleware');
 var JugglingStore = require('connect-jugglingdb')(express);
 var schema = require('./database/jdmysql').schema;
 var Schemas = require(__dirname + '/database/schema').Schemas;
-
-
+/*Schemas.on('over',function(){});*/
 var appconf = conf.load('app');
 var SRCFILE = appconf.debug ? 'src' : 'build';
 
@@ -64,7 +63,7 @@ app.use(express.session({
   secret: 'keyboard cat',
   store: new JugglingStore(schema, {
     table: 'sessions', // 存session的表名
-    maxAge: 1000 * 60 * 10 // 默认持续时间：毫秒,10分钟
+    maxAge: 1000 * 60 * 2 // 默认持续时间：毫秒
   })
 }));
 
@@ -87,7 +86,6 @@ app.use(function(req, res, next) {
 // 开发环境配置
 if ('development' == app.get('env')) {
   logger.info("当前运行于开发环境！");
-
   app.use(express.errorHandler({
     showStack: true,
     dumpExceptions: true
@@ -241,6 +239,7 @@ function setroute(filepath, routeflag) {
           var ooo = 'index';
           if (req.param('ooo') && req.param('ooo') != '')
             ooo = req.param('ooo');
+          logger.debug(filepath);
           var routemod = require(filepath);
           if (routemod && routemod[req.route.method] && typeof(routemod[req.route.method][ooo]) === 'function') {
             routemod[req.route.method][ooo](req, res, next, routeflag + filename);

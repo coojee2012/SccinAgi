@@ -19,4 +19,5 @@ var routing = function(v) {
   this.activevar = {}; //用户存储用户输入的临时变量
 };
 
+var commonfun={};
 module.exports = routing;

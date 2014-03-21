@@ -159,12 +159,14 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                 if (err)
                   cb(null, '/var/spool/asterisk/monitor/');
                 else
-                  cb(null, patch);
+                  cb(null, path);
               });
             },
-            createFile:function(cb){
-              
-            }
+            createFile:['buildDir',function(cb){
+
+            }],
+            recording:[],
+            addRecord:[]
           }, function(err, results) {
 
           });

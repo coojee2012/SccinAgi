@@ -12,7 +12,7 @@ routing.prototype.NoCome = function(callrecordid, cb) {
             id: callrecordid
           },
           update: {
-            Result: 3,
+            Result: 2,
             State: 1
           }
         }, function(err, inst) {

@@ -233,10 +233,11 @@ posts.dialout = function(req, res, next) {
 posts.autodial = function(req, res, next) {
 	//res.set('Access-Control-Allow-Origin', '*');
 	//res.header('Access-Control-Allow-Origin', '*')
-	var Userkey=req.get('User-key');
-	var UserAgent=req.get('User-Agent');
-	console.log('获取到的头信息：',Userkey,UserAgent);
-	res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+	var Userkey = req.get('User-key');
+	var UserAgent = req.get('User-Agent');
+	logger.debug('拨打服务获取到的头信息：', Userkey, UserAgent);
+	res.setHeader('Content-type', 'application/json');
+	//res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
 	var CallInfoID = req.body['CallInfoID'];
 	var NoticeContent = req.body['NoticeContent'];
 	var SureContent = req.body['SureContent'];
@@ -249,263 +250,274 @@ posts.autodial = function(req, res, next) {
 			"success": false,
 			"result": '抽取编号不能为空'
 		});
-		return;
-	}
 
-	if (!NoticeContent || NoticeContent == "") {
+	} else if (!NoticeContent || NoticeContent == "") {
 		res.send({
 			"success": false,
 			"result": '合成通知评标专家语音类容不能为空'
 		});
-		return;
-	}
 
-	if (!SureContent || SureContent == "") {
+	} else if (!SureContent || SureContent == "") {
 		res.send({
 			"success": false,
 			"result": '合成确认参加评标提示语音类容不能为空'
 		});
-		return;
-	}
 
-	if (!QueryContent || QueryContent == "") {
+	} else if (!QueryContent || QueryContent == "") {
 		res.send({
 			"success": false,
 			"result": '合成自动查询语音类容不能为空'
 		});
-		return;
-	}
 
-
-	if (!Phones || Phones == "") {
+	} else if (!Phones || Phones == "") {
 		res.send({
 			"success": false,
 			"result": '拨打电话不能为空'
 		});
-		return;
-	}
 
-
-	async.auto({
-		//保存初始化数据到拨打记录表
-		addCallRecords: function(callback) {
-			try {
-				Schemas['crmCallRecords'].create({
-					id: guid.create(),
-					CallInfoID: CallInfoID
-				}, function(err, callrecord) {
-					callback(err, callrecord);
-				});
-			} catch (ex) {
-				callback(ex, null);
-			}
-		},
-		//保存初始化数据到语音内容表
-		addVoiceContent: ['addCallRecords',
-			function(callback, results) {
+	} else {
+		async.auto({
+			//保存初始化数据到拨打记录表
+			addCallRecords: function(callback) {
 				try {
-					Schemas['crmVoiceContent'].create({
-						Contents: NoticeContent,
-						callrecord: results.addCallRecords
-					}, function(err, inst) {
-						callback(err, inst);
+					Schemas['crmCallRecords'].create({
+						id: guid.create(),
+						CallInfoID: CallInfoID
+					}, function(err, callrecord) {
+						callback(err, callrecord);
 					});
 				} catch (ex) {
 					callback(ex, null);
 				}
-			}
-		],
-		//保存初始化数据到拨打电话表
-		addCallPhone: ['addCallRecords',
-			function(callback, results) {
-				var phones = Phones.split(',');
-				var count = 0;
-				async.whilst(
-					function() {
-						return count < phones.length;
-					},
-					function(cb) {
-
-						count++;
-						Schemas['crmCallPhone'].create({
-							id: guid.create(),
-							Phone: phones[count - 1],
-							PhoneSequ: count - 1,
+			},
+			//保存初始化数据到语音内容表
+			addVoiceContent: ['addCallRecords',
+				function(callback, results) {
+					try {
+						Schemas['crmVoiceContent'].create({
+							Contents: NoticeContent,
 							callrecord: results.addCallRecords
 						}, function(err, inst) {
-							cb(err, inst);
+							callback(err, inst);
 						});
-					},
-					function(err, results) {
-						callback(err, results);
-
+					} catch (ex) {
+						callback(ex, null);
 					}
-				);
+				}
+			],
+			//保存初始化数据到拨打电话表
+			addCallPhone: ['addCallRecords',
+				function(callback, results) {
+					var phones = Phones.split(',');
+					var count = 0;
+					async.whilst(
+						function() {
+							return count < phones.length;
+						},
+						function(cb) {
 
+							count++;
+							Schemas['crmCallPhone'].create({
+								id: guid.create(),
+								Phone: phones[count - 1],
+								PhoneSequ: count - 1,
+								callrecord: results.addCallRecords
+							}, function(err, inst) {
+								cb(err, inst);
+							});
+						},
+						function(err, results) {
+							callback(err, results);
 
-			}
-		],
-		//保存初始化数据到拨打结果表
-		addDialResult: ['addCallRecords',
-			function(callback, results) {
-				Schemas['crmDialResult'].create({
-					CallInfoID: CallInfoID,
-					callrecord: results.addCallRecords
-				}, function(err, inst) {
-					callback(err, inst);
-				});
-			}
-		],
-		//合成通知语音
-		voiceMixNotice: ['addCallRecords',
-			function(callback, results) {
-				//处理语音合成
-				//合成的语音文件名字  results.addCallRecords.id + -notice.wav
-				var exec = require('child_process').exec,
-					last = exec('dir', function(error, stdout, stderr) {
-						callback(error, stdout);
-					});
-			}
-		],
-		//合成确认语音
-		voiceMixSure: ['addCallRecords',
-			function(callback, results) {
-				//处理语音合成
-				//合成的语音文件名字  results.addCallRecords.id + -sure.wav
-				var exec = require('child_process').exec,
-					last = exec('dir', function(error, stdout, stderr) {
-						callback(error, stdout);
-					});
-			}
-		],
-		//合成查询语音
-		voiceMixQuery: ['addCallRecords',
-			function(callback, results) {
-				//处理语音合成
-				//合成的语音文件名字  results.addCallRecords.id + -query.wav
-				var exec = require('child_process').exec,
-					last = exec('dir', function(error, stdout, stderr) {
-						callback(error, stdout);
-					});
-			}
-		],
-		//更新合成状态
-		updateVoiceContent: ['voiceMixNotice', 'voiceMixSure', 'voiceMixQuery', 'addVoiceContent',
-			function(callback, results) {
-				try{
-				var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
-				voc.State = 1;
-				voc.save(function(err, inst) {
-					callback(err, inst);
-				});
-			}catch(ex){
-				callback('更新合成状态时发生错误！', null);
-			}
+						}
+					);
 
-			}
-		],
-		//开始拨打
-		callDial: ['updateVoiceContent',
-			function(callback, results) {
-				//var Variable = "CHANNEL(language)=cn,Content=" + Content + "CallInfoID=" + CallInfoID;
-				var channel = "LOCAL/" + 200 + "@sub-outgoing";
-				var Context = 'sub-outgoing-callback';
-				//var Context='app-exten';
-				var action = new AsAction.Originate();
-				action.Channel = channel;
-				//action.Timeout=30;
-				action.Async = true;
-				action.Account = results.addCallRecords.id;
-				action.CallerID = 200;
-				action.Context = Context;
-				action.Variable = 'callrecordid=' + results.addCallRecords.id + ',keynum=' + KeyNum;
-				action.Exten = 200;
-				if (nami.connected) {
-					nami.send(action, function(response) {
-						callback(null, response);
-					});
-				} else {
-					callback('无法连接到语音服务器！', null);
 
 				}
+			],
+			//保存初始化数据到拨打结果表
+			addDialResult: ['addCallRecords',
+				function(callback, results) {
+					Schemas['crmDialResult'].create({
+						CallInfoID: CallInfoID,
+						callrecord: results.addCallRecords
+					}, function(err, inst) {
+						callback(err, inst);
+					});
+				}
+			],
+			//合成通知语音
+			voiceMixNotice: ['addCallRecords',
+				function(callback, results) {
+					//处理语音合成
+					//合成的语音文件名字  results.addCallRecords.id + -notice.wav
+					var exec = require('child_process').exec,
+						last = exec('dir', function(error, stdout, stderr) {
+							callback(error, stdout);
+						});
+				}
+			],
+			//合成确认语音
+			voiceMixSure: ['addCallRecords',
+				function(callback, results) {
+					//处理语音合成
+					//合成的语音文件名字  results.addCallRecords.id + -sure.wav
+					var exec = require('child_process').exec,
+						last = exec('dir', function(error, stdout, stderr) {
+							callback(error, stdout);
+						});
+				}
+			],
+			//合成查询语音
+			voiceMixQuery: ['addCallRecords',
+				function(callback, results) {
+					//处理语音合成
+					//合成的语音文件名字  results.addCallRecords.id + -query.wav
+					var exec = require('child_process').exec,
+						last = exec('dir', function(error, stdout, stderr) {
+							callback(error, stdout);
+						});
+				}
+			],
+			//更新合成状态
+			updateVoiceContent: ['voiceMixNotice', 'voiceMixSure', 'voiceMixQuery', 'addVoiceContent',
+				function(callback, results) {
+					try {
+						var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
+						voc.State = 1;
+						voc.save(function(err, inst) {
+							callback(err, inst);
+						});
+					} catch (ex) {
+						callback('更新合成状态时发生错误！', null);
+					}
+
+				}
+			],
+			//验证可用通道是否满足拨打条件
+			checkChans: ['updateVoiceContent',
+				function(callback, results) {
+					Schemas['pbxCdr'].count({
+							alive: 'yes'						
+					}, function(err, counts) {
+						if (err)
+							callback(err, null);
+						else {
+							if (counts && counts > 10) {
+								callback('当前可用线路不足，已用:' + counts, counts);
+							} else {
+								callback(null, counts);
+							}
+						}
+
+					});
+				}
+			],
+			//开始拨打
+			callDial: ['checkChans',
+				function(callback, results) {
+					//var Variable = "CHANNEL(language)=cn,Content=" + Content + "CallInfoID=" + CallInfoID;
+					var channel = "LOCAL/" + 200 + "@sub-outgoing";
+					var Context = 'sub-outgoing-callback';
+					//var Context='app-exten';
+					var action = new AsAction.Originate();
+					action.Channel = channel;
+					//action.Timeout=30;
+					action.Async = true;
+					action.Account = results.addCallRecords.id;
+					action.CallerID = 200;
+					action.Context = Context;
+					action.Variable = 'callrecordid=' + results.addCallRecords.id + ',keynum=' + KeyNum;
+					action.Exten = 200;
+					if (nami.connected) {
+						nami.send(action, function(response) {
+							callback(null, response);
+						});
+					} else {
+						callback('无法连接到语音服务器！', null);
+
+					}
+				}
+			]
+
+		}, function(err, results) {
+
+			if (err) {
+				logger.error('调用拨打服务发生异常：',err);
+				var errmsg = "";
+				if (typeof(err) === 'object') {
+					errmsg += err.TypeError || err.Error || '';
+				} else {
+					errmsg = err;
+				}
+				res.send({
+					"success": false,
+					"result": "服务器发生内部异常:" + errmsg + ",请联系系统管理员！"
+				});
+			} else {
+				res.send({
+					"success": true,
+					"result": "调用成功！"
+				});
 			}
-		]
 
-	}, function(err, results) {
+		});
 
-		if (err) {
-			var errmsg = "";
-			if (typeof(err) === 'object') {
-				errmsg += err.TypeError;
-			}else{
-				errmsg=err;
-			}
-			res.send({
-				"success": false,
-				"result": "服务器发生内部异常:"+errmsg+",请联系系统管理员！"
-			});
-		} else {
-			res.send({
-				"success": true,
-				"result": "调用成功！"
-			});
-		}
-
-	});
-
-
+	}
 
 }
 
 
 
 posts.getresult = function(req, res, next) {
+	var Userkey = req.get('User-key');
+	var UserAgent = req.get('User-Agent');
+	logger.debug('获取结果服务获取到的头信息：', Userkey, UserAgent);
+
+	res.setHeader('Content-type', 'application/json');
 	res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
 	var CallInfoID = req.body['CallInfoID'];
+	logger.debug("开始获取：" + CallInfoID + '的呼叫结果！');
+
 	if (!CallInfoID || CallInfoID == "") {
 		res.send({
 			"success": false,
 			"result": '抽取编号不能为空'
 		});
-		
-	}else{
-		try{
-		Schemas['crmDialResult'].findOne({
-		where: {
-			CallInfoID: CallInfoID
-		}
-	}, function(err, inst) {
-		if (err) {
+
+	} else {
+		try {
+			Schemas['crmDialResult'].findOne({
+				where: {
+					CallInfoID: CallInfoID
+				}
+			}, function(err, inst) {
+				if (err) {
+					res.send({
+						"success": false,
+						"result": '获取拨打结果时服务器发生异常'
+					});
+				} else if (inst == null) {
+					res.send({
+						"success": false,
+						"result": '在服务器上没有找到该数据'
+					});
+				} else {
+					res.send({
+						"success": true,
+						"result": inst.Result.toString()
+					});
+				}
+			});
+		} catch (ex) {
+			logger.error("获取拨打结果发生异常：", ex);
 			res.send({
 				"success": false,
 				"result": '获取拨打结果时服务器发生异常'
 			});
-		} else if (inst == null) {
-			res.send({
-				"success": false,
-				"result": '在服务器上没有找到该数据'
-			});
-		} else {
-			console.log(inst);
-			res.send({
-				"success": true,
-				"result": "" + inst.Result + ""
-			});
+
 		}
-
-
-	});
-	}catch(ex){
-		logger.error("获取拨打结果发生异常：",ex);
-		res.send({
-				"success": false,
-				"result": '获取拨打结果时服务器发生异常'
-			});
-
 	}
-	}
-	
-
 }
 
 posts.packCall = function(req, res, next) {
@@ -744,8 +756,8 @@ function getconnectchannel(type, exten, cb) {
 
 }
 
-function safekey(userkey){
+function safekey(userkey) {
 	var crypto = require('crypto');
-    var fs = require('fs');
-    
+	var fs = require('fs');
+
 }

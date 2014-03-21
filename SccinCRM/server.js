@@ -91,6 +91,9 @@ if (cluster.isMaster) {
 		});
 
 	});
+
+	var normal = require('child_process').fork('Wetnurse.js');
+
 } else if (cluster.isWorker) {
 	logger.info(' 子进程-> ' + "启动子进程 ..." + cluster.worker.id);
 	process.on('message', function(msg) {
