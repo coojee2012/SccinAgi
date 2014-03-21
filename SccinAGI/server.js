@@ -44,7 +44,7 @@ var server = AGI.createServer(function(context) {
         args[kv[0]] = kv[1];
       }
     }
-   // logger.debug(vars);
+    logger.debug(vars);
     route.args = args;
     route.vars = vars;
     if (typeof(route[router]) === 'function') {
@@ -72,6 +72,7 @@ var server = AGI.createServer(function(context) {
           id: route.sessionnum
         },
         update: {
+          alive:'no',
           endtime: moment().format("YYYY-MM-DD HH:mm:ss")
         }
       }, function(err, inst) {
@@ -80,7 +81,8 @@ var server = AGI.createServer(function(context) {
 
         context.end();
       });
-    } else {
+    }
+    else {
       context.end();
     }
 

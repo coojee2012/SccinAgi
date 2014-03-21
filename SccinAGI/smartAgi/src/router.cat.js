@@ -18,6 +18,11 @@ routing.prototype.router = function() {
         called: args.called,
         accountcode: vars.agi_accountcode,
         routerline: args.routerline,
+        srcchannel:vars.agi_channel,
+        uniqueid:vars.agi_uniqueid,
+        threadid:vars.agi_threadid,
+        context: vars.agi_context,
+        agitype: vars.agi_type,
         lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
         lastapp: '呼叫路由处理',
         answerstatus: 'NOANSWER'

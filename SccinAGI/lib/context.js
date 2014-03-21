@@ -364,6 +364,39 @@ Context.prototype.MixMonitor = function(filename, options,command, cb) {
   this.exec('MixMonitor', filename, options, command, cb);
 }
 
+/*
+Description
+If filename contains %d, these characters will be replaced with a number incremented by one each time the file is recorded. Use core show file formats to see the available formats on your system User can press # to terminate the recording and continue to the next priority. If the user hangs up during a recording, all data will be lost and the application will terminate.
+RECORDED_FILE - Will be set to the final filename of the recording.
+RECORD_STATUS - This is the final status of the command
+DTMF - A terminating DTMF was received ('#' or '*', depending upon option 't')
+SILENCE - The maximum silence occurred in the recording.
+SKIP - The line was not yet answered and the 's' option was specified.
+TIMEOUT - The maximum length was reached.
+HANGUP - The channel was hung up.
+ERROR - An unrecoverable error occurred, which resulted in a WARNING to the logs.
+Syntax
+Record(filename.format,silence,maxduration,options)
+Arguments
+filename
+filename
+format - Is the format of the file type to be recorded (wav, gsm, etc).
+silence - Is the number of seconds of silence to allow before returning.
+maxduration - Is the maximum recording duration in seconds. If missing or 0 there is no maximum.
+options
+a - Append to existing recording rather than replacing.
+n - Do not answer, but record anyway if line not yet answered.
+q - quiet (do not play a beep tone).
+s - skip recording if the line is not yet answered.
+t - use alternate '*' terminator key (DTMF) instead of default '#'
+x - Ignore all terminator keys (DTMF) and keep recording until hangup.
+k - Keep recorded file upon hangup.
+y - Terminate recording if any DTMF digit is received.
+*/
+Context.prototype.Record = function(filename,silence,maxduration,options, cb) {
+  this.exec('Record', filename,silence,maxduration, options, cb);
+}
+
 Context.prototype.ChannelStatus=function(channelname,cb){
   this.send('CHANNEL STATUS ' +channelname+ ENDLINE, cb);
 }

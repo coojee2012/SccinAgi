@@ -6,7 +6,6 @@ var schema = require(basedir+'/database/jdmysql').schema;
 var crmCallRecords=require('./CallRecords');
 var crmVoiceContent=schema.define('crmVoiceContent',{
     Contents:     {type: Schema.Text},
-    //crmVoiceContentID:{type: String, length: 50},
     State:   {type: Number,default:0 }
 });
 crmVoiceContent.Name='crmVoiceContent';

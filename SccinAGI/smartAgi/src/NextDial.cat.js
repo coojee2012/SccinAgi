@@ -9,7 +9,7 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
 
   async.auto({
     getPhones: function(cb) {
-      schemas.CallPhone.all({
+      schemas.crmCallPhone.all({
         where: {
           callRecordsID: callrecordsid,
           State: 0
@@ -23,7 +23,6 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
     startnewdial: ['getPhones',
       function(cb, results) {
         if (results.getPhones && results.getPhones.length > 0) {
-
           var channel = "LOCAL/" + 200 + "@sub-outgoing";
           var Context = 'sub-outgoing-callback';
           var action = new AsAction.Originate();
@@ -31,7 +30,7 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
           //action.Timeout=30;
           action.Async = true;
           action.Account = callrecordsid;
-          action.CallerID = 200;
+          action.CallerID = 66899866;
           action.Context = Context;
           action.Variable = 'callrecordid=' + callrecordsid + ',keynum=' + keyNum;
           action.Exten = 200;
@@ -49,8 +48,7 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
 
 
         } else {
-          cb();
-
+          cb(null,'over');
         }
       }
     ]

@@ -6,21 +6,26 @@ routing.prototype.NoCome = function(callrecordid, cb) {
   var logger = self.logger;
   async.auto({
     saveDialResult: function(callback) {
-      schemas.DialResult.update({
-        where: {
-          id: callrecordid
-        },
-        update: {
-          Result: 3,
-          State: 1
-        }
-      }, function(err, inst) {
-        callback(err, inst);
-      });
+      try {
+        schemas.crmDialResult.update({
+          where: {
+            id: callrecordid
+          },
+          update: {
+            Result: 3,
+            State: 1
+          }
+        }, function(err, inst) {
+          callback(err, inst);
+        });
+      } catch (ex) {
+        logger.error('记录确认不参加评标发生异常:', ex);
+        callback('记录确认不参加评标发生异常！', null);
+      }
     },
     voiceNotice: ['saveDialResult',
       function(callback, results) {
-        context.Playback('b_bye', function(err, response) {
+        context.Playback('nosure', function(err, response) {
           context.hangup(function(err, response) {
             context.end();
             callback(err, response);
