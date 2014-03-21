@@ -1,42 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title></title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Sccin CallCenter Application System.">
-<meta name="author" content="linmuyi9999@163.com">
-<link rel="stylesheet" type="text/css" href="/themes/jsTree/style.min.css">
-<script type="text/javascript" src="/js/jquery-2.1.0.min.js"></script>
-<script type="text/javascript" src="/js/lib/jstree.min.js"></script>
-<script type="text/javascript">
-	$(function () { $('#jstree').jstree({
-  "core" : {
-  	"theme":{	"default":"small"},
-  	 'data' : [
-       {
-         'text' : '200-呼入主菜单',
-         "icon":'/images/ivr/bell.png',
-         'state' : {
-           'opened' : true,
-           'selected' : true
-         },
-         'children' : [
-           { 'text' : '播放语音',"icon":'/images/ivr/pi206.png' },
-           {'text' : '拨打电话',"icon":'/images/ivr/11.png' },
-           {'text' : '录制字符',"icon":'/images/ivr/19-2.png' }
-         ]
-      }
-    
-    ]
-  
-  },
-
-}); });
-</script>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sccin CallCenter Application System.">
+    <meta name="author" content="linmuyi9999@163.com">
+    <link rel="stylesheet" type="text/css" href="/themes/jsTree/style.min.css">
+    <script type="text/javascript" src="/js/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="/js/lib/jstree.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#jstree').jstree({
+                "core": {
+                    "theme": {    "default": "small"},
+                    'data': [
+                        {
+                            'text': '200-呼入主菜单',
+                            "icon": '/images/ivr/bell.png',
+                            'state': {
+                                'opened': true,
+                                'selected': true
+                            },
+                            'children': [
+                                { 'text': '播放语音', "icon": '/images/ivr/pi206.png' },
+                                {'text': '拨打电话', "icon": '/images/ivr/11.png' },
+                                {'text': '录制字符', "icon": '/images/ivr/19-2.png' }
+                            ]
+                        }
+                    ]
+                }
+            });
+        });
+    </script>
 </head>
 <body>
-	 <div id="jstree">
-	 </div>
+<div id="jstree">
+</div>
 </body>
 </html>

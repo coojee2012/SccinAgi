@@ -3,7 +3,7 @@
     <div class="column form-column main col col-sm-9 form-horizontal">
         <h1> <span class="label label-info">
       <img src="/images/man.png"/>
-      <img src="/images/queue.png"/>增加拨入规则</span></h1>
+      <img src="/images/queue.png"/>增加分机拨号规则</span></h1>
 
         <div class="panel panel-default fieldset">
             <div class="formStyle">
@@ -32,7 +32,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>呼叫来自</th>
+                            <th>分机分组</th>
                             <td>
                                 <select name="callergroup" id="callergroup" class="form-control input-sm"
                                         style='width: 100%;'>
@@ -43,17 +43,20 @@
                         <tr>
                             <th>匹配规则</th>
                             <td>
-                                <div class="form-inline">当外线送入的被叫号码以<input type="text" style="width:45px;" id='callerid'
-                                                                           name='callerid'
-                                                                           class="form-control input-sm"/>开头且长度为<input
-                                        type="text" id='callerlen' style="width:30px;" name='callerlen'
-                                        class="form-control input-sm"/>位时,从头开始删掉<input type="text"
-                                                                                       id='replacecalledtrim'
-                                                                                       style="width:30px;"
-                                                                                       name='replacecalledtrim'
-                                                                                       class="form-control input-sm"/>位且补充信息<input
-                                        type="text" id='replacecalledappend' style="width:50px;"
-                                        name='replacecalledappend' class="form-control input-sm"/>到该号码上.
+                                <div class="form-inline">用户拨打的号码是以
+                                    <input type="text" style="width:45px;" id='callednum'
+                                           name='callednum'
+                                           class="form-control input-sm"/>开头,长度为
+                                    <input
+                                            type="text" id='calledlen' style="width:30px;" name='calledlen'
+                                            class="form-control input-sm"/>位.从头删除掉
+                                    <input type="text" id='replacecalledtrim'
+                                           style="width:30px;"
+                                           name='replacecalledtrim'
+                                           class="form-control input-sm"/>位数字,同时补充
+                                    <input
+                                            type="text" id='replacecalledappend' style="width:60px;"
+                                            name='replacecalledappend' class="form-control input-sm"/>到该号码上.
                                 </div>
                             </td>
                         </tr>
