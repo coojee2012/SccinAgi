@@ -1,8 +1,8 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var crmKeyType=schema.define('KeyType',{
     keyTypeID:   { type: String, length: 50},//编号
     KeyTypeName:   { type: String, length: 50},//名称
@@ -10,4 +10,5 @@ var crmKeyType=schema.define('KeyType',{
 });
 crmKeyType.Name='crmKeyType';
 schema.models.crmKeyType;
-module.exports = crmKeyType;
+exports.crmKeyType = crmKeyType;
+Dbs.crmKeyType = crmKeyType;

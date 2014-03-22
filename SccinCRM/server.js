@@ -7,6 +7,9 @@ var http = require('http');
 var cluster = require('cluster');
 var logger = require('./lib/logger').logger('web');
 var os = require('os');
+var conf = require('node-conf');
+var appconf = conf.load('app');
+var SRCFILE = appconf.debug ? '.js' : '.min.js';
 // 获取CPU 的数量
 var numCPUs = os.cpus().length;
 var workers = {};
@@ -17,14 +20,25 @@ process.on('SIGTERM', function() {
 	for (var pid in workers) {
 		process.kill(pid);
 	}
-
 	process.exit(0);
-
 });
 
-/*process.on('exit', function() {
+process.on('SIGBREAK',function(){
+	console.log('SIGBREAK');
+});
+
+process.on('SIGHUP',function(){
+	logger.info('窗口被关闭了！');
+	for (var pid in workers) {
+		process.kill(pid);
+	}
+	process.exit(0);
+});
+ 
+
+process.on('exit', function() {
 	logger.error('服务器发生异常，导致退出！');
-});*/
+});
 
 
 if (cluster.isMaster) {
@@ -92,7 +106,13 @@ if (cluster.isMaster) {
 
 	});
 
-	var normal = require('child_process').fork('Wetnurse.js');
+	var normal = require('child_process').fork('Wetnurse'+SRCFILE);
+	normal.on('exit',function(code,signal){
+    logger.info('奶妈程序退出了：'+code);
+	});
+	normal.on('error',function(err){
+    logger.error('奶妈程序发生异常：'+err);
+	});
 
 } else if (cluster.isWorker) {
 	logger.info(' 子进程-> ' + "启动子进程 ..." + cluster.worker.id);
@@ -109,7 +129,7 @@ if (cluster.isMaster) {
 		logger.error(' 子进程-> uncaughtException:', err);
 	});
 
-	var server = require('./app');
+	var server = require('./app'+SRCFILE);
 	var count = 0;
 	server.on('connection', function() {
 		count++;

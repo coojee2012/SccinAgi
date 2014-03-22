@@ -1,11 +1,11 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;
 var manageUserRole=require('./UserRole');
-var manageDepartments=require('./Departments');
+var manageDepartments=require('./Departments');*/
 
 var manageMenmus=schema.define('manageMenmus',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
@@ -25,4 +25,5 @@ manageMenmus.validatesPresenceOf('menName', 'menURL','iconName');//验证非空
 
 manageMenmus.Name='manageMenmus';
 schema.models.manageMenmus;
-module.exports = manageMenmus;
+exports.manageMenmus = manageMenmus;
+Dbs.manageMenmus = manageMenmus;

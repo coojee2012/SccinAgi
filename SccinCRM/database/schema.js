@@ -1,45 +1,10 @@
-var fs = require('fs');
 var schema = require('./jdmysql').schema;
-var dirname = __dirname;
 var conf = require('node-conf');
 var appconf = conf.load('app');
-var SRCFILE = appconf.debug ? 'src' : 'build';
-var path = require('path');
-var dbdir = dirname + '/../modules/' + SRCFILE + '/';
-var guid = require('guid');
-var async = require('async');
-
-/*var util = require("util");
-var events = require("events");*/
-
-function Schemas() {
-    //events.EventEmitter.call(this);
-    worker(dbdir, function() {
-        console.log('我的工作完成了');
-        /*    if (appconf.debug) {
-    schema.automigrate(function() {
-        console.log('创建表');
-
-    });
-}*/
-
-        schema.isActual(function(err, actual) {
-            if (!actual) {
-                schema.autoupdate(function(err) {
-                    console.log('更新表！');
-                });
-            }
-        });
-    });
-};
-
-//util.inherits(Schemas, events.EventEmitter);
-
-exports.Schemas = new Schemas();
-
-
-
-function worker(dir, callback) {
+var SRCFILE = appconf.debug ? '.js' : '.min.js';
+var Schemas = require( '../modules/DBModules'+SRCFILE).Dbs;
+exports.Schemas = Schemas;
+/*function worker(dir, callback) {
     var files = fs.readdirSync(dir);
     //console.log(files);
     async.each(files, function(filepath, cb) {
@@ -66,4 +31,4 @@ function worker(dir, callback) {
     }, function(err) {
         callback();
     });
-}
+}*/

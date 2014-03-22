@@ -1,10 +1,10 @@
-
+/*
 var Schema = require('jugglingdb').Schema;
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;
 var moment = require('moment');
-var crmCallRecords=require('./CallRecords');
+var crmCallRecords=require('./CallRecords');*/
 
 var crmDialResult = schema.define('crmDialResult', {
 	CallInfoID:     { type: String, length: 50},//呼叫编号
@@ -18,4 +18,5 @@ crmDialResult.belongsTo(crmCallRecords, {as: 'callrecord', foreignKey: 'id'});
 
 schema.models.crmDialResult;
 
-module.exports = crmDialResult;
+exports.crmDialResult = crmDialResult;
+Dbs.crmDialResult = crmDialResult;

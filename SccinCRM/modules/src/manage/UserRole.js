@@ -1,10 +1,10 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;
-var manageMenmuRoleRelations=require('./MenmuRoleRelations');
+var manageMenmuRoleRelations=require('./MenmuRoleRelations');*/
 
 var manageUserRole=schema.define('manageUserRole',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
@@ -26,4 +26,5 @@ manageUserRole.validatesPresenceOf('roleName');//验证非空
 
 manageUserRole.Name='manageUserRole';
 schema.models.manageUserRole;
-module.exports = manageUserRole;
+exports.manageUserRole = manageUserRole;
+Dbs.manageUserRole = manageUserRole;

@@ -1,10 +1,10 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;
 var Actions=require('./IvrActions');
-var Inputs=require('./IvrInputs');
+var Inputs=require('./IvrInputs');*/
 
 var pbxIvrMenmu=schema.define('pbxIvrMenmu',{
 	ivrname:   {type:String,length:50},
@@ -13,9 +13,10 @@ var pbxIvrMenmu=schema.define('pbxIvrMenmu',{
 	isreadonly:   {type:String,length: 10,default: function () {return '否';}}
 });
 
-pbxIvrMenmu.hasMany(Actions,{as:'actions',foreignKey:'ivrnumber'});
-pbxIvrMenmu.hasMany(Inputs,{as:'inputs',foreignKey:'ivrnumber'});
+pbxIvrMenmu.hasMany(pbxIvrActions,{as:'actions',foreignKey:'ivrnumber'});
+pbxIvrMenmu.hasMany(pbxIvrInputs,{as:'inputs',foreignKey:'ivrnumber'});
 
 pbxIvrMenmu.Name='pbxIvrMenmu';
 schema.models.pbxIvrMenmu;
-module.exports = pbxIvrMenmu;
+exports.pbxIvrMenmu = pbxIvrMenmu;
+Dbs.pbxIvrMenmu = pbxIvrMenmu;

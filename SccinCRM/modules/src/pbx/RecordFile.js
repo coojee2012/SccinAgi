@@ -1,9 +1,9 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxRcordFile=schema.define('pbxRcordFile',{
 	id:{type:String,length:100,default:function(){return guid.create();}},//关联CDR
 	filename:   {type:String,length:50},
@@ -18,4 +18,5 @@ var pbxRcordFile=schema.define('pbxRcordFile',{
 });
 pbxRcordFile.Name='pbxRcordFile';
 schema.models.pbxRcordFile;
-module.exports = pbxRcordFile;
+exports.pbxRcordFile = pbxRcordFile;
+Dbs.pbxRcordFile=pbxRcordFile;

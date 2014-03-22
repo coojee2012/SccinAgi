@@ -1,9 +1,9 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 //var manageUserInfo=require('./UserInfo');
 
 var manageDepartments=schema.define('manageDepartments',{
@@ -24,4 +24,5 @@ manageDepartments.validatesPresenceOf('depName');//验证非空
 
 manageDepartments.Name='manageDepartments';
 schema.models.manageDepartments;
-module.exports = manageDepartments;
+exports.manageDepartments = manageDepartments;
+Dbs.manageDepartments = manageDepartments;

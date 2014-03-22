@@ -1,4 +1,4 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
@@ -6,7 +6,7 @@ var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;
 var manageUserRole=require('./UserRole');
 var manageDepartments=require('./Departments');
-
+*/
 var manageUserInfo=schema.define('manageUserInfo',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
 	uName:   {type:String,length:50},
@@ -37,4 +37,5 @@ manageUserInfo.validatesLengthOf('uPass', {min: 4, message: {min: '注册密码�
 
 manageUserInfo.Name='manageUserInfo';
 schema.models.manageUserInfo;
-module.exports = manageUserInfo;
+exports.manageUserInfo = manageUserInfo;
+Dbs.manageUserInfo = manageUserInfo;

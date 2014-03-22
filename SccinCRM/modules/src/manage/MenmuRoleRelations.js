@@ -1,9 +1,9 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 
 var manageMenmuRoleRelations=schema.define('manageMenmuRoleRelations',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
@@ -14,4 +14,5 @@ var manageMenmuRoleRelations=schema.define('manageMenmuRoleRelations',{
 
 manageMenmuRoleRelations.Name='manageMenmuRoleRelations';
 schema.models.manageMenmuRoleRelations;
-module.exports = manageMenmuRoleRelations;
+exports.manageMenmuRoleRelations = manageMenmuRoleRelations;
+Dbs.manageMenmuRoleRelations = manageMenmuRoleRelations;

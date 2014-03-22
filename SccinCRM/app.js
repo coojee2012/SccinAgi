@@ -15,8 +15,9 @@ var domainMiddleware = require('domain-middleware');
 
 var JugglingStore = require('connect-jugglingdb')(express);
 var schema = require('./database/jdmysql').schema;
-var Schemas = require(__dirname + '/database/schema').Schemas;
-/*Schemas.on('over',function(){});*/
+var Schemas = require(__dirname + '/modules/DBModules').Dbs;
+
+
 var appconf = conf.load('app');
 var SRCFILE = appconf.debug ? 'src' : 'build';
 
@@ -237,7 +238,7 @@ function setroute(filepath, routeflag) {
         });
         app.all(routeflag + filename + '/:ooo', function(req, res, next) {
           var ooo = 'index';
-          if (req.param('ooo') && req.param('ooo') != '')
+          if (req.param('ooo') && req.param('ooo') !== '')
             ooo = req.param('ooo');
           logger.debug(filepath);
           var routemod = require(filepath);
@@ -253,8 +254,8 @@ function setroute(filepath, routeflag) {
 
     } else if (stats.isDirectory()) {
       var dirname = path.basename(filepath);
-      var parentDir = path.dirname(filepath);
-      var parentDirname = path.basename(path.dirname(filepath));
+      //var parentDir = path.dirname(filepath);
+      //var parentDirname = path.basename(path.dirname(filepath));
       readroutes(filepath, routeflag + dirname + '/');
     } else {
       logger.error("unknow type of file");

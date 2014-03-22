@@ -1,8 +1,8 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxCdr=schema.define('pbxCdr',{
     caller:   {type:String,length:50},
 	called:   {type:String,length:50},
@@ -23,4 +23,5 @@ var pbxCdr=schema.define('pbxCdr',{
 });
 pbxCdr.Name='pbxCdr';
 schema.models.pbxCdr;
-module.exports = pbxCdr;
+exports.pbxCdr = pbxCdr;
+Dbs.pbxCdr=pbxCdr;
