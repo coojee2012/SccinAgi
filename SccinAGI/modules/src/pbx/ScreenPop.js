@@ -1,9 +1,9 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxScreenPop=schema.define('pbxScreenPop',{
 	callernumber:   {type:String,length:50,default:function () { return ''; }},//主叫
 	callednumber:   {type:String,length:50,default:function () { return ''; }},//被叫
@@ -16,4 +16,5 @@ var pbxScreenPop=schema.define('pbxScreenPop',{
 });
 pbxScreenPop.Name='pbxScreenPop';
 schema.models.pbxScreenPop;
-module.exports = pbxScreenPop;
+exports.pbxScreenPop = pbxScreenPop;
+Dbs.pbxScreenPop = pbxScreenPop;

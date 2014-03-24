@@ -1,8 +1,8 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxIvrActMode=schema.define('pbxIvrActMode',{
 	modename:   {type:String,length:50},
 	url:   {type:String,length:100},
@@ -11,4 +11,5 @@ var pbxIvrActMode=schema.define('pbxIvrActMode',{
 });
 pbxIvrActMode.Name='pbxIvrActMode';
 schema.models.pbxIvrActMode;
-module.exports = pbxIvrActMode;
+exports.pbxIvrActMode = pbxIvrActMode;
+Dbs.pbxIvrActMode = pbxIvrActMode;

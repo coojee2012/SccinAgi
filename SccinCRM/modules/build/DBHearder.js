@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-03-22 */
+var Schema=require("jugglingdb").Schema,moment=require("moment"),guid=require("guid"),conf=require("node-conf"),basedir=conf.load("app").appbase,schema=require("../database/jdmysql").schema,Dbs={};

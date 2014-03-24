@@ -1,8 +1,8 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxTrunk=schema.define('pbxTrunk',{
     trunkname:   {type:String,length:50},
 	trunkproto:   {type:String,length:50},
@@ -17,4 +17,5 @@ pbxTrunk.validatesPresenceOf('trunkname', 'trunkproto');//验证非空
 
 pbxTrunk.Name='pbxTrunk';
 schema.models.pbxTrunk;
-module.exports = pbxTrunk;
+exports.pbxTrunk = pbxTrunk;
+Dbs.pbxTrunk = pbxTrunk;

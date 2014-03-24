@@ -1,9 +1,3 @@
-var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var guid = require('guid');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
 var pbxAutoMonitorWays=schema.define('pbxAutoMonitorWays',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
     wayName:   {type:String,length:50},//录音方式名称
@@ -17,4 +11,5 @@ var pbxAutoMonitorWays=schema.define('pbxAutoMonitorWays',{
 });
 pbxAutoMonitorWays.Name='pbxAutoMonitorWays';
 schema.models.pbxAutoMonitorWays;
-module.exports = pbxAutoMonitorWays;
+exports.pbxAutoMonitorWays = pbxAutoMonitorWays;
+Dbs.pbxAutoMonitorWays=pbxAutoMonitorWays;

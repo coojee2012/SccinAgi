@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-03-22 */
+var crmDialResult=schema.define("crmDialResult",{CallInfoID:{type:String,length:50},Result:{type:Number,"default":-1},State:{type:Number,"default":0},WorkTime:{type:String,length:50,"default":function(){return moment().format("YYYY-MM-DD HH:mm:ss")}}});crmDialResult.Name="crmDialResult",crmDialResult.belongsTo(crmCallRecords,{as:"callrecord",foreignKey:"id"}),schema.models.crmDialResult,exports.crmDialResult=crmDialResult,Dbs.crmDialResult=crmDialResult;

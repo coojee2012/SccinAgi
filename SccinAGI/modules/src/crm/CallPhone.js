@@ -1,9 +1,9 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;
 var moment = require('moment');
-var crmCallRecords=require('./CallRecords');
+var crmCallRecords=require('./CallRecords');*/
 
 var crmCallPhone = schema.define('crmCallPhone', {
     callRecordsID:     { type: String, length: 50},
@@ -18,4 +18,5 @@ crmCallPhone.Name='crmCallPhone';
 
 schema.models.crmCallPhone;
 
-module.exports = crmCallPhone;
+exports.crmCallPhone = crmCallPhone;
+Dbs.crmCallPhone = crmCallPhone;

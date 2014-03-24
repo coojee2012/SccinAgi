@@ -1,9 +1,9 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxConference=schema.define('pbxConference',{
 	pincode:   {type:String,length:50},//进入会议室的密码
 	playwhenevent:   {type: Number, default: function () { return 0 }},//播放音乐当离开时
@@ -12,4 +12,6 @@ var pbxConference=schema.define('pbxConference',{
 });
 pbxConference.Name='pbxConference';
 schema.models.pbxConference;
-module.exports = pbxConference;
+exports.pbxConference = pbxConference;
+
+Dbs.pbxConference=pbxConference;

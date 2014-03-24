@@ -20,4 +20,5 @@ crmCallLog.belongsTo(crmCallPhone, {as: 'callphone', foreignKey: 'id'});
 schema.models.crmCallLog;
 
 exports.crmCallLog = crmCallLog;
+
 Dbs.crmCallLog = crmCallLog;

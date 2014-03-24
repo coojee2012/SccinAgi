@@ -21,7 +21,8 @@ var routing = function(v) {
 
 var commonfun={};
 module.exports = routing;
-;//发起拨打下一个电话
+
+//发起拨打下一个电话
 
 routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
   var self = this;
@@ -80,7 +81,8 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
     cb(err, results);
   });
 
-};//确定不参加评标
+}
+//确定不参加评标
 routing.prototype.NoCome = function(callrecordid, cb) {
   var self = this;
   var context = self.context;
@@ -119,7 +121,8 @@ routing.prototype.NoCome = function(callrecordid, cb) {
   }, function(err, results) {
     cb(err, results);
   });
-};//确定参加评标后处理
+}
+//确定参加评标后处理
 
 routing.prototype.SureCome = function(callrecordid, phone, keyNum, cb) {
   var self = this;
@@ -233,7 +236,8 @@ routing.prototype.SureCome = function(callrecordid, phone, keyNum, cb) {
   }, function(err, results) {
     cb(err, results);
   });
-};//动态添加指定队列坐席成员
+}
+//动态添加指定队列坐席成员
 //queuenum-队列名称
 //agent-坐席
 routing.prototype.addQueueMember = function() {
@@ -253,10 +257,12 @@ routing.prototype.addQueueMember = function() {
   }, function(err, results) {
     return;
   });
-};;//调用其它AGI程序
+};
+//调用其它AGI程序
 routing.prototype.agi = function(agiaddr, callback) {
 
-};//北京专家库自动拨打接通后处理程序
+}
+//北京专家库自动拨打接通后处理程序
 routing.prototype.calloutback = function() {
   var self = this;
   var context = self.context;
@@ -491,13 +497,15 @@ routing.prototype.calloutback = function() {
 
     });
 
-};//当前通道达到预先设定的阀值，播放友情提示并记录到未接来电
+}
+//当前通道达到预先设定的阀值，播放友情提示并记录到未接来电
 routing.prototype.channelMax = function(callback) {
   async.auto({}, function(err, resluts) {
     callback(err, resluts);
   })
 }
-;function str2obj(str) {
+
+function str2obj(str) {
   var obj = {};
   if (str && str !== '') {
     var tmp = str.split('&');
@@ -533,10 +541,12 @@ commonfun.mkdir=function(path,cb){
             }
           });
 }
-;//拨打电话会议
+
+//拨打电话会议
 routing.prototype.conference = function(confno, assign, callback) {
 
-};//呼叫坐席分机失败处理
+}
+//呼叫坐席分机失败处理
 routing.prototype.dialExtenFail = function(extennum, failstatus, callback) {
   var self = this;
   var context = self.context;
@@ -575,7 +585,8 @@ routing.prototype.dialExtenFail = function(extennum, failstatus, callback) {
       callback(err, -results);
     });
 
-};//内部拨打
+}
+//内部拨打
 routing.prototype.diallocal = function(localnum, callback) {
   var self = this;
   var context = self.context;
@@ -628,7 +639,8 @@ routing.prototype.diallocal = function(localnum, callback) {
     callback(err, results);
   });
 
-};;//拨打外部电话
+};
+//拨打外部电话
 routing.prototype.dialout = function(linenum, callback) {
   var self = this;
   var context = self.context;
@@ -761,14 +773,16 @@ routing.prototype.dialout = function(linenum, callback) {
   }, function(err, results) {
     callback(err, results);
   });
-};;//默认触发处理
+};
+//默认触发处理
 routing.prototype.dodefault = function(context, vars) {
   context.hangup(function(err, rep) {
     console.log("Hangup success:", rep);
     context.end();
   });
 
-};;//拨打分机
+};
+//拨打分机
 routing.prototype.extension = function(extennum, assign, callback) {
   var self = this;
   var context = self.context;
@@ -896,7 +910,8 @@ routing.prototype.extension = function(extennum, assign, callback) {
   }, function(err, results) {
     callback(err, results);
   });
-};
+}
+
 //挂机处理程序
 routing.prototype.hangup = function(num, callback) {
   var self = this;
@@ -910,7 +925,8 @@ routing.prototype.hangup = function(num, callback) {
     callback(err, response);
   });
 };
-;//自动语音应答处理
+
+//自动语音应答处理
 //IVR号码
 //IVR执行起点默认为1
 routing.prototype.ivr = function(ivrnum, action, callback) {
@@ -1007,7 +1023,8 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
       callback(err, results);
     });
   }
-};;//循环执行IVR动作
+};
+//循环执行IVR动作
 //actionid 当前执行编号
 //需要执行的actions
 //按键终端信息
@@ -1389,7 +1406,8 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
   } else {
     callback('所有的动作执行完毕', -1);
   }
-};//响应IVR按键
+}
+//响应IVR按键
 routing.prototype.ivrinput = function(key, inputs, callback) {
   var self = this;
   var context = self.context;
@@ -1432,7 +1450,8 @@ routing.prototype.ivrinput = function(key, inputs, callback) {
     }
 
   }
-};//发起录音
+}
+//发起录音
 routing.prototype.monitor = function(filename, callback) {
   var self = this;
   var context = self.context;
@@ -1454,7 +1473,8 @@ routing.prototype.monitor = function(filename, callback) {
     }
   });
 
-};;//示忙指定队列坐席成员
+};
+//示忙指定队列坐席成员
 //queuenum-队列名称，留空所有队列里面的该坐席都示忙
 //agent-坐席
 routing.prototype.pauseQueueMember = function(queuenum, assign, callback) {
@@ -1478,7 +1498,8 @@ routing.prototype.pauseQueueMember = function(queuenum, assign, callback) {
     callback(err, results);
   });
 };
-;//拨打队列
+
+//拨打队列
 routing.prototype.queue = function(queuenum, assign, callback) {
   var self = this;
   var context = self.context;
@@ -1530,7 +1551,8 @@ routing.prototype.queue = function(queuenum, assign, callback) {
     callback(err, results);
   });
 
-};;//队列中坐席应答成功
+};
+//队列中坐席应答成功
 routing.prototype.queueAnswered = function() {
   var self = this;
   var context = self.context;
@@ -1602,7 +1624,8 @@ routing.prototype.queueAnswered = function() {
     context.end();
   });
 
-};//动态删除指定队列坐席成员
+}
+//动态删除指定队列坐席成员
 //queuenum-队列名称
 //agent-坐席
 routing.prototype.removeQueueMember = function() {
@@ -1622,7 +1645,8 @@ routing.prototype.removeQueueMember = function() {
   }, function(err, results) {
     return;
   });
-};;//呼叫路由处理
+};
+//呼叫路由处理
 //args.routerline
 //args.called
 routing.prototype.router = function() {
@@ -1775,7 +1799,8 @@ routing.prototype.router = function() {
       }
     }
   });
-};//北京专家库自动外呼
+}
+//北京专家库自动外呼
 //sccincallout?callRecordsID=
 routing.prototype.sccincallout = function() {
   var self = this;
@@ -2139,7 +2164,8 @@ routing.prototype.sccincallout = function() {
     }
   });
 
-};;//发起系统录音
+};
+//发起系统录音
 routing.prototype.sysmonitor = function(monitype, callback) {
   var self = this;
   var context = self.context;
@@ -2303,7 +2329,8 @@ routing.prototype.sysmonitor = function(monitype, callback) {
     }
   });
 
-};;
+};
+
 //取消示忙指定队列坐席成员
 //queuenum-队列名称，留空所有队列里面的该坐席都取消示忙
 //agent-坐席

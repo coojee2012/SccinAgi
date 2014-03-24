@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-03-22 */
+var manageMenmuRoleRelations=schema.define("manageMenmuRoleRelations",{id:{type:String,length:100,"default":function(){return guid.create()}},roleId:{type:String,length:100},menmuID:{type:String,length:100},crtTime:{type:Date,"default":function(){return moment().format("YYYY-MM-DD HH:mm:ss")}}});manageMenmuRoleRelations.Name="manageMenmuRoleRelations",schema.models.manageMenmuRoleRelations,exports.manageMenmuRoleRelations=manageMenmuRoleRelations,Dbs.manageMenmuRoleRelations=manageMenmuRoleRelations;

@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-03-22 */
+var crmVoiceContent=schema.define("crmVoiceContent",{Contents:{type:Schema.Text},State:{type:Number,"default":0}});crmVoiceContent.Name="crmVoiceContent",crmVoiceContent.belongsTo(crmCallRecords,{as:"callrecord",foreignKey:"id"}),schema.models.crmVoiceContent,exports.crmVoiceContent=crmVoiceContent,Dbs.crmVoiceContent=crmVoiceContent;

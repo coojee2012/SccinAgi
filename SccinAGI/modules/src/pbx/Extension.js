@@ -1,11 +1,11 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;
 
-var pbxExtenGroupRelations=require('./ExtenGroupRelations');
+var pbxExtenGroupRelations=require('./ExtenGroupRelations');*/
 
 var pbxExtension=schema.define('pbxExtension',{
 	accountcode:   {type:String,length:50},	//账号	
@@ -29,4 +29,5 @@ pbxExtension.validatesNumericalityOf('fristchecked', {int: true});//验证未数
 
 pbxExtension.Name='pbxExtension';
 schema.models.pbxExtension;
-module.exports = pbxExtension;
+exports.pbxExtension = pbxExtension;
+Dbs.pbxExtension = pbxExtension;

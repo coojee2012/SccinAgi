@@ -27,12 +27,9 @@ module.exports = function(grunt) {
         options: {
           banner: '/*! 数据库表结构 <%= grunt.template.today("yyyy-mm-dd") %> */\n'
         },
-        files: [{
-          expand: true,
-          cwd: 'modules/',
-          src: 'DBModules.js',
-          dest: 'modules/DBModules.min.js'
-        }]
+        files: {
+          'modules/DBModules.min.js':['modules/DBModules.js'],
+        }
       }
     },
     //文件合并

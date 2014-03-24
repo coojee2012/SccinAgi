@@ -1,10 +1,10 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;
-var Actmode=require('./IvrActMode');
+var Actmode=require('./IvrActMode');*/
 var pbxIvrActions=schema.define('pbxIvrActions',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
 	ivrnumber:  {type:String,length:50},
@@ -13,8 +13,10 @@ var pbxIvrActions=schema.define('pbxIvrActions',{
 	args:   {type:String,length:256}
 });
 
-pbxIvrActions.belongsTo(Actmode, {as: 'Actmode', foreignKey: 'actmode'});
+pbxIvrActions.belongsTo(pbxIvrActMode, {as: 'Actmode', foreignKey: 'actmode'});
 
 pbxIvrActions.Name='pbxIvrActions';
 schema.models.pbxIvrActions;
-module.exports = pbxIvrActions;
+
+exports.pbxIvrActions = pbxIvrActions;
+Dbs.pbxIvrActions = pbxIvrActions;

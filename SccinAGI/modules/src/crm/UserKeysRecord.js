@@ -1,10 +1,10 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;
 var crmCallLog=require('./CallLog');
-var crmCallPhone=require('./CallPhone');
+var crmCallPhone=require('./CallPhone');*/
 var crmUserKeysRecord=schema.define('crmUserKeysRecord',{
     callLogID:     { type: String, length: 50},
     keyTypeID:     { type: String, length: 50},
@@ -21,4 +21,5 @@ crmUserKeysRecord.belongsTo(crmCallPhone, {as: 'keytype', foreignKey: 'keyTypeID
 
 
 schema.models.crmUserKeysRecord;
-module.exports = crmUserKeysRecord;
+exports.crmUserKeysRecord = crmUserKeysRecord;
+Dbs.crmUserKeysRecord = crmUserKeysRecord;

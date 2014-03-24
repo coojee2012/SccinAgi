@@ -27,30 +27,59 @@ module.exports = function(grunt) {
         options: {
           banner: '/*! 数据库表结构 <%= grunt.template.today("yyyy-mm-dd") %> */\n'
         },
-        files: [{
-          expand: true,
-          cwd: 'modules/src',
-          src: '**/*.js',
-          dest: 'modules/build'
-        }]
+        files: {
+          'modules/DBModules.min.js':['modules/DBModules.js'],
+        }
       }
     },
     //文件合并
     concat: {
-        options: {
-          //定义一个字符串插入没个文件之间用于连接输出
-          separator: ';'
-        },
-        smartAgi: {
-          src: ['smartAgi/src/routing.js','smartAgi/src/*.cat.js'],
-          dest: 'smartAgi/src/Routings.js'
-        }
-      
+      options: {
+        //定义一个字符串插入没个文件之间用于连接输出
+        separator: '\r\n'
+      },
+      smartAgi: {
+        src: ['smartAgi/src/routing.js', 'smartAgi/src/*.cat.js'],
+        dest: 'smartAgi/src/Routings.js'
+      },
+      DBModules: {
+        src: ['modules/src/DBHearder.js',
+          'modules/src/pbx/CallProcess.js',
+          'modules/src/pbx/Card.js',
+          'modules/src/pbx/Cdr.js',
+          'modules/src/pbx/Conference.js',
+          'modules/src/pbx/ExtenGroupRelations.js',
+          'modules/src/pbx/ExtenGroup.js',
+          'modules/src/pbx/Extension.js',
+          'modules/src/pbx/IvrActMode.js',
+          'modules/src/pbx/IvrActions.js',
+          'modules/src/pbx/IvrInputs.js',
+          'modules/src/pbx/IvrMenmu.js',
+          'modules/src/pbx/LocalNumber.js',
+          'modules/src/pbx/LostCall.js',
+          'modules/src/pbx/Queue.js',
+          'modules/src/pbx/RecordFile.js',
+          'modules/src/pbx/Router.js',
+          'modules/src/pbx/ScreenPop.js',
+          'modules/src/pbx/Sounds.js',
+          'modules/src/pbx/Trunk.js',
+          'modules/src/crm/CallRecords.js',
+          'modules/src/crm/CallPhone.js',
+          'modules/src/crm/CallLog.js',
+          'modules/src/crm/DialResult.js',
+          'modules/src/crm/KeyType.js',
+          'modules/src/crm/UserKeysRecord.js',
+          'modules/src/crm/VoiceContent.js',
+          'modules/src/DBEnd.js'
+        ],
+        dest: 'modules/DBModules.js'
+      }
+
 
     },
     //代码检测
     jshint: {
-      files: ['Gruntfile.js', 'server.js'],
+      files: ['Gruntfile.js', 'server.js','modules/DBModules.js'],
       options: {
         globals: {
           exports: true

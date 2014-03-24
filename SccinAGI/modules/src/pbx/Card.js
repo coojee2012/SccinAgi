@@ -1,9 +1,9 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxCard=schema.define('pbxCard',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
     cardname:   {type:String,length:50},
@@ -15,4 +15,6 @@ var pbxCard=schema.define('pbxCard',{
 });
 pbxCard.Name='pbxCard';
 schema.models.pbxCard;
-module.exports = pbxCard;
+exports.pbxCard = pbxCard;
+
+Dbs.pbxCard=pbxCard;

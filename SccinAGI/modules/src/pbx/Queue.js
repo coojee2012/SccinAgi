@@ -1,9 +1,9 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxQueue=schema.define('pbxQueue',{
 	queuename:   {type:String,length:50},//队列名称
 	announce:   {type:String,length:50,default: function () { return ''; }},//将在电话接通的时候播放xxxx,
@@ -32,4 +32,5 @@ var pbxQueue=schema.define('pbxQueue',{
 });
 pbxQueue.Name='pbxQueue';
 schema.models.pbxQueue;
-module.exports = pbxQueue;
+exports.pbxQueue = pbxQueue;
+Dbs.pbxQueue = pbxQueue;

@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-03-22 */
+var crmCallLog=schema.define("crmCallLog",{Phone:{type:String,length:50},PhoneSequ:{type:Number,"default":0},WorkTime:{type:String,length:50,"default":function(){return moment().format("YYYY-MM-DD HH:mm:ss")}}});crmCallLog.Name="crmCallLog",crmCallLog.belongsTo(crmCallPhone,{as:"callphone",foreignKey:"id"}),schema.models.crmCallLog,exports.crmCallLog=crmCallLog,Dbs.crmCallLog=crmCallLog;

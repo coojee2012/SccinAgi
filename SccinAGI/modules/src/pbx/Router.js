@@ -1,9 +1,9 @@
-var Schema = require('jugglingdb').Schema;
+/*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
+var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxRouter=schema.define('pbxRouter',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
     proirety:   {type:Number},//执行顺序（优先级）
@@ -25,4 +25,6 @@ var pbxRouter=schema.define('pbxRouter',{
 });
 pbxRouter.Name='pbxRouter';
 schema.models.pbxRouter;
-module.exports = pbxRouter;
+
+exports.pbxRouter = pbxRouter;
+Dbs.pbxRouter = pbxRouter;

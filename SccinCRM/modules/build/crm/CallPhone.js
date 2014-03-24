@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-03-22 */
+var crmCallPhone=schema.define("crmCallPhone",{callRecordsID:{type:String,length:50},Phone:{type:String,length:50},State:{type:Number,"default":0},PhoneSequ:{type:Number,"default":0}});crmCallPhone.belongsTo(crmCallRecords,{as:"callrecord",foreignKey:"callRecordsID"}),crmCallPhone.Name="crmCallPhone",schema.models.crmCallPhone,exports.crmCallPhone=crmCallPhone,Dbs.crmCallPhone=crmCallPhone;

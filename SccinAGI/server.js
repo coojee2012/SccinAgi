@@ -10,13 +10,14 @@ var log4js = require('log4js');
 log4js.configure(logconf, agiconf);
 var logger = log4js.getLogger('agi');
 logger.setLevel('DEBUG');
+var Schemas = require('./database/schema').Schemas;
 
 var server = AGI.createServer(function(context) {
   logger.debug("当前上下文状态：" + context.state + '，上下文流是否可读：' + context.stream.readable);
-  var Schemaslocal = require('./database/schema').Schemas;
+  
   var route = new routing({
     context: context,
-    Schemas: Schemaslocal,
+    Schemas: Schemas,
     agiconf: agiconf,
     nami: nami,
     args: null,
@@ -67,7 +68,7 @@ var server = AGI.createServer(function(context) {
     logger.info("发生挂机事件.");
     if (route.args.routerline) {
       logger.info("正常呼叫中心流程，记录挂机时间.");
-      Schemaslocal.pbxCdr.update({
+      Schemas.pbxCdr.update({
         where: {
           id: route.sessionnum
         },

@@ -1,0 +1,2 @@
+/*! 数据库表结构 2014-03-22 */
+var pbxLocalNumber=schema.define("pbxLocalNumber",{localtype:{type:String,length:50},assign:{type:String,length:100}});pbxLocalNumber.Name="pbxLocalNumber",schema.models.pbxLocalNumber,exports.pbxLocalNumber=pbxLocalNumber,Dbs.pbxLocalNumber=pbxLocalNumber;
