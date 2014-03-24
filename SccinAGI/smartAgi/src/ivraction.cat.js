@@ -151,6 +151,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           } else {
             filename = actargs.varname;
           }
+          filename += "." + format;
           var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
 
           async.auto({
@@ -162,13 +163,58 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                   cb(null, path);
               });
             },
-            createFile:['buildDir',function(cb){
-
-            }],
-            recording:[],
-            addRecord:[]
+            createFile: ['buildDir',
+              function(cb, results) {
+                fs.writeFile(results.buildDir + filename, '', function(err) {
+                  if (err) cb(err, null);
+                  else
+                    cb(null, results.buildDir + filename);
+                });
+              }
+            ],
+            recording: ['createFile',
+              function(cb, results) {
+                context.Record(results.createFile, silence, maxduration, options, function(err, response) {
+                  cb(err, response);
+                });
+              }
+            ],
+            checkRecording: ['recording',
+              function(cb, resluts) {
+                try {
+                  context.getVariable('RECORD_STATUS', function(err, response) {
+                    logger.debug("获取录音状态：", response);
+                    var reg = /(\d+)\s+\((.*)\)/;
+                    var c = null,
+                      status = null;
+                    if (reg.test(response.result)) {
+                      c = RegExp.$1;
+                      status = RegExp.$2;
+                    }
+                    cb(err, status);
+                  });
+                } catch (ex) {
+                  logger.error(ex);
+                  cb('获取录音状态：', null);
+                }
+              }
+            ],
+            addRecord: ['checkRecording',
+              function(cb, results) {
+                schemas.pbxRcordFile.create({
+                  id: self.sessionnum,
+                  filename: filename,
+                  extname: format,
+                  callnumber: vars.agi_callerid,
+                  extennum: args.called,
+                  folder: filepath
+                }, function(err, inst) {
+                  cb(err, inst);
+                })
+              }
+            ]
           }, function(err, results) {
-
+            callback(err, results);
           });
 
         } else if (actmode.modename === '播放录音') {

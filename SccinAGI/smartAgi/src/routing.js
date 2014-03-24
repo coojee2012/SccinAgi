@@ -1,4 +1,5 @@
 var async = require('async');
+var fs=require('fs');
 var AsAction = require("nami").Actions;
 var moment = require('moment');
 var guid = require('guid');

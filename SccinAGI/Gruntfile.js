@@ -44,7 +44,7 @@ module.exports = function(grunt) {
       },
       DBModules: {
         src: ['modules/src/DBHearder.js',
-          'modules/src/pbx/CallProcess.js',
+          'modules/src/pbx/CallProcees.js',
           'modules/src/pbx/Card.js',
           'modules/src/pbx/Cdr.js',
           'modules/src/pbx/Conference.js',
