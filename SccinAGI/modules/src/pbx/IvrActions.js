@@ -1,10 +1,3 @@
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var guid = require('guid');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var Actmode=require('./IvrActMode');*/
 var pbxIvrActions=schema.define('pbxIvrActions',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
 	ivrnumber:  {type:String,length:50},

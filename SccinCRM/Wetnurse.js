@@ -29,4 +29,4 @@ var t = setInterval(function() {
 
 	})
 	logger.debug('这个是奶妈程序的输出！');
-}, 10000);
+}, 60000);

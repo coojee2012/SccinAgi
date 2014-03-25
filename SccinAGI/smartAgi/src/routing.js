@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var async = require('async');
 var fs=require('fs');
 var AsAction = require("nami").Actions;

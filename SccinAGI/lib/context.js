@@ -2,6 +2,7 @@ var Readable = require('readable-stream');
 var EventEmitter = require('events').EventEmitter;
 var state = require('./state');
 var ENDLINE = "\n";
+var async=require('async');
 var Context = function(stream) {
   EventEmitter.call(this);
   //console.log(stream);
@@ -216,7 +217,7 @@ Context.prototype.SayDigits = function(number, escape, cb) {
 
 Context.prototype.saydigits = function(number, cb) {
   var digit = null;
-  var self=this;
+  var self = this;
   if (number.length == 1) {
     digit = number;
     self.Playback('digits/' + digit, function(err, response) {
@@ -226,10 +227,118 @@ Context.prototype.saydigits = function(number, cb) {
     digit = number.substring(0, 1);
     number = number.substr(1);
     self.Playback('digits/' + digit, function(err, response) {
-      self.saydigits(number,cb);
+      self.saydigits(number, cb);
     });
   }
 }
+
+Context.prototype.saynumber = function(number, callback) {
+  var self = this;
+  var num = number.split('.');
+  var intbefor = num[0];
+  var intafter = num[1];
+  console.log(intbefor, intafter);
+  //超过万位，直接按数字字符读
+  if (intbefor.length > 5) {
+    async.auto({
+      saydigits: function(cb) {
+        self.saydigits(intbefor, cb);
+      },
+      sayboclock: ['saydigits',
+        function(cb, results) {
+          if (intafter && intafter !== '') {
+            self.Playback("digits/oclock", cb);
+          } else {
+            cb(null, null);
+          }
+        }
+      ],
+      sayafter: ['sayboclock',
+        function(cb, resluts) {
+          if (intafter && intafter !== '') {
+            self.saydigits(intafter, cb);
+          } else {
+            cb(null, null);
+          }
+        }
+      ]
+    }, function(err, results) {
+      callback(err, results);
+    });
+  }
+  //万位及以后按数学方式读 
+  else {
+    var say = function(n, cb) {
+      var weis = n.length;
+      var firtn = n.substr(0, 1);
+      var lastn = n.substr(1);
+      //如果第一位是0，且有剩余字符
+      if (firtn === '0' && lastn.substr(0, 1) === '0') {
+        say(lastn, cb);
+      }
+      //如果不是最后一位
+      else if (weis > 1) {
+        async.auto({
+          saydigits: function(cb2) {
+            self.Playback("digits/" + firtn, cb2);
+          },
+          saydanwei: ['saydigits',
+            function(cb2, results) {
+              if (weis == 5 && firtn !== '0') {
+                self.Playback("digits/wan", cb2);
+              } else if (weis == 4 && firtn !== '0') {
+                self.Playback("digits/thousand", cb2);
+              } else if (weis == 3 && firtn !== '0') {
+                self.Playback("digits/hundred", cb2);
+              } else if (weis == 2 && firtn !== '0') {
+                self.Playback("digits/"+'10', cb2);
+              } else {
+                cb2(null, 1);
+              }
+            }
+          ]
+        }, function(err, result) {
+          say(lastn, cb);
+        });
+      }
+      //读出最后一位及浮点数 
+      else {
+        async.auto({
+          saydigits: function(cb3) {
+            if (firtn !== '0')
+              self.Playback("digits/" + firtn, cb3);
+            else
+              cb(null, null);
+          },
+          sayboclock: ['saydigits',
+            function(cb3, results) {
+              if (intafter && intafter !== '') {
+                self.Playback("digits/oclock", cb3);
+              } else {
+                cb3(null, null);
+              }
+            }
+          ],
+          sayafter: ['sayboclock',
+            function(cb3, resluts) {
+              if (intafter && intafter !== '') {
+                self.saydigits(intafter, cb3);
+              } else {
+                cb3(null, null);
+              }
+            }
+          ]
+        }, function(err, results) {
+          cb(err, results);
+        });
+      }
+
+    }
+    say(intbefor, callback);
+  }
+
+}
+
 
 Context.prototype.GetChannelStatus = function(channelname, cb) {
   if (typeof channelname === 'function') {
@@ -260,12 +369,12 @@ Context.prototype.Dial = function(number, timeout, options, cb) {
   this.exec('Dial', number, timeout, options, cb);
 }
 
-Context.prototype.Queue=function(queuename,options,URL,announceoverride,timeout,agi,cb){
-if(options=='')
-  options='tc';
-if(timeout==null)
-  timeout=60;
-this.exec('Queue',queuename,options,URL,announceoverride,timeout,agi,cb);
+Context.prototype.Queue = function(queuename, options, URL, announceoverride, timeout, agi, cb) {
+  if (options == '')
+    options = 'tc';
+  if (timeout == null)
+    timeout = 60;
+  this.exec('Queue', queuename, options, URL, announceoverride, timeout, agi, cb);
 }
 
 /**
@@ -278,8 +387,8 @@ ADDED
 MEMBERALREADY
 NOSUCHQUEUE
 **/
-Context.prototype.AddQueueMember=function(queuename,agent,cb){
-  this.exec('AddQueueMember',queuename,agent,cb);
+Context.prototype.AddQueueMember = function(queuename, agent, cb) {
+  this.exec('AddQueueMember', queuename, agent, cb);
 }
 /**
 动态删除坐席
@@ -294,8 +403,8 @@ NOSUCHQUEUE
 NOTDYNAMIC
 Example: RemoveQueueMember(techsupport,SIP/3000)
 **/
-Context.prototype.RemoveQueueMember=function(queuename,agent,cb){
-  this.exec('RemoveQueueMember',queuename,agent,cb);
+Context.prototype.RemoveQueueMember = function(queuename, agent, cb) {
+  this.exec('RemoveQueueMember', queuename, agent, cb);
 }
 
 /**
@@ -308,8 +417,8 @@ PAUSED
 NOTFOUND
 Example: PauseQueueMember(,SIP/3000)
 **/
-Context.prototype.PauseQueueMember=function(queuename,agent,cb){
- this.exec('PauseQueueMember',queuename,agent,cb);
+Context.prototype.PauseQueueMember = function(queuename, agent, cb) {
+  this.exec('PauseQueueMember', queuename, agent, cb);
 }
 /**
 队列示闲
@@ -321,8 +430,8 @@ UNPAUSED
 NOTFOUND
 Example: UnpauseQueueMember(,SIP/3000)
 **/
-Context.prototype.UnpauseQueueMember=function(queuename,agent,cb){
-this.exec('UnpauseQueueMember',queuename,agent,cb);
+Context.prototype.UnpauseQueueMember = function(queuename, agent, cb) {
+  this.exec('UnpauseQueueMember', queuename, agent, cb);
 }
 
 Context.prototype.Originate = function(channel, type, args, cb) {
@@ -360,7 +469,7 @@ command - Will be executed when the recording is over.
 Any strings matching ^{X} will be unescaped to X.
 All variables will be evaluated at the time MixMonitor is called.
 */
-Context.prototype.MixMonitor = function(filename, options,command, cb) {
+Context.prototype.MixMonitor = function(filename, options, command, cb) {
   this.exec('MixMonitor', filename, options, command, cb);
 }
 
@@ -393,11 +502,11 @@ x - Ignore all terminator keys (DTMF) and keep recording until hangup.
 k - Keep recorded file upon hangup.
 y - Terminate recording if any DTMF digit is received.
 */
-Context.prototype.Record = function(filename,silence,maxduration,options, cb) {
-  this.exec('Record', filename,silence,maxduration, options, cb);
+Context.prototype.Record = function(filename, silence, maxduration, options, cb) {
+  this.exec('Record', filename, silence, maxduration, options, cb);
 }
 
-Context.prototype.ChannelStatus=function(channelname,cb){
-  this.send('CHANNEL STATUS ' +channelname+ ENDLINE, cb);
+Context.prototype.ChannelStatus = function(channelname, cb) {
+  this.send('CHANNEL STATUS ' + channelname + ENDLINE, cb);
 }
 module.exports = Context;

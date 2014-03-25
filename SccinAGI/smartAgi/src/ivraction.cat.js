@@ -3,6 +3,84 @@
 //需要执行的actions
 //按键终端信息
 //回掉函数
+/**
+   执行动作参数说明：
+   1、播放语音：interruptible：允许按键中断，【'true'/'false'】,默认为true
+        folder:语音目录，相对于：/var/lib/asterisk/sounds/cn/
+        filename:语音文件名
+        下面参数在interruptible=true时有效
+        retrytime：允许重听的次数，默认为3
+        timeout：等待按键超时时间，毫秒，默认为10000
+        failivrnum：获取按键失败处理IVR号码，默认为挂机IVR
+        failactid：获取按键失败处理IVR号码动作编号，默认为0
+
+   2、发起录音：varname：需要播放的录音变量名
+             format：播放的录音格式
+             maxduration：默认最多可以录制1小时，0表示随便录好久
+             options：默认如果没应答就跳过录音
+             【  a - 在已有录音文件后面追加录音.
+                n - 即使电话没有应答，也要录音.
+          q - 安静模式（录音前不播放beep声）.
+        s - 如果线路未应答，将跳过录音.
+        t - 用*号终止录音，代替默认按#号终止录音
+        x - 忽略所有按键，只有挂机才能终止录音.
+        k - 保持录音，即使线路已经挂断了.
+        y - 任何按键都可以终止录音.】
+             silence：如果持续了超过X秒的沉默，将停止录音，默认10秒,0表示不判断
+
+
+   3、播放录音：varname：需要播放的录音变量名
+             format：播放的录音格式
+   4、录制数字字符：maxdigits：最大接收字符数，默认为20
+            beep：【true/false】，录制字符前是否播放beep声，默认为false
+            varname：保存的变量名，仅在当前会话有效
+            addbefore：【true/false】,是否保存用户上一次的输入，默认为false
+   5、读出数字字符：varname：需读出的变量名，仅在当前会话有效
+            digits：直接读出给定的数字字符
+   6、拨打号码：varname：从会话中保存的变量获取号码
+          digits：指定号码
+          dialway：拨打方式【diallocal/dialout】
+   7、数字方式读出：varname：从给定的变量读取
+                    digits：从给定的字符读取
+
+   8、读出日期时间:fromvar:从变量中获取日期时间，格式 YYYYMMDD HHMM
+                    fromstr:指定日期时间，格式 YYYYMMDD HHMM
+                    saynow:[true,false],读出当前日期时间，true将不会从变量获取
+                    sayway:[date,time,datetime]，读出方式
+
+   9、检测日期：months：【1-12】，采用复选框的方式，传回的值用,号分开，如：1，3，5
+                dates:[1-31]，采用复选框的方式，传回的值用,号分开，如：1，3，5
+                weeks:[1-7]，采用复选框的方式，传回的值用,号分开，如：1，3，5               
+                hours:[0-23]，采用复选框的方式，传回的值用,号分开，如：1，3，5
+                minutes:[0-59]，采用复选框的方式，传回的值用,号分开，如：1，3，5
+
+   10、主叫变换：optiontype：替换方式【replace，addbefore,append】
+                  number:号码
+
+   11、检查号码归属地:quhao:匹配的区号，可以是一组区号，用“,”号分开，如：010,028
+                      doneway:处理方式，【diallocal,dialout】
+                      number:处理号码
+                      ivrnumber:成功匹配跳转到的IVR号码
+                      actionid:IVR执行动作序号
+
+
+   12、跳转到语音信箱
+
+   13、跳转到IVR菜单：ivrnumber:成功匹配跳转到的IVR号码
+                      actionid:IVR执行动作序号
+
+   14、WEB交互接口
+
+   15、AGI扩展接口
+
+   16、等待几秒
+
+   17、播放音调
+
+   18、挂机
+
+
+**/
 routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
   var self = this;
   var context = self.context;
@@ -13,7 +91,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
   var vars = self.vars;
   logger.debug("进入IVR动作执行流程编号:", actionid);
 
-  if (actionid < actions.length) {
+  if (actionid && actionid < actions.length) {
     logger.debug(actions[actionid].__cachedRelations.Actmode);
     var actmode = actions[actionid].__cachedRelations.Actmode;
     var actargs = str2obj(actions[actionid].args);
@@ -39,6 +117,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
     });
 
     logger.debug("Action 参数:", actargs);
+    logger.debug('actionid1:',actionid);
     //async auto 执行action 开始
     async.auto({
       Action: function(cb) {
@@ -130,12 +209,52 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
         }
         // 检查号码归属地
         else if (actmode.modename === '检查号码归属地') {
+          var callerid = self.vars.agi_callerid;
+          var quhao = actargs.quhao; //可以是“,”号分开的多个区号
+          var doneway = actargs.doneway; //diallocal or dialout
+          var number = actargs.number;
+          if (!number || number === '' || !quhao || quhao === '') {
+            cb('归属地匹配参数有误！', null);
+          } else {
+            quhao = quhao.split(',');
+            if (/^(013|015|018|13|15|18)(\d{5})\d{4}$/.test(callerid)) {
+              var haoma7 = RegExp.$1+''+RegExp.$2;
+              haoma7 = haoma7.replace(/^0/, '');
+              schemas.pbxMobileCode.findOne({
+                where: {
+                  number7: haoma7
+                }
+              }, function(err, inst) {
+                if (err || inst === null)
+                  cb('查询号码库发生异常或为找到对应的号码库', null);
+                else {
+                  var code = inst.quhao;
+                      code=code.replace(/\D+/, '');
+                  if (_.contains(quhao, code)) {
+                    self[doneway](number, cb);
+                  } else {
+                    cb(null, null);
+                  }
+                }
+              });
 
-
-
-        } else if (actmode.modename === '发起录音') {
+            } else if (/(^0[1-2]\d|^0[3-9]\d\d)\d{7,8}$/.test(callerid)) {
+              var code = RegExp.$1;
+              if (_.contains(quhao, code)) {
+                self[doneway](number, cb);
+              } else {
+                cb(null, null);
+              }
+            } else {            
+              cb(null, null);
+            }
+          }
+        } 
+        //发起录音
+        else if (actmode.modename === '发起录音') {
+          logger.debug('actionid2:',actionid);
           var maxduration = actargs.maxduration || 60; //默认最多可以录制1小时，0表示随便录好久
-          var options = actargs.options || 'sy'; //默认如果没应答就跳过录音
+          var options = actargs['options'] || 'sy'; //默认如果没应答就跳过录音
           var format = actargs.format || 'wav'; //默认文件后缀名
           var silence = actargs.silence || 10; //如果持续了超过X秒的沉默，将停止录音，默认10秒,0表示不判断
           var filename = "";
@@ -149,76 +268,99 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
               filename = extname;
             }
           } else {
-            filename = actargs.varname;
+            filename = actargs.varname || '';
           }
-          filename += "." + format;
-          var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
+          if (!filename || filename === '') {
+            callback('录音文件名不能为空！', null);
+          } else {
+            filename += "." + format;
+            logger.debug(actions,actionid);
+            var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
 
-          async.auto({
-            buildDir: function(cb) {
-              commonfun.mkdir(filepath, function(err, path) {
-                if (err)
-                  cb(null, '/var/spool/asterisk/monitor/');
-                else
-                  cb(null, path);
-              });
-            },
-            createFile: ['buildDir',
-              function(cb, results) {
-                fs.writeFile(results.buildDir + filename, '', function(err) {
-                  if (err) cb(err, null);
+            async.auto({
+              buildDir: function(cb) {
+                commonfun.mkdir(filepath, function(err, path) {
+                  if (err)
+                    cb(null, '/var/spool/asterisk/monitor/');
                   else
-                    cb(null, results.buildDir + filename);
+                    cb(null, path);
                 });
-              }
-            ],
-            recording: ['createFile',
-              function(cb, results) {
-                context.Record(results.createFile, silence, maxduration, options, function(err, response) {
-                  cb(err, response);
-                });
-              }
-            ],
-            checkRecording: ['recording',
-              function(cb, resluts) {
-                try {
-                  context.getVariable('RECORD_STATUS', function(err, response) {
-                    logger.debug("获取录音状态：", response);
-                    var reg = /(\d+)\s+\((.*)\)/;
-                    var c = null,
-                      status = null;
-                    if (reg.test(response.result)) {
-                      c = RegExp.$1;
-                      status = RegExp.$2;
-                    }
-                    cb(err, status);
+              },
+              createFile: ['buildDir',
+                function(cb, results) {
+                  fs.writeFile(results.buildDir + filename, '', function(err) {
+                    if (err) cb(err, null);
+                    else
+                      cb(null, results.buildDir + filename);
                   });
-                } catch (ex) {
-                  logger.error(ex);
-                  cb('获取录音状态：', null);
                 }
-              }
-            ],
-            addRecord: ['checkRecording',
-              function(cb, results) {
-                schemas.pbxRcordFile.create({
-                  id: self.sessionnum,
-                  filename: filename,
-                  extname: format,
-                  callnumber: vars.agi_callerid,
-                  extennum: args.called,
-                  folder: filepath
-                }, function(err, inst) {
-                  cb(err, inst);
-                })
-              }
-            ]
-          }, function(err, results) {
-            callback(err, results);
-          });
+              ],
+              recording: ['createFile',
+                function(cb, results) {
+                  context.Record(results.createFile, silence, maxduration, options, function(err, response) {
+                    cb(err, response);
+                  });
+                }
+              ],
+              checkRecording: ['recording',
+                function(cb, resluts) {
+                  try {
+                    context.getVariable('RECORD_STATUS', function(err, response) {
+                      logger.debug("获取录音状态：", response);
+                      var reg = /(\d+)\s+\((.*)\)/;
+                      var c = null,
+                        status = null;
+                      if (reg.test(response.result)) {
+                        c = RegExp.$1;
+                        status = RegExp.$2;
+                      }
+                      cb(err, status);
+                    });
+                  } catch (ex) {
+                    logger.error(ex);
+                    cb('获取录音状态：', null);
+                  }
+                }
+              ],
+              addRecord: ['checkRecording',
+                function(cb, results) {
+                  schemas.pbxRcordFile.create({
+                    id: self.sessionnum,
+                    filename: filename,
+                    extname: format,
+                    callnumber: vars.agi_callerid,
+                    extennum: args.called,
+                    folder: filepath
+                  }, function(err, inst) {
+                    cb(err, inst);
+                  })
+                }
+              ]
+            }, function(err, results) {
+              callback(err, results);
+            });
+          }
 
         } else if (actmode.modename === '播放录音') {
+          var format = actargs.format || 'wav'; //默认文件后缀名
+          var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
+          var filename = "";
+          if (/\<\%(\w+)\%\>(\S+)/.test(actargs.varname)) {
+            var hans = RegExp.$1;
+            var extname = RegExp.$2;
+            if (hans !== '' && typeof(commonfun[hans]) === 'function') {
+              filename += commonfun[hans]();
+              filename += '-' + extname;
+            } else {
+              filename = extname;
+            }
+          } else {
+            filename = actargs.varname || '';
+          }
 
+          context.Playback(filepath + filename + '.' + format, function(err, response) {
+            cb(err, response);
+          });
         }
         //录制数字字符
         else if (actmode.modename === '录制数字字符') {
@@ -306,13 +448,120 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           }
 
         } else if (actmode.modename === '数字方式读出') {
+          var tempvarname = 'lastwaitfordigit';
+          if (actargs.varname && actargs.varname !== '')
+            tempvarname = actargs.varname;
+          var digits = self.activevar[tempvarname];
+
+          if (actargs.digits && /\d+/.test(actargs.digits))
+            digits = actargs.digits;
+          logger.debug('数学读出：', digits);
+          if (digits && digits !== '') {
+            self.sayNumber(digits, function(err, result) {
+              cb(err, result);
+            });
+          } else {
+            cb('没有需要读取的数字', -1);
+          }
 
         } else if (actmode.modename === '读出日期时间') {
+          var datetimestr = "";
+          var formatstr = "";
+          if (actargs.sayway && actargs.sayway === 'date') {
+            formatstr = "YYMMDD";
+          } else if (actargs.sayway && actargs.sayway === 'time') {
+            formatstr = "HHmm";
+          } else {
+            formatstr = "YYYYMMDD HHmm";
+          }
 
+          if (actargs.saynow === 'true') {
+            datetimestr = moment().format(formatstr);
+          } else if (actargs.fromvar !== '') {
+            datetimestr = self.activevar[actargs.fromvar];
+            datetimestr = moment(datetimestr, ["YYYY-MM-DD HH:mm", "YY-MM-DD HH:mm", "MM-DD-YYYY HH:mm",
+              "DD-MM HH:mm", "DD-MM-YYYY HH:mm"
+            ]).format(formatstr);
+          } else if (actargs.fromstr !== '') {
+            datetimestr = moment(actargs.fromstr, ["YYYY-MM-DD HH:mm", "YY-MM-DD HH:mm", "MM-DD-YYYY HH:mm",
+              "DD-MM HH:mm", "DD-MM-YYYY HH:mm"
+            ]).format(formatstr);
+          }
+
+          if (datetimestr !== '') {
+            self.sayDateTime(datetimestr, actargs.sayway, function(err, result) {
+              cb(err, result);
+            });
+          } else {
+            cb('没有可以读取的日期时间！', -1);
+          }
         } else if (actmode.modename === '检测日期') {
+          var isok = true;
+          var year = moment().year();
+          var month = moment().month() + 1; //1-12
+          var date = moment().date(); //1-31
+          var week = moment().isoWeekday(); //1-7
+          var hour = moment().hour(); //0-23
+          var minute = moment().minute(); //0-59
+          var second = moment().second(); //0-59
 
+          if (actargs.months && actargs.months !== '') {
+            var months = actargs.months.split(',');
+            if (_.contains(months, month.toString()))
+              isok = true;
+            else
+              isok = false;
+          }
+          if (actargs.dates && actargs.dates !== '' && isok) {
+            var dates = actargs.dates.split(',');
+            if (_.contains(dates, date.toString()))
+              isok = true;
+            else
+              isok = false;
+          }
+          if (actargs.weeks && actargs.weeks !== '' && isok) {
+            var weeks = actargs.weeks.split(',');
+            if (_.contains(weeks, week.toString()))
+              isok = true;
+            else
+              isok = false;
+          }
+          if (actargs.hours && actargs.hours !== '' && isok) {
+            var hours = actargs.hours.split(',');
+            if (_.contains(hours, hour.toString()))
+              isok = true;
+            else
+              isok = false;
+          }
+          if (actargs.minutes && actargs.minutes !== '' && isok) {
+            var minutes = actargs.minutes.split(',');
+            if (_.contains(minutes, minute.toString()))
+              isok = true;
+            else
+              isok = false;
+          }
+          var ivrnumber = actargs.ivrnumber;
+          var ivractionid = actargs.actionid || 0;
+          if (isok) {
+            self.ivr(ivrnumber, ivractionid, cb);
+          } else {
+            cb(null, null);
+          }
         } else if (actmode.modename === '主叫变换') {
-
+          var optiontype = actargs.optiontype;
+          var number = actargs.number;
+          if (!optiontype || !number) {
+            cb(null, null);
+          } else {
+            if (optiontype === 'replace')
+              self.vars.agi_callerid = number;
+            else if (optiontype === 'addbefore')
+              self.vars.agi_callerid = number + self.vars.agi_callerid;
+            else if (optiontype === 'append') {
+              self.vars.agi_callerid = self.vars.agi_callerid + number;
+            } else {}
+            cb(null, null);
+          }
         }
         //拨打号码
         else if (actmode.modename === '拨打号码') {
@@ -349,6 +598,13 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
         } else if (actmode.modename === '跳转到语音信箱') {
 
         } else if (actmode.modename === '跳转到IVR菜单') {
+          var ivrnumber = actargs.ivrnumber;
+          var actionid = actargs.actionid || 0;
+          if (!ivrnumber || ivrnumber === '') {
+            cb('无法跳转到指定IVR，IVR编号为空！', null);
+          } else {
+            self.ivr(ivrnumber, actionid, cb);
+          }
 
         } else if (actmode.modename === 'WEB交互接口') {
 

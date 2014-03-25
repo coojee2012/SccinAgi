@@ -19,6 +19,7 @@
     "moment":"*",
     "mysql":"*",
     "node-conf":"*",
+    "lodash":">=2.4.1",
     "log4js":"*",
     "readable-stream": "*"
   },

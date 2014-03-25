@@ -63,6 +63,7 @@ module.exports = function(grunt) {
           'modules/src/pbx/ScreenPop.js',
           'modules/src/pbx/Sounds.js',
           'modules/src/pbx/Trunk.js',
+          'modules/src/pbx/MobileCode.js',
           'modules/src/crm/CallRecords.js',
           'modules/src/crm/CallPhone.js',
           'modules/src/crm/CallLog.js',
