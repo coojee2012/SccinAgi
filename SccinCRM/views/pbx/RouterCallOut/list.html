@@ -109,7 +109,10 @@
         var where = {};
         where.dbName = '<%= modename%>';
 //gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
-        where.whereCount = 0;//添加需要查询的条件个数
+        where.whereCount = 1;//添加需要查询的条件个数
+        where.whereCol_0='routerline';
+        where.whereWay_0='';
+        where.whereValue_0='呼出';
         return where;
     }
 
