@@ -98,6 +98,7 @@ Context.prototype.setState = function(state) {
 };
 
 Context.prototype.send = function(msg, cb) {
+  console.log(msg);
   this.pending = cb;
   this.stream.write(msg);
 };
@@ -350,6 +351,7 @@ Context.prototype.GetChannelStatus = function(channelname, cb) {
 }
 
 Context.prototype.SetVariable = function(variablename, variablevalue, cb) {
+  console.log('IAM HERE');
   this.send('SET VARIABLE ' + variablename + ' ' + variablevalue, cb);
 }
 

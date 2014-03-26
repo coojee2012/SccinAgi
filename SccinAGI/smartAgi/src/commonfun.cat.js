@@ -34,3 +34,39 @@ commonfun.mkdir=function(path,cb){
             }
           });
 }
+
+//Parse the url, get the port
+//e.g. http://www.google.com/path/another -> 80
+//     http://foo.bar:8081/a/b -> 8081
+
+commonfun.getPort=function(url) {
+    var hostPattern = /\w+:\/\/([^\/]+)(\/)?/i;
+    var domain = url.match(hostPattern);
+
+    var pos = domain[1].indexOf(":");
+    if (pos !== -1) {
+        domain[1] = domain[1].substr(pos + 1);
+        return parseInt(domain[1]);
+    } else if (url.toLowerCase().substr(0, 5) === "https") return 443;
+    else return 80;
+}
+
+//Parse the url,get the host name
+//e.g. http://www.google.com/path/another -> www.google.com
+
+commonfun.getHost=function(url) {
+    var hostPattern = /\w+:\/\/([^\/]+)(\/)?/i;
+    var domain = url.match(hostPattern);
+
+    var pos = domain[1].indexOf(":");
+    if (pos !== -1) {
+        domain[1] = domain[1].substring(0, pos);
+    }
+    return domain[1];
+}
+commonfun.getPath=function(url) {
+    var pathPattern = /\w+:\/\/([^\/]+)(\/.+)(\/$)?/i;
+    var fullPath = url.match(pathPattern);
+    return fullPath ? fullPath[2] : '/';
+}
+

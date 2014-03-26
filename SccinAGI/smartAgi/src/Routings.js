@@ -544,6 +544,42 @@ commonfun.mkdir=function(path,cb){
           });
 }
 
+//Parse the url, get the port
+//e.g. http://www.google.com/path/another -> 80
+//     http://foo.bar:8081/a/b -> 8081
+
+commonfun.getPort=function(url) {
+    var hostPattern = /\w+:\/\/([^\/]+)(\/)?/i;
+    var domain = url.match(hostPattern);
+
+    var pos = domain[1].indexOf(":");
+    if (pos !== -1) {
+        domain[1] = domain[1].substr(pos + 1);
+        return parseInt(domain[1]);
+    } else if (url.toLowerCase().substr(0, 5) === "https") return 443;
+    else return 80;
+}
+
+//Parse the url,get the host name
+//e.g. http://www.google.com/path/another -> www.google.com
+
+commonfun.getHost=function(url) {
+    var hostPattern = /\w+:\/\/([^\/]+)(\/)?/i;
+    var domain = url.match(hostPattern);
+
+    var pos = domain[1].indexOf(":");
+    if (pos !== -1) {
+        domain[1] = domain[1].substring(0, pos);
+    }
+    return domain[1];
+}
+commonfun.getPath=function(url) {
+    var pathPattern = /\w+:\/\/([^\/]+)(\/.+)(\/$)?/i;
+    var fullPath = url.match(pathPattern);
+    return fullPath ? fullPath[2] : '/';
+}
+
+
 //拨打电话会议
 routing.prototype.conference = function(confno, assign, callback) {
 
@@ -993,6 +1029,7 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
       Answer: ['getIVRActions', 'getIVRInputs',
         function(cb, results) {
           context.answer(function(err, response) {
+             logger.debug("IVR应答成功！");
             cb(err, response);
           });
         }
@@ -1131,24 +1168,30 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
       }
     }*/
 
-    schemas.pbxCallProcees.create({
-      callsession: self.sessionnum,
-      caller: vars.agi_callerid,
-      called: args.called,
-      routerline: args.routerline,
-      passargs: 'actionid=' + actionid + '&' + actions[actionid].args,
-      processname: actmode.modename,
-      doneresults: ''
-    }, function(err, inst) {
-      if (err)
-        logger.error("记录呼叫处理过程发生异常：", err);
-    });
+
 
     logger.debug("Action 参数:", actargs);
-    logger.debug('actionid1:',actionid);
+    var autoaction = actionid;
     //async auto 执行action 开始
     async.auto({
+      AddProcees: function(cb) {
+        schemas.pbxCallProcees.create({
+          callsession: self.sessionnum,
+          caller: vars.agi_callerid,
+          called: args.called,
+          routerline: args.routerline,
+          passargs: 'actionid=' + actionid + '&' + actions[actionid].args,
+          processname: actmode.modename,
+          doneresults: ''
+        }, function(err, inst) {
+          if (err)
+            logger.error("记录呼叫处理过程发生异常：", err);
+          cb(err, inst);
+        });
+      },
       Action: function(cb) {
+        //播放语音
+        logger.debug('actionid:', actionid);
         if (actmode.modename === '播放语音') {
           //不允许按键中断
           logger.debug("IVR播放语音");
@@ -1233,7 +1276,6 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             GetInputKey(count);
 
           }
-
         }
         // 检查号码归属地
         else if (actmode.modename === '检查号码归属地') {
@@ -1246,7 +1288,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           } else {
             quhao = quhao.split(',');
             if (/^(013|015|018|13|15|18)(\d{5})\d{4}$/.test(callerid)) {
-              var haoma7 = RegExp.$1+''+RegExp.$2;
+              var haoma7 = RegExp.$1 + '' + RegExp.$2;
               haoma7 = haoma7.replace(/^0/, '');
               schemas.pbxMobileCode.findOne({
                 where: {
@@ -1257,7 +1299,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                   cb('查询号码库发生异常或为找到对应的号码库', null);
                 else {
                   var code = inst.quhao;
-                      code=code.replace(/\D+/, '');
+                  code = code.replace(/\D+/, '');
                   if (_.contains(quhao, code)) {
                     self[doneway](number, cb);
                   } else {
@@ -1273,14 +1315,15 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
               } else {
                 cb(null, null);
               }
-            } else {            
+            } else {
               cb(null, null);
             }
           }
-        } else if (actmode.modename === '发起录音') {
-          logger.debug('actionid2:',actionid);
+        }
+        //发起录音
+        else if (actmode.modename === '发起录音') {
           var maxduration = actargs.maxduration || 60; //默认最多可以录制1小时，0表示随便录好久
-          var options = actargs['options'] || 'sy'; //默认如果没应答就跳过录音
+          var options = actargs['options'] || 's'; //默认如果没应答就跳过录音
           var format = actargs.format || 'wav'; //默认文件后缀名
           var silence = actargs.silence || 10; //如果持续了超过X秒的沉默，将停止录音，默认10秒,0表示不判断
           var filename = "";
@@ -1297,39 +1340,39 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             filename = actargs.varname || '';
           }
           if (!filename || filename === '') {
-            callback('录音文件名不能为空！', null);
+            cb('录音文件名不能为空！', null);
           } else {
             filename += "." + format;
-            logger.debug(actions,actionid);
             var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
 
             async.auto({
-              buildDir: function(cb) {
+              buildDir: function(callback) {
                 commonfun.mkdir(filepath, function(err, path) {
                   if (err)
-                    cb(null, '/var/spool/asterisk/monitor/');
+                    callback(null, '/var/spool/asterisk/monitor/');
                   else
-                    cb(null, path);
+                    callback(null, path);
                 });
               },
               createFile: ['buildDir',
-                function(cb, results) {
-                  fs.writeFile(results.buildDir + filename, '', function(err) {
+                function(callback, results) {
+                  /* fs.writeFile(results.buildDir + filename, '', function(err) {
                     if (err) cb(err, null);
                     else
                       cb(null, results.buildDir + filename);
-                  });
+                  });*/
+                  callback(null, filepath + filename);
                 }
               ],
               recording: ['createFile',
-                function(cb, results) {
+                function(callback, results) {
                   context.Record(results.createFile, silence, maxduration, options, function(err, response) {
-                    cb(err, response);
+                    callback(err, response);
                   });
                 }
               ],
               checkRecording: ['recording',
-                function(cb, resluts) {
+                function(callback, resluts) {
                   try {
                     context.getVariable('RECORD_STATUS', function(err, response) {
                       logger.debug("获取录音状态：", response);
@@ -1340,16 +1383,16 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                         c = RegExp.$1;
                         status = RegExp.$2;
                       }
-                      cb(err, status);
+                      callback(err, status);
                     });
                   } catch (ex) {
                     logger.error(ex);
-                    cb('获取录音状态：', null);
+                    callback('获取录音状态：', null);
                   }
                 }
               ],
               addRecord: ['checkRecording',
-                function(cb, results) {
+                function(callback, results) {
                   schemas.pbxRcordFile.create({
                     id: self.sessionnum,
                     filename: filename,
@@ -1358,16 +1401,17 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                     extennum: args.called,
                     folder: filepath
                   }, function(err, inst) {
-                    cb(err, inst);
+                    callback(err, inst);
                   })
                 }
               ]
             }, function(err, results) {
-              callback(err, results);
+              cb(err, results);
             });
           }
-
-        } else if (actmode.modename === '播放录音') {
+        }
+        //播放录音 
+        else if (actmode.modename === '播放录音') {
           var format = actargs.format || 'wav'; //默认文件后缀名
           var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
           var filename = "";
@@ -1472,8 +1516,9 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           } else {
             cb('没有需要读取的数字', -1);
           }
-
-        } else if (actmode.modename === '数字方式读出') {
+        }
+        //数字方式读出 
+        else if (actmode.modename === '数字方式读出') {
           var tempvarname = 'lastwaitfordigit';
           if (actargs.varname && actargs.varname !== '')
             tempvarname = actargs.varname;
@@ -1489,8 +1534,9 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           } else {
             cb('没有需要读取的数字', -1);
           }
-
-        } else if (actmode.modename === '读出日期时间') {
+        }
+        //读出日期时间 
+        else if (actmode.modename === '读出日期时间') {
           var datetimestr = "";
           var formatstr = "";
           if (actargs.sayway && actargs.sayway === 'date') {
@@ -1521,7 +1567,9 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           } else {
             cb('没有可以读取的日期时间！', -1);
           }
-        } else if (actmode.modename === '检测日期') {
+        }
+        //检测日期 
+        else if (actmode.modename === '检测日期') {
           var isok = true;
           var year = moment().year();
           var month = moment().month() + 1; //1-12
@@ -1573,7 +1621,9 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           } else {
             cb(null, null);
           }
-        } else if (actmode.modename === '主叫变换') {
+        }
+        //主叫变换 
+        else if (actmode.modename === '主叫变换') {
           var optiontype = actargs.optiontype;
           var number = actargs.number;
           if (!optiontype || !number) {
@@ -1619,28 +1669,168 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             logger.debug('需要拨打的号码有误。');
             cb('需要拨打的号码有误。', -1);
           }
-
-
-        } else if (actmode.modename === '跳转到语音信箱') {
-
-        } else if (actmode.modename === '跳转到IVR菜单') {
+        }
+        //跳转到语音信箱
+        else if (actmode.modename === '跳转到语音信箱') {}
+        //跳转到IVR菜单
+        else if (actmode.modename === '跳转到IVR菜单') {
           var ivrnumber = actargs.ivrnumber;
-          var actionid = actargs.actionid || 0;
+          var ivractionid = actargs.actionid || 0;
           if (!ivrnumber || ivrnumber === '') {
             cb('无法跳转到指定IVR，IVR编号为空！', null);
           } else {
-            self.ivr(ivrnumber, actionid, cb);
+            self.ivr(ivrnumber, ivractionid, cb);
           }
+        }
+        //WEB交互接口 
+        //返回值为一格式化字符串：status=done|fail,通道变量1=变量值1，通道变量2=变量值2，
+        //成功调用后，将根据返回字符串和设置的通道变量前缀，设置通道变量，以供其他应用使用
+        else if (actmode.modename === 'WEB交互接口') {
+          var url = actargs.url; //支持http:// | https://
+          var methods = actargs.methods; //get | post
+          var timeout = actargs.timeout || 10; //默认10秒
+          var programs = actargs.programs; //a~1,b~2,c~3,d~<%caller | called | 或其他已知自定义通道变量 %>
+          var varprex = actargs.varprex || 　'webapp-'; //设置本次结果需要设置的通道变量前缀，默认为 'webapp-'
+          var doneivrnum = actargs.doneivrnum;
+          var doneivractid = actargs.doneivractid || 0;
+          var failivrnum = actargs.failivrnum;
+          var failivractid = actargs.failivractid || 0;
+          var timeoutivrnum = actargs.timeoutivrnum;
+          var timeoutivractid = actargs.timeoutivractid || 0;
+          var proto = url.substring(0, url.indexOf(":")) === 'https' ? 'https' : 'http';
+          var p = require(proto);
+          var options = {
+            host: commonfun.getHost(url),
+            port: commonfun.getPort(url),
+            path: commonfun.getPath(url),
+            headers: {
+              "Content-Type": 'text/html'
+            },
+            method: methods
+          };
+          var datas = {};
+          var channelvar = [];
+          programs = programs.split(',');
+          _(programs).forEach(function(num) {
+            var keyval = num.split('~');
+            var key = keyval[0];
+            var val = keyval[1];
+            if (/\<\%(\S+)\%\>/.test(val)) {
+              channelvar.push({
+                "key": key,
+                "val": RegExp.$1
+              });
+            } else {
+              datas[key] = val;
+            }
 
-        } else if (actmode.modename === 'WEB交互接口') {
+          });
+          logger.debug('datas:',datas);
+          async.auto({
+            getChannelval: function(cb1) {
+              async.each(channelvar, function(item, cb11) {
+                context.getVariable(item.val, function(err, response) {
+                  var reg = /(\d+)\s+\((.*)\)/;
+                  var c = null;
+                  if (reg.test(response.result)) {
+                    c = RegExp.$1;
+                    datas[item.key] = RegExp.$2;
+                  } else {
+                    datas[item.key] = ""
+                  }
+                  cb11(err);
+                });
+              }, function(err) {
+                 logger.debug('执行了getChannelval！');
+                cb1(err, datas);
+              });
+            },
+            getData: ['getChannelval',
+              function(cb1, results) {
+                logger.debug(datas);
+                datas = JSON.stringify(datas);
+                var req = p.request(options, function(res) {
+                  var retval = "";
+                  logger.debug('STATUS: ' + res.statusCode);
+                  logger.debug('HEADERS: ' + JSON.stringify(res.headers));
+                  res.setEncoding('utf8');
+                  res.on('data', function(chunk) {
+                    logger.debug('获取到返回数据：',retval);
+                    retval += chunk
+                  });
+                  res.on('end', function() {
+                    logger.debug('执行了getData！',retval);
+                    cb1(null, retval);
+                  });
+                });
+                req.on('error', function(e) {
+                  logger.debug('problem with request: ' + e.message);
+                  cb1('error', null);
+                });
+                req.setTimeout(timeout * 1000, function(){
+                  req.end();
+                  cb1('timeout', null);
+                });
+                req.write(datas + '\n');
+                req.end();
+              }
+            ],
+            setChannelVal: ['getData',
+              function(cb1, results) {
+                var getstr = results.getData;
+                var getobj = getstr.split('&');
+                var channelvals = [];
+                logger.debug('getobj:',getobj);
+                _(getobj).forEach(function(num) {
+                  var nums = num.split('=');
+                  if (nums[0] === 'status') {
+                    if (nums[1] === 'fail') {
+                      cb1('fail', null);
+                    }
+                  } else {
+                    logger.debug('channels push:',varprex + nums[0]);
+                    channelvals.push({
+                      key: varprex + nums[0],
+                      val: nums[1]
+                    });
+                  }
+                });
+              logger.debug('channelvals:',channelvals);
 
-        } else if (actmode.modename === 'AGI扩展接口') {
+                async.each(channelvals, function(item, cb2) {
+                  logger.debug('设置变量：',item.key,'->',item.val);
+                  context.SetVariable('cname', 'tr', function(err, response) {
+                    logger.debug('设置变量2：',item.key,'->',item.val);
+                    cb2(err, response);
+                  });
+                }, function(err) {
+                  logger.debug('执行了setChannelVal！');
+                  cb1(err, null);
+                });
+              }
+            ]
+          }, function(err, results) {
+            if (err && err === 'fail') {
+              self.ivr(failivrnum, failivractid, cb);
+            }
+            else if (err || err === 'timeout') {
+              self.ivr(timeoutivrnum, timeoutivractid, cb);
+            }   else {
+              self.ivr(doneivrnum, doneivractid, cb);
+            }
+          });
 
-        } else if (actmode.modename === '等待几秒') {
+        }
+        //AGI扩展接口
+        else if (actmode.modename === 'AGI扩展接口') {
 
-        } else if (actmode.modename === '播放音调') {
-
-        } else if (actmode.modename === '通道阀') {
+        }
+        //等待几秒
+        else if (actmode.modename === '等待几秒') {}
+        //播放音调 
+        else if (actmode.modename === '播放音调') {}
+        //通道阀
+        else if (actmode.modename === '通道阀') {
           async.auto({
             getActiveChannels: function(callback) {
               var trunkProto = actargs.trunkProto;
@@ -1887,7 +2077,7 @@ routing.prototype.queueAnswered = function() {
     //更新CDR应答状态和被叫坐席
     updateCDR: ['getAnswerMem',
       function(cb, results) {
-        schemas.PBXCdr.update({
+        schemas.pbxCdr.update({
           where: {
             id: sessionnum
           },
@@ -1904,7 +2094,7 @@ routing.prototype.queueAnswered = function() {
     //写入弹屏数据
     updatePop: ['getAnswerMem',
       function(cb, results) {
-        schemas.PBXScreenPop.update({
+        schemas.pbxScreenPop.update({
           where: {
             id: results.getAnswerMem
           },

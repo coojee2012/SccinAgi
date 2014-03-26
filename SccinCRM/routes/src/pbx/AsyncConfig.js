@@ -1,6 +1,5 @@
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-
 var Schemas = require(basedir+'/database/schema').Schemas;
 var guid = require('guid');
 var async = require('async');

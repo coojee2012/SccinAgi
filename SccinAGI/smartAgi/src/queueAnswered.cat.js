@@ -31,7 +31,7 @@ routing.prototype.queueAnswered = function() {
     //更新CDR应答状态和被叫坐席
     updateCDR: ['getAnswerMem',
       function(cb, results) {
-        schemas.PBXCdr.update({
+        schemas.pbxCdr.update({
           where: {
             id: sessionnum
           },
@@ -48,7 +48,7 @@ routing.prototype.queueAnswered = function() {
     //写入弹屏数据
     updatePop: ['getAnswerMem',
       function(cb, results) {
-        schemas.PBXScreenPop.update({
+        schemas.pbxScreenPop.update({
           where: {
             id: results.getAnswerMem
           },

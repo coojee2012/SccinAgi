@@ -63,6 +63,7 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
       Answer: ['getIVRActions', 'getIVRInputs',
         function(cb, results) {
           context.answer(function(err, response) {
+             logger.debug("IVR应答成功！");
             cb(err, response);
           });
         }
