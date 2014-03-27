@@ -239,6 +239,9 @@ routing.prototype.SureCome = function(callrecordid, phone, keyNum, cb) {
     cb(err, results);
   });
 }
+/**
+语音信箱
+**/
 routing.prototype.VoiceMail = function(number, callback) {
 	var self = this;
 	var context = self.context;
@@ -260,13 +263,93 @@ routing.prototype.VoiceMail = function(number, callback) {
 		}
 	}
 
-	if(!number || number === ''){
+	if (!number || number === '') {
 		context.end();
-	}else{
-		
+	} else {
+		var voicefilepatch = "/var/spool/asterisk/monitor/voicemail/" + number + '/';
+		var voicefilename = guid.create();
+		var voiceextenname = "wav";
+		async.auto({
+			checkOlds: function(cb) {
+				console.log(schemas.pbxRcordFile);
+				schemas.pbxRcordFile.all({
+					where: {
+						lable: 'voicemail'
+					},
+					order: 'cretime DESC',
+					skip: 60 //删除超过60条的记录
+				}, function(err, dbs) {
+					cb(err, dbs);
+				});
+			},
+			delOld: ['checkOlds',
+				function(cb, resluts) {
+					if (resluts.checkOlds.length > 0) {
+						commonfun.delrecordfiles(schemas, resluts.checkOlds, cb);
+					} else {
+						cb(null, null);
+					}
+				}
+			],
+			playusevoice: ['delOld',
+				function(cb, results) {
+					context.Playback("vm-intro", cb);
+				}
+			],
+			record: ['playusevoice',
+				function(cb, results) {
+					var maxduration = 60; //默认最多可以录制1小时，0表示随便录好久
+					var options = 'sxk'; //默认如果没应答就跳过录音
+					var format = voiceextenname; //默认文件后缀名
+					var silence = 10; //如果持续了超过X秒的沉默，将停止录音，默认10秒,0表示不判断
+					context.Record(voicefilepatch + voicefilename + '.' + format, silence, maxduration, options, function(err, response) {
+						cb(err, response);
+					});
+				}
+			],
+			playGoodbye: ['record',
+				function(cb, results) {
+					context.Playback("vm-goodbye", cb);
+				}
+			],
+			getFileSize: ['record',
+				function(cb, results) {
+					commonfun.getfilestate(voicefilepatch + voicefilename + '.' + voiceextenname, function(err, stats) {
+						var size = 0;
+						if (err) {
+							logger.error(err);
+						} else {
+							size = stats.size;
+						}
+						cb(null, size);
+
+					});
+				}
+			],
+			insertdb: ['getFileSize',
+				function(cb, results) {
+					schemas.pbxRcordFile.create({
+						filename: voicefilename,
+						lable: 'voicemail',
+						folder: voicefilepatch,
+						extname: voiceextenname,
+						callnumber: vars.agi_callerid,
+						extennum: args.called,
+						filesize: results.getFileSize
+					}, function(err, inst) {
+						cb(err, inst);
+					});
+				}
+			]
+
+		}, function(err, results) {
+			if (err)
+				logger.error('语音信箱：', err);
+			callback(err, results);
+		});
 	}
-	
-	
+
+
 }
 //动态添加指定队列坐席成员
 //queuenum-队列名称
@@ -548,67 +631,111 @@ function str2obj(str) {
   return obj;
 }
 
-commonfun.guid=function(){
-	return guid.create();
+commonfun.guid = function() {
+  return guid.create();
 }
-commonfun.unixtime=function(){
-	var d=new Date();
-	var unixtime=d.getTime();
-	var random = Math.random()*100;
-	return unixtime.toString()+'-'+random.toString();
+commonfun.unixtime = function() {
+  var d = new Date();
+  var unixtime = d.getTime();
+  var random = Math.random() * 100;
+  return unixtime.toString() + '-' + random.toString();
 }
-commonfun.mkdir=function(path,cb){
-	 fs.exists(path, function(exists) {
-            if (!exists) {
-              fs.mkdir(path, function(err) {
-                if (err) {
-                  cb('无法创建需要的目录：'+path, null);
-                } else {
-                  cb(null, path);
-                }
-              });
-            } else {
-              cb(null, path);
-            }
-          });
+commonfun.mkdir = function(path, cb) {
+  fs.exists(path, function(exists) {
+    if (!exists) {
+      fs.mkdir(path, function(err) {
+        if (err) {
+          cb('无法创建需要的目录：' + path, null);
+        } else {
+          cb(null, path);
+        }
+      });
+    } else {
+      cb(null, path);
+    }
+  });
 }
 
 //Parse the url, get the port
 //e.g. http://www.google.com/path/another -> 80
 //     http://foo.bar:8081/a/b -> 8081
 
-commonfun.getPort=function(url) {
-    var hostPattern = /\w+:\/\/([^\/]+)(\/)?/i;
-    var domain = url.match(hostPattern);
+commonfun.getPort = function(url) {
+  var hostPattern = /\w+:\/\/([^\/]+)(\/)?/i;
+  var domain = url.match(hostPattern);
 
-    var pos = domain[1].indexOf(":");
-    if (pos !== -1) {
-        domain[1] = domain[1].substr(pos + 1);
-        return parseInt(domain[1]);
-    } else if (url.toLowerCase().substr(0, 5) === "https") return 443;
-    else return 80;
+  var pos = domain[1].indexOf(":");
+  if (pos !== -1) {
+    domain[1] = domain[1].substr(pos + 1);
+    return parseInt(domain[1]);
+  } else if (url.toLowerCase().substr(0, 5) === "https") return 443;
+  else return 80;
 }
 
 //Parse the url,get the host name
 //e.g. http://www.google.com/path/another -> www.google.com
 
-commonfun.getHost=function(url) {
-    var hostPattern = /\w+:\/\/([^\/]+)(\/)?/i;
-    var domain = url.match(hostPattern);
+commonfun.getHost = function(url) {
+  var hostPattern = /\w+:\/\/([^\/]+)(\/)?/i;
+  var domain = url.match(hostPattern);
 
-    var pos = domain[1].indexOf(":");
-    if (pos !== -1) {
-        domain[1] = domain[1].substring(0, pos);
+  var pos = domain[1].indexOf(":");
+  if (pos !== -1) {
+    domain[1] = domain[1].substring(0, pos);
+  }
+  return domain[1];
+}
+
+commonfun.getPath = function(url) {
+  var pathPattern = /\w+:\/\/([^\/]+)(\/.+)(\/$)?/i;
+  var fullPath = url.match(pathPattern);
+  return fullPath ? fullPath[2] : '/';
+}
+
+commonfun.delrecordfiles = function(schemas, dbs, callback) {
+  var self = this;
+  var fs = require('fs');
+  var schema = schemas.pbxRcordFile;
+  async.each(dbs, function(item, cb) {
+    self.delbyid(schema, item.id, function(err, results) {
+      if (err)
+        cb(err);
+      else {
+        var file = item.folder + item.filename + item.extname;
+        fs.unlink(file, cb);
+      }
+    });
+  }, function(err) {
+    callback(err, null);
+  });
+}
+
+commonfun.delbyid = function(schema, id, cb) {
+  schema.find(id, function(err, inst) {
+    if (err) {
+      cb(err, null);
+    } else {
+      if (!inst) {
+        cb(null, null);
+      } else {
+        inst.destroy(function(err) {
+          if (err) {
+            cb(err, null);
+          } else {
+            cb(null, null);
+          }
+        });
+      }
     }
-    return domain[1];
-}
-commonfun.getPath=function(url) {
-    var pathPattern = /\w+:\/\/([^\/]+)(\/.+)(\/$)?/i;
-    var fullPath = url.match(pathPattern);
-    return fullPath ? fullPath[2] : '/';
+  });
 }
 
-
+commonfun.getfilestate = function(filename, cb) {
+  var fs = require('fs');
+  fs.stat(filename, function(err, stats) {
+    cb(err, stats);
+  });
+}
 //拨打电话会议
 routing.prototype.conference = function(confno, assign, callback) {
 
@@ -1778,7 +1905,10 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           }
         }
         //跳转到语音信箱
-        else if (actmode.modename === '跳转到语音信箱') {}
+        else if (actmode.modename === '跳转到语音信箱') {
+          var number=actargs.number;
+          self.VoiceMail(number,cb);
+        }
         //跳转到IVR菜单
         else if (actmode.modename === '跳转到IVR菜单') {
           var ivrnumber = actargs.ivrnumber;

@@ -606,7 +606,10 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           }
         }
         //跳转到语音信箱
-        else if (actmode.modename === '跳转到语音信箱') {}
+        else if (actmode.modename === '跳转到语音信箱') {
+          var number=actargs.number;
+          self.VoiceMail(number,cb);
+        }
         //跳转到IVR菜单
         else if (actmode.modename === '跳转到IVR菜单') {
           var ivrnumber = actargs.ivrnumber;
