@@ -2,7 +2,7 @@ var Readable = require('readable-stream');
 var EventEmitter = require('events').EventEmitter;
 var state = require('./state');
 var ENDLINE = "\n";
-var async=require('async');
+var async = require('async');
 var Context = function(stream) {
   EventEmitter.call(this);
   //console.log(stream);
@@ -292,7 +292,7 @@ Context.prototype.saynumber = function(number, callback) {
               } else if (weis == 3 && firtn !== '0') {
                 self.Playback("digits/hundred", cb2);
               } else if (weis == 2 && firtn !== '0') {
-                self.Playback("digits/"+'10', cb2);
+                self.Playback("digits/" + '10', cb2);
               } else {
                 cb2(null, 1);
               }
@@ -352,7 +352,7 @@ Context.prototype.GetChannelStatus = function(channelname, cb) {
 
 Context.prototype.SetVariable = function(variablename, variablevalue, cb) {
   console.log('IAM HERE');
-  this.send('SET VARIABLE ' + variablename + ' ' + variablevalue, cb);
+  this.send('SET VARIABLE ' + variablename + ' ' + variablevalue + ENDLINE, cb);
 }
 
 Context.prototype.Dial = function(number, timeout, options, cb) {
@@ -510,5 +510,46 @@ Context.prototype.Record = function(filename, silence, maxduration, options, cb)
 
 Context.prototype.ChannelStatus = function(channelname, cb) {
   this.send('CHANNEL STATUS ' + channelname + ENDLINE, cb);
+}
+/**
+Synopsis
+Waits for some time.
+Description
+This application waits for a specified number of seconds.
+Syntax
+Wait(seconds)
+Arguments
+seconds - Can be passed with fractions of a second. For example, 1.5 will ask the application to wait for 1.5 seconds.
+**/
+Context.prototype.Wait = function(seconds, cb) {
+  if (!seconds || seconds === '' || /(\d+)|(\d+\.\d+)/.test(seconds) === false) {
+    seconds = 3;
+  }
+  this.exec('Wait', seconds, cb);
+}
+/**
+概要
+播放一个语气列表.
+描述
+播放一个语气列表.当在播放该语气列表时，拨号计划将立即继续执行下一步。 
+参考配置文件indications.conf中的实例获取详细播放列表的信息.
+语法
+PlayTones(arg)
+参数
+arg - 既可以是在配置文件 indications.conf 中指定的名称, 也可以是特别的指定播放频率和持续时间.
+**/
+Context.prototype.PlayTones = function(arg, cb) {
+this.exec('PlayTones', arg, cb);
+}
+/**
+概要
+停止播放一个语气列表.
+描述
+停止播放一个由PlayTones()发起的语气列表.
+语法
+StopPlayTones()
+**/
+Context.prototype.StopPlayTones = function(cb) {
+this.exec('StopPlayTones',cb);
 }
 module.exports = Context;

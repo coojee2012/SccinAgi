@@ -9,6 +9,22 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
   var logger = self.logger;
   var args = self.args;
   var vars = self.vars;
+  if (!ivrnum || ivrnum === '') {
+    ivrnum = args.ivrnum;
+  }
+  if (!action || action === '') {
+    action = args.action;
+  }
+
+  if (!callback || typeof(!callback) !== 'function') {
+    callback = function(err, results) {
+      if (err)
+        context.hangup(function(err, rep) {});
+      else
+        return 0;
+    }
+  }
+  
   if (self.ivrlevel > 50) {
     callback('IVR嵌套过深', -1);
   } else {

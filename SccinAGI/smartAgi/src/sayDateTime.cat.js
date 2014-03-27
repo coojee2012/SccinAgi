@@ -10,6 +10,23 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 	var logger = self.logger;
 	var args = self.args;
 	var vars = self.vars;
+
+	if (!datetime || datetime === '') {
+		datetime = args.datetime;
+	}
+	if (!sayway || sayway === '') {
+		sayway = args.sayway;
+	}
+
+	if (!callback || typeof(!callback) !== 'function') {
+		callback = function(err, results) {
+			if (err)
+				context.hangup(function(err, rep) {});
+			else
+				 context.end();
+		}
+	}
+
 	if (!datetime || datetime === '')
 		callback('无效的日期时间参数！', -1);
 	else {

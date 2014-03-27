@@ -7,6 +7,18 @@ routing.prototype.diallocal = function(localnum, callback) {
   var logger = self.logger;
   var args = self.args;
   var vars = self.vars;
+
+   if (!localnum || localnum === '') {
+    localnum = args.localnum;
+  }
+ if (!callback || typeof(!callback) !== 'function') {
+    callback = function(err, results) {
+      if (err)
+        context.hangup(function(err, rep) {});
+      else
+         context.end();
+    }
+  }
   async.auto({
     updateCDR: function(cb) {
       schemas.pbxCdr.update({

@@ -651,19 +651,21 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             var key = keyval[0];
             var val = keyval[1];
             if (/\<\%(\S+)\%\>/.test(val)) {
-              channelvar.push({
+              /* channelvar.push({
                 "key": key,
                 "val": RegExp.$1
-              });
+              });*/
+              datas[key] = self.activevar[key];
             } else {
               datas[key] = val;
             }
 
           });
-          logger.debug('datas:',datas);
+          logger.debug('datas:', datas);
           async.auto({
             getChannelval: function(cb1) {
-              async.each(channelvar, function(item, cb11) {
+              cb1(null, datas);
+              /*async.each(channelvar, function(item, cb11) {
                 context.getVariable(item.val, function(err, response) {
                   var reg = /(\d+)\s+\((.*)\)/;
                   var c = null;
@@ -676,9 +678,9 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                   cb11(err);
                 });
               }, function(err) {
-                 logger.debug('执行了getChannelval！');
+                logger.debug('执行了getChannelval！');
                 cb1(err, datas);
-              });
+              });*/
             },
             getData: ['getChannelval',
               function(cb1, results) {
@@ -690,19 +692,19 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                   logger.debug('HEADERS: ' + JSON.stringify(res.headers));
                   res.setEncoding('utf8');
                   res.on('data', function(chunk) {
-                    logger.debug('获取到返回数据：',retval);
+                    //logger.debug('获取到返回数据：', retval);
                     retval += chunk
                   });
                   res.on('end', function() {
-                    logger.debug('执行了getData！',retval);
+                    //logger.debug('执行了getData！', retval);
                     cb1(null, retval);
                   });
                 });
                 req.on('error', function(e) {
-                  logger.debug('problem with request: ' + e.message);
+                  //logger.debug('problem with request: ' + e.message);
                   cb1('error', null);
                 });
-                req.setTimeout(timeout * 1000, function(){
+                req.setTimeout(timeout * 1000, function() {
                   req.end();
                   cb1('timeout', null);
                 });
@@ -714,8 +716,8 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
               function(cb1, results) {
                 var getstr = results.getData;
                 var getobj = getstr.split('&');
-                var channelvals = [];
-                logger.debug('getobj:',getobj);
+                //var channelvals = [];
+                // logger.debug('getobj:', getobj);
                 _(getobj).forEach(function(num) {
                   var nums = num.split('=');
                   if (nums[0] === 'status') {
@@ -723,47 +725,75 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                       cb1('fail', null);
                     }
                   } else {
-                    logger.debug('channels push:',varprex + nums[0]);
+                    /* logger.debug('channels push:',varprex + nums[0]);
                     channelvals.push({
                       key: varprex + nums[0],
                       val: nums[1]
-                    });
+                    });*/
+                    self.activevar[varprex + nums[0]] = nums[1];
                   }
                 });
-              logger.debug('channelvals:',channelvals);
-
+                cb1(null, null);
+                /*logger.debug('channelvals:', channelvals);
                 async.each(channelvals, function(item, cb2) {
-                  logger.debug('设置变量：',item.key,'->',item.val);
+                  logger.debug('设置变量：', item.key, '->', item.val);
                   context.SetVariable('cname', 'tr', function(err, response) {
-                    logger.debug('设置变量2：',item.key,'->',item.val);
+                    logger.debug('设置变量2：', item.key, '->', item.val);
                     cb2(err, response);
                   });
                 }, function(err) {
                   logger.debug('执行了setChannelVal！');
                   cb1(err, null);
-                });
+                });*/
               }
             ]
           }, function(err, results) {
             if (err && err === 'fail') {
               self.ivr(failivrnum, failivractid, cb);
-            }
-            else if (err || err === 'timeout') {
+            } else if (err || err === 'timeout') {
               self.ivr(timeoutivrnum, timeoutivractid, cb);
-            }   else {
+            } else {
               self.ivr(doneivrnum, doneivractid, cb);
             }
           });
-
         }
         //AGI扩展接口
         else if (actmode.modename === 'AGI扩展接口') {
-
+          var addr = actargs.addr;
+          var programs = "?";
+          _.forOwn(actargs, function(num, key) {
+            if (key !== 'addr')
+              programs += key + '=' + num + '&';
+          });
+          context.AGI(addr + programs, cb);
         }
         //等待几秒
-        else if (actmode.modename === '等待几秒') {}
+        else if (actmode.modename === '等待几秒') {
+          var seconds = actargs.seconds;
+          context.Wait(seconds, cb);
+        }
         //播放音调 
-        else if (actmode.modename === '播放音调') {}
+        else if (actmode.modename === '播放音调') {
+          var tonename = actargs.tonename;
+          var seconds = actargs.seconds;
+          async.auto({
+            playtones: function(cb1) {
+              context.PlayTones(tonename, cb1);
+            },
+            waitamoment: ['playtones',
+              function(cb1, results) {
+                context.Wait(seconds, cb1);
+              }
+            ],
+            stopPlaytones: ['waitamoment',
+              function(cb1, results) {
+                context.StopPlayTones(cb1);
+              }
+            ]
+          }, function(err, results) {
+            cb(err, results);
+          });
+        }
         //通道阀
         else if (actmode.modename === '通道阀') {
           async.auto({

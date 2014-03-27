@@ -18,7 +18,7 @@ var routing = function(v) {
   this.transferlevel = 0; //防止呼叫转移死循环
   this.lastinputkey = '';
   this.routerline='';
-  this.activevar = {}; //用户存储用户输入的临时变量
+  this.activevar = {}; //用户存储用户输入的临时变量，相当于通道变量一样，跨域AGI后失效
 };
 
 var commonfun={};
