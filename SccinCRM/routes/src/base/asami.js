@@ -240,9 +240,13 @@ posts.autodial = function(req, res, next) {
 	//res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
 	var CallInfoID = req.body['CallInfoID'];
 	var NoticeContent = req.body['NoticeContent'];
+	NoticeContent = NoticeContent.replace(/\s+/g, '');
 	var SureContent = req.body['SureContent'];
+	SureContent = SureContent.replace(/\s+/g, '');
 	var QueryContent = req.body['QueryContent'];
+	QueryContent = QueryContent.replace(/\s+/g, '');
 	var Phones = req.body['Phones'];
+	Phones = Phones.replace(/\s+/g, '');
 	var KeyNum = req.body['KeyNum'];
 
 	if (!CallInfoID || CallInfoID == "") {
@@ -276,6 +280,8 @@ posts.autodial = function(req, res, next) {
 		});
 
 	} else {
+		var ttsapp = conf.load('app').ttsapp;
+		var javapath = conf.load('app').javapath;
 		async.auto({
 			//保存初始化数据到拨打记录表
 			addCallRecords: function(callback) {
@@ -351,31 +357,78 @@ posts.autodial = function(req, res, next) {
 				function(callback, results) {
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -notice.wav
+					var cmd = javapath + ' -jar  ' +ttsapp+' ';
+					cmd += results.addCallRecords.id+'-notice';
+					cmd += ' ' + NoticeContent;
 					var exec = require('child_process').exec,
-						last = exec('dir', function(error, stdout, stderr) {
-							callback(error, stdout);
+						last = exec(cmd, function(error, stdout, stderr) {
+							if (error)
+							{
+								logger.error('合成通知语音失败:',error);
+								callback(error, stdout);
+							}
+							else {
+								if (stdout === '0') {
+									logger.error('合成通知语音失败:',stdout);
+									callback('合成通知语音失败！', null);
+								} else {
+									callback(null, null);
+								}
+							}
 						});
 				}
 			],
 			//合成确认语音
-			voiceMixSure: ['addCallRecords',
+			voiceMixSure: ['voiceMixNotice',
 				function(callback, results) {
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -sure.wav
+					var cmd = javapath + ' -jar  ' +ttsapp+' ';
+					cmd += results.addCallRecords.id+'-sure';
+					cmd += ' ' + SureContent;
 					var exec = require('child_process').exec,
-						last = exec('dir', function(error, stdout, stderr) {
-							callback(error, stdout);
+						last = exec(cmd, function(error, stdout, stderr) {
+							if (error)
+							{
+								logger.error('合成确认语音失败：',error);
+								callback(error, stdout);
+							}
+								
+							else {
+								if (stdout === '0') {
+									logger.error('合成确认语音失败：',stdout);
+									callback('合成确认语音失败！', null);
+								} else {
+									callback(null, null);
+								}
+							}
 						});
 				}
 			],
 			//合成查询语音
-			voiceMixQuery: ['addCallRecords',
+			voiceMixQuery: ['voiceMixSure',
 				function(callback, results) {
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -query.wav
+					var cmd = javapath + ' -jar  ' +ttsapp+' ';
+					cmd += results.addCallRecords.id+'-query';
+					cmd += ' ' + QueryContent;
+					
 					var exec = require('child_process').exec,
-						last = exec('dir', function(error, stdout, stderr) {
-							callback(error, stdout);
+						last = exec(cmd, function(error, stdout, stderr) {
+							if (error)
+							{
+								logger.error('合成查询语音失败：',error);
+								callback(error, stdout);
+							}
+							else {
+								if (stdout === '0') {
+									logger.error('合成查询语音失败：',stdout);
+									callback('合成查询语音失败！', null);
+								} else {
+									callback(null, null);
+								}
+							}
 						});
 				}
 			],
@@ -398,7 +451,7 @@ posts.autodial = function(req, res, next) {
 			checkChans: ['updateVoiceContent',
 				function(callback, results) {
 					Schemas['pbxCdr'].count({
-							alive: 'yes'						
+						alive: 'yes'
 					}, function(err, counts) {
 						if (err)
 							callback(err, null);
@@ -443,7 +496,7 @@ posts.autodial = function(req, res, next) {
 		}, function(err, results) {
 
 			if (err) {
-				logger.error('调用拨打服务发生异常：',err);
+				logger.error('调用拨打服务发生异常：', err);
 				var errmsg = "";
 				if (typeof(err) === 'object') {
 					errmsg += err.TypeError || err.Error || '';

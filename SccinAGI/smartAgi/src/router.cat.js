@@ -111,7 +111,7 @@ routing.prototype.router = function() {
             if (err)
               logger.error("记录呼叫处理过程发生异常：", err);
           });
-          //processmode,路由处理方式，即本地的一个AGI程式
+          //processmode,路由处理方式，即本地的一个AGI程式:本地处理，呼叫外线，黑名单
           //processdefined，传递到AGI的参数
           self[processmode](processdefined, function(err, result) {
             cb(err, result);

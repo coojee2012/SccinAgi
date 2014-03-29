@@ -23,6 +23,7 @@
     "async": ">=0.2.9",
     "nodegrass":">=0.0.3",
     "excel-export":">=0.3.11",
+    "node-highcharts-exporter":"*",
     "express-partials":"*",
     "moment": "*",
     "stylus": "*"

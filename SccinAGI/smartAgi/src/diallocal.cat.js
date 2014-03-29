@@ -8,15 +8,15 @@ routing.prototype.diallocal = function(localnum, callback) {
   var args = self.args;
   var vars = self.vars;
 
-   if (!localnum || localnum === '') {
+  if (!localnum || localnum === '') {
     localnum = args.localnum;
   }
- if (!callback || typeof(!callback) !== 'function') {
+  if (!callback || typeof(!callback) !== 'function') {
     callback = function(err, results) {
       if (err)
         context.hangup(function(err, rep) {});
       else
-         context.end();
+        context.end();
     }
   }
   async.auto({

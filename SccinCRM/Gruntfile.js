@@ -59,6 +59,8 @@ module.exports = function(grunt) {
           'modules/src/pbx/ScreenPop.js',
           'modules/src/pbx/Sounds.js',
           'modules/src/pbx/Trunk.js',
+          'modules/src/pbx/MobileCode.js',
+          'modules/src/pbx/BlackList.js',
           'modules/src/manage/Departments.js',
           'modules/src/manage/MenmuRoleRelations.js',
           'modules/src/manage/MenmuGroup.js',

@@ -7,5 +7,7 @@
 	"email" : "12345678",
 	"env":"development",
 	"appbase":"D:\\GitHub\\SccinAgi\\SccinCRM",
+	"ttsapp":"/var/lib/asterisk/agi-bin/VoiceTTS.jar",
+	"javapath":"/usr/bin/java",
 	"debug":true
 }

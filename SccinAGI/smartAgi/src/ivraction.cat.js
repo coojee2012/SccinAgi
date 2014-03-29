@@ -848,6 +848,10 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             cb(err, results);
           });
         }
+        //黑名单
+        else if(actmode.modename === '黑名单'){
+          self.blacklist('',cb);
+        }
         //默认挂机
         else {
           cb('默认处理', -1);

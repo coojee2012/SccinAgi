@@ -10,6 +10,7 @@ var pbxRcordFile=schema.define('pbxRcordFile',{
 	extname:    {type:String,length:50},
 	filesize:   {type:Number,default:function () { return 0 }},
 	calltype:   {type:String,length:50},
+	lable:   {type:String,length:50},//录音类型，queue,exten,ivr,voicemail等
 	cretime:    {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	extennum:   {type:String,length:50},
 	folder:     {type:String,length:50},

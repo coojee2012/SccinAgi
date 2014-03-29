@@ -100,7 +100,7 @@ routing.prototype.calloutback = function() {
             async.auto({
               //播放语音
               playinfo: function(callback) {
-                context.GetData('/home/share/' + 'notice', 5000, 1, function(err, response) {
+                context.GetData('/home/share/' +callRecordsID+ '-notice', 5000, 1, function(err, response) {
                   console.log("撒也不按，挂机了", response);
                   callback(err, response);
                 });

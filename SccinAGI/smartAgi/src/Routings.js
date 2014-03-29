@@ -156,7 +156,7 @@ routing.prototype.SureCome = function(callrecordid, phone, keyNum, cb) {
           async.auto({
             playvoice: function(callback) {
               try {
-                context.GetData('/home/share/'+'sure', 5000, 1, function(err, response) {
+                context.GetData('/home/share/'+callrecordid+'-sure', 5000, 1, function(err, response) {
                   callback(err, response);
                 });
               } catch (ex) {
@@ -348,8 +348,6 @@ routing.prototype.VoiceMail = function(number, callback) {
 			callback(err, results);
 		});
 	}
-
-
 }
 //动态添加指定队列坐席成员
 //queuenum-队列名称
@@ -375,6 +373,43 @@ routing.prototype.addQueueMember = function() {
 //调用其它AGI程序
 routing.prototype.agi = function(agiaddr, callback) {
 
+}
+routing.prototype.blacklist = function(caller, callback) {
+	var self = this;
+	var context = self.context;
+	var schemas = self.schemas;
+	var nami = self.nami;
+	var logger = self.logger;
+	var args = self.args;
+	var vars = self.vars;
+	if (!caller || caller === '' || caller === args.called) {
+		caller = vars.agi_callerid;
+	}
+	if (!callback || typeof(!callback) !== 'function') {
+		callback = function(err, results) {
+			if (err)
+				context.hangup(function(err, rep) {});
+			else
+				context.end();
+		}
+	}
+	try {
+		schemas.pbxBlackList.find(caller, function(err, inst) {
+			if (err) {
+				logger.error('黑名单处理发生异常:', err);
+				callback(err, null);
+			} else {
+				if (inst !== null) {
+					context.hangup(callback);
+				} else {
+					callback(null, null);
+				}
+			}
+		});
+	} catch (ex) {
+		logger.error('黑名单处理发生异常:', ex);
+		callback(ex, null);
+	}
 }
 //北京专家库自动拨打接通后处理程序
 routing.prototype.calloutback = function() {
@@ -478,7 +513,7 @@ routing.prototype.calloutback = function() {
             async.auto({
               //播放语音
               playinfo: function(callback) {
-                context.GetData('/home/share/' + 'notice', 5000, 1, function(err, response) {
+                context.GetData('/home/share/' +callRecordsID+ '-notice', 5000, 1, function(err, response) {
                   console.log("撒也不按，挂机了", response);
                   callback(err, response);
                 });
@@ -790,15 +825,15 @@ routing.prototype.diallocal = function(localnum, callback) {
   var args = self.args;
   var vars = self.vars;
 
-   if (!localnum || localnum === '') {
+  if (!localnum || localnum === '') {
     localnum = args.localnum;
   }
- if (!callback || typeof(!callback) !== 'function') {
+  if (!callback || typeof(!callback) !== 'function') {
     callback = function(err, results) {
       if (err)
         context.hangup(function(err, rep) {});
       else
-         context.end();
+        context.end();
     }
   }
   async.auto({
@@ -2147,6 +2182,10 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             cb(err, results);
           });
         }
+        //黑名单
+        else if(actmode.modename === '黑名单'){
+          self.blacklist('',cb);
+        }
         //默认挂机
         else {
           cb('默认处理', -1);
@@ -2518,7 +2557,7 @@ routing.prototype.router = function() {
             if (err)
               logger.error("记录呼叫处理过程发生异常：", err);
           });
-          //processmode,路由处理方式，即本地的一个AGI程式
+          //processmode,路由处理方式，即本地的一个AGI程式:本地处理，呼叫外线，黑名单
           //processdefined，传递到AGI的参数
           self[processmode](processdefined, function(err, result) {
             cb(err, result);

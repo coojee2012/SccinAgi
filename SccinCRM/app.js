@@ -80,7 +80,7 @@ app.use(function(req, res, next) {
       res.end();
       logger.error('访问%s超时，访问方式：%s。', req.url, req.method);
     }
-  }, 10000);
+  }, 60000);
   next();
 });
 
@@ -178,10 +178,10 @@ function clientErrorHandler(err, req, res, next) {
 
 function errorHandler(err, req, res, next) {
   logger.error('errorHandler:', err);
-  var util=require('util');
+  var util = require('util');
   res.status(500);
   res.render('error.html', {
-    error:util.inspect(err)
+    error: util.inspect(err)
   });
 }
 
@@ -214,51 +214,55 @@ function readroutes(dir, routeflag) {
   for (var i = 0; i < len; i++) {
     file = files[i];
 
-    setroute(dir + "\\" + file, routeflag);
+    setroute(dir + "/" + file, routeflag);
   }
 
 }
 
 function setroute(filepath, routeflag) {
   fs.stat(filepath, function(err, stats) {
-    if (stats.isFile()) {
-      var filename = path.basename(filepath, '.js');
-      var parentDir = path.dirname(filepath);
-      var parentDirname = path.basename(path.dirname(filepath));
-      var thisFilename = path.basename(__filename, '.js');
-      if (filename != thisFilename && filename.indexOf(parentDirname) < 0) {
-        app.all(routeflag + filename, function(req, res, next) {
-          var ooo = 'index';
-          var routemod = require(filepath);
-          if (routemod && routemod[req.route.method] && typeof(routemod[req.route.method][ooo]) === 'function') {
-            routemod[req.route.method][ooo](req, res, next, routeflag + filename);
-          } else {
-            res.render('404.html');;
-          }
-        });
-        app.all(routeflag + filename + '/:ooo', function(req, res, next) {
-          var ooo = 'index';
-          if (req.param('ooo') && req.param('ooo') !== '')
-            ooo = req.param('ooo');
-          logger.debug(filepath);
-          var routemod = require(filepath);
-          if (routemod && routemod[req.route.method] && typeof(routemod[req.route.method][ooo]) === 'function') {
-            routemod[req.route.method][ooo](req, res, next, routeflag + filename);
-          } else {
-            res.render('404.html');
-          }
+    if (err)
+      logger.error(err);
+    else {
+      if (stats.isFile()) {
+        var filename = path.basename(filepath, '.js');
+        var parentDir = path.dirname(filepath);
+        var parentDirname = path.basename(path.dirname(filepath));
+        var thisFilename = path.basename(__filename, '.js');
+        if (filename != thisFilename && filename.indexOf(parentDirname) < 0) {
+          app.all(routeflag + filename, function(req, res, next) {
+            var ooo = 'index';
+            var routemod = require(filepath);
+            if (routemod && routemod[req.route.method] && typeof(routemod[req.route.method][ooo]) === 'function') {
+              routemod[req.route.method][ooo](req, res, next, routeflag + filename);
+            } else {
+              res.render('404.html');;
+            }
+          });
+          app.all(routeflag + filename + '/:ooo', function(req, res, next) {
+            var ooo = 'index';
+            if (req.param('ooo') && req.param('ooo') !== '')
+              ooo = req.param('ooo');
+            logger.debug(filepath);
+            var routemod = require(filepath);
+            if (routemod && routemod[req.route.method] && typeof(routemod[req.route.method][ooo]) === 'function') {
+              routemod[req.route.method][ooo](req, res, next, routeflag + filename);
+            } else {
+              res.render('404.html');
+            }
 
-        });
-        //logger.info(app.routes);
+          });
+          //logger.info(app.routes);
+        }
+
+      } else if (stats.isDirectory()) {
+        var dirname = path.basename(filepath);
+        //var parentDir = path.dirname(filepath);
+        //var parentDirname = path.basename(path.dirname(filepath));
+        readroutes(filepath, routeflag + dirname + '/');
+      } else {
+        logger.error("unknow type of file");
       }
-
-    } else if (stats.isDirectory()) {
-      var dirname = path.basename(filepath);
-      //var parentDir = path.dirname(filepath);
-      //var parentDirname = path.basename(path.dirname(filepath));
-      readroutes(filepath, routeflag + dirname + '/');
-    } else {
-      logger.error("unknow type of file");
     }
   });
 }

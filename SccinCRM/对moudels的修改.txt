@@ -22,3 +22,10 @@ AbstractClass.query = function(sql, cb) {
 };
 2、修改connect-jugglingdb
 添加自定义的ID，用以支持系统更默认采用Number的id
+
+var coll = this.collection = schema.define('Session', {
+            id:{type:String,default:function(){return guid.create();}},
+            sid: {
+                type: String,
+                index: true
+            },
