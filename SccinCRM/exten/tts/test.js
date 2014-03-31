@@ -7,4 +7,7 @@ console.log( obj.plusOne() ); // 13
 console.log( obj.plusOne2() ); // 11
 console.log( obj.plusOne2() ); // 12
 console.log( obj.plusOne2() ); // 13
+console.log( obj.pre_Quit() ); // 13
+console.log( obj.pre_Quit() ); // 13
+console.log( obj.pre_Quit() ); // 13
 

@@ -13,7 +13,10 @@ using namespace v8;
 Persistent<Function> TTSObject::constructor;
 
 TTSObject::TTSObject(double value) : value_(value) {
+
 }
+
+
 
 TTSObject::~TTSObject() {
 }
@@ -22,13 +25,16 @@ void TTSObject::Init(Handle<Object> exports) {
   // Prepare constructor template
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   tpl->SetClassName(String::NewSymbol("TTSObject"));
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
+  tpl->InstanceTemplate()->SetInternalFieldCount(2);
   // Prototype
   tpl->PrototypeTemplate()->Set(String::NewSymbol("plusOne"),
       FunctionTemplate::New(PlusOne)->GetFunction());
 
 tpl->PrototypeTemplate()->Set(String::NewSymbol("plusOne2"),
       FunctionTemplate::New(PlusOne2)->GetFunction());
+
+tpl->PrototypeTemplate()->Set(String::NewSymbol("pre_Quit"),
+      FunctionTemplate::New(pre_quit)->GetFunction());
 
   constructor = Persistent<Function>::New(tpl->GetFunction());
   exports->Set(String::NewSymbol("TTSObject"), constructor);
@@ -50,6 +56,8 @@ Handle<Value> TTSObject::New(const Arguments& args) {
     return scope.Close(constructor->NewInstance(argc, argv));
   }
 }
+
+
 
 
 const char* ToCString(const String::Utf8Value& value) {
@@ -127,6 +135,19 @@ Handle<Value> TTSObject::PlusOne2(const Arguments& args) {
   return scope.Close(Number::New(obj->value_));
 }
 
+Handle<Value> TTSObject::pre_quit(const Arguments& args)//TTSConnectStruct& tts_connect
+{
+  HandleScope scope;
+  TTSObject* obj = ObjectWrap::Unwrap<TTSObject>(args.This());
+obj->abc_=true;
+  if(obj->abc_){
+    obj->abc_=false;
+  }
+    obj->value_ += 3;
+    return scope.Close(Number::New(obj->value_));
+//return scope.Close(Undefined());
+
+}
 
 /** 
  * @brief   parse_cmd_line
@@ -782,9 +803,11 @@ Handle<Value> TTSObject::PlusOne2(const Arguments& args) {
  * @see   
  */
 
-Handle<Value> TTSObject::pre_quit(TTSConnectStruct& tts_connect)
+/*Handle<Value> TTSObject::pre_quit(const Arguments& args)//TTSConnectStruct& tts_connect
 {
-  /*if ( instance_ )
+  HandleScope scope;
+  TTSObject* obj = ObjectWrap::Unwrap<TTSObject>(args.This());
+  if ( instance_ )
   {
     if ( user_lib_loaded_ )
     {
@@ -835,24 +858,24 @@ Handle<Value> TTSObject::pre_quit(TTSConnectStruct& tts_connect)
     }
 
     instance_ = NULL;
-  }*/
+  }
 
   //-------------------------
   // Unload TTS from system
   // 从系统中卸载TTS服务
   //-------------------------
-  /*if ( tts_inited_ )
+  if ( obj->tts_inited_ )
   {
    // tts_uninitialize_();    
     //std::cout << TEXT("TTS kernel is unloaded from system.") << std::endl;
-    tts_inited_ = FALSE;
-  }*/
-
-  int a=0;
-  if(a != 1){
-    
+    obj->tts_inited_ = FALSE;
   }
-return Undefined();
+
+obj->abc_=true;
+  if(obj->abc_){
+    obj->abc_=false;
+  }
+return scope.Close(Undefined());
   //std::cout << TEXT("TTSConsole finished.") << std::endl;
-}
+}*/
 
