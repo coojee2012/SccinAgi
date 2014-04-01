@@ -10,6 +10,7 @@ var partials = require('express-partials');
 var http = require('http');
 var path = require('path');
 var conf = require('node-conf');
+var tts=require('./lib/tts').tts;
 var nami = require(__dirname + '/asterisk/asmanager').nami;
 var domainMiddleware = require('domain-middleware');
 

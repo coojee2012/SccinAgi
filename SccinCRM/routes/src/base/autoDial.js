@@ -1,7 +1,6 @@
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var logger = require(basedir+'/lib/logger').logger('web');
-
 /*
  * GET home page.
  */

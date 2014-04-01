@@ -1466,7 +1466,8 @@ int ttscon_demo(TTSConnectStruct& tts_connect, TTSData& tts_data, TTSRETVAL& ret
 	if (synth_mode_ == tsmTradition)	//tradition synthesize mode
 	{ 	
 		std::cout << TEXT("Using traditional method to synthesize Text.");
-		std::cout << std::endl;
+		std::cout << std::endl;
+
 		ret = tts_synth_text_(instance_, &tts_data);
 		if (ret) 
 		{

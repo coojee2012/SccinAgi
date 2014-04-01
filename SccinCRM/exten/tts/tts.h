@@ -19,30 +19,31 @@ class TTSObject : public node::ObjectWrap {
   static void Init(v8::Handle<v8::Object> exports);
 
  private:
-  explicit TTSObject(double value = 0);
+  explicit TTSObject(const v8::Arguments& args);
   ~TTSObject();
 
-  static v8::Handle<v8::Value> New(const v8::Arguments& args);
-  static v8::Handle<v8::Value> PlusOne(const v8::Arguments& args);
-  static v8::Handle<v8::Value> PlusOne2(const v8::Arguments& args);
-  static v8::Handle<v8::Value> pre_quit(const v8::Arguments& args);//(TTSConnectStruct& tts_connect);
-  static v8::Persistent<v8::Function> constructor;
+ static  v8::Handle<v8::Value> New(const v8::Arguments& args);
+ static v8::Handle<v8::Value> PlusOne(const v8::Arguments& args);
+ static  v8::Handle<v8::Value> Synth(const v8::Arguments& args);
+ static  v8::Handle<v8::Value> Reload(const v8::Arguments& args);
+ static  v8::Handle<v8::Value> Unload(const v8::Arguments& args);
+ static  v8::Persistent<v8::Function> constructor;
   bool abc_;
   double value_;
+  TTSConnectStruct  tts_connect;
 
  // Some useful funtions
 // 一些有用的funtions
-static int		  test_txt_file   (void);
-static int		  test_out_file   (void);
-static v8::Handle<v8::Value>		  parse_cmd_line  (const v8::Arguments& args);
-static int		  load_tts_lib    (TTSCON_Dll_Handle& lib, const char* lib_name);
-static int		  ttscon_demo     (TTSConnectStruct& tts_connect, TTSData& tts_data, TTSRETVAL& ret);
-static int		  ReadTxtFile     (LPCTSTR szTxtFile, LPTSTR szBuff, int nSize );
-static int		  CatWavFile      (LPCTSTR sWavFile, PBYTE pBufNew, TTSDWORD dwBufNewLen);
-static void	  print_usage     (void);
-static int	      set_synth_param (void);
+ int		  load   (const v8::Arguments& args);
+ int		  unload   (void);
+ int	  parse_cmd_line  (const v8::Arguments& args);
+ int		  load_tts_lib    (TTSCON_Dll_Handle& lib, const char* lib_name);
+ void   pre_quit(void);
+ int		  ReadTxtFile     (LPCTSTR szTxtFile, LPTSTR szBuff, int nSize );
+ int		  CatWavFile      (LPCTSTR sWavFile, PBYTE pBufNew, TTSDWORD dwBufNewLen);
+ int	      set_synth_param (void);
 
-static void      fmt_cmd_line    (const v8::Arguments& args, std::vector<std::string>& param_vec);
+ static void      fmt_cmd_line    (const v8::Arguments& args, std::vector<std::string>& param_vec);
  
  char	out_audio_file_[PATH_MAX]	;//	= {0};		// output audiofile name
  char	text_file_[PATH_MAX]		;//	= {0};		// output audiofile name
@@ -65,10 +66,10 @@ static void      fmt_cmd_line    (const v8::Arguments& args, std::vector<std::st
  BOOL				user_lib_loaded_	;//= FALSE;
  BOOL				asyn_connect_		;//= FALSE;
  BOOL				asyn_discon_		;//= FALSE;
-/*
- TTSCON_Mutex		synth_complete_mutex_; // The event for asynchronous synthesizing
- TTSCON_Mutex		connect_complete_mutex_;//The event for asynchronous connecting
- TTSCON_Mutex     discon_complete_mutex_; //The event for asynchronous disconnecting
+
+ TTSCON_Mutex		synth_complete_mutex_; // The event for asynchronous synthesizing 异步合成事件
+ TTSCON_Mutex		connect_complete_mutex_;//The event for asynchronous connecting    异步连接事件
+ TTSCON_Mutex     discon_complete_mutex_; //The event for asynchronous disconnecting 异步断开事件
 
 // The map for printing SynthParam when SetSynthParam successful
  std::map<int, std::string> option_map; 
@@ -77,6 +78,7 @@ static void      fmt_cmd_line    (const v8::Arguments& args, std::vector<std::st
  int    ttscon_mode_value;// = 0;
 // Call back procedure.
 //回调程序
+
 TTSRETVAL SynthProcessProc(HTTSINSTANCE hTTSInstance, 
 						   PTTSData pTTSData, TTSINT32 lParam, PTTSVOID pUserData);
 TTSRETVAL ConnectCBProc	  (HTTSINSTANCE tts_inst, PTTSConnectStruct connect, 
@@ -87,7 +89,7 @@ TTSRETVAL ConnectCBProc	  (HTTSINSTANCE tts_inst, PTTSConnectStruct connect,
  char lib_name_[256];
 // Times of Load/Free Library
  int synth_rounds_num_ ;//= 1;
-*/
+
 //Pointers which point to address of the exported function or variable in the Library
 //指针指向的地址库中导出的函数或变量
  Proc_TTSSetSynthParam tts_set_synth_param_;// = NULL;

@@ -1,5 +1,6 @@
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
+var tts = require(basedir + '/lib/tts').tts;
 
 var nami = require(basedir + '/asterisk/asmanager').nami,
 	util = require('util'),
@@ -357,19 +358,26 @@ posts.autodial = function(req, res, next) {
 				function(callback, results) {
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -notice.wav
-					var cmd = javapath + ' -jar  ' +ttsapp+' ';
-					cmd += results.addCallRecords.id+'-notice';
+
+					tts.synth('/home/share/' + results.addCallRecords.id + '-notice.wav', NoticeContent, function(state, msg) {
+						if (state === 'true') {
+							callback(null, null);
+						} else {
+							logger.error('合成通知语音失败:', msg);
+							callback('合成通知语音失败！', null);
+						}
+					});
+					var cmd = javapath + ' -jar  ' + ttsapp + ' ';
+					cmd += results.addCallRecords.id + '-notice';
 					cmd += ' ' + NoticeContent;
 					var exec = require('child_process').exec,
 						last = exec(cmd, function(error, stdout, stderr) {
-							if (error)
-							{
-								logger.error('合成通知语音失败:',error);
+							if (error) {
+								logger.error('合成通知语音失败:', error);
 								callback(error, stdout);
-							}
-							else {
+							} else {
 								if (stdout === '0') {
-									logger.error('合成通知语音失败:',stdout);
+									logger.error('合成通知语音失败:', stdout);
 									callback('合成通知语音失败！', null);
 								} else {
 									callback(null, null);
@@ -383,26 +391,15 @@ posts.autodial = function(req, res, next) {
 				function(callback, results) {
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -sure.wav
-					var cmd = javapath + ' -jar  ' +ttsapp+' ';
-					cmd += results.addCallRecords.id+'-sure';
-					cmd += ' ' + SureContent;
-					var exec = require('child_process').exec,
-						last = exec(cmd, function(error, stdout, stderr) {
-							if (error)
-							{
-								logger.error('合成确认语音失败：',error);
-								callback(error, stdout);
-							}
-								
-							else {
-								if (stdout === '0') {
-									logger.error('合成确认语音失败：',stdout);
-									callback('合成确认语音失败！', null);
-								} else {
-									callback(null, null);
-								}
-							}
-						});
+					tts.synth('/home/share/' + results.addCallRecords.id + '-sure.wav', SureContent, function(state, msg) {
+						if (state === 'true') {
+							callback(null, null);
+						} else {
+							logger.error('合成确认语音失败:', msg);
+							callback('合成确认语音失败!', null);
+						}
+					});
+					
 				}
 			],
 			//合成查询语音
@@ -410,30 +407,19 @@ posts.autodial = function(req, res, next) {
 				function(callback, results) {
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -query.wav
-					var cmd = javapath + ' -jar  ' +ttsapp+' ';
-					cmd += results.addCallRecords.id+'-query';
-					cmd += ' ' + QueryContent;
-					
-					var exec = require('child_process').exec,
-						last = exec(cmd, function(error, stdout, stderr) {
-							if (error)
-							{
-								logger.error('合成查询语音失败：',error);
-								callback(error, stdout);
-							}
-							else {
-								if (stdout === '0') {
-									logger.error('合成查询语音失败：',stdout);
-									callback('合成查询语音失败！', null);
-								} else {
-									callback(null, null);
-								}
-							}
-						});
+						tts.synth('/home/share/' + results.addCallRecords.id + '-query.wav', QueryContent, function(state, msg) {
+						if (state === 'true') {
+							callback(null, null);
+						} else {
+							logger.error('合成查询语音失败:', msg);
+							callback('合成查询语音失败!', null);
+						}
+					});
 				}
 			],
 			//更新合成状态
 			updateVoiceContent: ['voiceMixNotice', 'voiceMixSure', 'voiceMixQuery', 'addVoiceContent',
+			//updateVoiceContent: ['addVoiceContent',
 				function(callback, results) {
 					try {
 						var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
