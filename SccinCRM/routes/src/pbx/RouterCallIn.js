@@ -2,11 +2,11 @@ var path = require("path");
 var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var Schemas = require(basedir+'/database/schema').Schemas;
+var Schemas = require(basedir + '/database/schema').Schemas;
 var moment = require('moment');
 var async = require('async');
 
-var logger = require(basedir+'/lib/logger').logger('web');
+var logger = require(basedir + '/lib/logger').logger('web');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -15,21 +15,21 @@ module.exports = {
 };
 
 //呼入规则列表显示
-gets.index = function(req, res,next,baseurl) {
+gets.index = function(req, res, next, baseurl) {
 	res.render('pbx/RouterCallIn/list.html', {
-		baseurl:baseurl,
-		modename:'pbxRouter'
+		baseurl: baseurl,
+		modename: 'pbxRouter'
 	});
 }
 
 //新建
-gets.create = function(req, res,next,baseurl) {
+gets.create = function(req, res, next, baseurl) {
 	res.render('pbx/RouterCallIn/create.html', {
-		baseurl:baseurl
+		baseurl: baseurl
 	});
 }
 //编辑
-gets.edit = function(req, res,next,baseurl) {
+gets.edit = function(req, res, next, baseurl) {
 	var id = req.query["id"];
 	async.auto({
 		findUser: function(cb) {
@@ -42,7 +42,7 @@ gets.edit = function(req, res,next,baseurl) {
 		}
 	}, function(err, results) {
 		res.render('pbx/RouterCallIn/edit.html', {
-			baseurl:baseurl,
+			baseurl: baseurl,
 			inst: results.findUser
 		});
 	});
@@ -50,7 +50,7 @@ gets.edit = function(req, res,next,baseurl) {
 
 
 //保存（适用于新增和修改）
-posts.save = function(req, res,next,baseurl) {
+posts.save = function(req, res, next, baseurl) {
 	var Obj = {};
 	for (var key in req.body) {
 		Obj[key] = req.body[key];
@@ -59,14 +59,21 @@ posts.save = function(req, res,next,baseurl) {
 	async.auto({
 			isHaveCheck: function(cb) {
 				if (!Obj.routername || Obj.routername === '') {
-					cb('呼入规则不能为空', -1);
+					cb('呼入规则名称不能为空', -1);
 				} else {
 					Schemas['pbxRouter'].find(Obj.id, function(err, inst) {
 						cb(err, inst);
 					});
 				}
 			},
-			createNew: ['isHaveCheck',
+			maxProirety: function(cb) {
+				Schemas['pbxRouter'].findOne({
+					
+				}, function(err, inst) {
+					cb(err, inst);
+				});
+			},
+			createNew: ['isHaveCheck', 'maxProirety',
 				function(cb, results) {
 					if (results.isHaveCheck !== null) { //如果存在本函数什么都不做
 						cb(null, -1);
@@ -133,7 +140,7 @@ posts.save = function(req, res,next,baseurl) {
 }
 
 
-posts.delete = function(req, res,next,baseurl) {
+posts.delete = function(req, res, next, baseurl) {
 	var id = req.body['id'];
 	Schemas['pbxRouter'].find(id, function(err, inst) {
 		var myjson = {};
@@ -164,31 +171,28 @@ posts.delete = function(req, res,next,baseurl) {
 	});
 }
 
-posts.sortRouter = function(req, res,next,baseurl) {
+posts.sortRouter = function(req, res, next, baseurl) {
 	var flagIndex = 1;
 	var myjson = {};
 	myjson.success = 'OK';
 	myjson.msg = '排序成功！';
 	var ids = req.body['ids'].split('|');
-	
+
 	for (var i = 0; i < ids.length; i++) {
-		if(ids[i] != null && ids[i] != "")
-		{
+		if (ids[i] != null && ids[i] != "") {
 			Schemas['pbxRouter'].update({
-							where: {
-								id: ids[i]
-							},
-							update: {
-								proirety:flagIndex++
-							}
-						}, function(err2, inst2) {
-							if(err2)
-							{
-								myjson.success = 'ERROR';
-								myjson.msg = '更新数据发生异常,请联系管理员！！';
-							}
-						}
-					);
+				where: {
+					id: ids[i]
+				},
+				update: {
+					proirety: flagIndex++
+				}
+			}, function(err2, inst2) {
+				if (err2) {
+					myjson.success = 'ERROR';
+					myjson.msg = '更新数据发生异常,请联系管理员！！';
+				}
+			});
 		}
 	}
 	res.send(myjson);

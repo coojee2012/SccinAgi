@@ -126,7 +126,7 @@ routing.prototype.NoCome = function(callrecordid, cb) {
 }
 //确定参加评标后处理
 
-routing.prototype.SureCome = function(callrecordid, phone, keyNum, cb) {
+routing.prototype.SureCome = function(callrecordid,ProjMoveID, phone, keyNum, cb) {
   var self = this;
   var context = self.context;
   var schemas = self.schemas;
@@ -156,7 +156,7 @@ routing.prototype.SureCome = function(callrecordid, phone, keyNum, cb) {
           async.auto({
             playvoice: function(callback) {
               try {
-                context.GetData('/home/share/'+callrecordid+'-sure', 5000, 1, function(err, response) {
+                context.GetData('/home/share/'+ProjMoveID+'-sure', 5000, 1, function(err, response) {
                   callback(err, response);
                 });
               } catch (ex) {
@@ -418,8 +418,9 @@ routing.prototype.calloutback = function() {
   var schemas = self.schemas;
   var callRecordsID = null;
   var keyNum = null;
+  var ProjMoveID=null;
   var logger = self.logger;
-  self.args.routerline='扩展应用';
+  self.args.routerline = '扩展应用';
   var args = self.args;
   var vars = self.vars;
   async.auto({
@@ -455,9 +456,21 @@ routing.prototype.calloutback = function() {
           cb(err, callRecordsID);
         });
       },
+      getProjMoveID: ['getCallrcordsId',
+        function(cb, results) {
+          schemas.crmCallRecords.find(callRecordsID, function(err, inst) {
+            if (err || inst === null) {
+              cb(err, inst);
+            } else {
+              ProjMoveID=inst.ProjMoveID;
+              cb(null, inst.ProjMoveID);
+            }
+          });
+        }
+      ],
       //通过通道变量获取有效按键
       getKeyNum: ['getCallrcordsId',
-        function(cb) {
+        function(cb, results) {
           context.getVariable('keynum', function(err, response) {
             var reg = /(\d+)\s+\((.*)\)/;
             var c = null,
@@ -504,7 +517,7 @@ routing.prototype.calloutback = function() {
         }
       ],
       //获取按键记录
-      getKey: ['getPhones', 'updateCallRecords',
+      getKey: ['getPhones','getProjMoveID' ,'updateCallRecords',
         function(cb, results) {
           var phone = results.getPhones[0];
           //获取用户按键函数
@@ -513,7 +526,7 @@ routing.prototype.calloutback = function() {
             async.auto({
               //播放语音
               playinfo: function(callback) {
-                context.GetData('/home/share/' +callRecordsID+ '-notice', 5000, 1, function(err, response) {
+                context.GetData('/home/share/' + results.getProjMoveID + '-notice', 5000, 1, function(err, response) {
                   console.log("撒也不按，挂机了", response);
                   callback(err, response);
                 });
@@ -591,7 +604,7 @@ routing.prototype.calloutback = function() {
               }
               //用户确定参加评标
               else if (results.checkinput.count == 100 && results.checkinput.key === keyNum[0]) {
-                self.SureCome(callRecordsID, phone, keyNum, function(err, results) {
+                self.SureCome(callRecordsID,ProjMoveID, phone, keyNum, function(err, results) {
                   cb(err, results);
                 });
               }

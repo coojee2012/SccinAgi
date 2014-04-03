@@ -10,7 +10,6 @@ var partials = require('express-partials');
 var http = require('http');
 var path = require('path');
 var conf = require('node-conf');
-var tts=require('./lib/tts').tts;
 var nami = require(__dirname + '/asterisk/asmanager').nami;
 var domainMiddleware = require('domain-middleware');
 
@@ -62,10 +61,10 @@ app.use(express.methodOverride());
 app.use(express.cookieParser());
 
 app.use(express.session({
-  secret: 'keyboard cat',
+  secret: 'coojee2012@qq.com',
   store: new JugglingStore(schema, {
     table: 'sessions', // 存session的表名
-    maxAge: 1000 * 60 * 2 // 默认持续时间：毫秒
+    maxAge: 1000 * 60 * 60 * 24 * 7 // 默认持续时间：毫秒
   })
 }));
 

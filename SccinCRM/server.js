@@ -11,7 +11,8 @@ var conf = require('node-conf');
 var appconf = conf.load('app');
 var SRCFILE = appconf.debug ? '.js' : '.min.js';
 // 获取CPU 的数量
-var numCPUs = os.cpus().length;
+//var numCPUs = os.cpus().length;
+var numCPUs = 1;
 var workers = {};
 var count = 0;
 // 当主进程被终止时，关闭所有工作进程

@@ -1,16 +1,10 @@
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var crmCallRecords=require('./CallRecords');*/
 var crmVoiceContent=schema.define('crmVoiceContent',{
-    Contents:     {type: Schema.Text},
-    //crmVoiceContentID:{type: String, length: 50},
-    State:   {type: Number,default:0 }
+    NoticeContents:     {type: Schema.Text},
+    SureContents:     {type: Schema.Text},
+    QueryContents:     {type: Schema.Text},
+    State:   {type: Number,default:0 } //0:新插入数据，1：合成中,2：合成完成
 });
 crmVoiceContent.Name='crmVoiceContent';
-crmVoiceContent.belongsTo(crmCallRecords, {as: 'callrecord', foreignKey: 'id'});
 schema.models.crmVoiceContent;
 exports.crmVoiceContent = crmVoiceContent;
 Dbs.crmVoiceContent = crmVoiceContent;

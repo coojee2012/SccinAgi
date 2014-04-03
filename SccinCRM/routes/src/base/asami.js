@@ -240,6 +240,7 @@ posts.autodial = function(req, res, next) {
 	res.setHeader('Content-type', 'application/json');
 	//res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
 	var CallInfoID = req.body['CallInfoID'];
+	var ProjMoveID = req.body['ProjMoveID'];
 	var NoticeContent = req.body['NoticeContent'];
 	NoticeContent = NoticeContent.replace(/\s+/g, '');
 	var SureContent = req.body['SureContent'];
@@ -254,6 +255,12 @@ posts.autodial = function(req, res, next) {
 		res.send({
 			"success": false,
 			"result": '抽取编号不能为空'
+		});
+
+	} else if (!ProjMoveID || ProjMoveID == "") {
+		res.send({
+			"success": false,
+			"result": '项目编号不能为空'
 		});
 
 	} else if (!NoticeContent || NoticeContent == "") {
@@ -281,15 +288,14 @@ posts.autodial = function(req, res, next) {
 		});
 
 	} else {
-		var ttsapp = conf.load('app').ttsapp;
-		var javapath = conf.load('app').javapath;
 		async.auto({
 			//保存初始化数据到拨打记录表
 			addCallRecords: function(callback) {
 				try {
 					Schemas['crmCallRecords'].create({
 						id: guid.create(),
-						CallInfoID: CallInfoID
+						CallInfoID: CallInfoID,
+						ProjMoveID: ProjMoveID
 					}, function(err, callrecord) {
 						callback(err, callrecord);
 					});
@@ -297,16 +303,31 @@ posts.autodial = function(req, res, next) {
 					callback(ex, null);
 				}
 			},
+			getSythState: function(callback) {
+				try {
+					Schemas['crmVoiceContent'].find(ProjMoveID, function(err, inst) {
+						callback(err, inst);
+					});
+				} catch (ex) {
+					callback(ex, null);
+				}
+			},
 			//保存初始化数据到语音内容表
-			addVoiceContent: ['addCallRecords',
+			addVoiceContent: ['addCallRecords', 'getSythState',
 				function(callback, results) {
 					try {
-						Schemas['crmVoiceContent'].create({
-							Contents: NoticeContent,
-							callrecord: results.addCallRecords
-						}, function(err, inst) {
-							callback(err, inst);
-						});
+						if (results.getSythState === null) {
+							Schemas['crmVoiceContent'].create({
+								NoticeContents: NoticeContent,
+								SureContents: SureContent,
+								QueryContents: QueryContent,
+								id: ProjMoveID
+							}, function(err, inst) {
+								callback(err, inst);
+							});
+						} else {
+							callback(null, results.getSythState);
+						}
 					} catch (ex) {
 						callback(ex, null);
 					}
@@ -353,37 +374,45 @@ posts.autodial = function(req, res, next) {
 					});
 				}
 			],
+			//将新插入的合成表数据，更新合成状态为合成中
+			setVoiceContent: ['addVoiceContent',
+				function(callback, results) {
+					try {
+						if (results.addVoiceContent.State === 0) {
+							var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
+							voc.State = 1;
+							voc.save(function(err, inst) {
+								callback(err, inst);
+							});
+						} else if(results.addVoiceContent.State === 1) {
+							callback('有相同项目编号的语音正在合成中！', null);
+						}else{
+							callback(null,results.addVoiceContent);
+						}
+					} catch (ex) {
+						callback('更新合成中状态时发生错误！', null);
+					}
+
+				}
+			],
 			//合成通知语音
-			voiceMixNotice: ['addCallRecords',
+			voiceMixNotice: ['setVoiceContent',
 				function(callback, results) {
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -notice.wav
-
-					tts.synth('/home/share/' + results.addCallRecords.id + '-notice.wav', NoticeContent, function(state, msg) {
-						if (state === 'true') {
-							callback(null, null);
-						} else {
-							logger.error('合成通知语音失败:', msg);
-							callback('合成通知语音失败！', null);
-						}
-					});
-					var cmd = javapath + ' -jar  ' + ttsapp + ' ';
-					cmd += results.addCallRecords.id + '-notice';
-					cmd += ' ' + NoticeContent;
-					var exec = require('child_process').exec,
-						last = exec(cmd, function(error, stdout, stderr) {
-							if (error) {
-								logger.error('合成通知语音失败:', error);
-								callback(error, stdout);
+					if (results.setVoiceContent.State === 1) {
+						tts.synth('/home/share/' + ProjMoveID + '-notice.wav', NoticeContent, function(state, msg) {
+							if (state === 'true') {
+								callback(null, null);
 							} else {
-								if (stdout === '0') {
-									logger.error('合成通知语音失败:', stdout);
-									callback('合成通知语音失败！', null);
-								} else {
-									callback(null, null);
-								}
+								logger.error('合成通知语音失败:', msg);
+								callback('合成通知语音失败！', null);
 							}
 						});
+					} else {
+						callback(null, null);
+					}
+
 				}
 			],
 			//合成确认语音
@@ -391,15 +420,19 @@ posts.autodial = function(req, res, next) {
 				function(callback, results) {
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -sure.wav
-					tts.synth('/home/share/' + results.addCallRecords.id + '-sure.wav', SureContent, function(state, msg) {
-						if (state === 'true') {
-							callback(null, null);
-						} else {
-							logger.error('合成确认语音失败:', msg);
-							callback('合成确认语音失败!', null);
-						}
-					});
-					
+					if (results.setVoiceContent.State === 1) {
+						tts.synth('/home/share/' + ProjMoveID + '-sure.wav', SureContent, function(state, msg) {
+							if (state === 'true') {
+								callback(null, null);
+							} else {
+								logger.error('合成确认语音失败:', msg);
+								callback('合成确认语音失败!', null);
+							}
+						});
+					} else {
+						callback(null, null);
+					}
+
 				}
 			],
 			//合成查询语音
@@ -407,28 +440,32 @@ posts.autodial = function(req, res, next) {
 				function(callback, results) {
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -query.wav
-						tts.synth('/home/share/' + results.addCallRecords.id + '-query.wav', QueryContent, function(state, msg) {
-						if (state === 'true') {
-							callback(null, null);
-						} else {
-							logger.error('合成查询语音失败:', msg);
-							callback('合成查询语音失败!', null);
-						}
-					});
+					if (results.setVoiceContent.State === 1) {
+						tts.synth('/home/share/' + ProjMoveID + '-query.wav', QueryContent, function(state, msg) {
+							if (state === 'true') {
+								callback(null, null);
+							} else {
+								logger.error('合成查询语音失败:', msg);
+								callback('合成查询语音失败!', null);
+							}
+						});
+					} else {
+						callback(null, null);
+					}
 				}
 			],
-			//更新合成状态
+			//更新合成状态为已完成
 			updateVoiceContent: ['voiceMixNotice', 'voiceMixSure', 'voiceMixQuery', 'addVoiceContent',
-			//updateVoiceContent: ['addVoiceContent',
+				//updateVoiceContent: ['addVoiceContent',
 				function(callback, results) {
 					try {
 						var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
-						voc.State = 1;
+						voc.State = 2;
 						voc.save(function(err, inst) {
 							callback(err, inst);
 						});
 					} catch (ex) {
-						callback('更新合成状态时发生错误！', null);
+						callback('更新合成完成状态时发生错误！', null);
 					}
 
 				}
@@ -442,7 +479,7 @@ posts.autodial = function(req, res, next) {
 						if (err)
 							callback(err, null);
 						else {
-							if (counts && counts > 10) {
+							if (counts && counts > 60) {
 								callback('当前可用线路不足，已用:' + counts, counts);
 							} else {
 								callback(null, counts);

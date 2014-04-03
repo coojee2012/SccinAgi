@@ -1,6 +1,6 @@
 //确定参加评标后处理
 
-routing.prototype.SureCome = function(callrecordid, phone, keyNum, cb) {
+routing.prototype.SureCome = function(callrecordid,ProjMoveID, phone, keyNum, cb) {
   var self = this;
   var context = self.context;
   var schemas = self.schemas;
@@ -30,7 +30,7 @@ routing.prototype.SureCome = function(callrecordid, phone, keyNum, cb) {
           async.auto({
             playvoice: function(callback) {
               try {
-                context.GetData('/home/share/'+callrecordid+'-sure', 5000, 1, function(err, response) {
+                context.GetData('/home/share/'+ProjMoveID+'-sure', 5000, 1, function(err, response) {
                   callback(err, response);
                 });
               } catch (ex) {

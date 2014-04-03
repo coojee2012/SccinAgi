@@ -2,7 +2,9 @@
     
        //图表
             $(function() {
-                
+               /* alert(window.location.href);
+                alert(window.location.protocol);
+                alert(window.location.host);*/
                 Highcharts.setOptions({
         global : {
             useUTC : false
@@ -93,6 +95,7 @@
                         buttons:{
                             // 导出按钮配置
                             exportButton:{
+                                text:'导出图片',
                                 menuItems: null,
                                 onclick: function() {
                                     this.exportChart();
@@ -100,15 +103,22 @@
                             },
                             // 打印按钮配置
                             printButton:{
-                                enabled:false
-                            }
+                                enabled:true,
+                                text: '打印图表',
+                                onclick: function () {
+                                 this.print();
+                              }
+                            },
+                            contextButton: {
+                    enabled: false
+                }
                         },
                         // 文件名
-                        filename: '报表',
+                        filename: 'callreport',
                         // 配置导出接口
-                        url: 'http://' + location.hostname + '/test/Highcharts-2.3.2/example/exporting/index.php',
+                        url: '/pbx/dycharts/exportpic',
                         // 导出文件默认类型
-                        type:'application/pdf'
+                        type:'image/svg+xml'
                     },
                         
                     /**

@@ -1,6 +1,14 @@
 var assert = require('assert');
 var binding = require('./build/Release/binding');
-var obj = new binding.TTSObject(10);
+var obj = new binding.TTSObject({
+"server":"192.168.7.144",
+"format":0,
+"speed":300,
+"volume":10,
+"tone":300,
+"digit":3,
+"prompt":false
+});
 setInterval(function(){
 console.time('100-elements');
 obj.synth("test1.wav","我就是个大厦波啊！我就是个大厦波啊！我就是个大厦波啊！我就是个大厦波啊！我就是个大厦波啊！我就是个大厦波啊",

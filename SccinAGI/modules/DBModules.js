@@ -506,14 +506,9 @@ pbxBlackList.Name='pbxBlackList';
 schema.models.pbxBlackList;
 exports.pbxBlackList = pbxBlackList;
 Dbs.pbxBlackList=pbxBlackList;
-/*var Schema = require('jugglingdb').Schema;
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var moment = require('moment');
-*/
 var crmCallRecords = schema.define('crmCallRecords', {
     CallInfoID:     { type: String, length: 50},//呼叫编号
+    ProjMoveID:{type: String, length: 50},//项目编号
     CallState:   { type: Number,default:0 },//是否呼叫标志0：未呼叫，1：已经呼叫
     WorkTime:   { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
 });
@@ -634,19 +629,13 @@ crmUserKeysRecord.belongsTo(crmCallPhone, {as: 'keytype', foreignKey: 'keyTypeID
 schema.models.crmUserKeysRecord;
 exports.crmUserKeysRecord = crmUserKeysRecord;
 Dbs.crmUserKeysRecord = crmUserKeysRecord;
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var crmCallRecords=require('./CallRecords');*/
 var crmVoiceContent=schema.define('crmVoiceContent',{
-    Contents:     {type: Schema.Text},
-    //crmVoiceContentID:{type: String, length: 50},
-    State:   {type: Number,default:0 }
+    NoticeContents:     {type: Schema.Text},
+    SureContents:     {type: Schema.Text},
+    QueryContents:     {type: Schema.Text},
+    State:   {type: Number,default:0 } //0:新插入数据，1：合成中,2：合成完成
 });
 crmVoiceContent.Name='crmVoiceContent';
-crmVoiceContent.belongsTo(crmCallRecords, {as: 'callrecord', foreignKey: 'id'});
 schema.models.crmVoiceContent;
 exports.crmVoiceContent = crmVoiceContent;
 Dbs.crmVoiceContent = crmVoiceContent;

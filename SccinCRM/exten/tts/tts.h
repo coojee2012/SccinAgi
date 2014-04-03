@@ -36,14 +36,16 @@ class TTSObject : public node::ObjectWrap {
 // 一些有用的funtions
  int		  load   (const v8::Arguments& args);
  int		  unload   (void);
- int	  parse_cmd_line  (const v8::Arguments& args);
+ //int	  parse_cmd_line  (const v8::Arguments& args);
  int		  load_tts_lib    (TTSCON_Dll_Handle& lib, const char* lib_name);
  void   pre_quit(void);
  int		  ReadTxtFile     (LPCTSTR szTxtFile, LPTSTR szBuff, int nSize );
  int		  CatWavFile      (LPCTSTR sWavFile, PBYTE pBufNew, TTSDWORD dwBufNewLen);
  int	      set_synth_param (void);
-
- static void      fmt_cmd_line    (const v8::Arguments& args, std::vector<std::string>& param_vec);
+ int connect(void);
+ int disconnect(void);
+int initialize(void);
+ //static void      fmt_cmd_line    (const v8::Arguments& args, std::vector<std::string>& param_vec);
  
  char	out_audio_file_[PATH_MAX]	;//	= {0};		// output audiofile name
  char	text_file_[PATH_MAX]		;//	= {0};		// output audiofile name
@@ -99,6 +101,7 @@ TTSRETVAL ConnectCBProc	  (HTTSINSTANCE tts_inst, PTTSConnectStruct connect,
  Proc_TTSUnloadUserLib tts_unload_user_lib_;// = NULL;
  Proc_TTSConnect tts_connect_;//= //NULL;
  Proc_TTSInitialize tts_initialize_ ;//= NULL;
+ Proc_TTSInitializeEx tts_initialize_ex_ ;
  Proc_TTSSynthTextEx tts_synth_text_ex_;// = NULL;
  Proc_TTSSynthText tts_synth_text_;// = NULL;
  Proc_TTSFetchNext tts_fetch_next_ ;//= NULL;

@@ -7,6 +7,23 @@ var schema = require('../database/jdmysql').schema;
 var Dbs={};
 
 
+var pbxCallProcees=schema.define('pbxCallProcees',{
+	id:{type:String,length:100,default:function(){return guid.create();}},
+	callsession:{type:String,length:100},
+	callernumber:   {type:String,length:50},
+	callednumber:   {type:String,length:50},
+	processname:{type:String,length:50},
+	passargs:   {type:String,length:100},
+	doneresults:   {type:String,length:50},
+	routerline:   {type: String, length:10},
+	cretime:   {type: String,length:50, default: function () {return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	
+});
+pbxCallProcees.Name='pbxCallProcees';
+schema.models.pbxCallProcees;
+exports.pbxCallProcees = pbxCallProcees;
+
+Dbs.pbxCallProcees=pbxCallProcees;
 /*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
@@ -144,11 +161,6 @@ pbxExtension.Name='pbxExtension';
 schema.models.pbxExtension;
 exports.pbxExtension = pbxExtension;
 Dbs.pbxExtension = pbxExtension;
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxIvrActMode=schema.define('pbxIvrActMode',{
 	modename:   {type:String,length:50},
 	url:   {type:String,length:100},
@@ -159,13 +171,69 @@ pbxIvrActMode.Name='pbxIvrActMode';
 schema.models.pbxIvrActMode;
 exports.pbxIvrActMode = pbxIvrActMode;
 Dbs.pbxIvrActMode = pbxIvrActMode;
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var guid = require('guid');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var Actmode=require('./IvrActMode');*/
+/**
+   执行动作参数说明：
+   1、播放语音：interruptible：允许按键中断，【'true'/'false'】,默认为true
+				folder:语音目录，相对于：/var/lib/asterisk/sounds/cn/
+				filename:语音文件名
+				下面参数在interruptible=true时有效
+				retrytime：允许重听的次数，默认为3
+				timeout：等待按键超时时间，毫秒，默认为10000
+				failivrnum：获取按键失败处理IVR号码，默认为挂机IVR
+				failactid：获取按键失败处理IVR号码动作编号，默认为0
+
+   2、发起录音：varname：需要播放的录音变量名
+             format：播放的录音格式
+             maxduration：默认最多可以录制1小时，0表示随便录好久
+             options：默认如果没应答就跳过录音
+             【	a - 在已有录音文件后面追加录音.
+               	n - 即使电话没有应答，也要录音.
+			  	q - 安静模式（录音前不播放beep声）.
+				s - 如果线路未应答，将跳过录音.
+				t - 用*号终止录音，代替默认按#号终止录音
+				x - 忽略所有按键，只有挂机才能终止录音.
+				k - 保持录音，即使线路已经挂断了.
+				y - 任何按键都可以终止录音.】
+             silence：如果持续了超过X秒的沉默，将停止录音，默认10秒,0表示不判断
+
+
+   3、播放录音：varname：需要播放的录音变量名
+             format：播放的录音格式
+   4、录制数字字符：maxdigits：最大接收字符数，默认为20
+   					beep：【true/false】，录制字符前是否播放beep声，默认为false
+   					varname：保存的变量名，仅在当前会话有效
+   					addbefore：【true/false】,是否保存用户上一次的输入，默认为false
+   5、读出数字字符：varname：需读出的变量名，仅在当前会话有效
+   					digits：直接读出给定的数字字符
+   6、拨打号码：varname：从会话中保存的变量获取号码
+   				digits：指定号码
+   				dialway：拨打方式【diallocal/dialout】
+   7、数字方式读出
+
+   8、读出日期时间
+
+   9、检测日期
+
+   10、主叫变换
+
+   11、检查号码归属地
+
+   12、跳转到语音信箱
+
+   13、跳转到IVR菜单
+
+   14、WEB交互接口
+
+   15、AGI扩展接口
+
+   16、等待几秒
+
+   17、播放音调
+
+   18、挂机
+
+
+**/
 var pbxIvrActions=schema.define('pbxIvrActions',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
 	ivrnumber:  {type:String,length:50},
@@ -308,6 +376,7 @@ var pbxRcordFile=schema.define('pbxRcordFile',{
 	extname:    {type:String,length:50},
 	filesize:   {type:Number,default:function () { return 0 }},
 	calltype:   {type:String,length:50},
+	lable:   {type:String,length:50},//录音类型，queue,exten,ivr,voicemail等
 	cretime:    {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	extennum:   {type:String,length:50},
 	folder:     {type:String,length:50},
@@ -411,6 +480,33 @@ pbxTrunk.Name='pbxTrunk';
 schema.models.pbxTrunk;
 exports.pbxTrunk = pbxTrunk;
 Dbs.pbxTrunk = pbxTrunk;
+var pbxMobileCode=schema.define('pbxMobileCode',{
+	id:{type:String,length:100,default:function(){return guid.create();}},
+	haoduan:{type:String,length:10},
+	number7:   {type:String,length:20},
+	server:   {type:String,length:50},
+	sheng:{type:String,length:50},
+	shi:   {type:String,length:50},
+	quhao:   {type:String,length:50},
+	youbian:   {type: String, length:20}	
+});
+pbxMobileCode.Name='pbxMobileCode';
+schema.models.pbxMobileCode;
+exports.pbxMobileCode = pbxMobileCode;
+
+Dbs.pbxMobileCode=pbxMobileCode;
+/**
+黑名单
+**/
+var pbxBlacList=schema.define('pbxBlacList',{
+	memo:{type:String,length:50,default: function () { return ''; }},//添加成黑名单的原因
+	cretime: {type:String,length:100,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+});
+pbxBlacList.Name='pbxBlacList';
+schema.models.pbxBlacList;
+exports.pbxBlacList = pbxBlacList;
+
+Dbs.pbxBlacList=pbxBlacList;
 /*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
@@ -558,14 +654,9 @@ manageUserInfo.Name='manageUserInfo';
 schema.models.manageUserInfo;
 exports.manageUserInfo = manageUserInfo;
 Dbs.manageUserInfo = manageUserInfo;
-/*var Schema = require('jugglingdb').Schema;
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var moment = require('moment');
-*/
 var crmCallRecords = schema.define('crmCallRecords', {
     CallInfoID:     { type: String, length: 50},//呼叫编号
+    ProjMoveID:{type: String, length: 50},//项目编号
     CallState:   { type: Number,default:0 },//是否呼叫标志0：未呼叫，1：已经呼叫
     WorkTime:   { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
 });
@@ -686,19 +777,13 @@ crmUserKeysRecord.belongsTo(crmCallPhone, {as: 'keytype', foreignKey: 'keyTypeID
 schema.models.crmUserKeysRecord;
 exports.crmUserKeysRecord = crmUserKeysRecord;
 Dbs.crmUserKeysRecord = crmUserKeysRecord;
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var crmCallRecords=require('./CallRecords');*/
 var crmVoiceContent=schema.define('crmVoiceContent',{
-    Contents:     {type: Schema.Text},
-    //crmVoiceContentID:{type: String, length: 50},
-    State:   {type: Number,default:0 }
+    NoticeContents:     {type: Schema.Text},
+    SureContents:     {type: Schema.Text},
+    QueryContents:     {type: Schema.Text},
+    State:   {type: Number,default:0 } //0:新插入数据，1：合成中,2：合成完成
 });
 crmVoiceContent.Name='crmVoiceContent';
-crmVoiceContent.belongsTo(crmCallRecords, {as: 'callrecord', foreignKey: 'id'});
 schema.models.crmVoiceContent;
 exports.crmVoiceContent = crmVoiceContent;
 Dbs.crmVoiceContent = crmVoiceContent;
