@@ -29,6 +29,9 @@
     "stylus": "*"
   },
   "devDependencies": {
+    "assert":"~1.0",
+    "vows":"~0.7.0",
+    "request":"~2.34.0",
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.3.2",
     "grunt-contrib-concat": "~0.3.0",

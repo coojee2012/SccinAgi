@@ -61,16 +61,30 @@ posts.save = function(req, res, next, baseurl) {
 				if (!Obj.routername || Obj.routername === '') {
 					cb('呼入规则名称不能为空', -1);
 				} else {
-					Schemas['pbxRouter'].find(Obj.id, function(err, inst) {
-						cb(err, inst);
-					});
+					if (!Obj.id || Obj.id === '') {
+						delete Obj.id;
+						cb(null, null);
+					} else {
+						Schemas['pbxRouter'].find(Obj.id, function(err, inst) {
+							cb(err, inst);
+						});
+					}
 				}
 			},
 			maxProirety: function(cb) {
 				Schemas['pbxRouter'].findOne({
-					
+					where: {
+						routerline: '呼入'
+					},
+					order: 'proirety DESC'
 				}, function(err, inst) {
-					cb(err, inst);
+					if (err) {
+						cb(err, inst);
+					} else {
+						var n = inst === null ? 1 : inst.proirety + 1;
+						cb(null, n);
+					}
+
 				});
 			},
 			createNew: ['isHaveCheck', 'maxProirety',
@@ -80,7 +94,7 @@ posts.save = function(req, res, next, baseurl) {
 					} else {
 
 						//初始化的数据
-						Obj.proirety = 0;
+						Obj.proirety = results.maxProirety;
 						Obj.routerline = "呼入";
 
 						Schemas['pbxRouter'].create(Obj, function(err, inst) {
@@ -147,27 +161,40 @@ posts.delete = function(req, res, next, baseurl) {
 		if (err) {
 			myjson.success = 'ERROR';
 			myjson.msg = '查询数据发生异常,请联系管理员！';
+			res.send(myjson);
 		} else {
 			if (!inst) {
 				myjson.success = 'ERROR';
 				myjson.msg = '没有找到需要删除的数据！';
-			} else {
-
-			}
-			inst.destroy(function(err) {
-				if (err) {
-					myjson.success = 'ERROR';
-					myjson.msg = '删除数据发生异常,请联系管理员！！';
-				} else {
-					myjson.success = 'OK';
-					myjson.msg = '删除成功！';
-				}
 				res.send(myjson);
+			} else {
+				var proirety = inst.proirety;
+				inst.destroy(function(err) {
+					if (err) {
+						myjson.success = 'ERROR';
+						myjson.msg = '删除数据发生异常,请联系管理员！！';
+						res.send(myjson);
+					} else {
+						//myjson.success = 'OK';
+						//myjson.msg = '删除成功！';
+						Schemas['pbxRouter'].all({
+							where: {
+								routerline: '呼入'
+							},
+							order: 'proirety ASC'
+						}, function(err, dbs) {
+							var ids = "";
+							for (var i = 0; i < dbs.length; i++) {
+								ids += dbs[i].id + '|';
+							}
+							req.body['ids'] = ids;
+							posts.sortRouter(req, res, next, baseurl);
+						});
+					}
 
-			});
-
+				});
+			}
 		}
-
 	});
 }
 

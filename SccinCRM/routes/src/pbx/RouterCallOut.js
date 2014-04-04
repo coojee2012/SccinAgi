@@ -15,31 +15,32 @@ module.exports = {
 };
 
 //呼出规则列表显示
-gets.index = function (req, res, next, baseurl) {
+gets.index = function(req, res, next, baseurl) {
     res.render('pbx/RouterCallOut/list.html', {
-        baseurl: baseurl, modename: 'pbxRouter'
+        baseurl: baseurl,
+        modename: 'pbxRouter'
     });
 }
 
 //新建
-gets.create = function (req, res, next, baseurl) {
+gets.create = function(req, res, next, baseurl) {
     res.render('pbx/RouterCallOut/create.html', {
         baseurl: baseurl
     });
 }
 //编辑
-gets.edit = function (req, res, next, baseurl) {
+gets.edit = function(req, res, next, baseurl) {
     var id = req.query["id"];
     async.auto({
-        findUser: function (cb) {
-            Schemas['pbxRouter'].find(id, function (err, inst) {
+        findUser: function(cb) {
+            Schemas['pbxRouter'].find(id, function(err, inst) {
                 if (err || inst == null)
                     cb('编辑查找呼出规则发生错误或呼出规则不存在！', inst);
                 else
                     cb(err, inst);
             });
         }
-    }, function (err, results) {
+    }, function(err, results) {
         res.render('pbx/RouterCallOut/edit.html', {
             baseurl: baseurl,
             inst: results.findUser
@@ -49,40 +50,61 @@ gets.edit = function (req, res, next, baseurl) {
 
 
 //保存（适用于新增和修改）
-posts.save = function (req, res, next, baseurl) {
+posts.save = function(req, res, next, baseurl) {
     var Obj = {};
     for (var key in req.body) {
         Obj[key] = req.body[key];
     }
     //console.log(Obj);
     async.auto({
-            isHaveCheck: function (cb) {
+            isHaveCheck: function(cb) {
                 if (!Obj.routername || Obj.routername === '') {
                     cb('呼出规则不能为空', -1);
                 } else {
-                    Schemas['pbxRouter'].find(Obj.id, function (err, inst) {
+                    if (!Obj.id || Obj.id === '') {
+                        delete Obj.id;
+                        cb(null, null);
+                    } else {
+                    Schemas['pbxRouter'].find(Obj.id, function(err, inst) {
                         cb(err, inst);
                     });
                 }
+                }
             },
-            createNew: ['isHaveCheck',
-                function (cb, results) {
+            maxProirety: function(cb) {
+                Schemas['pbxRouter'].findOne({
+                    where: {
+                        routerline: '呼出'
+                    },
+                    order: 'proirety DESC'
+                }, function(err, inst) {
+                    if (err) {
+                        cb(err, inst);
+                    } else {
+                        var n = inst === null ? 1 : inst.proirety + 1;
+                        cb(null, n);
+                    }
+
+                });
+            },
+            createNew: ['isHaveCheck','maxProirety',
+                function(cb, results) {
                     if (results.isHaveCheck !== null) { //如果存在本函数什么都不做
                         cb(null, -1);
                     } else {
 
                         //初始化的数据
-                        Obj.proirety = 0;
+                        Obj.proirety = results.maxProirety;
                         Obj.routerline = "呼出";
 
-                        Schemas['pbxRouter'].create(Obj, function (err, inst) {
+                        Schemas['pbxRouter'].create(Obj, function(err, inst) {
                             cb(err, inst);
                         });
                     }
                 }
             ],
             updateOld: ['isHaveCheck',
-                function (cb, results) {
+                function(cb, results) {
                     if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
                         cb(null, -1);
                     } else {
@@ -93,21 +115,21 @@ posts.save = function (req, res, next, baseurl) {
                                 id: Obj.id
                             },
                             update: Obj
-                        }, function (err, inst) {
+                        }, function(err, inst) {
                             cb(err, inst);
                         });
                     }
                 }
             ]
         },
-        function (err, results) {
+        function(err, results) {
             var myjson = {
                 success: '',
                 id: '',
                 msg: ''
             };
             if (results.createNew !== -1) {
-                results.createNew.isValid(function (valid) {
+                results.createNew.isValid(function(valid) {
                     if (!valid) {
                         myjson.success = 'ERROR';
                         myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
@@ -130,9 +152,9 @@ posts.save = function (req, res, next, baseurl) {
             res.send(myjson);
         });
 }
-posts.delete = function (req, res, next, baseurl) {
+posts.delete = function(req, res, next, baseurl) {
     var id = req.body['id'];
-    Schemas['pbxRouter'].find(id, function (err, inst) {
+    Schemas['pbxRouter'].find(id, function(err, inst) {
         var myjson = {};
         if (err) {
             myjson.success = 'ERROR';
@@ -141,24 +163,36 @@ posts.delete = function (req, res, next, baseurl) {
             if (!inst) {
                 myjson.success = 'ERROR';
                 myjson.msg = '没有找到需要删除的数据！';
-            } else {
-
-            }
-            inst.destroy(function (err) {
-                if (err) {
-                    myjson.success = 'ERROR';
-                    myjson.msg = '删除数据发生异常,请联系管理员！！';
-                } else {
-                    myjson.success = 'OK';
-                    myjson.msg = '删除成功！';
-                }
                 res.send(myjson);
-            });
+            } else {
+                inst.destroy(function(err) {
+                    if (err) {
+                        myjson.success = 'ERROR';
+                        myjson.msg = '删除数据发生异常,请联系管理员！！';
+                        res.send(myjson);
+                    } else {
+                        Schemas['pbxRouter'].all({
+                            where: {
+                                routerline: '呼出'
+                            },
+                            order: 'proirety ASC'
+                        }, function(err, dbs) {
+                            var ids = "";
+                            for (var i = 0; i < dbs.length; i++) {
+                                ids += dbs[i].id + '|';
+                            }
+                            req.body['ids'] = ids;
+                            posts.sortRouter(req, res, next, baseurl);
+                        });
+                    }
+
+                });
+            }
         }
     });
 }
 
-posts.sortRouter = function (req, res, next, baseurl) {
+posts.sortRouter = function(req, res, next, baseurl) {
     var flagIndex = 1;
     var myjson = {};
     myjson.success = 'OK';
@@ -168,19 +202,18 @@ posts.sortRouter = function (req, res, next, baseurl) {
     for (var i = 0; i < ids.length; i++) {
         if (ids[i] != null && ids[i] != "") {
             Schemas['pbxRouter'].update({
-                    where: {
-                        id: ids[i]
-                    },
-                    update: {
-                        proirety: flagIndex++
-                    }
-                }, function (err2, inst2) {
-                    if (err2) {
-                        myjson.success = 'ERROR';
-                        myjson.msg = '更新数据发生异常,请联系管理员！！';
-                    }
+                where: {
+                    id: ids[i]
+                },
+                update: {
+                    proirety: flagIndex++
                 }
-            );
+            }, function(err2, inst2) {
+                if (err2) {
+                    myjson.success = 'ERROR';
+                    myjson.msg = '更新数据发生异常,请联系管理员！！';
+                }
+            });
         }
     }
     res.send(myjson);
