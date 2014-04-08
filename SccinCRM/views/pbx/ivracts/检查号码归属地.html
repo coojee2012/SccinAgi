@@ -1,0 +1,106 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <div class="panel panel-default fieldset">
+                            <div class="formStyle">
+                                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                                	<input type="hidden" id="id" name="id" value="<%= id%>" />
+                                    <table>
+                                        <colgroup>
+                                            <col style="width:20%">
+                                        </colgroup>
+                                        <tr>
+                                            <th>匹配的区号</th>
+                                            <td>
+                                                <input type="text" value="" name="quhao" id="quhao" placeholder="多个区号用‘,’号隔开。" datatype="*"
+                                                       errormsg="不能为空！"
+                                                       class="form-control input-sm"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>处理号码</th>
+                                            <td>
+                                               <input type="text" value="" name="number" id="number"
+                                                       class="form-control input-sm"
+                                                       placeholder="只能是数字，最少3位，不能超过20位"
+                                                       datatype="n3-20"
+                                                        sucmsg="验证通过！"
+                                                       errormsg="验证不通过！"
+                                                       />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>拨打方式</th>
+                                            <td>
+                                                <label class="radio-inline tipmsg">
+                                                    <input type="radio" id="addbefore1" name='doneway'
+                                                           value="diallocal">本地拨打</label>
+                                                <label class="radio-inline tipmsg" title="">
+                                                    <input type="radio" id="addbefore2" name='doneway' value="dialout"
+                                                           checked='checked'>呼叫外线</label>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td colspan="2" style="text-align: center">
+                                                <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+var quhao="";
+var number="";
+var doneway="diallocal";
+<%if(args!==null){%>
+quhao="<%= args.quhao%>";
+number="<%= args.number%>";
+doneway="<%= args.doneway%>";
+<%}%>
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+
+        $("#quhao").val(quhao);
+        $("#number").val(number);
+        $("#doneway").val(doneway);
+
+        $('#savemenmu').click(function (e) {
+            if ($('#form1').Validform().check()) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/save',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            //window.location.href = "edit?id=" + data.id;
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+    });
+
+</script>

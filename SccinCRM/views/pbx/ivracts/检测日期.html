@@ -1,0 +1,169 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <div class="panel panel-default fieldset">
+                            <div class="formStyle">
+                                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                                	<input type="hidden" id="id" name="id" value="<%= id%>" />
+                                    <table>
+                                        <colgroup>
+                                            <col style="width:20%">
+                                        </colgroup>
+                                       
+                                        <tr>
+                                            <th>匹配分钟</th>
+                                            <td>
+                                                <%for(var ii=0;ii<60;ii++){%>
+                                                <label class="checkbox-inline tipmsg" title="">
+            <input type="checkbox"  name='minutes' value="<%= ii%>"><%= ii%></label>
+                                                <%}%>
+                                               
+                                              
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <th>匹配小时</th>
+                                            <td>
+                                                <%for(var jj=0;jj<24;jj++){%>
+                                                <label class="checkbox-inline tipmsg" title="">
+            <input type="checkbox"  name='hours' value="<%= jj%>"><%= jj%></label>
+                                                <%}%>
+                                               
+                                              
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <th>匹配星期</th>
+                                            <td>
+                                                <%for(var tt=0;tt<6;tt++){%>
+                                                <label class="checkbox-inline tipmsg" title="">
+            <input type="checkbox"  name='weeks' value="<%= tt%>">星期<%= tt+1%></label>
+                                                <%}%>
+                                               
+                                              
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>匹配日期</th>
+                                            <td>
+                                                <%for(var kk=1;kk<32;kk++){%>
+                                                <label class="checkbox-inline tipmsg" title="">
+            <input type="checkbox"  name='dates' value="<%= kk%>"><%= kk%></label>
+                                                <%}%>
+                                               
+                                              
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>录音格式</th>
+                                            <td>
+                                                   <select  class="form-control input-sm" id="format" name="format">
+                <option value="wav">WAV</option>
+                <option value="gsm">GSM</option>
+                <option value="alaw">A-law</option>
+                <option value="ulaw">U-law</option>
+              </select>
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <th>最长录音时间(秒)</th>
+                                            <td>
+                                                <input type="text" value="" name="maxduration" id="maxduration" placeholder="默认最长为1小时,0表示不限制。"
+                                                       datatype="n1-5"
+                                                       sucmsg="验证通过！"
+                                                       errormsg="验证不通过！"
+                                                       class="form-control input-sm"/>
+                                            </td>
+                                        </tr>
+                                          <tr>
+                                            <th>录音选项</th>
+                                            <td>
+                                                   <select  class="form-control input-sm" multiple id="options" name="options">
+                <option value="a">a-在已有录音文件后面追加录音</option>
+                <option value="q">q-安静模式（录音前不播放beep声）</option>
+                <option value="s">s-如果线路未应答，将跳过录音</option>
+                <option value="t">t-用*号终止录音，代替默认按#号终止录音</option>
+                <option value="x">x-忽略所有按键，只有挂机才能终止录音</option>
+                <option value="y">y-任何按键都可以终止录音</option>
+              
+              </select>
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <th>无声检测(秒)</th>
+                                            <td>
+                                                <input type="text" value="" name="silence" id="silence" placeholder="默认最长为10秒,0表示不检测。"
+                                                       datatype="n1-5"
+                                                       sucmsg="验证通过！"
+                                                       errormsg="验证不通过！"
+                                                       class="form-control input-sm"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" style="text-align: center">
+                                                <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+var maxdigits="20";
+var varname="";
+var beep="true";
+var addbefore="fasle";
+<%if(args!==null){%>
+maxdigits="<%= args.maxdigits%>";
+varname="<%- args.varname%>";
+beep="<%= args.beep%>";
+addbefore="<%= args.addbefore%>";
+<%}%>
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+
+        $("#maxdigits").val(maxdigits);
+        $("#varname").val(varname);
+        $("input[name='addbefore'][value='"+addbefore+"']").attr("checked","checked");
+        $("input[name='beep'][value='"+beep+"']").attr("checked","checked");
+     
+
+        $('#savemenmu').click(function (e) {
+            if ($('#form1').Validform().check()) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/save',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            //window.location.href = "edit?id=" + data.id;
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+    });
+
+</script>

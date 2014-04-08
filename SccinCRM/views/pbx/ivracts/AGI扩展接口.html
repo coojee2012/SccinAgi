@@ -1,0 +1,87 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <div class="panel panel-default fieldset">
+                            <div class="formStyle">
+                                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                                	<input type="hidden" id="id" name="id" value="<%= id%>" />
+                                    <table>
+                                        <colgroup>
+                                            <col style="width:20%">
+                                        </colgroup>
+                                        <tr>
+                                            <th>AGI地址</th>
+                                            <td>
+                                               <input type="text" value="" name="addr" id="addr"
+                                                       class="form-control input-sm"
+                                                       placeholder="如：agi://127.0.0.1/test&a=1&b=2" datatype="*"
+                                                       errormsg="不能为空！"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>*使用说明</th>
+                                            <td>
+                                               <span>可以指定一个本地或外地可访问的AGI地址，跳转到其他AGI接口后将不受IVR流程控制。可以在地址后面以'&key=value'的方式添加传递到AGI接口的参数。如：agi://127.0.0.1/test&a=1&b=2</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" style="text-align: center">
+                                                <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+var addr="";
+
+
+<%if(args!==null){%>
+addr="<%= args.addr%>";
+<%}%>
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+
+        $("#addr").val(addr);
+    
+     
+
+        $('#savemenmu').click(function (e) {
+            if ($('#form1').Validform().check()) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/save',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            //window.location.href = "edit?id=" + data.id;
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+    });
+
+</script>

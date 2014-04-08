@@ -1,0 +1,258 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <div class="panel panel-default fieldset">
+                            <div class="formStyle">
+                                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                                	<input type="hidden" id="id" name="id" value="<%= id%>" />
+                                    <table>
+                                        <colgroup>
+                                            <col style="width:20%">
+                                        </colgroup>
+                                        <tr>
+                                            <th>URL地址</th>
+                                            <td colspan="3">
+                                               <input type="text" value="" name="url" id="url"
+                                                       class="form-control input-sm"
+                                                       placeholder="支持http或https，如，http://127.0.0.1" datatype="*"
+                                                       errormsg="不能为空！"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>访问方式</th>
+                                            <td colspan="3">
+                                               <select  class="form-control input-sm" id="methods" name="methods" datatype="*" errormsg="不能为空！">
+                <option value="">请选择</option>
+                <option value="get">GET</option>
+                <option value="post">POST</option>
+               
+              </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>访问超时(秒)</th>
+                                            <td colspan="3">
+                                                <input type="text" value="" name="timeout" id="timeout" placeholder="只能是数字，不能超过20位"
+                                                       datatype="n1-20"
+                                                        sucmsg="验证通过！"
+                                                       errormsg="验证不通过！"
+                                                       class="form-control input-sm"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>访问参数</th>
+                                            <td colspan="3">
+                                               <input type="text" value="" name="programs" id="programs"
+                                                       class="form-control input-sm"
+                                                       placeholder="格式如下：key~value,b~2,c~3;支持插入系统已知的通道变量名"/>
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <th>通道变量前缀</th>
+                                            <td colspan="3">
+                                               <input type="text" value="" name="varprex" id="varprex"
+                                                       class="form-control input-sm"
+                                                       placeholder="默认为webapp-" datatype="*"
+                                                       errormsg="不能为空！"/>
+                                            </td>
+                                        </tr>
+                                        <tr>  
+                                            <th>成功跳转到IVR号码</th>
+                                            <td>
+                                    <select  class="form-control input-sm" id="doneivrnum" name="doneivrnum" datatype="*" errormsg="不能为空！">
+                                        <option value="">请选择</option>
+              </select>
+          </td>
+                                         
+                                            <th>成功跳转到IVR编号</th>
+                                            <td>
+                                    <select  class="form-control input-sm" id="doneivractid" name="doneivractid" datatype="*" errormsg="不能为空！">
+                                        <option value="">请选择</option>
+              </select>
+          </td>
+                                        </tr>
+                                          <tr>  
+                                            <th>失败跳转到IVR号码</th>
+                                            <td>
+                                    <select  class="form-control input-sm" id="failivrnum" name="failivrnum" datatype="*" errormsg="不能为空！">
+              <option value="">请选择</option>
+              </select>
+          </td>
+                                         
+                                            <th>失败跳转到IVR编号</th>
+                                            <td>
+                                    <select  class="form-control input-sm" id="failivractid" name="failivractid" datatype="*" errormsg="不能为空！">
+                                        <option value="">请选择</option>
+              </select>
+          </td>
+                                        </tr>
+                                        <tr>  
+                                            <th>超时跳转到IVR号码</th>
+                                            <td>
+                                    <select  class="form-control input-sm" id="timeoutivrnum" name="timeoutivrnum" datatype="*" errormsg="不能为空！">
+                                        <option value="">请选择</option>
+              </select>
+          </td>
+                                         
+                                            <th>超时跳转到IVR编号</th>
+                                            <td>
+                                    <select  class="form-control input-sm" id="timeoutivractid" name="timeoutivractid" datatype="*" errormsg="不能为空！">
+                                        <option value="">请选择</option>
+              </select>
+          </td>
+                                        </tr>
+                                        <tr>
+                                            <th>*使用说明</th>
+                                            <td colspan="3">
+                                               <span>返回值为一格式化字符串：status=done|fail,通道变量1=变量值1，通道变量2=变量值2，成功调用后，将根据返回字符串和设置的通道变量前缀，设置通道变量，以供其他应用使用。</span>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td colspan="4" style="text-align: center">
+                                                <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+var url="";
+var methods="";
+var timeout="";
+var programs="";
+var varprex="";
+var doneivrnum="";
+var doneivractid="";
+var failivrnum="";
+var failivractid="";
+var timeoutivrnum="";
+var timeoutivractid="";
+<%if(args!==null){%>
+url="<%= args.url%>";
+methods="<%= args.methods%>";
+timeout="<%= args.timeout%>";
+programs="<%= args.programs%>";
+varprex="<%= args.varprex%>";
+doneivrnum="<%= args.doneivrnum%>";
+doneivractid="<%= args.doneivractid%>";
+failivrnum="<%= args.failivrnum%>";
+failivractid="<%= args.failivractid%>";
+timeoutivrnum="<%= args.timeoutivrnum%>";
+timeoutivractid="<%= args.timeoutivractid%>";
+<%}%>
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+
+        $("#url").val(url);
+        $("#methods").val(methods);
+        $("#timeout").val(timeout);
+        $("#programs").val(programs);
+        $("#varprex").val(varprex);
+       
+
+
+
+        getivrbumbers('doneivrnum',doneivrnum);
+        getivractions('doneivractid',doneivrnum,doneivractid);
+          $("#doneivrnum").change(function(){
+
+var ivrnum=$("#doneivrnum").val();
+getivractions('doneivractid',ivrnum);
+});
+        getivrbumbers('failivrnum',failivrnum);
+        getivractions('failivractid',failivrnum,failivractid);
+          $("#failivrnum").change(function(){
+
+var ivrnum=$("#failivrnum").val();
+getivractions('failivractid',ivrnum);
+});
+        getivrbumbers('timeoutivrnum',timeoutivrnum);
+         getivractions('timeoutivractid',timeoutivrnum,timeoutivractid);
+           $("#timeoutivrnum").change(function(){
+var ivrnum=$("#timeoutivrnum").val();
+getivractions('timeoutivractid',ivrnum);
+});
+
+        $('#savemenmu').click(function (e) {
+            if ($('#form1').Validform().check()) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/save',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            //window.location.href = "edit?id=" + data.id;
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+    });
+
+function getivrbumbers(elmid,value){
+  $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/getivrnums',
+                    data: {},// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        for(var i=0;i<data.length;i++){
+        var option = $("<option>").val(data[i].id).text(data[i].id+'-'+data[i].ivrname);
+            //option.attr('desc',data[i].description);
+      $("#"+elmid).append(option);
+    }
+    $("#"+elmid).val(value);
+                    }
+                });  
+}
+
+function getivractions(actid,ivrnum,value){
+$("#"+actid).empty();
+$("#"+actid).append($("<option>").val("").text("请选择"));
+    $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/getivracts',
+                    data: {ivrnum:ivrnum},// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        for(var i=0;i<data.length;i++){
+        var option = $("<option>").val(data[i].ordinal).text(data[i].ordinal+'-'+data[i].text);
+            //option.attr('desc',data[i].description);
+      $("#"+actid).append(option);
+    }
+    $("#"+actid).val(value);
+                    }
+                });  
+}
+</script>

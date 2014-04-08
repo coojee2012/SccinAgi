@@ -1,0 +1,119 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <div class="panel panel-default fieldset">
+                            <div class="formStyle">
+                                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                                	<input type="hidden" id="id" name="id" value="<%= id%>" />
+                                    <table>
+                                        <colgroup>
+                                            <col style="width:20%">
+                                        </colgroup>
+                                        <tr>
+                                            <th>需接收个数</th>
+                                            <td>
+                                                <input type="text" value="" name="maxdigits" id="maxdigits" placeholder="只能是数字,不能超过100，默认20"
+                                                       datatype="n1-2"
+                                                       ajaxurl="<%- baseurl%>/checkAjax" sucmsg="验证通过！"
+                                                       errormsg="验证不通过！"
+                                                       class="form-control input-sm"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>变量名</th>
+                                            <td>
+                                               <input type="text" value="" name="varname" id="varname"
+                                                       class="form-control input-sm"
+                                                       placeholder="指定一个通道变量名！" datatype="*"
+                                                       errormsg="不能为空！"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>播放'beep'提示</th>
+                                            <td>
+                                                <label class="radio-inline tipmsg">
+                                                    <input type="radio" id="isreadonly1" name='beep'
+                                                           value="true">是</label>
+                                                <label class="radio-inline tipmsg" title="">
+                                                    <input type="radio" id="isreadonly2" name='beep' value="false"
+                                                           checked='checked'>否</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>包含上一个输入</th>
+                                            <td>
+                                                <label class="radio-inline tipmsg">
+                                                    <input type="radio" id="addbefore1" name='addbefore'
+                                                           value="true">是</label>
+                                                <label class="radio-inline tipmsg" title="">
+                                                    <input type="radio" id="addbefore2" name='addbefore' value="false"
+                                                           checked='checked'>否</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" style="text-align: center">
+                                                <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+var maxdigits="20";
+var varname="";
+var beep="true";
+var addbefore="fasle";
+<%if(args!==null){%>
+maxdigits="<%= args.maxdigits%>";
+varname="<%= args.varname%>";
+beep="<%= args.beep%>";
+addbefore="<%= args.addbefore%>";
+<%}%>
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+
+        $("#maxdigits").val(maxdigits);
+        $("#varname").val(varname);
+        $("input[name='addbefore'][value='"+addbefore+"']").attr("checked","checked");
+        $("input[name='beep'][value='"+beep+"']").attr("checked","checked");
+     
+
+        $('#savemenmu').click(function (e) {
+            if ($('#form1').Validform().check()) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/save',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            //window.location.href = "edit?id=" + data.id;
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+    });
+
+</script>
