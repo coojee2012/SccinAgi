@@ -2,117 +2,88 @@
     <div class="page_box">
         <div class="column form-column main col form-horizontal">
             <div class="panel panel-default fieldset">
-                <div class="panel-heading">
-                </div>
+                <div class="panel-heading"></div>
                 <div class="panel-body ">
                     <div class="form-group">
                         <div class="panel panel-default fieldset">
                             <div class="formStyle">
-                                <form action='<%- baseurl%>/save' method='POST' id='form1'>
-                                	<input type="hidden" id="id" name="id" value="<%= id%>" />
+                                <form action='<%- baseurl%>
+                                    /save' method='POST' id='form1'>
+                                    <input type="hidden" id="id" name="id" value="<%= id%>" />
                                     <table>
                                         <colgroup>
-                                            <col style="width:20%">
-                                        </colgroup>
-                                       
-                                        <tr>
-                                            <th>匹配分钟</th>
-                                            <td>
-                                                <%for(var ii=0;ii<60;ii++){%>
-                                                <label class="checkbox-inline tipmsg" title="">
-            <input type="checkbox"  name='minutes' value="<%= ii%>"><%= ii%></label>
-                                                <%}%>
-                                               
-                                              
-                                            </td>
-                                        </tr>
-                                         <tr>
-                                            <th>匹配小时</th>
-                                            <td>
-                                                <%for(var jj=0;jj<24;jj++){%>
-                                                <label class="checkbox-inline tipmsg" title="">
-            <input type="checkbox"  name='hours' value="<%= jj%>"><%= jj%></label>
-                                                <%}%>
-                                               
-                                              
-                                            </td>
-                                        </tr>
-                                         <tr>
-                                            <th>匹配星期</th>
-                                            <td>
-                                                <%for(var tt=0;tt<6;tt++){%>
-                                                <label class="checkbox-inline tipmsg" title="">
-            <input type="checkbox"  name='weeks' value="<%= tt%>">星期<%= tt+1%></label>
-                                                <%}%>
-                                               
-                                              
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>匹配日期</th>
-                                            <td>
-                                                <%for(var kk=1;kk<32;kk++){%>
-                                                <label class="checkbox-inline tipmsg" title="">
-            <input type="checkbox"  name='dates' value="<%= kk%>"><%= kk%></label>
-                                                <%}%>
-                                               
-                                              
-                                            </td>
-                                        </tr>
+                                        <col style="width:20%"></colgroup>
 
-                                        <tr>
-                                            <th>录音格式</th>
-                                            <td>
-                                                   <select  class="form-control input-sm" id="format" name="format">
-                <option value="wav">WAV</option>
-                <option value="gsm">GSM</option>
-                <option value="alaw">A-law</option>
-                <option value="ulaw">U-law</option>
-              </select>
-                                            </td>
-                                        </tr>
-                                         <tr>
-                                            <th>最长录音时间(秒)</th>
-                                            <td>
-                                                <input type="text" value="" name="maxduration" id="maxduration" placeholder="默认最长为1小时,0表示不限制。"
-                                                       datatype="n1-5"
-                                                       sucmsg="验证通过！"
-                                                       errormsg="验证不通过！"
-                                                       class="form-control input-sm"/>
-                                            </td>
-                                        </tr>
-                                          <tr>
-                                            <th>录音选项</th>
-                                            <td>
-                                                   <select  class="form-control input-sm" multiple id="options" name="options">
-                <option value="a">a-在已有录音文件后面追加录音</option>
-                <option value="q">q-安静模式（录音前不播放beep声）</option>
-                <option value="s">s-如果线路未应答，将跳过录音</option>
-                <option value="t">t-用*号终止录音，代替默认按#号终止录音</option>
-                <option value="x">x-忽略所有按键，只有挂机才能终止录音</option>
-                <option value="y">y-任何按键都可以终止录音</option>
-              
-              </select>
-                                            </td>
-                                        </tr>
-                                         <tr>
-                                            <th>无声检测(秒)</th>
-                                            <td>
-                                                <input type="text" value="" name="silence" id="silence" placeholder="默认最长为10秒,0表示不检测。"
-                                                       datatype="n1-5"
-                                                       sucmsg="验证通过！"
-                                                       errormsg="验证不通过！"
-                                                       class="form-control input-sm"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="4" style="text-align: center">
-                                                <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </form>
-                            </div>
+                                    <tr>
+                                        <th>匹配分钟</th>
+                                        <td>
+                                            <%for(var ii=0;ii<60;ii++){%>
+                                            <label class="checkbox-inline tipmsg" title="">
+                                                <input type="checkbox"  name='minutes' value="<%= ii%>">
+                                                <%= ii%></label>
+                                            <%}%></td>
+                                    </tr>
+                                    <tr>
+                                        <th>匹配小时</th>
+                                        <td>
+                                            <%for(var jj=0;jj<24;jj++){%>
+                                            <label class="checkbox-inline tipmsg" title="">
+                                                <input type="checkbox"  name='hours' value="<%= jj%>">
+                                                <%= jj%></label>
+                                            <%}%></td>
+                                    </tr>
+                                    <tr>
+                                        <th>匹配星期</th>
+                                        <td>
+                                            <%for(var tt=0;tt<7;tt++){%>
+                                            <% var weeks=["一","二","三","四","五","六","日"];%>
+                                            <label class="checkbox-inline tipmsg" title="">
+                                                <input type="checkbox"  name='weeks' value="<%= tt%>">星期
+                                                <%= weeks[tt]%></label>
+                                            <%}%></td>
+                                    </tr>
+                                    <tr>
+                                        <th>匹配日期</th>
+                                        <td>
+                                            <%for(var kk=1;kk<32;kk++){%>
+                                            <label class="checkbox-inline tipmsg" title="">
+                                                <input type="checkbox"   name='dates' value="<%= kk%>">
+                                                <%= kk%></label>
+                                            <%}%></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>匹配月份</th>
+                                        <td>
+                                            <%for(var k3=0;k3<12;k3++){%>
+                                            <% var mons=["一","二","三","四","五","六","七","八","九","十","十一","十二"];%>
+                                            <label class="checkbox-inline tipmsg" title="">
+                                                <input type="checkbox"  name='months' value="<%= k3%>">
+                                                <%= mons[k3]%>月</label>
+                                            <%}%></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>符合时间跳转到IVR</th>
+                                        <td>
+                                            <select  class="form-control input-sm" id="ivrnumber" name="ivrnumber" datatype="*" errormsg="不能为空！">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>跳转到IVR动作</th>
+                                        <td>
+                                            <select  class="form-control input-sm" id="actionid" name="actionid" datatype="*" errormsg="不能为空！"></select>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="4" style="text-align: center">
+                                            <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存"></td>
+                                    </tr>
+                                </table>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -120,26 +91,64 @@
         </div>
     </div>
 </div>
+</div>
 <script type='text/javascript'>
-var maxdigits="20";
-var varname="";
-var beep="true";
-var addbefore="fasle";
+var minutes=["1","2"];
+var hours=[];
+var weeks=[];
+var dates=[];
+var months=[];
+var ivrnumber="";
+var actionid="";
 <%if(args!==null){%>
-maxdigits="<%= args.maxdigits%>";
-varname="<%- args.varname%>";
-beep="<%= args.beep%>";
-addbefore="<%= args.addbefore%>";
+minutes="<%= args.minutes%>".split(',');
+hours="<%- args.hours%>".split(',');
+weeks="<%= args.weeks%>".split(',');
+dates="<%= args.dates%>".split(',');
+months="<%= args.months%>".split(',');
+ivrnumber="<%= args.ivrnumber%>";
+actionid="<%= args.actionid%>";
 <%}%>
     $(function () {
         $(".tipmsg").tooltip({placement: 'auto'});
         $('#form1').Validform();
+        $("input[name='minutes']").each(function(){
+            for(var i=0;i<minutes.length;i++){
+                if($(this).val() == minutes[i])
+                    $(this).attr("checked","checked");
+            }
+        });
+        $("input[name='hours']").each(function(){
+            for(var i=0;i<hours.length;i++){
+                if($(this).val() == hours[i])
+                    $(this).attr("checked","checked");
+            }
+        });
+        $("input[name='weeks']").each(function(){
+            for(var i=0;i<weeks.length;i++){
+                if($(this).val() == weeks[i])
+                    $(this).attr("checked","checked");
+            }
+        });
+        $("input[name='dates']").each(function(){
+            for(var i=0;i<dates.length;i++){
+                if($(this).val() == dates[i])
+                    $(this).attr("checked","checked");
+            }
+        });
+        $("input[name='months']").each(function(){
+            for(var i=0;i<months.length;i++){
+                if($(this).val() == months[i])
+                    $(this).attr("checked","checked");
+            }
+        });
+        getivrbumbers('ivrnumber',ivrnumber);
+        getivractions('actionid',ivrnumber,actionid);
+          $("#ivrnumber").change(function(){
 
-        $("#maxdigits").val(maxdigits);
-        $("#varname").val(varname);
-        $("input[name='addbefore'][value='"+addbefore+"']").attr("checked","checked");
-        $("input[name='beep'][value='"+beep+"']").attr("checked","checked");
-     
+         var ivrnum=$("#ivrnumber").val();
+         getivractions('actionid',ivrnum);
+        });
 
         $('#savemenmu').click(function (e) {
             if ($('#form1').Validform().check()) {
@@ -165,5 +174,49 @@ addbefore="<%= args.addbefore%>";
 
         });
     });
+
+function getivrbumbers(elmid,value){
+  $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/getivrnums',
+                    data: {},// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        for(var i=0;i<data.length;i++){
+        var option = $("<option>").val(data[i].id).text(data[i].id+'-'+data[i].ivrname);
+            //option.attr('desc',data[i].description);
+      $("#"+elmid).append(option);
+    }
+    $("#"+elmid).val(value);
+                    }
+                });  
+}
+
+function getivractions(actid,ivrnum,value){
+$("#"+actid).empty();
+$("#"+actid).append($("<option>").val("").text("请选择"));
+    $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/getivracts',
+                    data: {ivrnum:ivrnum},// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        for(var i=0;i<data.length;i++){
+        var option = $("<option>").val(data[i].ordinal).text(data[i].ordinal+'-'+data[i].text);
+            //option.attr('desc',data[i].description);
+      $("#"+actid).append(option);
+    }
+    $("#"+actid).val(value);
+                    }
+                });  
+}
 
 </script>

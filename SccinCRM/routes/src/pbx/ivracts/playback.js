@@ -33,6 +33,14 @@ gets.index = function(req, res, next) {
 
 }
 
+gets.acts=function(req, res, next) {
+	var ivrnum = req.query.ivrnum;
+	res.render('pbx/ivracts/acts.html', {
+				baseurl: req.path,
+				ivrnum: ivrnum
+			});
+}
+
 posts.getFilename = function(req, res, next) {
 	var folder = req.body.folder;
 	Schemas.pbxSounds.all({

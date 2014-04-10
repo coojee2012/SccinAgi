@@ -1,0 +1,94 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <div class="panel panel-default fieldset">
+                            <div class="formStyle">
+                                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                                	<input type="hidden" id="id" name="id" value="<%= id%>" />
+                                    <table>
+                                        <colgroup>
+                                            <col style="width:20%">
+                                        </colgroup>
+                                        <tr>
+                                            <th>读出下面的数字</th>
+                                            <td>
+                                                <input type="text" value="" name="digits" id="digits" 
+                                                placeholder="只能是数字,不能超过100，默认20"
+                                                datatype="n1-20"
+                                                sucmsg="验证通过！"
+                                                errormsg="验证不通过！"
+                                                class="form-control input-sm"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>从变量读出</th>
+                                            <td>
+                                               <input type="text" value="" name="varname" id="varname"
+                                                       class="form-control input-sm"
+                                                       placeholder="指定一个通道变量名！"/>
+                                            </td>
+                                        </tr>
+                                         
+                                        
+                                        <tr>
+                                            <td colspan="4" style="text-align: center">
+                                                <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+var digits="";
+var varname="";
+
+<%if(args!==null){%>
+digits="<%= args.digits%>";
+varname="<%= args.varname%>";
+
+<%}%>
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+
+        $("#varname").val(varname);
+        $("#digits").val(digits);
+      
+        $('#savemenmu').click(function (e) {
+            if ($('#form1').Validform().check()) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/save',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            //window.location.href = "edit?id=" + data.id;
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+    });
+
+</script>

@@ -10,35 +10,47 @@
     <script type="text/javascript" src="/js/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="/js/lib/jstree.min.js"></script>
     <script type="text/javascript">
+    var ivrnum=<%= menuInst.id%>;
         $(function () {
-            $('#jstree').on('changed.jstree', function (e, data) {
+            $('#jstree').bind("loaded.jstree", function (e, data) {  
+  }).bind('changed.jstree', function (e, data) {
     var i, j, r = [];
     for(i = 0, j = data.selected.length; i < j; i++) {
      // r.push(data.instance.get_node(data.selected[i]).text);
      var id=data.instance.get_node(data.selected[i]).id;
      var text=data.instance.get_node(data.selected[i]).text;
      var pid=data.instance.get_parent(data.selected[i]);
-     if(pid==='actions' ){
-       // alert('actions:'+data.instance.get_node(data.selected[i]).id);
-       
-
+     if(id==='actions'){
+      window.parent.document.getElementById("ivraction").src="/pbx/ivracts/playback/acts?ivrnum="+ivrnum;  
+     }
+     if(id==='inputs'){
+      window.parent.document.getElementById("ivraction").src="/pbx/ivracts/playback/inputs?ivrnum="+ivrnum; 
+     }
+     if(pid==='actions' ){     
         window.parent.document.getElementById("ivraction").src="/pbx/ivracts/playback?id="+id+"&text="+text;
      }
      if(pid==='inputs'){
  //alert('inputs:'+data.instance.get_node(data.selected[i]).id)
+
      }
+
      
     }
     //$('#event_result').html('Selected: ' + r.join(', '));
-  }).jstree({
+  }).bind("move_node.jstree",function(e,data){
+            alert(e);
+        }).jstree({
                 "core": {
-                    "theme": {    "default": "small"},
-                   // "check_callback" : true,
+                    "theme": {"default": "small"},
+                    "initially_open" : [ "root" ],
+                    "check_callback" : true,
+                    "notify_plugins":true,
                     'data': [
                         {
                             'text': 'IVR<%= menuInst.id%>的执行动作',
                             "icon": '/images/ivr/bell.png',
                             "id":"actions",
+                            "type":"root",
                             'state': {
                                 'opened': true,
                                 'selected': false
@@ -47,7 +59,7 @@
                             'children':
                             [
                             <%for(var i=0;i<inst.length;i++){%>
-                                { 'text': '<%= inst[i].text%>', "icon": '<%= inst[i].icon%>',"id":"<%= inst[i].id%>" },
+                                { 'text': '<%= inst[i].text%>',"type":"actions", "icon": '<%= inst[i].icon%>',"id":"<%= inst[i].id%>" },
                                 <%}%>
 
                                 /*{ 'text': '播放语音', "icon": '/images/ivr/pi206.png',"id":"nbbb1" },
@@ -59,19 +71,68 @@
                             'text':'IVR<%= menuInst.id%>的按键选择',
                             'icon':'/images/ivr/19-2.png',
                             "id":"inputs",
+                            "type":"root",
                             'state': {
                                 'opened': true,
                                 'selected': false
                             },
                             'children':[
-                               { 'text': '无效按键', "icon": '/images/ivr/pi206.png',"id":"nbbb1" },
+                               { 'text': '无效按键',"type":"inputs", "icon": '/images/ivr/pi206.png',"id":"nbbb1" },
                                {'text': '输入超时', "icon": '/images/ivr/11.png',"id":"nbbb2" },
                                {'text': '重试次数', "icon": '/images/ivr/19-2.png',"id":"nbbb3" }
                             ]
                         }
                     ]
                 },
-               // "plugins":["dnd"]
+                "plugins":["themes","dnd","contextmenu","ui","types"],
+                 "types" : {
+      "root" : {
+        "icon" : "glyphicon glyphicon-flash",
+        "copy":false,
+        "is_draggable" : true //设置节点不可拖拽 
+      },
+      "default" : {
+        "icon" : "glyphicon glyphicon-flash",
+        "copy":false,
+        "is_draggable" : true
+      },
+      "actions" : {
+        "icon" : "glyphicon glyphicon-ok"
+      },
+      "inputs" : {
+        "icon" : "glyphicon glyphicon-ok"
+      }
+    },
+                "dnd":{
+ "drop_target" : false,
+            "drag_target" : false
+                },
+                "ui":{  
+                     "theme_name" : "classic" //设置皮肤样式  
+                 },
+                 "contextmenu": {  
+            "items": {  
+                "create": null,  
+                "rename": null,  
+                "remove": null,  
+                "ccp": null,  
+                "弹出对话框": {  
+                    "label": "弹出对话框",  
+                    "action": function (obj) { alert(obj) }  
+                },  
+                "包含子级菜单": {  
+                    "label": "包含子级菜单",  
+                    "submenu": {  
+                        "cut" : {  
+                            "separator_before"  : false,  
+                            "separator_after"   : false,  
+                            "label"             : "Cut",  
+                            "action"            : function (obj) { alert("Cut") }  
+                        }  
+                    }  
+                }  
+            } 
+            } 
             });
         });
     </script>

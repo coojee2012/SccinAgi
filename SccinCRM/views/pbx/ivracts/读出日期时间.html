@@ -1,0 +1,121 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <div class="panel panel-default fieldset">
+                            <div class="formStyle">
+                                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                                	<input type="hidden" id="id" name="id" value="<%= id%>" />
+                                    <table>
+                                        <colgroup>
+                                            <col style="width:20%">
+                                        </colgroup>
+                                        <tr>
+                                            <th>读出以下日期时间</th>
+                                            <td>
+                                                <input type="text" value="" name="fromstr" id="fromstr" placeholder="指定日期时间，格式：YYYYMMDD HHMM"
+                                                       class="form-control input-sm"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>从变量读出</th>
+                                            <td>
+                                               <input type="text" value="" name="fromvar" id="fromvar"
+                                                       class="form-control input-sm"
+                                                       placeholder="指定一个通道变量名！"/>
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <th>读出当前日期时间</th>
+                                            <td>
+                                                <label class="radio-inline tipmsg">
+                                                    <input type="radio" id="isreadonly1" name='saynow'
+                                                           value="true">是</label>
+                                                <label class="radio-inline tipmsg" title="">
+                                                    <input type="radio" id="isreadonly2" name='saynow' value="false"
+                                                           checked='checked'>否</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>读出方式</th>
+                                            <td>
+                                                <label class="radio-inline tipmsg">
+                                                    <input type="radio" id="isreadonly1" name='sayway'
+                                                           value="date">只读日期</label>
+                                                <label class="radio-inline tipmsg" title="">
+                                                    <input type="radio" id="isreadonly2" name='sayway' value="time" checked='checked'>只读时间</label>
+                                                <label class="radio-inline tipmsg" title="">
+                                                    <input type="radio" id="isreadonly3" name='sayway' value="datetime" checked='checked'>读日期和时间</label>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td colspan="4" style="text-align: center">
+                                                <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+var fromstr="";
+var fromvar="";
+var saynow="false";
+var sayway="datetime";
+<%if(args!==null){%>
+fromstr="<%= args.fromstr%>";
+fromvar="<%= args.fromvar%>";
+saynow="<%= args.saynow%>";
+sayway="<%= args.sayway%>";
+<%}%>
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+
+        $("#fromstr").val(fromstr);
+        $("#fromvar").val(fromvar);
+        $("input[name='saynow']").each(function(){         
+                if($(this).val() == saynow)
+                    $(this).attr("checked","checked");          
+        });
+        $("input[name='sayway']").each(function(){         
+                if($(this).val() == sayway)
+                    $(this).attr("checked","checked");          
+        });
+        $('#savemenmu').click(function (e) {
+            if ($('#form1').Validform().check()) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/save',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            //window.location.href = "edit?id=" + data.id;
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+    });
+
+</script>
