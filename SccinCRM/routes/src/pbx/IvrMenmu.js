@@ -143,12 +143,175 @@ gets.ivrtree = function(req, res, next, baseurl) {
         }
     }, function(err, results) {
         res.render('.' + baseurl + '/ivrtree.html', {
+            layout: false,
             baseurl: baseurl,
             modename: 'pbxIvrMenmu',
             inst: results.findAction,
             menuInst: results.findMenu
         });
     });
+}
+
+posts.reorder = function(req, res, next, baseurl) {
+    var neworders = req.body.neworders.split(",");
+    orderactions(neworders, function(err) {
+        if (err) {
+            res.send({
+                success: "ERROR",
+                msg: "排序失败！"
+            });
+        } else {
+            res.send({
+                success: "OK",
+                msg: "排序成功！"
+            });
+        }
+    })
+
+}
+
+posts.addaction = function(req, res, next, baseurl) {
+    var modeid = req.body.modeid;
+    var ivrnum = req.body.ivrnum;
+    async.auto({
+        count: function(cb) {
+            Schemas.pbxIvrActions.count({
+                ivrnumber: ivrnum
+            }, function(err, count) {
+                console.log(count);
+                cb(err, count);
+            });
+        },
+        create: ['count',
+            function(cb, results) {
+                var node = {
+                    ivrnumber: ivrnum,
+                    ordinal: results.count + 1,
+                    actmode: '' + modeid + '',
+                    args: 'varname=&digits=&dialway=diallocal'
+                }
+                Schemas.pbxIvrActions.create(node, function(err, inst) {
+                    cb(err, inst);
+                });
+            }
+        ]
+    }, function(err, results) {
+        if (err) {
+            res.send({
+                success: "ERROR",
+                id: "",
+                msg: err
+            });
+        } else {
+            res.send({
+                success: "OK",
+                id: results.create.id
+            });
+        }
+
+    });
+
+
+}
+
+posts.delaction = function(req, res, next, baseurl) {
+    var ids = req.body.ids.split(",");
+    var ivrnum = req.body.ivrnum;
+    if (ids.length > 0) {
+        async.auto({
+            find: function(cb) {
+                Schemas.pbxIvrActions.all({
+                    where: {
+                        id: {
+                            "inq": ids
+                        },
+                        ivrnumber: ivrnum
+                    }
+                }, function(err, dbs) {
+                    cb(err, dbs);
+                });
+            },
+            del: ["find",
+                function(cb, results) {
+                    delactions(results.find, cb);
+                }
+            ],
+            findtwo: ["del",
+                function(cb, results) {
+                    Schemas.pbxIvrActions.all({
+                        where: {
+                            ivrnumber: ivrnum
+                        },
+                        order: 'ordinal asc'
+                    }, function(err, dbs) {
+                        cb(err, _.map(dbs, function(act) {
+                            return act.id;
+                        }));
+                    });
+                }
+            ],
+            order: ["findtwo",
+                function(cb, results) {
+                    orderactions(results.findtwo, cb);
+                }
+            ]
+        }, function(err, results) {
+            if (err)
+                res.send({
+                    success: "ERROR",
+                    msg: "删除发生错误:"+err
+                });
+            else
+                res.send({
+                    success: "OK",
+                    msg: "删除成功！"
+                });
+        });
+    } else {
+        res.send({
+            success: "ERROR",
+            msg: "没有什么需要删除的！"
+        });
+    }
+}
+
+function delactions(actions, callback) {
+    async.each(actions, function(item, cb) {
+        item.destroy(function(err) {
+            if (err) {
+                cb(err);
+            } else {
+                cb(null);
+            }
+        });
+    }, function(err) {
+        callback(err);
+    });
+}
+
+function orderactions(neworders, cb) {
+    var count = 0;
+    async.whilst(
+        function() {
+            return count < neworders.length;
+        },
+        function(callback) {
+            count++;
+            Schemas.pbxIvrActions.update({
+                where: {
+                    id: neworders[count - 1]
+                },
+                update: {
+                    ordinal: count
+                }
+            }, function(err, inst) {
+                callback(err, inst);
+            });
+        },
+        function(err) {
+            cb(err);
+        }
+    );
 }
 
 
