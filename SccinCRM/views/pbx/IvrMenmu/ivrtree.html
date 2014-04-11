@@ -10,209 +10,399 @@
     <script type="text/javascript" src="/js/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="/js/lib/jstree.min.js"></script>
     <script type="text/javascript">
-    var ivrnum=<%= menuInst.id%>;
-    var contextmenu=null;
-  /*  $(document).bind("context_parse.vakata",function(e,data){
+    var ivrnum = <%= menuInst.id %> ;
+    var contextmenu = null;
+    /*  $(document).bind("context_parse.vakata",function(e,data){
     contextmenu=$(data.element);
     alert(contextmenu.items);
   }).bind("context_show.vakata",function(e,data){
    //alert(r);
   });*/
-    $(function () {
-  var Tree =    $('#jstree').bind("loaded.jstree", function (e, data) {  
-      }).bind('changed.jstree', function (e, data) {
+    $(function() {
+      var Tree = $('#jstree').bind("loaded.jstree", function(e, data) {}).bind('changed.jstree', function(e, data) {
         var i, j, r = [];
-        for(i = 0, j = data.selected.length; i < j; i++) {
-     // r.push(data.instance.get_node(data.selected[i]).text);
-     var id=data.instance.get_node(data.selected[i]).id;
-     var text=data.instance.get_node(data.selected[i]).text;
-     var pid=data.instance.get_parent(data.selected[i]);
-     var items=data.instance.settings.contextmenu.items;
-    
-     if(id==='actions'){
-      window.parent.document.getElementById("ivraction").src="/pbx/ivracts/playback/acts?ivrnum="+ivrnum; 
-      items.delete._disabled=true;
-      items.addaction._disabled=false; 
-      items.addinputs._disabled=true;
-    }
-    if(id==='inputs'){
-      items.delete._disabled=true;
-      items.addaction._disabled=true; 
-      items.addinputs._disabled=false;
-      window.parent.document.getElementById("ivraction").src="/pbx/ivracts/playback/inputs?ivrnum="+ivrnum; 
-    }
-    if(pid==='actions' ){
-      items.delete._disabled=false;
-      items.addaction._disabled=false; 
-      items.addinputs._disabled=true;     
-      window.parent.document.getElementById("ivraction").src="/pbx/ivracts/playback?id="+id+"&text="+text;
-    }
-    if(pid==='inputs'){
-      items.delete._disabled=false;
-      items.addaction._disabled=true; 
-      items.addinputs._disabled=false; 
- //alert('inputs:'+data.instance.get_node(data.selected[i]).id)
+        for (i = 0, j = data.selected.length; i < j; i++) {
+          // r.push(data.instance.get_node(data.selected[i]).text);
+          var id = data.instance.get_node(data.selected[i]).id;
+          var text = data.instance.get_node(data.selected[i]).text;
+          var pid = data.instance.get_parent(data.selected[i]);
+          var items = data.instance.settings.contextmenu.items;
 
-}
+          if (id === 'actions') {
+            window.parent.document.getElementById("ivraction").src = "/pbx/ivracts/playback/acts?ivrnum=" + ivrnum;
+            items.delete._disabled = true;
+            items.addaction._disabled = false;
+            items.addinputs._disabled = true;
+          }
+          if (id === 'inputs') {
+            items.delete._disabled = true;
+            items.addaction._disabled = true;
+            items.addinputs._disabled = false;
+            window.parent.document.getElementById("ivraction").src = "/pbx/ivracts/playback/inputs?ivrnum=" + ivrnum;
+          }
+          if (pid === 'actions') {
+            items.delete._disabled = false;
+            items.addaction._disabled = false;
+            items.addinputs._disabled = true;
+            window.parent.document.getElementById("ivraction").src = "/pbx/ivracts/playback?id=" + id + "&text=" + text;
+          }
+          if (pid === 'inputs') {
+            items.delete._disabled = false;
+            items.addaction._disabled = true;
+            items.addinputs._disabled = false;
+            if(text==="输入超时" || text==="无效按键" || text==="重试次数"){
+              items.delete._disabled = true;
+            }
+            window.parent.document.getElementById("ivraction").src = "/pbx/ivracts/playback/einputs?id=" + id + "&text=" + text;
+          }
 
 
-}
-    //$('#event_result').html('Selected: ' + r.join(', '));
-  }).bind("move_node.jstree",function(e,data){
-    var neworders=data.new_instance._model.data[data.parent].children.join(",");
-    $.ajax({
-     cache: true,
-     type: "POST",
-     url: '<%- baseurl%>/reorder',
-                        data: {neworders:neworders},// 你的formid
-                        async: false,
-                        error: function (request) {
-                         window.parent.$.scojs_message('连接服务器失败！', 1);
-                       },
-                       success: function (data) {
-                        if (data.success === 'OK') {
+        }
+        //$('#event_result').html('Selected: ' + r.join(', '));
+      }).bind("move_node.jstree", function(e, data) {
+        var neworders = data.new_instance._model.data[data.parent].children.join(",");
+        $.ajax({
+          cache: true,
+          type: "POST",
+          url: '<%- baseurl%>/reorder',
+          data: {
+            neworders: neworders
+          }, // 你的formid
+          async: false,
+          error: function(request) {
+            window.parent.$.scojs_message('连接服务器失败！', 1);
+          },
+          success: function(data) {
+            if (data.success === 'OK') {
 
-                        }
-                        window.parent.$.scojs_message(data.msg,2);
-                      }
-                    });
-  }).bind("show_contextmenu.jstree",function(e,data){
-      }).jstree({
-    "core": {
-      "theme": {
-        "name": "small",
-        "url":true,
-        "dots":true
-      },
-      "initially_open" : [ "root" ],
-      "check_callback" : function (operation, node, node_parent, node_position, more) {
+            }
+            window.parent.$.scojs_message(data.msg, 2);
+          }
+        });
+      }).bind("show_contextmenu.jstree", function(e, data) {}).jstree({
+        "core": {
+          "theme": {
+            "name": "small",
+            "url": true,
+            "dots": true
+          },
+          "initially_open": ["root"],
+          "check_callback": function(operation, node, node_parent, node_position, more) {
             // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node' or 'copy_node'
             // in case of 'rename_node' node_position is filled with the new node name
             //return operation === 'rename_node' ? true : false;
-            if(operation==='move_node' && node.parent==="inputs")
+            if (operation === 'move_node' && node.parent === "inputs")
               return false;
-            if(operation==="delete_node" && (node.id==="actions" || node.id==="inputs"))
-            {
-             window.parent.$.scojs_message('此节点不能被删除！', 1);
-             return false;
-           }  
-           else
-            return true;
-        },
-        "notify_plugins":true,
-        'data': [
-        {
-          'text': 'IVR<%= menuInst.id%>的执行动作',
-          "icon": '/images/ivr/bell.png',
-          "id":"actions",
-          "type":"actionroot",
-          'state': {
-            'opened': true,
-            'selected': false
+            if (operation === "delete_node" && (node.id === "actions" || node.id === "inputs")) {
+              window.parent.$.scojs_message('此节点不能被删除！', 1);
+              return false;
+            } else
+              return true;
           },
-          'children':[
-          <%for(var i=0;i<inst.length;i++){%>
-            { 'text': '<%= inst[i].text%>',"type":"actions", "icon": '<%= inst[i].icon%>',"id":"<%= inst[i].id%>" },
-            <%}%>
+          "notify_plugins": true,
+          'data': [{
+            'text': 'IVR<%= menuInst.id%>的执行动作',
+            "icon": '/images/ivr/16.png',
+            "id": "actions",
+            "type": "actionroot",
+            'state': {
+              'opened': true,
+              'selected': false
+            },
+            'children': [ <%
+              for (var i = 0; i < inst.length; i++) { %> {
+                  'text': '<%= inst[i].text%>',
+                  "type": "actions",
+                  "icon": '<%= inst[i].icon%>',
+                  "id": "<%= inst[i].id%>"
+                }, <%
+              } %>
+            ]
+          }, {
+            'text': 'IVR<%= menuInst.id%>的按键选择',
+            'icon': '/images/ivr/view-fullscreen.png',
+            "id": "inputs",
+            "type": "inputroot",
+            'state': {
+              'opened': true,
+              'selected': false
+            },
+        'children': [ <%
+          for (var i100 = 0; i100 < inputs.length; i100++) { %> <%
+            if (inputs[i100].general === 0) { %> {
+                'text': '按键<%= inputs[i100].inputnum%>',
+                "type": "inputs",
+                "id": "<%= inputs[i100].id%>"
+              }, <%
+            } else if (inputs[i100].general === 1 && inputs[i100].generaltype === 'timeout') { %> {
+                'text': '输入超时',
+                "type": "inputs",
+                "icon":"/images/ivr/pi37.png",
+                "id": "<%= inputs[i100].id%>"
+              }, <%
+            } else if (inputs[i100].general === 1 && inputs[i100].generaltype === 'invalidkey') { %> {
+                'text': '无效按键',
+                "type": "inputs",
+                "icon":"/images/ivr/pi37.png",
+                "id": "<%= inputs[i100].id%>"
+              }, <%
+            } else if (inputs[i100].general === 1 && inputs[i100].generaltype === 'retry') { %> {
+                'text': '重试次数',
+                "icon":"/images/ivr/pi37.png",
+                "type": "inputs",
+                "id": "<%= inputs[i100].id%>"
+              }, <%
+            } %> <%
+          } %>
+        ]
+          }]
+        },
+        "plugins": ["themes", "dnd", "contextmenu", "ui", "types"],
+        "types": {
+          "#": {
+            "max_children": 2,
+            "max_depth": -1,
+            "valid_children": ["actionroot", "inputroot"]
+          },
+          "default": {
+            "icon": "glyphicon glyphicon-flash"
+          },
+          "actionroot": {
+            "icon": "glyphicon glyphicon-flash",
+            "valid_children": ["actions"]
+          },
+          "inputroot": {
+            "icon": "glyphicon glyphicon-flash",
+            "valid_children": ["inputs"]
 
-                                /*{ 'text': '播放语音', "icon": '/images/ivr/pi206.png',"id":"nbbb1" },
-                               {'text': '拨打电话', "icon": '/images/ivr/11.png',"id":"nbbb2" },
-                               {'text': '录制字符', "icon": '/images/ivr/19-2.png',"id":"nbbb3" }*/
-                               ]
-                             },
-                             {
-                              'text':'IVR<%= menuInst.id%>的按键选择',
-                              'icon':'/images/ivr/19-2.png',
-                              "id":"inputs",
-                              "type":"inputroot",
-                              'state': {
-                                'opened': true,
-                                'selected': false
-                              },
-                              'children':[
-                              { 'text': '无效按键',"type":"inputs","id":"nbbb1" },
-                              {'text': '输入超时',"type":"inputs", "id":"nbbb2" },
-                              {'text': '重试次数',"type":"inputs", "id":"nbbb3" }
-                              ]
+          },
+          "actions": {
+            "icon": "glyphicon glyphicon-ok",
+            "valid_children": [],
+          },
+          "inputs": {
+            "icon": '/images/ivr/19-2.png',
+            "valid_children": []
+          }
+        },
+        "dnd": {
+          "is_draggable": true,
+          "copy": false
+        },
+        "contextmenu": {
+          "select_node": true,
+          "items": {
+
+            "addaction": {
+              "label": "添加动作",
+              "icon": '/images/ivr/71.png',
+              "submenu": {
+                "播放类": {
+                  "label": "播放类",
+                  "icon": "/images/ivr/37.png",
+                  "submenu": { <%
+                    for (var i8 = 0; i8 < actmods.length; i8++) { %> <%
+                      if (actmods[i8].category === "read") { %>
+                          "<%= actmods[i8].modename%>": {
+                            "label": "<%= actmods[i8].modename%>",
+                            "modeid": "<%= actmods[i8].id%>",
+                            "icon": "<%= actmods[i8].iconame%>",
+                            "action": function(obj) {
+                              createaction(obj);
                             }
-                            ]
-                          },
-                          "plugins":["themes","dnd","contextmenu","ui","types"],
-                          "types" : {
-                            "#":{
-                              "max_children":2,
-                              "max_depth":-1,
-                              "valid_children":["actionroot","inputroot"]
-                            },
-                            "default" : {
-                              "icon" : "glyphicon glyphicon-flash"
-                            },
-                            "actionroot" : {
-                              "icon" : "glyphicon glyphicon-flash",
-                              "valid_children":["actions"]
-                            },
-                            "inputroot" : {
-                              "icon" : "glyphicon glyphicon-flash",
-                              "valid_children":["inputs"]
-
-                            },
-                            "actions" : {
-                              "icon" : "glyphicon glyphicon-ok",
-                              "valid_children":[],
-                            },
-                            "inputs" : {
-                              "icon": '/images/ivr/19-2.png',
-                              "valid_children":[]
+                        },
+                        <%
+                      } %> <%
+                    } %>
+                  }
+                },
+                "录制类": {
+                  "label": "录制类",
+                  "icon": "/images/ivr/38.png",
+                  "submenu": { <%
+                    for (var i9 = 0; i9 < actmods.length; i9++) { %> <%
+                      if (actmods[i9].category === "record") { %>
+                          "<%= actmods[i9].modename%>": {
+                            "label": "<%= actmods[i9].modename%>",
+                            "modeid": "<%= actmods[i9].id%>",
+                            "icon": "<%= actmods[i9].iconame%>",
+                            "action": function(obj) {
+                              createaction(obj);
                             }
-                          },
-                          "dnd":{
-                           "is_draggable" : true,
-                           "copy" : false
-                         },
-                         "contextmenu": {  
-                          "select_node":true,
-                          "items": {  
-                             
-      "addaction": {  
-        "label": "添加动作",  
-        "submenu": {  
-          "播放语音" : {   
-            "label"             : "播放语音", 
-            "modeid":"1",
-            "icon":"/images/ivr/19-2.png",
-            "action"            :function(obj){createaction(obj);}  
-          }  
-        }  
-      } ,  
-      "addinputs": {  
-        "label": "添加输入",  
-        "submenu": {  
-          "按键1" : {  
-            "separator_before"  : false,  
-            "separator_after"   : false,  
-            "label"             : "按键1",  
-            "action"            : function (obj) { alert("Cut") }  
-          } ,"按键2" : {  
-            "label"             : "按键2",  
-            "action"            : function (obj) { alert("Cut") }  
-          }  ,"按键3" : {  
-            "label"             : "按键3",  
-            "action"            : function (obj) { alert("Cut") }  
-          } 
-        }  
-      },
-       "delete": {  
-                              "label": "删除",  
-                              "action": function(e){delnode(e);}  
-      }
-    } 
-  },
-  "ui":{  
-                     "theme_name" : "classic" //设置皮肤样式  
-                   }
+                        },
+                        <%
+                      } %> <%
+                    } %>
+                  }
+                },
+                "检查类": {
+                  "label": "检查类",
+                  "icon": "/images/ivr/24.png",
+                  "submenu": { <%
+                    for (var i10 = 0; i10 < actmods.length; i10++) { %> <%
+                      if (actmods[i10].category === "check") { %>
+                          "<%= actmods[i10].modename%>": {
+                            "label": "<%= actmods[i10].modename%>",
+                            "modeid": "<%= actmods[i10].id%>",
+                            "icon": "<%= actmods[i10].iconame%>",
+                            "action": function(obj) {
+                              createaction(obj);
+                            }
+                        },
+                        <%
+                      } %> <%
+                    } %>
+                  }
+                },
+                "控制类": {
+                  "label": "控制类",
+                  "icon": "/images/ivr/pi144.png",
+                  "submenu": { <%
+                    for (var i11 = 0; i11 < actmods.length; i11++) { %> <%
+                      if (actmods[i11].category === "control") { %>
+                          "<%= actmods[i11].modename%>": {
+                            "label": "<%= actmods[i11].modename%>",
+                            "modeid": "<%= actmods[i11].id%>",
+                            "icon": "<%= actmods[i11].iconame%>",
+                            "action": function(obj) {
+                              createaction(obj);
+                            }
+                        },
+                        <%
+                      } %> <%
+                    } %>
+                  }
+                }
+              }
+            },
+        "addinputs": {
+          "label": "添加输入",
+          "icon": '/images/ivr/43.png',
+          "submenu": {
+            "按键0~5": {
+              "label": "按键0~5",
+              "icon": "/images/ivr/19.png",
+              "submenu": {
+                "按键0": {
+                  "label": "按键0",
+                  "keynum":'0',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                },
+                "按键1": {
+                  "label": "按键1",
+                  "keynum":'1',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                },
+                "按键2": {
+                  "label": "按键2",
+                  "keynum":'2',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                },
+                "按键3": {
+                  "label": "按键3",
+                  "keynum":'3',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                },
+                "按键3": {
+                  "label": "按键3",
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                },
+                "按键4": {
+                  "label": "按键4",
+                  "keynum":'4',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                },
+                "按键5": {
+                  "label": "按键5",
+                  "keynum":'5',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                }
+              }
+            },
+            "按键6~*": {
+              "label": "按键6~*",
+              "icon": "/images/ivr/19.png",
+              "submenu": {
+                "按键6": {
+                  "label": "按键6",
+                  "keynum":'6',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                },
+                "按键7": {
+                  "label": "按键7",
+                  "icon": "/images/ivr/19.png",
+                  "keynum":'7',
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                },
+                "按键8": {
+                  "label": "按键8",
+                  "keynum":'8',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    acreateinput(obj);
+                  }
+                },
+                "按键9": {
+                  "label": "按键9",
+                  "keynum":'9',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                },
+                "按键*": {
+                  "label": "按键*",
+                  "keynum":'*',
+                  "icon": "/images/ivr/19.png",
+                  "action": function(obj) {
+                    createinput(obj);
+                  }
+                }
+              }
+            }
+          }
+        },
+            "delete": {
+              "label": "删除",
+              "icon": '/images/ivr/01.png',
+              "action": function(e) {
+                delnode(e);
+              }
+            }
+          }
+        },
+        "ui": {
+          "theme_name": "classic" //设置皮肤样式  
+        }
 
-                 });
-});
+      });
+    });
 
 
 function createaction(obj,cb){
@@ -243,6 +433,47 @@ function createaction(obj,cb){
                         if (data.success === 'OK') {
                           var node={"id":data.id,"text":menmu.label,"type":"actions","icon":menmu.icon};
                           sel= ref.create_node(sel,node);
+                          if(sel){
+                            window.parent.$.scojs_message("新增动作成功!",2);
+                          }else{
+                            window.parent.$.scojs_message("新增插入显示失败!",2);
+                          }
+                        }else{
+                          window.parent.$.scojs_message("新增失败:"+data.msg,1);
+                        }
+                        
+                      }
+                    });
+}
+
+function createinput(obj,cb){
+  var menmu=obj.item;
+  var ref=$('#jstree').jstree(true);
+  var sel = ref.get_selected(true);
+  var pos="last";
+  if(sel.length>0 ){
+    if(sel[0].id!=='inputs')
+      sel=sel[0].parent;
+    else
+      sel=sel[0];
+  }else{
+    window.parent.$.scojs_message('树异常！', 1);
+    return false;
+  }
+  var keynum=menmu.keynum;
+  $.ajax({
+    cache: true,
+    type: "POST",
+    url: '<%- baseurl%>/addinput',
+                        data: {ivrnum:ivrnum,keynum:keynum},// 你的formid
+                        async: false,
+                        error: function (request) {
+                         window.parent.$.scojs_message('连接服务器失败！', 1);
+                       },
+                       success: function (data) {
+                        if (data.success === 'OK') {
+                          var node={"id":data.id,"text":menmu.label,"type":"inputs","icon":"/images/ivr/19-2.png"};
+                          sel= ref.create_node(sel,node,0);
                           if(sel){
                             window.parent.$.scojs_message("新增动作成功!",2);
                           }else{

@@ -140,6 +140,23 @@ gets.ivrtree = function(req, res, next, baseurl) {
                 else
                     cb(err, inst);
             });
+        },
+        getActmodes: function(cb) {
+            Schemas['pbxIvrActMode'].all({
+                order: 'id ASC'
+            }, function(err, dbs) {
+                cb(err, dbs);
+            });
+        },
+        findInputs: function(cb) {
+            Schemas['pbxIvrInputs'].all({
+                where: {
+                    ivrnumber: id
+                },
+                order: ['general ASC', 'inputnum ASC']
+            }, function(err, dbs) {
+                cb(err, dbs);
+            });
         }
     }, function(err, results) {
         res.render('.' + baseurl + '/ivrtree.html', {
@@ -147,6 +164,8 @@ gets.ivrtree = function(req, res, next, baseurl) {
             baseurl: baseurl,
             modename: 'pbxIvrMenmu',
             inst: results.findAction,
+            actmods: results.getActmodes,
+            inputs: results.findInputs,
             menuInst: results.findMenu
         });
     });
@@ -259,7 +278,7 @@ posts.delaction = function(req, res, next, baseurl) {
             if (err)
                 res.send({
                     success: "ERROR",
-                    msg: "删除发生错误:"+err
+                    msg: "删除发生错误:" + err
                 });
             else
                 res.send({
@@ -357,37 +376,69 @@ posts.save = function(req, res, next, baseurl) {
                         });
                     }
                 }
-            ]
-        },
-        function(err, results) {
-            var myjson = {
-                success: '',
-                id: '',
-                msg: ''
-            };
-            if (results.createNew !== -1) {
-                results.createNew.isValid(function(valid) {
-                    if (!valid) {
-                        myjson.success = 'ERROR';
-                        myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
+            ],
+            defaultinputs: ["createNew",
+                function(cb, results) {
+                    if (results.createNew === -1) { //如果不存在本函数什么都不做
+                        cb(null, -1);
                     } else {
-                        myjson.success = 'OK';
-                        myjson.msg = '新增成功!';
-                        myjson.id = results.createNew.id;
+                        var inputs = [{
+                            ivrnumber: Obj.id,
+                            inputnum: "101",
+                            generaltype: "timeout",
+                            general: 1
+                        }, {
+                            ivrnumber: Obj.id,
+                            inputnum: "102",
+                            generaltype: "invalidkey",
+                            general: 1
+                        }, {
+                            ivrnumber: Obj.id,
+                            inputnum: "103",
+                            generaltype: "retry",
+                            general: 1
+                        }];
+                        async.forEach(inputs, function(item, callback) {
+                            Schemas['pbxIvrInputs'].create(item, function(err, inst) {
+                                callback(err, inst);
+                            });
+                        }, function(err, results) {
+                            cb(err, results);
+                        });
                     }
-                });
-            } else if (results.updateOld !== -1) {
-                myjson.success = 'OK';
-                myjson.msg = '修改成功!';
-                myjson.id = Obj.id;
+                }
+            ]
+    },
 
-            } else if (err) {
-                console.log(err);
-                myjson.success = 'ERROR';
-                myjson.msg = '保存数据发生异常,请联系管理员！';
-            }
-            res.send(myjson);
-        });
+    function(err, results) {
+        var myjson = {
+            success: '',
+            id: '',
+            msg: ''
+        };
+        if (results.createNew !== -1) {
+            results.createNew.isValid(function(valid) {
+                if (!valid) {
+                    myjson.success = 'ERROR';
+                    myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
+                } else {
+                    myjson.success = 'OK';
+                    myjson.msg = '新增成功!';
+                    myjson.id = results.createNew.id;
+                }
+            });
+        } else if (results.updateOld !== -1) {
+            myjson.success = 'OK';
+            myjson.msg = '修改成功!';
+            myjson.id = Obj.id;
+
+        } else if (err) {
+            console.log(err);
+            myjson.success = 'ERROR';
+            myjson.msg = '保存数据发生异常,请联系管理员！';
+        }
+        res.send(myjson);
+    });
 }
 
 //删除
@@ -419,5 +470,51 @@ posts.delete = function(req, res, next, baseurl) {
 
         }
 
+    });
+}
+
+posts.addinput = function(req, res, next) {
+    var ivrnum = req.body.ivrnum;
+    var keynum = req.body.keynum;
+    async.auto({
+        check: function(cb) {
+            Schemas.pbxIvrInputs.all({
+                where: {
+                    ivrnumber: ivrnum,
+                    inputnum: keynum
+                }
+            }, function(err, dbs) {
+                if (err)
+                    cb("数据库查询发生异常！", null);
+                else if (dbs.length > 0)
+                    cb("已经存在同样的按键！", null);
+                else
+                    cb(null, null);
+            });
+        },
+        add: ["check",
+            function(cb, results) {
+                Schemas.pbxIvrInputs.create({
+                    ivrnumber: ivrnum,
+                    inputnum: keynum,
+                    generaltype: "1"
+                }, function(err, inst) {
+                    cb(err, inst);
+                });
+            }
+        ]
+    }, function(err, results) {
+        if (err)
+            res.send({
+                success: 'ERROR',
+                id: "",
+                msg: err
+            });
+        else
+            res.send({
+                success: 'OK',
+                id: results.add.id,
+                msg: '保存成功！'
+            });
     });
 }

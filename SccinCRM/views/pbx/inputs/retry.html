@@ -1,0 +1,218 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                     <lable><h2> 在用户重试多少次后让其进入无效或输入超时设置?</h2></lable>
+                </div>
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <div class="panel panel-default fieldset">
+                            <div class="formStyle">
+                                <form action='<%- baseurl%>
+                                    /save' method='POST' id='form1'>
+                                    <input type="hidden" id="id" name="id" value="<%= inst.id%>" />
+                                    <table>
+                                        <colgroup>
+                                        <col style="width:20%"></colgroup>
+                                        <tr>
+                                            <th>允许重试的次数</th>
+                                            <td>
+                                                <input type="text" value="" name="retry" id="retry" placeholder="只能是数字，不能超过20位；默认为3次。"
+                                                datatype="n1-20"
+                                                sucmsg="验证通过！"
+                                                errormsg="验证不通过！"
+                                                class="form-control input-sm"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>播放语音文件目录</th>
+                                            <td>
+                                                <select  class="form-control input-sm" id="folder" name="folder">
+                                                    <option value="system">系统默认</option>
+                                                    <option value="custom">用户语音</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>播放语音文件名</th>
+                                            <td>
+                                                <select  class="form-control input-sm" id="filename" name="filename">
+                                                </select>
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <th>文件描述</th>
+                                            <td id="desciption">
+                                               
+                                            </td>
+                                        </tr>
+                                        
+                                    <tr>
+                                        <th>跳转到IVR</th>
+                                        <td>
+                                            <select  class="form-control input-sm" id="gotoivrnumber" name="gotoivrnumber" datatype="*" errormsg="不能为空！">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>跳转到IVR动作</th>
+                                        <td>
+                                            <select  class="form-control input-sm" id="gotoivractid" name="gotoivractid" datatype="*" errormsg="不能为空！"></select>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="4" style="text-align: center">
+                                            <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存"></td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script type='text/javascript'>
+var gotoivrnumber="";
+var gotoivractid="";
+var filename="";
+var folder="";
+var retry="3";
+
+<%if(args!==null){%>
+gotoivrnumber="<%= inst.gotoivrnumber%>";
+gotoivractid="<%= inst.gotoivractid%>";
+filename="<%= args.filename%>";
+folder="<%= args.folder%>";
+retry="<%= args.retry || 3%>";
+<%}%>
+
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+        $("#folder").val(folder);
+
+        filenameoption(folder, filename);
+        $("#filename").val(filename);
+        $("#retry").val(retry);
+
+        $("#folder").change(function() {
+            $("#filename").empty();
+            folder = $("#folder").val();
+            filenameoption(folder, filename);
+            $("#filename").val(filename);
+        });
+
+      $("#filename").change(function(){
+var desc=$("#filename").find("option:selected").attr('desc');
+    $("#desciption").html(desc)
+        });
+
+        getivrbumbers('gotoivrnumber',gotoivrnumber);
+        getivractions('gotoivractid',gotoivrnumber,gotoivractid);
+          $("#gotoivrnumber").change(function(){
+
+         var ivrnum=$("#gotoivrnumber").val();
+         getivractions('gotoivractid',ivrnum);
+        });
+
+
+        $('#savemenmu').click(function (e) {
+            if ($('#form1').Validform().check()) {
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/saveinput',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            //window.location.href = "edit?id=" + data.id;
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+    });
+
+function getivrbumbers(elmid,value){
+  $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/getivrnums',
+                    data: {},// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        for(var i=0;i<data.length;i++){
+        var option = $("<option>").val(data[i].id).text(data[i].id+'-'+data[i].ivrname);
+            //option.attr('desc',data[i].description);
+      $("#"+elmid).append(option);
+    }
+    $("#"+elmid).val(value);
+                    }
+                });  
+}
+
+function getivractions(actid,ivrnum,value){
+$("#"+actid).empty();
+$("#"+actid).append($("<option>").val("").text("请选择"));
+    $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/getivracts',
+                    data: {ivrnum:ivrnum},// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        for(var i=0;i<data.length;i++){
+        var option = $("<option>").val(data[i].ordinal).text(data[i].ordinal+'-'+data[i].text);
+            //option.attr('desc',data[i].description);
+      $("#"+actid).append(option);
+    }
+    $("#"+actid).val(value);
+                    }
+                });  
+}
+
+function filenameoption(folder,filename){
+    $.ajax({
+type: "POST",
+url: '<%- baseurl%>/getFilename',
+data:{folder:folder},
+async: false,
+error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+ success: function (data) {
+    for(var i=0;i<data.length;i++){
+        var option = $("<option>").val(data[i].filename).text(data[i].filename);
+            option.attr('desc',data[i].description);
+      $("#filename").append(option);
+    }
+    $("#filename").val(filename);
+    var desc=$("#filename").find("option:selected").attr('desc');
+    $("#desciption").html(desc)
+    
+ }
+                    
+    });
+}
+
+</script>

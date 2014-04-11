@@ -163,7 +163,7 @@ exports.pbxExtension = pbxExtension;
 Dbs.pbxExtension = pbxExtension;
 var pbxIvrActMode=schema.define('pbxIvrActMode',{
 	modename:   {type:String,length:50},
-	url:   {type:String,length:100},
+	category:   {type:String,length:10},//check,read,record,control
 	iconame:   {type:String,length:50},
 	memo:    {type:String,length:200}
 });
@@ -249,22 +249,15 @@ schema.models.pbxIvrActions;
 
 exports.pbxIvrActions = pbxIvrActions;
 Dbs.pbxIvrActions = pbxIvrActions;
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var guid = require('guid');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;*/
-
 var pbxIvrInputs=schema.define('pbxIvrInputs',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
 	ivrnumber:  {type:String,length:50},
-	general:   {type:Number,default: function () {return 0;}},//错误响应，包括无效按键或等待按键超时标识或重试次数设置
-	generaltype:   {type:String,length:50},//按键错误或等待按键超时或重试次数设置
+	general:   {type:Number,default: function () {return 0;}},//0,普通按键；1，默认响应
+	generaltype:   {type:String,length:50},//错误响应：包括无效按键或等待按键超时标识或重试次数设置【timeout,invalidkey,retry】
 	generalargs:   {type:String,length:150},//错误响应参数
 	inputnum:   {type: String,length:10},
 	gotoivrnumber:   {type: String,length:50},
-	gotoivractid:   {type: Number,default: function () {return 0;}}
+	gotoivractid:   {type: Number,default: function () {return 1;}}
 });
 
 
@@ -273,14 +266,6 @@ pbxIvrInputs.Name='pbxIvrInputs';
 schema.models.pbxIvrInputs;
 exports.pbxIvrInputs = pbxIvrInputs;
 Dbs.pbxIvrInputs = pbxIvrInputs;
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var Actions=require('./IvrActions');
-var Inputs=require('./IvrInputs');*/
-
 var pbxIvrMenmu=schema.define('pbxIvrMenmu',{
 	ivrname:   {type:String,length:50},
 	description:   {type:String,length:150},

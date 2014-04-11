@@ -1,6 +1,6 @@
 var pbxIvrActMode=schema.define('pbxIvrActMode',{
 	modename:   {type:String,length:50},
-	url:   {type:String,length:100},
+	category:   {type:String,length:10},//check,read,record,control
 	iconame:   {type:String,length:50},
 	memo:    {type:String,length:200}
 });

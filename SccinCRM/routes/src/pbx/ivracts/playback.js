@@ -33,12 +33,39 @@ gets.index = function(req, res, next) {
 
 }
 
-gets.acts=function(req, res, next) {
+gets.acts = function(req, res, next) {
 	var ivrnum = req.query.ivrnum;
 	res.render('pbx/ivracts/acts.html', {
-				baseurl: req.path,
-				ivrnum: ivrnum
+		baseurl: req.path,
+		ivrnum: ivrnum
+	});
+}
+gets.inputs = function(req, res, next) {
+	var ivrnum = req.query.ivrnum;
+	res.render('pbx/ivracts/inputs.html', {
+		baseurl: req.path,
+		ivrnum: ivrnum
+	});
+}
+
+gets.einputs = function(req, res, next) {
+	var id = req.query.id;
+	var text = req.query.text;
+	Schemas.pbxIvrInputs.find(id, function(err, inst) {
+		if (err || inst === null)
+			res.send("没有该输入！");
+		else {
+			var args = comfun.str2obj(inst.generalargs);
+			var text = "normal";
+			if (inst.generaltype === "retry" || inst.generaltype === "timeout" || inst.generaltype === "invalidkey")
+				text = inst.generaltype;
+			res.render('pbx/inputs/' + text + '.html', {
+				baseurl: "/pbx/ivracts/playback",
+				inst: inst,
+				args: args
 			});
+		}
+	});
 }
 
 posts.getFilename = function(req, res, next) {
@@ -85,7 +112,8 @@ posts.getivracts = function(req, res, next) {
 
 posts.save = function(req, res, next) {
 	var obj = req.body;
-	var id = req.body.id;
+	var id = obj.id;
+	delete obj.id;
 	var str = comfun.obj2str(obj);
 	Schemas.pbxIvrActions.update({
 		where: {
@@ -101,3 +129,31 @@ posts.save = function(req, res, next) {
 		});
 	});
 }
+
+posts.saveinput = function(req, res, next) {
+	var obj = req.body;
+	var id = obj.id;
+	var gotoivrnumber = obj.gotoivrnumber;
+	var gotoivractid = obj.gotoivractid;
+	delete obj.id;
+	delete obj.gotoivrnumber;
+	delete obj.gotoivractid;
+
+	var str = comfun.obj2str(obj) || "";
+	Schemas.pbxIvrInputs.update({
+		where: {
+			id: id
+		},
+		update: {
+			gotoivrnumber: gotoivrnumber,
+			gotoivractid: gotoivractid,
+			generalargs: str
+		}
+	}, function(err, inst) {
+		res.send({
+			success: 'OK',
+			msg: '保存成功！'
+		});
+	});
+}
+
