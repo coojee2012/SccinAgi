@@ -252,7 +252,7 @@ posts.delaction = function(req, res, next, baseurl) {
             },
             del: ["find",
                 function(cb, results) {
-                    delactions(results.find, cb);
+                    delsthes(results.find, cb);
                 }
             ],
             findtwo: ["del",
@@ -294,7 +294,49 @@ posts.delaction = function(req, res, next, baseurl) {
     }
 }
 
-function delactions(actions, callback) {
+posts.delinput = function(req, res, next, baseurl) {
+    var ids = req.body.ids.split(",");
+    var ivrnum = req.body.ivrnum;
+    if (ids.length > 0) {
+        async.auto({
+            find: function(cb) {
+                Schemas.pbxIvrInputs.all({
+                    where: {
+                        id: {
+                            "inq": ids
+                        },
+                        ivrnumber: ivrnum
+                    }
+                }, function(err, dbs) {
+                    cb(err, dbs);
+                });
+            },
+            del: ["find",
+                function(cb, results) {
+                    delsthes(results.find, cb);
+                }
+            ]
+        }, function(err, results) {
+            if (err)
+                res.send({
+                    success: "ERROR",
+                    msg: "删除发生错误:" + err
+                });
+            else
+                res.send({
+                    success: "OK",
+                    msg: "删除成功！"
+                });
+        });
+    } else {
+        res.send({
+            success: "ERROR",
+            msg: "没有什么需要删除的！"
+        });
+    }
+}
+
+function delsthes(actions, callback) {
     async.each(actions, function(item, cb) {
         item.destroy(function(err) {
             if (err) {
@@ -307,6 +349,7 @@ function delactions(actions, callback) {
         callback(err);
     });
 }
+
 
 function orderactions(neworders, cb) {
     var count = 0;
@@ -408,37 +451,37 @@ posts.save = function(req, res, next, baseurl) {
                     }
                 }
             ]
-    },
+        },
 
-    function(err, results) {
-        var myjson = {
-            success: '',
-            id: '',
-            msg: ''
-        };
-        if (results.createNew !== -1) {
-            results.createNew.isValid(function(valid) {
-                if (!valid) {
-                    myjson.success = 'ERROR';
-                    myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
-                } else {
-                    myjson.success = 'OK';
-                    myjson.msg = '新增成功!';
-                    myjson.id = results.createNew.id;
-                }
-            });
-        } else if (results.updateOld !== -1) {
-            myjson.success = 'OK';
-            myjson.msg = '修改成功!';
-            myjson.id = Obj.id;
+        function(err, results) {
+            var myjson = {
+                success: '',
+                id: '',
+                msg: ''
+            };
+            if (results.createNew !== -1) {
+                results.createNew.isValid(function(valid) {
+                    if (!valid) {
+                        myjson.success = 'ERROR';
+                        myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
+                    } else {
+                        myjson.success = 'OK';
+                        myjson.msg = '新增成功!';
+                        myjson.id = results.createNew.id;
+                    }
+                });
+            } else if (results.updateOld !== -1) {
+                myjson.success = 'OK';
+                myjson.msg = '修改成功!';
+                myjson.id = Obj.id;
 
-        } else if (err) {
-            console.log(err);
-            myjson.success = 'ERROR';
-            myjson.msg = '保存数据发生异常,请联系管理员！';
-        }
-        res.send(myjson);
-    });
+            } else if (err) {
+                console.log(err);
+                myjson.success = 'ERROR';
+                myjson.msg = '保存数据发生异常,请联系管理员！';
+            }
+            res.send(myjson);
+        });
 }
 
 //删除
