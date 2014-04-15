@@ -4,6 +4,7 @@
       <div class="panel panel-default fieldset">
         <div class="panel-heading"> 
         <a href="<%- baseurl%>/create" class="btn btn-primary">新建呼叫队列</a>
+        <button data-toggle="modal" data-target="#syncconfig" id="sysncbutton" value="queuesync" data-backdrop="static" class="btn btn-warning">配置同步</button>
         </div>
         <div class="panel-body ">
           <div class="form-group">
@@ -57,76 +58,108 @@
 </div>
 
 <%- include ../../listsuredelmodal.html %>
+<%- include ../../listsyncmodal.html %>
+<%- include ../../listprogressbar.html %>
 <%- include ../../listtable.html %>
 <%- include ../../listbasefunc.html %>
 
 <script type="text/javascript">
 
-function getWhere(){
-var where={};
-where.dbName='<%= modename%>';
-//gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
-where.whereCount=2;//添加需要查询的条件个数
-where.whereCol_1='queuename';
-where.whereWay_1='like';
-where.whereValue_1='%'+$('#queuename').val()+'%';
-where.whereCol_0='id';
-where.whereWay_0='';
-where.whereValue_0=$('#id').val();
-return where;
+function getWhere() {
+  var where = {};
+  where.dbName = '<%= modename%>';
+  //gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
+  where.whereCount = 2; //添加需要查询的条件个数
+  where.whereCol_1 = 'queuename';
+  where.whereWay_1 = 'like';
+  where.whereValue_1 = '%' + $('#queuename').val() + '%';
+  where.whereCol_0 = 'id';
+  where.whereWay_0 = '';
+  where.whereValue_0 = $('#id').val();
+  return where;
 }
 
-function getToolWhere(){
-  var where=getWhere();
-  var toolswhere={};
-for(var key in where){
-  toolswhere[key]=where[key];
+function getToolWhere() {
+  var where = getWhere();
+  var toolswhere = {};
+  for (var key in where) {
+    toolswhere[key] = where[key];
+  }
+
+  toolswhere.sColumns = '';
+
+  var colums = getColums();
+  toolswhere.iSortingCols = 0;
+  for (var i = 0; i < colums.length; i++) {
+    if (toolswhere.sColumns !== '')
+      toolswhere.sColumns += ',' + colums[i].mData;
+    else
+      toolswhere.sColumns = colums[i].mData;
+
+    if (colums[i].asSorting && colums[i].asSorting.length > 0) {
+      toolswhere['iSortCol_' + toolswhere.iSortingCols] = toolswhere.iSortingCols;
+      toolswhere['sSortDir_' + toolswhere.iSortingCols] = colums[i].asSorting[0];
+      toolswhere['bSortable_' + toolswhere.iSortingCols] = colums[i].bSortable;
+
+      toolswhere.iSortingCols++;
+
+    }
+
+  }
+
+  toolswhere.iDisplayStart = 0;
+  toolswhere.iDisplayLength = -1;
+  return toolswhere;
 }
 
-toolswhere.sColumns='';
-
-var colums=getColums();
-toolswhere.iSortingCols=0;
-for(var i=0;i<colums.length;i++){
- if(toolswhere.sColumns!=='')
-  toolswhere.sColumns+=','+colums[i].mData;
-else
-  toolswhere.sColumns=colums[i].mData;
-
-if(colums[i].asSorting && colums[i].asSorting.length>0){
-  toolswhere['iSortCol_'+toolswhere.iSortingCols]=toolswhere.iSortingCols;
-  toolswhere['sSortDir_'+toolswhere.iSortingCols]=colums[i].asSorting[0];
-   toolswhere['bSortable_'+toolswhere.iSortingCols]=colums[i].bSortable;
-  
-  toolswhere.iSortingCols++;
-
-}
-
-}
-
-toolswhere.iDisplayStart=0;
-toolswhere.iDisplayLength=-1;
-return toolswhere;
-}
-}
-}
 //设置默认排序列
-function getaaSorting(){
-return [[3,'desc']];
+function getaaSorting() {
+  return [[3, 'desc']];
 }
 
-function getColums(){
-  var colums=[
-      {"asSorting": [ "asc" ], "sClass":'center',"sName":"id","mData": "id","bSortable": true,"bVisible": true, "aTargets": [0] },
-      { "sClass":'center',"sName":"queuename","mData": "queuename","bSortable": false,"bVisible": true, "aTargets": [1] },
-      { "sClass":'center',"sName":"members","mData": "members","bSortable": false,"bVisible": true, "aTargets": [2] },
-      { "sClass":'center',"sName":"cretime","mData": "cretime","bSortable": false,"bVisible": true, "aTargets": [3] },
-      { "sClass":'center',"sName":"id","mData": "id","bSortable": false,"bVisible": true, "aTargets": [4] ,"mRender": function ( data, type, full ) {
-        var str='<a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id='+data+'">编辑</a>';
-            str+='<a class="btn btn-danger btn-xs print" href="javascript:delrow('+data+');">删除</a>'
-        return str;
-      }}
-    ];
-    return colums;
+function getColums() {
+  var colums = [{
+    "asSorting": ["asc"],
+    "sClass": 'center',
+    "sName": "id",
+    "mData": "id",
+    "bSortable": true,
+    "bVisible": true,
+    "aTargets": [0]
+  }, {
+    "sClass": 'center',
+    "sName": "queuename",
+    "mData": "queuename",
+    "bSortable": false,
+    "bVisible": true,
+    "aTargets": [1]
+  }, {
+    "sClass": 'center',
+    "sName": "members",
+    "mData": "members",
+    "bSortable": false,
+    "bVisible": true,
+    "aTargets": [2]
+  }, {
+    "sClass": 'center',
+    "sName": "cretime",
+    "mData": "cretime",
+    "bSortable": false,
+    "bVisible": true,
+    "aTargets": [3]
+  }, {
+    "sClass": 'center',
+    "sName": "id",
+    "mData": "id",
+    "bSortable": false,
+    "bVisible": true,
+    "aTargets": [4],
+    "mRender": function(data, type, full) {
+      var str = '<a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id=' + data + '">编辑</a>';
+      str += '<a class="btn btn-danger btn-xs print" href="javascript:delrow(' + data + ');">删除</a>'
+      return str;
+    }
+  }];
+  return colums;
 }
 </script>

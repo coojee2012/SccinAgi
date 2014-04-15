@@ -1,58 +1,85 @@
 <script type='text/javascript'>
-$(function(){
-$(".tipmsg").tooltip();
-//绑定删除按钮
- $('#suredelete').click(function(){
-  var delid= $('#deleteid').val();
- $.ajax({
-                type: "POST",
-                url:'<%- baseurl%>/delete',
-                data:{id:delid},// 你的formid
-                async: false,
-                error: function(request) {
-                   $('#confirm_modal').modal('hide');
-                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
-                },
-                success: function(data) {
-                  $('#confirm_modal').modal('hide');
-                  if(data.success==='OK'){
-                   var oTable=$('#datatable').dataTable();
-                       oTable.fnDraw();
-                  }
-                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
-                }
-            }); 
+$(function() {
+  $(".tipmsg").tooltip();
+  //绑定删除按钮
+  $('#suredelete').click(function() {
+    var delid = $('#deleteid').val();
+    $.ajax({
+      type: "POST",
+      url: '<%- baseurl%>/delete',
+      data: {
+        id: delid
+      }, // 你的formid
+      async: false,
+      error: function(request) {
+        $('#confirm_modal').modal('hide');
+        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+      },
+      success: function(data) {
+        $('#confirm_modal').modal('hide');
+        if (data.success === 'OK') {
+          var oTable = $('#datatable').dataTable();
+          oTable.fnDraw();
+        }
+        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+      }
+    });
   });
 
-//进度条
-$('#suresync').click(function(){
-$('#syncconfig').modal('hide');
-$('.progress-bar').css({'width':'1%'}).find('span').html('1%');
-$('#processbar_modal').modal({backdrop:'static', keyboard: false,show:true});
-setTimeout(function(){
-  $('.progress-bar').css({'width':'30%'}).find('span').html('30%');
-}, 3000);
-setTimeout(function(){
-  $('.progress-bar').css({'width':'60%'}).find('span').html('60%');
-}, 6000);
-setTimeout(function(){
-  $('.progress-bar').css({'width':'100%'}).find('span').html('100%');
-  $('#processbar_modal').modal('hide');
-}, 9000);
+  //进度条
+  $('#suresync').click(function() {
+    $('#syncconfig').modal('hide');
+
+    var sysnctype = $("#sysncbutton").val();
+    $.ajax({
+      type: "POST",
+      url: '/base/common/sysnconfig',
+      data: {
+        sysnctype: sysnctype
+      },
+      timeout: 1000 * 60,
+      async: false,
+      beforeSend: function(XMLHttpRequest) {
+        $('.progress-bar').css({
+          'width': '5%'
+        }).find('span').html('5%');
+        $('#processbar_modal').modal({
+          backdrop: 'static',
+          keyboard: false,
+          show: true
+        });
+      },
+      complete: function(XMLHttpRequest, textStatus) {
+        $('.progress-bar').css({
+          'width': '100%'
+        }).find('span').html('100%');
+        $('#processbar_modal').modal('hide');
+      },
+      error: function(request) {
+        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+      },
+      success: function(data) {
+        if (data.success === 'OK') {
+          var oTable = $('#datatable').dataTable();
+          oTable.fnDraw();
+        }
+        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+      }
+    });
+  });
+  //绑定查询按钮
+  $('#search').click(function() {
+    var oTable = $('#datatable').dataTable();
+    oTable.fnDraw();
+  });
+
+
+}).keydown(function() {
+  if (event.keyCode == 13)
+    $("#search").click();
 });
-//绑定查询按钮
- $('#search').click(function(){
- var oTable=$('#datatable').dataTable();
- oTable.fnDraw();
-});
 
-
-}).keydown(function(){ 
-if(event.keyCode == 13) 
-$("#search").click();}
-);
-
-function delrow(id){
+function delrow(id) {
   $('#deleteid').val(id);
   $('#confirm_modal').modal('show');
 }
