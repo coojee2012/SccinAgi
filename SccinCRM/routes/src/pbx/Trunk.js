@@ -252,6 +252,7 @@ posts.delete = function(req, res, next,baseurl) {
 			if (!inst) {
 				myjson.success = 'ERROR';
 				myjson.msg = '没有找到需要删除的数据！';
+				res.send(myjson);
 			} else {
 				async.auto({
 					updateDahdi: function(cb) {
@@ -282,6 +283,7 @@ posts.delete = function(req, res, next,baseurl) {
 						myjson.success = 'OK';
 						myjson.msg = '删除成功,请及时同步到服务器，使其生效！';
 					}
+					res.send(myjson);
 					
 				});
 
@@ -289,7 +291,7 @@ posts.delete = function(req, res, next,baseurl) {
 			}
 
 		}
-		res.send(myjson);
+		
 	});
 }
 

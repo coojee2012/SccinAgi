@@ -31,7 +31,7 @@
 <tr id="tr_username">
 	<th>验证用户</th>
 	<td>
-		<input type="text" id='str_accountcode'  name='str_accountcode' value="" class="form-control input-sm tipmsg" title="请填写验证用户名"  />
+		<input type="text" id='str_username'  name='str_username' value="" class="form-control input-sm tipmsg" title="请填写验证用户名"  />
 	</td>
 </tr>
 
@@ -60,7 +60,7 @@
 <tr>
 	<th>最大并发量</th>
 	<td>
-		<input type="text" id='str_call-limit'  name='str_call-limit' value="30" class="form-control input-sm tipmsg" datatype="n" title="呼入呼出并发量，默认30路"  />
+		<input type="text" id='str_callimit'  name='str_calllimit' value="30" class="form-control input-sm tipmsg" datatype="n" title="呼入呼出并发量，默认30路"  />
 	</td>
 </tr>
 <tr>
@@ -159,16 +159,29 @@ if($('#form1').Validform().check()){
 $("input[name='trunkprototype']").click(function(){
 			if ($("input[name='trunkprototype']:checked").val() == 'reg') {
 				$('#tr_host').show();
+				//$('#str_host').removeAttr("disabled");
 				$('#tr_username').show();
+				//$('#str_username').removeAttr("disabled");
 				$('#tr_secret').show();
+				//$('#str_secret').removeAttr("disabled");
+				/*$('#str_host').val("");
+				$('#str_port').val("");
+				$('#str_username').val("");
+				$('#str_secret').val("");*/
 			} else if ($("input[name='trunkprototype']:checked").val() == 'ip') {
 				$('#tr_host').show();
+				//$('#str_host').removeAttr("disabled");
 				$('#tr_username').hide();
+				//$('#str_username').attr("disabled","disabled");
 				$('#tr_secret').hide();
+				//$('#str_secret').attr("disabled","disabled");
 			} else if ($("input[name='trunkprototype']:checked").val() == 'iad') {
 				$('#tr_host').hide();
+				//$('#str_host').attr("disabled","disabled");
 				$('#tr_username').hide();
+				//$('#str_username').attr("disabled","disabled");
 				$('#tr_secret').show();
+				//$('#str_secret').removeAttr("disabled");
 			}
 		});
 

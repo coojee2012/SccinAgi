@@ -52,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(domainMiddleware({
   server: server,
-  killTimeout: 3000,
+  killTimeout: 30000,
 }));
 
 app.use(express.json());

@@ -1,6 +1,7 @@
 var mycommonfun={};
- mycommonfun.str2obj=function(str) {
-  var obj = {};
+ mycommonfun.str2obj=function(str,obj) {
+  if(!obj || typeof(obj)!=='object')
+    obj={};
   if (str && str !== '') {
     var tmp = str.split('&');
     for (var i in tmp) {

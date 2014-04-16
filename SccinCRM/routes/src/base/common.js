@@ -8,6 +8,7 @@ var fs = require('fs');
 var ejs = require('ejs');
 var nami = require(basedir + '/asterisk/asmanager').nami,
 	AsAction = require("nami").Actions;
+var comfun = require(basedir + '/lib/comfun');
 
 var gets = {};
 var posts = {};
@@ -151,6 +152,8 @@ posts.sysnconfig = function(req, res, next) {
 		extensync(res, next);
 	} else if (sysnctype === "queuesync") {
 		queuesync(res, next);
+	} else if (sysnctype === "trunksync") {
+		trunksync(res, next);
 	} else {
 		res.send({
 			success: "ERROR",
@@ -195,7 +198,9 @@ function extensync(res, next) {
 			function(cb, results) {
 				var tmparry = [];
 				tmparry = tmparry.concat(results.getsip).concat(results.getiax);
-				tmparry=[{"exts":tmparry}];
+				tmparry = [{
+					"exts": tmparry
+				}];
 				//tmparry.push({"SIP":results.getsip}).push({"IAX2":results.getiax});
 				tplbuilder(basedir + '/Install/tpl/extensions_hints.conf', tmparry, 'd:\\extensions_hints.conf', cb);
 			}
@@ -262,6 +267,113 @@ function queuesync(res, next) {
 				msg: "同步成功！"
 			});
 	});
+}
+
+function trunksync(res, next) {
+	async.auto({
+		siptrunks: function(cb) {
+			Schemas.pbxTrunk.all({
+				where: {
+					trunkproto: 'SIP'
+				},
+				order: "cretime asc"
+			}, function(err, dbs) {
+				cb(err, dbs);
+			});
+		},
+		iaxtrunks: function(cb) {
+			Schemas.pbxTrunk.all({
+				where: {
+					trunkproto: 'IAX2'
+				},
+				order: "cretime asc"
+			}, function(err, dbs) {
+				cb(err, dbs);
+			});
+		},
+		pritrunks: function(cb) {
+			Schemas.pbxTrunk.all({
+				where: {
+					trunkproto: 'PRI'
+				},
+				order: "cretime asc"
+			}, function(err, dbs) {
+				cb(err, dbs);
+			});
+		},
+		fxotrunks: function(cb) {
+			Schemas.pbxTrunk.all({
+				where: {
+					trunkproto: 'FXO'
+				},
+				order: "cretime asc"
+			}, function(err, dbs) {
+				cb(err, dbs);
+			});
+		},
+		createsip: ['siptrunks',
+			function(cb, results) {
+				async.map(results.siptrunks, function(item, callback) {
+					var tmp = objcopy(item);
+					tmp = comfun.str2obj(item.args, tmp);
+					callback(null, tmp);
+				}, function(err, newdbs) {
+					tplbuilder(basedir + '/Install/tpl/sip_trunk.conf', newdbs, 'd:\\sip_trunk.conf', cb);
+				});
+			}
+		],
+		createiax: ['iaxtrunks',
+			function(cb, results) {
+				async.map(results.iaxtrunks, function(item, callback) {
+					var tmp = objcopy(item);
+					tmp = comfun.str2obj(item.args, tmp);
+					callback(null, tmp);
+				}, function(err, newdbs) {
+					tplbuilder(basedir + '/Install/tpl/iax_trunk.conf', newdbs, 'd:\\iax_trunk.conf', cb);
+				});
+			}
+		],
+		createpri: ['pritrunks',
+			function(cb, results) {
+				async.map(results.pritrunks, function(item, callback) {
+					var tmp = objcopy(item);
+					tmp = comfun.str2obj(item.args, tmp);
+					callback(null, tmp);
+				}, function(err, newdbs) {
+					tplbuilder(basedir + '/Install/tpl/dahdi-channels-pri.conf', newdbs, 'd:\\dahdi-channels-pri.conf', cb);
+				});
+			}
+		],
+		createfxo: ['fxotrunks',
+			function(cb, results) {
+				async.map(results.fxotrunks, function(item, callback) {
+					var tmp = objcopy(item);
+					tmp = comfun.str2obj(item.args, tmp);
+					callback(null, tmp);
+				}, function(err, newdbs) {
+					tplbuilder(basedir + '/Install/tpl/dahdi-channels-fxs.conf', newdbs, 'd:\\dahdi-channels-fxs.conf', cb);
+				});
+			}
+		],
+		reloadconf: ["createsip", "createiax", "createpri", "createfxo",
+			function(cb, results) {
+				asreload(cb);
+			}
+		]
+	}, function(err, results) {
+		if (err)
+			res.send({
+				success: "ERROR",
+				msg: "同步失败:" + err
+			});
+
+		else
+			res.send({
+				success: "OK",
+				msg: "同步成功！"
+			});
+	});
+
 }
 /*
 通过模板批量生成配置到指定文件
