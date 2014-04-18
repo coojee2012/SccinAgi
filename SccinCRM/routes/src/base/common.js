@@ -162,6 +162,23 @@ posts.sysnconfig = function(req, res, next) {
 	}
 }
 
+posts.downsound=function(req,res,next){
+	var file=req.body.file;
+	var filename=file.split('/');
+	    filename=filename[filename.length-1];
+	res.download(basedir+'/public/sounds/'+file, filename, function(err){
+  if (err) {
+  	console.log(err);
+  	next(err);
+    // handle error, keep in mind the response may be partially-sent
+    // so check res.headerSent
+
+  } else {
+  }
+});
+
+}
+
 function extensync(res, next) {
 	async.auto({
 		getsip: function(cb) {
