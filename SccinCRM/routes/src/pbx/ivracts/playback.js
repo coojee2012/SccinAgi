@@ -17,12 +17,33 @@ module.exports = {
 gets.index = function(req, res, next) {
 	var id = req.query.id;
 	var text = req.query.text;
+	var ch2en={
+		"主叫变换":"changecaller",
+		"发起录音":"recording",
+		"录制数字字符":"recorddigits",
+		"拨打号码":"dialnumber",
+		"播放语音":"playback",
+		"播放录音":"playrecord",
+		"播放音调":"playtone",
+		"数字方式读出":"playdigits",
+		"检查号码归属地":"checkarea",
+		"检测日期":"checkdate",
+		"等待几秒":"waiteamoment",
+		"读出数字字符":"saynumber",
+		"读出日期时间":"saydatetime",
+		"跳转到语音信箱":"gotovoicemail",
+		"跳转到IVR菜单":"gotoivr",
+		"通道阀":"maxchannel",
+		"AGI扩展接口":"agiexten",
+		"WEB交互接口":"webchange",
+
+	}
 	Schemas.pbxIvrActions.find(id, function(err, inst) {
 		if (err || inst === null)
 			res.send("没有能处理该动作！");
 		else {
 			var args = comfun.str2obj(inst.args);
-			res.render('pbx/ivracts/' + text + '.html', {
+			res.render('pbx/ivracts/' + ch2en[text] + '.html', {
 				baseurl: req.path,
 				id: id,
 				args: args

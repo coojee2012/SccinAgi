@@ -29,3 +29,9 @@ var coll = this.collection = schema.define('Session', {
                 type: String,
                 index: true
             },
+3、修改nami模块的 action.js
+
+function QueueUnpause() {
+    QueueUnpause.super_.call(this, 'QueuePause');//将QueueUnPause 修改为 QueuePause
+    this.paused = 'false';
+}

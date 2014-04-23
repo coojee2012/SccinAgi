@@ -2477,9 +2477,9 @@ routing.prototype.router = function() {
         called: args.called,
         accountcode: vars.agi_accountcode,
         routerline: args.routerline,
-        srcchannel:vars.agi_channel,
-        uniqueid:vars.agi_uniqueid,
-        threadid:vars.agi_threadid,
+        srcchannel: vars.agi_channel,
+        uniqueid: vars.agi_uniqueid,
+        threadid: vars.agi_threadid,
         context: vars.agi_context,
         agitype: vars.agi_type,
         lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -2508,29 +2508,31 @@ routing.prototype.router = function() {
     ],
     Route: ['GetRouters',
       function(cb, results) {
-        logger.debug(results.GetRouters);
         var processmode = null;
         var processdefined = null;
         var match = false;
-        for (var i = 0; i < results.GetRouters.length; i++) {
-          if (vars.agi_accountcode === results.GetRouters[i].callergroup || results.GetRouters[i].callergroup === 'all') {
-            logger.debug("呼叫线路组匹配成功");
+        logger.debug("该类型路由有：", results.GetRouters.length);
+        async.eachSeries(results.GetRouters, function(item, cbk) {
+          if (match)
+            cbk();
+          if (vars.agi_accountcode === item.callergroup || item.callergroup === 'all') {
+            logger.debug("开始进行呼叫路由判断");
             match = true;
-            var reCaller = new RegExp("^" + results.GetRouters[i].callerid);
-            var reCalled = new RegExp("^" + results.GetRouters[i].callednum);
-            if (results.GetRouters[i].routerline === '呼入') {
+            var reCaller = new RegExp("^" + item.callerid);
+            var reCalled = new RegExp("^" + item.callednum);
+            if (item.routerline === '呼入') {
               //匹配主叫以什么号码开头
-              if (results.GetRouters[i].callerid !== '' && !reCaller.test(vars.agi_callerid))
+              if (item.callerid !== '' && !reCaller.test(vars.agi_callerid))
                 match = false;
               //匹配主叫长度
-              if (results.GetRouters[i].callerlen !== -1 && vars.agi_callerid.length !== results.GetRouters[i].callerlen)
+              if (item.callerlen !== -1 && vars.agi_callerid.length !== item.callerlen)
                 match = false;
-            } else if (results.GetRouters[i].routerline === '呼出') {
+            } else if (item.routerline === '呼出') {
               //匹配被叫以什么号码开头
-              if (results.GetRouters[i].callednum !== '' && !reCalled.test(args.called))
+              if (item.callednum !== '' && !reCalled.test(args.called))
                 match = false;
               //匹配被叫长度
-              if (results.GetRouters[i].calledlen !== -1 && args.called.length !== results.GetRouters[i].calledlen)
+              if (item.calledlen !== -1 && args.called.length !== item.calledlen)
                 match = false;
             } else {}
 
@@ -2538,59 +2540,56 @@ routing.prototype.router = function() {
             if (match) {
               //主叫替换
               logger.debug("路由匹配成功，开始进行替换操作");
-              if (results.GetRouters[i].replacecallerid !== '')
-                vars.agi_callerid = results.GetRouters[i].replacecallerid;
+              if (item.replacecallerid !== '')
+                vars.agi_callerid = item.replacecallerid;
               //删除被叫前几位
-              if (results.GetRouters[i].replacecalledtrim !== -1)
-                args.called = args.called.substr(results.GetRouters[i].replacecalledtrim);
+              if (item.replacecalledtrim !== -1)
+                args.called = args.called.substr(item.replacecalledtrim);
               //补充被叫前几位
-              if (results.GetRouters[i].replacecalledappend !== '')
-                args.called = results.GetRouters[i].replacecalledappend + args.called;
+              if (item.replacecalledappend !== '')
+                args.called = item.replacecalledappend + args.called;
 
-              processmode = results.GetRouters[i].processmode;
-              processdefined = results.GetRouters[i].processdefined || args.called; //如果指匹配设置号码否则采用被叫
-
-              break;
-
-            } else {
-              continue;
+              processmode = item.processmode;
+              processdefined = item.processdefined || args.called; //如果指匹配设置号码否则采用被叫
             }
           }
-        }
-        if (match) {
-          schemas.pbxCallProcees.create({
-            callsession: self.sessionnum,
-            caller: vars.agi_callerid,
-            called: args.called,
-            routerline: args.routerline,
-            passargs: 'processmode=' + processmode + '&processdefined=' + processdefined,
-            processname: '呼叫路由处理',
-            doneresults: '匹配到呼叫路由'
-          }, function(err, inst) {
-            if (err)
-              logger.error("记录呼叫处理过程发生异常：", err);
-          });
-          //processmode,路由处理方式，即本地的一个AGI程式:本地处理，呼叫外线，黑名单
-          //processdefined，传递到AGI的参数
-          self[processmode](processdefined, function(err, result) {
-            cb(err, result);
-          });
-        } else {
-          schemas.pbxCallProcees.create({
-            callsession: self.sessionnum,
-            caller: vars.agi_callerid,
-            called: args.called,
-            routerline: args.routerline,
-            passargs: '',
-            processname: '呼叫路由处理',
-            doneresults: '未找到匹配的路由！'
-          }, function(err, inst) {
-            if (err)
-              logger.error("记录呼叫处理过程发生异常：", err);
-          });
-          cb('未找到匹配的路由！', 1);
-        }
-
+          cbk();
+        }, function(err) {
+          if (match) {
+            schemas.pbxCallProcees.create({
+              callsession: self.sessionnum,
+              caller: vars.agi_callerid,
+              called: args.called,
+              routerline: args.routerline,
+              passargs: 'processmode=' + processmode + '&processdefined=' + processdefined,
+              processname: '呼叫路由处理',
+              doneresults: '匹配到呼叫路由'
+            }, function(err, inst) {
+              if (err)
+                logger.error("记录呼叫处理过程发生异常：", err);
+            });
+            //processmode,路由处理方式，即本地的一个AGI程式:本地处理，呼叫外线，黑名单
+            //processdefined，传递到AGI的参数
+            self[processmode](processdefined, function(err, result) {
+              cb(err, result);
+            });
+          } else {
+            schemas.pbxCallProcees.create({
+              callsession: self.sessionnum,
+              caller: vars.agi_callerid,
+              called: args.called,
+              routerline: args.routerline,
+              passargs: '',
+              processname: '呼叫路由处理',
+              doneresults: '未找到匹配的路由！'
+            }, function(err, inst) {
+              if (err)
+                logger.error("记录呼叫处理过程发生异常：", err);
+            });
+            cb('未找到匹配的路由！', 1);
+          }
+        });
+       
       }
     ]
   }, function(err, results) {
@@ -3323,7 +3322,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
       logger.error("自动录音，发生错误：", err);
       callback(null, err);//录音模块发生错误，不中断正常流程
     } else {
-      callback(null, response);
+      callback(null, null);
     }
   });
 

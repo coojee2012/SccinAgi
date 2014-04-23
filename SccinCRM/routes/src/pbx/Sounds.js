@@ -29,17 +29,40 @@ gets.index = function(req, res, next, baseurl) {
         });
     } else {
         var baifenbi = "1%";
-        if (/\d+/.test(used) && /\d+/.test(unused)) {
-            baifenbi = (used / (used + unused)) * 100 + '%';
-        }
-        res.render('pbx/Sounds/list.html', {
-            osinfo: systype + " " + sysrelease,
-            used: "-.-",
-            unused: '-.-',
-            baifenbi: baifenbi,
-            baseurl: baseurl,
-            modename: 'pbxSounds'
-        });
-       
+        var exec = require('child_process').exec,
+            child, used, unused;
+
+        child = exec('df -h',
+            function(error, stdout, stderr) {
+                console.log('stdout: ' + stdout);
+                console.log('stderr: ' + stderr);
+                var std = stdout.split("\n");
+                if (std.length > 0) {
+                    var m = std[2].split(/\s+/);
+                    console.log(m);
+                    used = m[1];
+                    unused = m[2];
+                    baifenbi = m[4];
+                } else {
+                    used = "-.-";
+                    unused = "-.-";
+                }
+                if (error !== null) {
+                    next(error);
+                } else {
+                    res.render('pbx/Sounds/list.html', {
+                        osinfo: systype + " " + sysrelease,
+                        used: used,
+                        unused: unused,
+                        baifenbi: baifenbi,
+                        baseurl: baseurl,
+                        modename: 'pbxSounds'
+                    });
+                }
+            });
+
+   
+
+
     }
 }

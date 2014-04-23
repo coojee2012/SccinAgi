@@ -59,14 +59,18 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
-
 app.use(express.session({
-  secret: 'coojee2012@qq.com',
+  secret: '11366846@qq.com'
+}));
+
+//注释部分为数据库session
+/*app.use(express.session({
+  secret: '11366846@qq.com',
   store: new JugglingStore(schema, {
     table: 'sessions', // 存session的表名
     maxAge: 1000 * 60 * 60 * 24 * 7 // 默认持续时间：毫秒
   })
-}));
+}));*/
 
 /*schema.autoupdate(function(err) {
   if (err) console.error(err);
@@ -100,7 +104,7 @@ if ('production' == app.get('env')) {
 }
 
 //app.use(authentication);
-
+app.use(safeClient);
 //路由处理
 app.use(app.router);
 app.get('/', function(req, res, next) {
@@ -201,6 +205,40 @@ function notAuthentication(req, res, next) {
     return res.redirect('/');
   }
   next();
+}
+
+function safeClient(req, res, next) {
+  var ip = req.ip;
+  var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+  if (reg.test(ip)) {
+    var safeip = appconf.allowips;
+    var iparray = ip.split(".");
+    var safe = false;
+    _.forEach(safeip, function(item) {
+      if (reg.test(item)) {
+        var itemarray = item.split(".");
+        if (itemarray[3] > 0) {
+          if(ip === item)
+          safe = true;
+        } else if (itemarray[2] > 0 ) {
+          if(iparray[0] === itemarray[0] && iparray[1] === itemarray[1] && iparray[2] === itemarray[2] && iparray[3] > 0)
+          safe = true;
+        } else if (itemarray[1] > 0 ) {
+          if(iparray[0] === itemarray[0] && iparray[1] === itemarray[1] && iparray[2] >= 0 && iparray[3] > 0)
+          safe = true;
+        } else if (itemarray[0] > 0 ) {
+          if(iparray[0] === itemarray[0] && iparray[1] >= 0 && iparray[2] >= 0 && iparray[3] > 0)
+          safe = true;
+        }
+      }
+    });
+    if (safe)
+      next();
+    else
+      next("IP地址不被允许访问！");
+  } else {
+    next("IP地址不合法！");
+  }
 }
 
 

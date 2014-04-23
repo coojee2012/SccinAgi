@@ -1,2 +1,2 @@
-/*! 路由处理程序 2014-04-11 */
+/*! 路由处理程序 2014-04-23 */
 var conf=require("node-conf"),basedir=conf.load("app").appbase,Schemas=require(basedir+"/database/schema").Schemas,guid=require("guid"),async=require("async"),gets={},posts={};module.exports={get:gets,post:posts},gets.index=function(a,b){b.send("测试GET")},posts.index=function(a,b){var c=a.body.a||"10010";b.send("status=done&kosm="+c)};

@@ -249,22 +249,15 @@ schema.models.pbxIvrActions;
 
 exports.pbxIvrActions = pbxIvrActions;
 Dbs.pbxIvrActions = pbxIvrActions;
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var guid = require('guid');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;*/
-
 var pbxIvrInputs=schema.define('pbxIvrInputs',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
 	ivrnumber:  {type:String,length:50},
-	general:   {type:Number,default: function () {return 0;}},//错误响应，包括无效按键或等待按键超时标识或重试次数设置
-	generaltype:   {type:String,length:50},//按键错误或等待按键超时或重试次数设置
+	general:   {type:Number,default: function () {return 0;}},//0,普通按键；1，默认响应
+	generaltype:   {type:String,length:50},//错误响应：包括无效按键或等待按键超时标识或重试次数设置【timeout,invalidkey,retry】
 	generalargs:   {type:String,length:150},//错误响应参数
 	inputnum:   {type: String,length:10},
 	gotoivrnumber:   {type: String,length:50},
-	gotoivractid:   {type: Number,default: function () {return 0;}}
+	gotoivractid:   {type: Number,default: function () {return 1;}}
 });
 
 
@@ -423,17 +416,70 @@ var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;*/
-var pbxScreenPop=schema.define('pbxScreenPop',{
-	callernumber:   {type:String,length:50,default:function () { return ''; }},//主叫
-	callednumber:   {type:String,length:50,default:function () { return ''; }},//被叫
-	sessionnumber:   {type:String,length:50,default:function () { return ''; }},//本次呼叫会话编号
-	updatetime:   {type: String, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
-	status:   {type:String,length:10,default:function () { return 'over'; }},//弹出类型:waite,over
-	routerdype:   {type:Number,default:function () { return 1; }},//呼叫路由1内线2外线
-	parked:   {type:String,length:50,default:function () { return 'not'; }},//保持状态：yes ,not
-	poptype:    {type:String,length:50,default:function () { return ''; }}//弹出类型:diallocal,dialout
+var pbxScreenPop = schema.define('pbxScreenPop', {
+	callernumber: {
+		type: String,
+		length: 50,
+		default: function() {
+			return '';
+		}
+	}, //主叫
+	callednumber: {
+		type: String,
+		length: 50,
+		default: function() {
+			return '';
+		}
+	}, //被叫
+	extensionnumber: {
+		type: String,
+		length: 50,
+		default: function() {
+			return '';
+		}
+	},
+	sessionnumber: {
+		type: String,
+		length: 50,
+		default: function() {
+			return '';
+		}
+	}, //本次呼叫会话编号
+	updatetime: {
+		type: String,
+		default: function() {
+			return moment().format("YYYY-MM-DD HH:mm:ss");
+		}
+	},
+	status: {
+		type: String,
+		length: 10,
+		default: function() {
+			return 'over';
+		}
+	}, //弹出类型:waite,over
+	routerdype: {
+		type: Number,
+		default: function() {
+			return 1;
+		}
+	}, //呼叫路由1内线2外线
+	parked: {
+		type: String,
+		length: 50,
+		default: function() {
+			return 'not';
+		}
+	}, //保持状态：yes ,not
+	poptype: {
+		type: String,
+		length: 50,
+		default: function() {
+			return '';
+		}
+	} //弹出类型:diallocal,dialout
 });
-pbxScreenPop.Name='pbxScreenPop';
+pbxScreenPop.Name = 'pbxScreenPop';
 schema.models.pbxScreenPop;
 exports.pbxScreenPop = pbxScreenPop;
 Dbs.pbxScreenPop = pbxScreenPop;
@@ -639,6 +685,21 @@ crmVoiceContent.Name='crmVoiceContent';
 schema.models.crmVoiceContent;
 exports.crmVoiceContent = crmVoiceContent;
 Dbs.crmVoiceContent = crmVoiceContent;
+var pbxAutoMonitorWays=schema.define('pbxAutoMonitorWays',{
+	id:{type:String,length:100,default:function(){return guid.create();}},
+    wayName:   {type:String,length:50},//录音方式名称
+	recordout: {type:String,length:10,default: function () { return '是'; }},//呼出录音
+	recordin:  {type:String,length:10,default: function () { return '是'; }},//呼入录音
+	recordqueue:{type:String,length:10,default: function () { return '是'; }},//作为队列分机接听录音
+	keepfortype:{type:String,length:10,default: function () { return '永久保存'; }},//保存方式：永久保存,按时间，按条数
+	keepforargs: {type:Number,default: function () { return 100; }},//保存方式参数，永久保存无效
+	members: {type:String,length:50},//分机成员，一个分机只能有一个录音方式
+	cretime: {type:String,length:100,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+});
+pbxAutoMonitorWays.Name='pbxAutoMonitorWays';
+schema.models.pbxAutoMonitorWays;
+exports.pbxAutoMonitorWays = pbxAutoMonitorWays;
+Dbs.pbxAutoMonitorWays=pbxAutoMonitorWays;
 exports.Dbs = Dbs;
 
 /*    if (appconf.debug) {

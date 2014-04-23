@@ -1,6 +1,6 @@
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var tts = require(basedir + '/lib/tts').tts;
+/*var tts = require(basedir + '/lib/tts').tts;*/
 
 var nami = require(basedir + '/asterisk/asmanager').nami,
 	util = require('util'),
@@ -234,6 +234,7 @@ posts.dialout = function(req, res, next) {
 posts.autodial = function(req, res, next) {
 	//res.set('Access-Control-Allow-Origin', '*');
 	//res.header('Access-Control-Allow-Origin', '*')
+	var tts = require(basedir + '/lib/tts').tts;
 	var Userkey = req.get('User-key');
 	var UserAgent = req.get('User-Agent');
 	logger.debug('拨打服务获取到的头信息：', Userkey, UserAgent);
@@ -384,10 +385,10 @@ posts.autodial = function(req, res, next) {
 							voc.save(function(err, inst) {
 								callback(err, inst);
 							});
-						} else if(results.addVoiceContent.State === 1) {
+						} else if (results.addVoiceContent.State === 1) {
 							callback('有相同项目编号的语音正在合成中！', null);
-						}else{
-							callback(null,results.addVoiceContent);
+						} else {
+							callback(null, results.addVoiceContent);
 						}
 					} catch (ex) {
 						callback('更新合成中状态时发生错误！', null);
@@ -615,6 +616,44 @@ posts.packCall = function(req, res, next) {
 	});
 }
 
+posts.packsinfo = function(req, res, next) {
+	var exten = req.body['exten'] || req.query['exten'];
+	var type = req.body['type'] || req.query['type'];
+	if (!type) {
+		type = 'SIP';
+	}
+	parkCalls(function(response) {
+		if (response.Response === 'Success' || response.response === 'Success') {
+			if (response.events != null && response.events.length > 0) {
+				var parked = false;
+				for (var ii = 0; ii < response.events.length; ii++) {
+					if (!response.events[ii].from)
+						continue;
+					var fromexten = response.events[ii].from;
+					var re = new RegExp(type + "/" + exten, "g");
+					if (fromexten.match(re)) {
+						parked = true;
+						break;
+					}
+				}
+				res.send({
+					response: 'Success',
+					parked: parked
+				});
+
+			} else {
+				res.send({
+					response: 'Success',
+					parked: false
+				});
+			}
+
+		} else {
+			res.send(response);
+		}
+	});
+}
+
 posts.unPark = function(req, res, next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
@@ -623,12 +662,16 @@ posts.unPark = function(req, res, next) {
 	}
 	parkCalls(function(response) {
 		if (response.Response === 'Success' || response.response === 'Success') {
-
+			console.log(response);
 			if (response.events != null && response.events.length > 0) {
+                var parked=false;
 				for (var ii = 0; ii < response.events.length; ii++) {
+					if (!response.events[ii].from)
+						continue;
 					var fromexten = response.events[ii].from;
 					var re = new RegExp(type + "/" + exten, "g");
 					if (fromexten.match(re)) {
+						parked=true;
 						var channel = response.events[ii].channel;
 						var action = new AsAction.Redirect();
 						action.Channel = channel;
@@ -640,11 +683,17 @@ posts.unPark = function(req, res, next) {
 						break;
 					}
 				}
+				if(!parked){
+					res.send({
+					response: 'Error',
+					msg: '没有找到取回!'
+				});
+				}
 
 			} else {
 				res.send({
 					response: 'Error',
-					Msg: '当前没有被保持的通话！'
+					msg: '当前没有被保持的通话！'
 				});
 			}
 
@@ -679,8 +728,7 @@ posts.GetCallInfo = function(req, res, next) {
 			success: '0'
 		});
 	} else {
-		var calleventDB = require('../modules/ippbx/callevent.js');
-		calleventDB.findOne({
+		Schemas.pbxScreenPop.findOne({
 			where: {
 				extensionnumber: exten
 			}
@@ -710,7 +758,7 @@ posts.GetCallInfo = function(req, res, next) {
 
 					inst.status = "over";
 					inst.poptype = "";
-					calleventDB.updateOrCreate(inst, function(err, inst2) {
+					Schemas.pbxScreenPop.updateOrCreate(inst, function(err, inst2) {
 						if (err)
 							res.send({
 								success: '0'
@@ -729,6 +777,56 @@ posts.GetCallInfo = function(req, res, next) {
 		});
 	}
 
+}
+gets.GetCallInfo = function(req, res, next) {
+
+	var exten = req.body['fromexten'] || req.query['fromexten'];
+	if (exten == null || exten == '') {
+		res.send('callback({"success": "0","msg":"没有获取到分机号！"})');
+	} else {
+		Schemas.pbxScreenPop.findOne({
+			where: {
+				extensionnumber: exten
+			}
+		}, function(err, inst) {
+			if (err || inst == null)
+				res.send('callback({"success": "0","msg":"获取弹屏信息发生错误。"})');
+			else {
+				var resjson = {};
+				if (inst.status == "waite") {
+
+					resjson.success = 1;
+					if (inst.routerdype == "2") {
+
+						resjson.caller = inst.callednumber;
+						resjson.called = inst.callernumber;
+					} else {
+						resjson.caller = inst.callernumber;
+						resjson.called = inst.callednumber;
+					}
+
+
+					resjson.unid = inst.uid;
+					resjson.poptype = inst.poptype;
+					resjson.callid = inst.callid;
+
+					inst.status = "over";
+					inst.poptype = "";
+					Schemas.pbxScreenPop.updateOrCreate(inst, function(err, inst2) {
+						if (err)
+							res.send('callback({"success": "0","msg":"更新弹屏状态发生异常！"})');
+						else {
+							res.send('callback(' + JSON.stringify(resjson) + ')');
+						}
+					});
+
+				} else {
+					res.send('callback({"success": "0","msg":"当前无响铃。"})');
+				}
+			}
+		});
+	}
+	//res.send('callback({"a":"v"})');
 }
 
 posts.DadOn = function(req, res, next) {
@@ -788,6 +886,131 @@ posts.DadOn = function(req, res, next) {
 	}
 
 }
+
+posts.GetDnd = function(req, res, next) {
+	var exten = req.body.exten || "";
+	GetDndInfo(exten, function(err, pased) {
+		if (err)
+			res.send({
+				success: false,
+				pased: pased,
+				msg: err
+			});
+		else {
+			res.send({
+				success: true,
+				pased: pased,
+				msg: "成功！"
+			});
+		}
+	});
+}
+
+function GetDndInfo(exten, callback) {
+	var action = new AsAction.QueueStatus();
+	action.Member = exten;
+	nami.send(action, function(response) {
+		if (response.response == 'Success') {
+			if (response.events.length > 0) {
+				var pased = false;
+				for (var i in response.events) {
+					console.log(response.events[i]);
+					if (response.events[i].event == 'QueueMember' && response.events[i].paused === '1') {
+						pased = true;
+					}
+				}
+				callback(null, pased);
+			} else {
+				callback('获取成员信息发生错误！', false);
+			}
+		} else {
+			callback('获取示忙信息发生错误！', false);
+		}
+	});
+}
+
+posts.DndQueueMember = function(req, res, next) {
+	var exten = req.body.exten || "";
+	var action = new AsAction.QueueStatus();
+	action.Member = exten;
+	//action.Queue = 401;
+	nami.send(action, function(response) {
+		if (response.response == 'Success') {
+			if (response.events.length > 0) {
+				var pased = false;
+				for (var i in response.events) {
+					console.log(response.events[i]);
+					if (response.events[i].event == 'QueueMember' && response.events[i].paused === '1') {
+						pased = true;
+					}
+				}
+				var act = null;
+				var msg = "";
+				if (pased) {
+					act = new AsAction.QueueUnpause();
+					msg = "示闲";
+				} else {
+					act = new AsAction.QueuePause();
+					msg = "示忙";
+				}
+				act.Interface = "LOCAL/" + exten + "@sub-queuefindnumber/n";
+				act.Reason = "";
+				nami.send(act, function(response2) {
+					console.log(response2);
+					if (response2.response == 'Success')
+						res.send({
+							success: true,
+							pased: !pased,
+							msg: msg + "成功！"
+						});
+					else {
+						res.send({
+							success: false,
+							pased: !pased,
+							msg: msg + "失败！"
+						});
+					}
+				});
+			} else {
+				res.send({
+					success: false,
+					msg: "获取成员状态事件发生异常！"
+				});
+			}
+		} else {
+			res.send({
+				success: false,
+				msg: "获取成员状态发生异常！"
+			});
+		}
+
+	});
+}
+
+posts.QueuePause = function(req, res, next) {
+	var exten = req.body.exten || "";
+
+	var action = new AsAction.QueuePause();
+	action.Interface = "";
+	action.Reason = "";
+	//action.Queue = 401;
+	nami.send(action, function(response) {
+		res.send(response);
+	});
+}
+
+posts.QueueUnPause = function(req, res, next) {
+	var exten = req.body.exten || "";
+
+	var action = new AsAction.QueueUnPause();
+	action.Interface = exten;
+	action.Reason = "";
+	//action.Queue = 401;
+	nami.send(action, function(response) {
+		res.send(response);
+	});
+}
+
 
 function parkCalls(cb) {
 	var action = new AsAction.ParkedCalls();

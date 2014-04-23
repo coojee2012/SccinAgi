@@ -219,7 +219,7 @@ function extensync(res, next) {
 					"exts": tmparry
 				}];
 				//tmparry.push({"SIP":results.getsip}).push({"IAX2":results.getiax});
-				tplbuilder(basedir + '/Install/tpl/extensions_hints.conf', tmparry, 'd:\\extensions_hints.conf', cb);
+				tplbuilder(basedir + '/Install/tpl/extensions_hints.conf', tmparry, '/etc/asterisk/extensions_hints.conf', cb);
 			}
 		],
 		reloadconf: ["createsip", "createiax",
@@ -335,7 +335,7 @@ function trunksync(res, next) {
 					tmp = comfun.str2obj(item.args, tmp);
 					callback(null, tmp);
 				}, function(err, newdbs) {
-					tplbuilder(basedir + '/Install/tpl/sip_trunk.conf', newdbs, 'd:\\sip_trunk.conf', cb);
+					tplbuilder(basedir + '/Install/tpl/sip_trunk.conf', newdbs, '/etc/asterisk/sip_trunk.conf', cb);
 				});
 			}
 		],
@@ -346,7 +346,7 @@ function trunksync(res, next) {
 					tmp = comfun.str2obj(item.args, tmp);
 					callback(null, tmp);
 				}, function(err, newdbs) {
-					tplbuilder(basedir + '/Install/tpl/iax_trunk.conf', newdbs, 'd:\\iax_trunk.conf', cb);
+					tplbuilder(basedir + '/Install/tpl/iax_trunk.conf', newdbs, '/etc/asterisk/iax_trunk.conf', cb);
 				});
 			}
 		],
@@ -357,7 +357,7 @@ function trunksync(res, next) {
 					tmp = comfun.str2obj(item.args, tmp);
 					callback(null, tmp);
 				}, function(err, newdbs) {
-					tplbuilder(basedir + '/Install/tpl/dahdi-channels-pri.conf', newdbs, 'd:\\dahdi-channels-pri.conf', cb);
+					tplbuilder(basedir + '/Install/tpl/dahdi-channels-pri.conf', newdbs, '/etc/asterisk/dahdi-channels-pri.conf', cb);
 				});
 			}
 		],
@@ -368,7 +368,7 @@ function trunksync(res, next) {
 					tmp = comfun.str2obj(item.args, tmp);
 					callback(null, tmp);
 				}, function(err, newdbs) {
-					tplbuilder(basedir + '/Install/tpl/dahdi-channels-fxs.conf', newdbs, 'd:\\dahdi-channels-fxs.conf', cb);
+					tplbuilder(basedir + '/Install/tpl/dahdi-channels-fxs.conf', newdbs, '/etc/asterisk/dahdi-channels-fxs.conf', cb);
 				});
 			}
 		],

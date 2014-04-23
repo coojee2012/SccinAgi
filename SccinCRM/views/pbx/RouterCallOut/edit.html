@@ -39,7 +39,7 @@
                             <td>
                                 <select name="callergroup" id="callergroup" value="<%= inst.callergroup%>"
                                         class="form-control input-sm" style='width: 100%;'>
-                                    <option value="0">任意</option>
+                                    <option value="all">任意</option>
                                 </select>
                             </td>
                         </tr>
@@ -67,14 +67,12 @@
                             <td>
                                 <select name="processmode" id="processmode" class="form-control input-sm"
                                         style='width: 100%;'>
-                                    <option value="黑名单"
-                                    <%if(inst.processmode==='黑名单'){%>selected='selected'<%}%>>黑名单</option>
-                                    <option value="VIP"
-                                    <%if(inst.processmode==='VIP'){%>selected='selected'<%}%>>VIP</option>
-                                    <option value="本地处理"
-                                    <%if(inst.processmode==='本地处理'){%>selected='selected'<%}%>>本地处理</option>
-                                    <option value="拨打外线"
-                                    <%if(inst.processmode==='拨打外线'){%>selected='selected'<%}%>>拨打外线</option>
+                                    <option value="blacklist"
+                                    <%if(inst.processmode==='blacklist'){%>selected='selected'<%}%>>黑名单</option>
+                                    <option value="diallocal"
+                                    <%if(inst.processmode==='diallocal'){%>selected='selected'<%}%>>本地处理</option>
+                                    <option value="dialout"
+                                    <%if(inst.processmode==='dialout'){%>selected='selected'<%}%>>拨打外线</option>
                                 </select>
                             </td>
                         </tr>

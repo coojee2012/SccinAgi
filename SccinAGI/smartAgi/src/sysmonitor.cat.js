@@ -158,7 +158,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
       logger.error("自动录音，发生错误：", err);
       callback(null, err);//录音模块发生错误，不中断正常流程
     } else {
-      callback(null, response);
+      callback(null, null);
     }
   });
 

@@ -9,5 +9,6 @@
 	"appbase":"D:\\GitHub\\SccinAgi\\SccinCRM",
 	"ttsapp":"/var/lib/asterisk/agi-bin/VoiceTTS.jar",
 	"javapath":"/usr/bin/java",
+	"allowips":["127.0.0.1","192.168.0.0"],
 	"debug":true
 }

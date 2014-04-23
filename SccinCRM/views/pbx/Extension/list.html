@@ -185,8 +185,9 @@ var oTable=$('#datatable').dataTable({
   oLanguage: {
   "sUrl":"/media/olanguage.json"
   },
-  sScrollX: "100%",
-  bScrollCollapse: true,
+    sScrollX: "100%",
+    iDisplayLength: 5,
+    bScrollCollapse: true,
     bPaginate: true,
     bFilter:false,
     bProcessing: true,
@@ -202,7 +203,7 @@ var oTable=$('#datatable').dataTable({
     aoColumnDefs: getColums(),
      oTableTools: {
              sSwfPath: "/css/datatable/css/swf/copy_csv_xls_pdf.swf",
-             aButtons: [{
+             aButtons: [/*{
           "sExtends": "copy",
           "sButtonText": "复制"
         },{
@@ -233,7 +234,7 @@ var oTable=$('#datatable').dataTable({
       "sInfo": "<h6>打印本页</h6><p>请使用浏览器的打印功能 " + "打印本页. 按ESC键退出.</p>",
       "sMessage": "列表",
       "bShowAll": true
-     } 
+     } */
                                 
                                                    
                               ]

@@ -487,32 +487,69 @@ posts.save = function(req, res, next, baseurl) {
 //删除
 posts.delete = function(req, res, next, baseurl) {
     var id = req.body['id'];
-    Schemas['pbxIvrMenmu'].find(id, function(err, inst) {
+    async.auto({
+        findivrmenmu: function(cb) {
+            Schemas['pbxIvrMenmu'].find(id, function(err, inst) {
+                if (err || inst === null) {
+                    cb("查找IVR发生错误！", null);
+                }
+                else if(inst.isreadonly==='是'){
+                    cb("系统只读，不能被删除！",null);
+                }
+                 else {
+                    cb(null, inst);
+                }
+            });
+        },
+        delmenmu: ["findivrmenmu",
+            function(cb, results) {
+                results.findivrmenmu.destroy(function(err) {
+                    cb(err, null);
+                });
+            }
+        ],
+        findivractions: ["delmenmu",
+            function(cb, results) {
+                Schemas['pbxIvrActions'].all({
+                    where: {
+                        ivrnumber: id
+                    }
+                }, function(err, dbs) {
+                    cb(err, dbs);
+                });
+            }
+        ],
+        findivrinputs: ["delmenmu",
+            function(cb, results) {
+                Schemas['pbxIvrInputs'].all({
+                    where: {
+                        ivrnumber: id
+                    }
+                }, function(err, dbs) {
+                    cb(err, dbs);
+                });
+            }
+        ],
+        delactions: ["findivractions",
+            function(cb, results) {
+                delsthes(results.findivractions, cb);
+            }
+        ],
+        delinputs: ["findivrinputs",
+            function(cb, results) {
+                delsthes(results.findivrinputs, cb);
+            }
+        ]
+    }, function(err, results) {
         var myjson = {};
         if (err) {
             myjson.success = 'ERROR';
             myjson.msg = '查询数据发生异常,请联系管理员！';
         } else {
-            if (!inst) {
-                myjson.success = 'ERROR';
-                myjson.msg = '没有找到需要删除的数据！';
-            } else {
-
-            }
-            inst.destroy(function(err) {
-                if (err) {
-                    myjson.success = 'ERROR';
-                    myjson.msg = '删除数据发生异常,请联系管理员！！';
-                } else {
-                    myjson.success = 'OK';
-                    myjson.msg = '删除成功！';
-                }
-                res.send(myjson);
-
-            });
-
+            myjson.success = 'OK';
+            myjson.msg = '删除成功！';
         }
-
+        res.send(myjson);
     });
 }
 

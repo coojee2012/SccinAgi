@@ -74,6 +74,7 @@ module.exports = function(grunt) {
           'modules/src/crm/KeyType.js',
           'modules/src/crm/UserKeysRecord.js',
           'modules/src/crm/VoiceContent.js',
+          'modules/src/pbx/AutoMonitorWays.js',
           'modules/src/DBEnd.js'
         ],
         dest: 'modules/DBModules.js'
