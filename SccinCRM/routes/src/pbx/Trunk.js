@@ -30,7 +30,7 @@ posts.checkAjax = function(req, res, next,baseurl) {
 
 }
 
-//分机列表显示
+//列表显示
 gets.index = function(req, res, next,baseurl) {
 	res.render('.'+baseurl+'/list.html', {
 		baseurl:baseurl,
