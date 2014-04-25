@@ -3,7 +3,7 @@
     <div class="column form-column main col form-horizontal">
       <div class="panel panel-default fieldset">
         <div class="panel-heading">
-          <button data-toggle="modal" data-target="#myModal" class="btn btn-primary">新建语音</button>
+          <a href="<%- baseurl%>/create" class="btn btn-primary">新建语音</a>
         </div>
         <div class="panel-body ">
           <div class="form-group">
@@ -14,7 +14,8 @@
             <label for="folder" class="control-label col-sm-2">所在目录</label>
             <div class="controls  col-sm-3">
               <select name="folder" id="folder" class="form-control input-sm">
-                <option value="">/</option>
+                <option value="">全部</option>
+                <option value=".">/</option>
                 <option value="custom">/custom</option>
                 <option value="dictate">/dictate</option>
                 <option value="digits">/digits</option>
@@ -88,12 +89,14 @@
           <div class="form-group">
 
             <div class="controls  col-sm-12">
-             <label>在这里，你可以通过下载到本地电脑中，使用音响/耳机试听语音，也可以输入你使用的分机，采用分机试听。采用分机试听时，请确保分机是有效且可用的！</label>
+             <label>&nbsp;&nbsp;&nbsp;&nbsp;在这里，如果你的浏览器支持HTML5你可以通过PC在线使用音响/耳机试听，否则，你需要通过下载到本地电脑中，使用音响/耳机试听语音；也可以输入你使用的分机，采用分机试听，采用分机试听时，请确保分机是有效且可用的！</label>
             </div>
              <label for="soundexten" class="control-label col-sm-2">分机号：</label>
             <div class="controls  col-sm-6">
               <input type="text" value="" name="soundexten" id="soundexten"  class="form-control input-sm">
-              <input type="hidden" value="" name="soundfile" id="soundfile"/>
+              <input type="hidden" value="" name="soundforder" id="soundforder"/>
+              <input type="hidden" value="" name="filenameh" id="filenameh"/> 
+              <input type="hidden" value="" name="extenname" id="extenname"/>         
             </div>
            
 
@@ -103,8 +106,8 @@
       </div>
     </div>
     <div class="modal-footer">
-        <button type="button" id="soundpc" name="soundpc" class="btn btn-primary"  data-dismiss="modal" onclick="javascript:listenbypc();" >下载</button>
-           <button type="button" id="soundext" name="soundext" class="btn btn-primary" >分机试听</button>
+        <button type="button" id="soundpc" name="soundpc" class="btn btn-primary"  data-dismiss="modal" onclick="javascript:listenbypc();" >PC试听</button>
+           <button type="button" id="soundext" name="soundext" class="btn btn-primary" data-dismiss="modal" onclick="javascript:listenbyphone();" >分机试听</button>
             <button type="button" id="soundext" name="soundext" class="btn btn-warning" href="#" data-dismiss="modal" >取消</button>
     </div>
   </div>
@@ -112,13 +115,16 @@
 </div>
 
 <div class="modal fade in" id="pcsoundmodal" tabindex="-4" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" style="width:400px">
+  <div class="modal-dialog" style="width:720px">
     <div class="modal-content">
       <div class="modal-body">
         <div class="text-center">
-          <div>
-
-          </div>
+         <div class="controls  col-sm-12">
+ <audio src="" controls="controls" id="pcaudio" class="col-sm-9">
+ 您的浏览器不支持此播放标签！
+ </audio>
+ <a href="javascript:download();" class="btn btn-primary col-sm-1" target="_blank">下载</a>
+ </div> 
         </div>
       </div>
     </div>
@@ -254,11 +260,11 @@ function getColums(){
     "mRender": function(data, type, full) {
       if(full.isreadonly==0){
         var str = '<a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id=' + data + '">编辑</a>';
-        str += '<a  data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-xs">试听</a>';
+        str += '<a class="btn btn-primary btn-xs" onclick="javascript:setSoudfile(\''+full.filename+'\',\''+full.folder+'\',\''+full.extname+'\')">试听</a>';
       str += '<a class="btn btn-danger btn-xs print" href="javascript:delrow(\'' + data + '\');">删除</a>'
       return str;
     }else{
-      var str = '<a  data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-xs" onclick="javascript:setSoudfile("'+full.filename+'","'+full.filename+'")">试听</a>';
+      var str = '<a class="btn btn-primary btn-xs" onclick="javascript:setSoudfile(\''+full.filename+'\',\''+full.folder+'\',\''+full.extname+'\')">试听</a>';
       return str;
     }
       
@@ -269,26 +275,54 @@ function getColums(){
 </script>
 <script type="text/javascript">
 function setSoudfile(filename,forder,ext){
-  $("#soundfile").val(forder+"/"+filename+"."+ext);
+  $("#soundforder").val(forder);
+  $("#filenameh").val(filename);
+  $("#extenname").val(ext);
+  $("#myModal").modal('show');
+}
+
+function download(){
+   var file = $("#soundforder").val()+"/"+$("#filenameh").val()+"."+$("#extenname").val();
+   window.open("/base/common/downsound?file="+file);
 }
 
 function listenbypc() {
   $("#myModal").modal("hide");
-  var file = $("#soundfile").val();
-    var form = $("<form>");   //定义一个form表单
-       form.attr('style','display:none');   //在form表单中添加查询参数
-       form.attr('target','');
-       form.attr('method','post');
-       form.attr('action',"/base/common/downsound");
-      
-       var input1 = $('<input>'); 
-       input1.attr('type','hidden'); 
-       input1.attr('name','file'); 
-       input1.attr('value',file); 
-      
-       $('body').append(form);  //将表单放置在web中
-       form.append(input1);   //将查询参数控件提交到表单上
-       form.submit();   //表单提交
+  if(typeof(Worker) !== "undefined")
+{        
+$("#pcsoundmodal").modal('show');
+var  audio=$("#pcaudio")[0];
+audio.src="/sounds/"+$("#soundforder").val()+"/"+$("#filenameh").val()+"."+$("#extenname").val();
+audio.play();
+} 
+else{   
+download();
+}         
+}
 
+function listenbyphone(){
+    var filename= $("#filenameh").val();
+    var tmpdir=$("#soundforder").val()+'/';
+    var exten=$("#soundexten").val();
+   // alert(tmpdir+filename);
+    if(/\d+/.test(exten)){
+       $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/listenByPhone',
+                    data: {folder:tmpdir,filename:filename,exten:exten},
+                    async: true,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {                                                                 
+                            $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                             }
+                });
+     }else{
+      alert("请输入有效的分机号!");
+     }
+   
+        
 }
 </script>

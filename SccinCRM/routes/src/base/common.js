@@ -62,10 +62,15 @@ posts.pagination = function(req, res, next) {
 			continue;
 		else {
 			where[whereCol] = {};
-			if (!whereWay || whereWay == '')
+			if ((!whereWay || whereWay == '') && whereValue !== '')
 				where[whereCol] = whereValue;
-			else
+			else if ((whereWay === 'between') && whereValue !== '') {
+				where[whereCol][whereWay] = whereValue.split(",");
+			} else if ((whereWay !== '') && whereValue !== '')
 				where[whereCol][whereWay] = whereValue;
+			else {
+
+			}
 		}
 	}
 	logger.info("查询条件:", where);
@@ -162,21 +167,46 @@ posts.sysnconfig = function(req, res, next) {
 	}
 }
 
-posts.downsound=function(req,res,next){
-	var file=req.body.file;
-	var filename=file.split('/');
-	    filename=filename[filename.length-1];
-	res.download(basedir+'/public/sounds/'+file, filename, function(err){
-  if (err) {
-  	console.log(err);
-  	next(err);
-    // handle error, keep in mind the response may be partially-sent
-    // so check res.headerSent
+gets.downsound = function(req, res, next) {
+	var file = req.query.file;
+	var filename = file.split('/');
+	filename = filename[filename.length - 1];
+	res.download(basedir + '/public/sounds/' + file, filename, function(err) {
+		if (err) {
+			console.log(err);
+			//next(err);
+			// handle error, keep in mind the response may be partially-sent
+			// so check res.headerSent
+			res.send("您想要的文件地址不存在！");
 
-  } else {
-  }
-});
+		} else {}
+	});
 
+}
+
+posts.uploadify=function(req,res,next){
+	 // 获得文件的临时路径
+	 console.log(req.files);
+     var tmp_path = req.files.Filedata.path;
+     var tmp_name=req.files.Filedata.path.split(/\/|\\\\|\\/);
+         tmp_name=tmp_name[tmp_name.length-1];
+     
+    var extname=tmp_name.split(".");
+        tmp_name=extname[0];
+        extname=extname[extname.length-1];
+    res.send({"tmpname":tmp_name,"extname":extname,"OriginalFileName":req.files.Filedata.originalFilename,"tmpdir":basedir+'/public/uploads/'});
+   /*
+   // 指定文件上传后的目录 - 示例为"images"目录。 
+    var target_path = basedir+'/public/images/' + req.files.Filedata.name; 
+   // 移动文件
+    fs.rename(tmp_path, target_path, function(err) {
+      if (err) throw err;
+      // 删除临时文件夹文件, 
+      fs.unlink(tmp_path, function() {
+         if (err) throw err;
+         res.send('File uploaded to: ' + target_path + ' - ' + req.files.Filedata.size + ' bytes');
+      });
+    });*/
 }
 
 function extensync(res, next) {

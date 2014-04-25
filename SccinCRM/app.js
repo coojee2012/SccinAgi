@@ -45,7 +45,7 @@ app.use(log4js.connectLogger(logger, {
   format: ':method :url'
 }));
 app.use(express.bodyParser({
-  uploadDir: './uploads'
+  uploadDir: './public/uploads'
 }));
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
