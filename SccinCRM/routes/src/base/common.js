@@ -184,6 +184,23 @@ gets.downsound = function(req, res, next) {
 
 }
 
+gets.downmonitor = function(req, res, next) {
+	var file = req.query.file;
+	var filename = file.split('/');
+	filename = filename[filename.length - 1];
+	res.download(basedir + '/public/monitor/' + file, filename, function(err) {
+		if (err) {
+			console.log(err);
+			//next(err);
+			// handle error, keep in mind the response may be partially-sent
+			// so check res.headerSent
+			res.send("您想要的文件地址不存在！");
+
+		} else {}
+	});
+
+}
+
 posts.uploadify=function(req,res,next){
 	 // 获得文件的临时路径
 	 console.log(req.files);

@@ -1,0 +1,196 @@
+<div class="layout_main">
+  <div class="page_box">
+    <div class="column form-column main col form-horizontal">
+      <div class="panel panel-default fieldset">
+        <div class="panel-heading">
+          <h1> <span class="label label-info">
+            <img src="/images/man.png"/>
+            <img src="/images/queue.png"/>当前正在编辑自动录音规则</span></h1>
+          </div>
+          <div class="panel-body ">
+            <div class="form-group">
+              <div class="panel panel-default fieldset">
+                <div class="formStyle">
+                  <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                    <input type="hidden" id="id" name="id" value="<%= inst.id%>" />
+                    <table>
+                    <tr>
+                      <th>规则名称</th>
+                      <td>
+                        <input type="text" value="" name="wayName" id="wayName" value="<%= inst.wayName%>" placeholder="请输入方便记忆的名称"
+                        datatype="*" ajaxurl="<%- baseurl%>/checkAjax"
+                        sucmsg="验证通过！"
+                        errormsg="验证不通过！"
+                        class="form-control input-sm"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>呼入录音</th>
+                      <td>
+                       <label class="radio-inline tipmsg" title="当直拨坐席分机时，是否录音。">
+                        <input type="radio" id="recordin1" name='recordin'
+                        value="是" <%if(inst.recordin=="是"){%>checked="checked"<%}%> >是</label>
+                        <label class="radio-inline tipmsg" title="当直拨坐席分机时，是否录音。">
+                          <input type="radio" id="recordin2" name='recordin' <%if(inst.recordin=="否"){%>checked="checked"<%}%> value="否"/>否</label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>呼出录音</th>
+                        <td>
+                         <label class="radio-inline tipmsg" title="当直拨坐席呼出时，是否录音。">
+                          <input type="radio" id="recordout1" name='recordout' <%if(inst.recordout=="是"){%>checked="checked"<%}%> 
+                          value="是">是</label>
+                          <label class="radio-inline tipmsg" title="当直拨坐席呼出时，是否录音。">
+                            <input type="radio" id="recordout2" name='recordout' <%if(inst.recordout=="否"){%>checked="checked"<%}%> value="否" >否</label>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>队列录音</th>
+                          <td>
+                            <label class="radio-inline tipmsg" title="当坐席作为队列成员接听时，是否录音。">
+                              <input type="radio" id="recordqueue1" name='recordqueue' <%if(inst.recordqueue=="是"){%>checked="checked"<%}%> 
+                              value="是" />是</label>
+                              <label class="radio-inline tipmsg" title="当坐席作为队列成员接听时，是否录音。">
+                                <input type="radio" id="recordqueue2" name='recordqueue' <%if(inst.recordqueue=="否"){%>checked="checked"<%}%> value="否"
+                               />否</label>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th>保存方式</th>
+                              <td>
+                                <label class="radio-inline tipmsg" title="超过指定时间后的记录将删除。">
+                                  <input type="radio" id="keepfortype1" name='keepfortype' <%if(inst.keepfortype=="按时间"){%>checked="checked"<%}%> 
+                                  value="按时间">按时间</label>
+                                  <label class="radio-inline tipmsg" title="超过指定条数后的记录时间删除前面。">
+                                    <input type="radio" id="keepfortype2" name='keepfortype' <%if(inst.keepfortype=="按条数"){%>checked="checked"<%}%> value="按条数" />按条数</label>
+                                    <label class="radio-inline tipmsg" title="永久保存">
+                                      <input type="radio" id="keepfortype3" name='keepfortype' <%if(inst.keepfortype=="永久保存"){%>checked="checked"<%}%> value="永久保存" />永久保存</label>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th>保存参数</th>
+                                    <td>
+                                      <input type="text" value="<%= inst.keepforargs%>" name="keepforargs" id="keepforargs" placeholder="只能是1-20位数字"
+                                      datatype="n1-20"
+                                      sucmsg="验证通过！"
+                                      errormsg="验证不通过！"
+                                      class="form-control input-sm"/>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th>坐席分机</th>
+                                    <td>
+                                     <div class="form-group">
+                                      <label for="extensions" class="control-label col-sm-1"></label>
+                                      <div class="controls  col-sm-4">
+                                        <span>备选分机</span>
+                                        <select size='10' name="extensions" multiple id="extensions" style='width: 100%;'>
+                                          <%- hasExtens%>
+                                        </select>
+                                      </div>
+                                      <label for="extensions" class="control-label col-sm-1">
+                                        <a href="###" id='addmem'><img src="/images/right.png" border='0'></a><br/><br/><a href="###" id='removemem'><img src="/images/left.png" border='0'></a>
+                                      </label>
+
+                                      <div class="controls  col-sm-4">
+                                        <span>已选分机</span>
+                                        <select size='10' name="members" multiple id="members" style='width: 100%;'>
+                                          <%- yyExtens%>
+                                        </select>
+                                      </div>
+                                      <label for="" class="control-label col-sm-1">
+                                        <a href="###" id='moveup'><img src="/images/up.png" border='0'></a><br/><br/><a href="###" id='movdown'><img src="/images/down.png" border='0'></a>
+                                      </label>
+
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="4" style="text-align: center">
+                                    <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
+                                    <a href="/pbx/RecordFile" class="btn btn-default btn-sm" role="button">返回</a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+<script type='text/javascript'>
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+        $('#savemenmu').click(function (e) {
+            if ($('#form1').Validform().check()) {
+              $("#members option").each(function(){
+      $(this).attr('selected',true);
+    });
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/save',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                           // window.location.href = "edit?id=" + data.id;
+                           $('#id').val(data.id);
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+
+
+
+  //增加成员
+  $("#addmem").click(function(){
+      $("#extensions option:selected").clone().appendTo("#members");
+      $("#extensions option:selected").remove();
+  });
+  $("#extensions").dblclick(function(){
+    $("option:selected",this).clone().appendTo("#members");
+    $("option:selected",this).remove();
+  });
+  //减少成员
+  $("#removemem").click(function(){
+      $("#members option:selected").clone().appendTo("#extensions");
+      $("#members option:selected").remove();
+  });
+  $("#members").dblclick(function(){
+    $("option:selected",this).clone().appendTo("#extensions");
+    $("option:selected",this).remove();
+  });
+  //成员上移
+  $("#moveup").click(function(){
+    var so = $("#members option:selected");
+    if(so.get(0) && so.get(0).index!=0){
+      so.each(function(){
+        $(this).prev().before($(this));
+      });
+    }
+  });
+  //成员下移
+  $("#movdown").click(function(){
+    var so = $("#members option:selected");
+    if(so.get(0) && so.get(0).index!=($("#members option").length-1)){
+      so.each(function(){
+        $(this).next().after($(this));
+      });
+    }
+  });
+
+    });
+</script>
