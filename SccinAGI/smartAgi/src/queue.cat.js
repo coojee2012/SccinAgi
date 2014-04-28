@@ -21,15 +21,26 @@ routing.prototype.queue = function(queuenum, assign, callback) {
         cb(err, inst);
       });
     },
+ /* setchannelvar: function(cb) {
+        context.SetVariable("sessionnum",self.sessionnum,function(err,response){
+          cb(err,response);
+        });
+      },
+   getchannelvar: ["setchannelvar",function(cb) {
+        context.getVariable('sessionnum', function(err, response) {
+          console.log(response);
+        });
+      }],*/
     queue: ['updateCDR',
       function(cb, results) {
         //Queue(queuename,options,URL,announceoverride,timeout,agi,cb)
-        context.Queue(queuenum, 'tc', '', '', 30, 'agi://192.168.0.114/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
+        context.Queue(queuenum, 'tc', '', '', 30, 'agi://127.0.0.1/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
           logger.debug("队列拨打返回结果:", response);
           cb(err, response);
         });
       }
     ],
+  
     getQueueStatus: ['queue',
       function(cb, results) {
         context.getVariable('QUEUESTATUS', function(err, response) {

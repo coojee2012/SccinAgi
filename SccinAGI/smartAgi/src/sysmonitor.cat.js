@@ -83,6 +83,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
         if (results.checkMonitorWay !== null) {
           if (results.checkMonitorWay.keepfortype === '按时间') {
             var where = {};
+            where.id={"neq":''};
             var olddate = moment().subtract('days', results.checkMonitorWay.keepforargs).format("YYYY-MM-DD");
             where.cretime = {
               'lte': olddate
@@ -93,7 +94,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
               cb(err, dbs);
             });
           } else if (results.checkMonitorWay.keepfortype === '按条数') {
-            schemas.pbxRcordFile.count({}, function(err, counts) {
+            schemas.pbxRcordFile.count(null, function(err, counts) {
               if (err) {
                 cb(err, []);
               } else if (counts > results.checkMonitorWay.keepforargs) {
@@ -119,7 +120,24 @@ routing.prototype.sysmonitor = function(monitype, callback) {
     //处理已有录音
     handleHasRecords: ['findHasRecords',
       function(cb, results) {
-        cb(null, null);
+        async.each(results.findHasRecords, function(item, callback) {
+          var filepath = item.folder + item.filename + '.' + item.extname;
+          fs.exists(filepath, function(exists) {
+            if (exists) {
+              fs.unlink(filepath, function(err) {
+                callback(err);
+              });
+            } else {
+              callback(null);
+            }
+          });
+        }, function(error) {
+          if (error)
+            logger.error(error);
+          else
+            cb(null, null);
+        });
+
       }
     ],
     //开始录音

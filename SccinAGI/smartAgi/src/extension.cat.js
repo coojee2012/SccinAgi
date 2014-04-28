@@ -41,6 +41,9 @@ routing.prototype.extension = function(extennum, assign, callback) {
         cb(err, inst);
       });
     },
+    extenmonitor: function(cb) {
+      self.sysmonitor("呼入", cb);
+    },
     dial: ['updateCDR',
       function(cb, resluts) {
         var localargs = str2obj(assign);

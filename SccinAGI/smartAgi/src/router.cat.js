@@ -32,7 +32,8 @@ routing.prototype.router = function() {
     },
     MixMonitor: ['AddCDR',
       function(cb, results) {
-        self.sysmonitor(cb);
+        //self.sysmonitor(cb);
+        cb(null, null);
       }
     ],
     GetRouters: ['AddCDR',
@@ -130,7 +131,7 @@ routing.prototype.router = function() {
             cb('未找到匹配的路由！', 1);
           }
         });
-       
+
       }
     ]
   }, function(err, results) {

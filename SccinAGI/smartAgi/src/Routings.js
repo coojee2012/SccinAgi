@@ -949,6 +949,11 @@ routing.prototype.dialout = function(linenum, callback) {
         });
       }
     ],
+    automonitor: ["findLine",
+      function(cb) {
+        self.sysmonitor("呼出", cb);
+      }
+    ],
     dial: ['findLine',
       function(cb, results) {
         var trunkproto = results.findLine.trunkproto;
@@ -1087,6 +1092,9 @@ routing.prototype.extension = function(extennum, assign, callback) {
         cb(err, inst);
       });
     },
+    extenmonitor: function(cb) {
+      self.sysmonitor("呼入", cb);
+    },
     dial: ['updateCDR',
       function(cb, resluts) {
         var localargs = str2obj(assign);
@@ -1172,6 +1180,135 @@ routing.prototype.extension = function(extennum, assign, callback) {
   }, function(err, results) {
     callback(err, results);
   });
+}
+//拨打分机
+routing.prototype.findqueuemember = function() {
+	var self = this;
+	var context = self.context;
+	var schemas = self.schemas;
+	var nami = self.nami;
+	var logger = self.logger;
+	var args = self.args;
+	var vars = self.vars;
+	var extennum = args.localnum;
+	async.auto({
+	/*	findsession: function(cb) {
+			context.getVariable('sessionnum', function(err, response) {
+				console.log("sessionnum:",response);
+				var sessionnum = '';
+				var reg = /(\d+)\s+\((.*)\)/;
+				var c = null,
+					id = null;
+				if (reg.test(response.result)) {
+					c = RegExp.$1;
+					sessionnum = RegExp.$2;
+					self.sessionnum=sessionnum;
+				}
+				cb(err, sessionnum);
+			});
+
+		},*/
+		/*updateCDR: ["findCDR",
+			function(cb) {
+				schemas.pbxCdr.update({
+					where: {
+						id: self.sessionnum
+					},
+					update: {
+						lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+						called: extennum,
+						lastapp: '寻找队列分机'
+					}
+				}, function(err, inst) {
+					cb(err, inst);
+				});
+			}
+		],*/
+		//在本地号码表里面寻找合适的号码，如果没有找到，默认到IVR号码为200
+		findLocal: function(cb, results) {
+				schemas.pbxLocalNumber.findOne({
+					where: {
+						id: extennum
+					}
+				}, function(err, inst) {
+					if (err)
+						cb(err, inst);
+					if (inst != null) {
+						cb(null, inst.assign);
+					} else {
+						cb("在本地号码中没有找到队列成员号码。", null);
+					}
+
+				});
+			}
+		,
+		dial: ['findLocal',
+			function(cb, resluts) {
+				var localargs = str2obj(resluts.findLocal);
+				var extenproto = localargs.extenproto || 'SIP';
+				var timeout = localargs.timeout || '60';
+				timeout = parseInt(timeout);
+				context.Dial(extenproto + '/' + extennum, timeout, 'tr', function(err, response) {
+					logger.debug("拨打分机返回结果：", response);
+					if (err) {
+						cb(err, response);
+					} else {
+						context.getVariable('DIALSTATUS', function(err, response) {
+							cb(null, response);
+						});
+					}
+				});
+
+			}
+		],
+		afterdial: ['dial',
+			function(cb, resluts) {
+				var re = /(\d+)\s+\((\w+)\)/;
+				var anwserstatus = null;
+				if (re.test(resluts.dial.result)) {
+					anwserstatus = RegExp.$2;
+				}
+				logger.debug("拨打队列分机应答状态：", anwserstatus);
+				//异步更新CDR，不影响流程
+				schemas.pbxCdr.update({
+					where: {
+						id: self.sessionnum
+					},
+					update: {
+						lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+						answerstatus: anwserstatus
+					}
+				}, function(err, inst) {
+					if (err)
+						logger.error("通话结束后更新通话状态发生异常！", err);
+				});
+
+				if (anwserstatus === 'CANCEL') {
+					logger.debug("主叫叫直接挂机！");
+					cb("主叫直接挂机！", -1);
+				} else if (anwserstatus === 'TRANSFER') {
+					logger.debug("被叫开启了呼叫转移！");
+					cb("被叫开启了呼叫转移！", -1);
+				}
+				/*else if (anwserstatus === 'CONGESTION') {
+          logger.debug("被叫直接挂机！");
+          cb("被叫直接挂机！", -1);
+        }  else if (anwserstatus === 'NOANSWER') {
+          logger.debug("被叫无应答！");
+          cb("被叫无应答！", -1);
+        }*/
+				else if (anwserstatus !== 'ANSWER') {
+					cb("拨打队列分机应答不成功！", -1);
+				} else {
+					logger.debug("拨打队列分机应答成功。");
+					cb(null, 1);
+				}
+			}
+		]
+	}, function(err, results) {
+		logger.error(err);
+		context.end();
+	});
 }
 routing.prototype.getAsConf = function(filename, callback) {
 	var self = this;
@@ -2374,15 +2511,26 @@ routing.prototype.queue = function(queuenum, assign, callback) {
         cb(err, inst);
       });
     },
+ /* setchannelvar: function(cb) {
+        context.SetVariable("sessionnum",self.sessionnum,function(err,response){
+          cb(err,response);
+        });
+      },
+   getchannelvar: ["setchannelvar",function(cb) {
+        context.getVariable('sessionnum', function(err, response) {
+          console.log(response);
+        });
+      }],*/
     queue: ['updateCDR',
       function(cb, results) {
         //Queue(queuename,options,URL,announceoverride,timeout,agi,cb)
-        context.Queue(queuenum, 'tc', '', '', 30, 'agi://192.168.0.114/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
+        context.Queue(queuenum, 'tc', '', '', 30, 'agi://127.0.0.1/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
           logger.debug("队列拨打返回结果:", response);
           cb(err, response);
         });
       }
     ],
+  
     getQueueStatus: ['queue',
       function(cb, results) {
         context.getVariable('QUEUESTATUS', function(err, response) {
@@ -2413,7 +2561,7 @@ routing.prototype.queueAnswered = function() {
   var logger = self.logger;
   var args = self.args;
   var vars = self.vars;
-  var sessionnum = args.sessionnum;
+  self.sessionnum=args.sessionnum;
   var queuenum = args.queuenum;
   logger.debug("队列被接听:", vars);
   async.auto({
@@ -2431,6 +2579,7 @@ routing.prototype.queueAnswered = function() {
           member = RegExp.$1;
         }
         logger.debug("当前应答坐席：", member);
+        self.args.called = member;
         cb(err, member);
       });
     },
@@ -2439,7 +2588,7 @@ routing.prototype.queueAnswered = function() {
       function(cb, results) {
         schemas.pbxCdr.update({
           where: {
-            id: sessionnum
+            id: self.sessionnum
           },
           update: {
             answerstatus: 'ANSWERED',
@@ -2461,15 +2610,20 @@ routing.prototype.queueAnswered = function() {
           update: {
             callernumber: vars.agi_callerid,
             callednumber: results.getAnswerMem,
-            sessionnumber: sessionnum,
+            sessionnumber: self.sessionnum,
             status: 'waite',
             routerdype: 1,
-            poptype: 'diallocal',
+            poptype: 'dialqueue',
             updatetime: moment().format("YYYY-MM-DD HH:mm:ss")
           }
         }, function(err, inst) {
           cb(err, inst);
         });
+      }
+    ],
+    automonitor: ['getAnswerMem',
+      function(cb, results) {
+        self.sysmonitor("队列", cb);
       }
     ]
   }, function(err, results) {
@@ -2569,7 +2723,8 @@ routing.prototype.router = function() {
     },
     MixMonitor: ['AddCDR',
       function(cb, results) {
-        self.sysmonitor(cb);
+        //self.sysmonitor(cb);
+        cb(null, null);
       }
     ],
     GetRouters: ['AddCDR',
@@ -2667,7 +2822,7 @@ routing.prototype.router = function() {
             cb('未找到匹配的路由！', 1);
           }
         });
-       
+
       }
     ]
   }, function(err, results) {
@@ -3277,11 +3432,12 @@ routing.prototype.sysmonitor = function(monitype, callback) {
           'like': '%' + args.called + '%'
         };
       } else {
-        cb(null, {
+        /* cb(null, {
           wayName: '系统自动',
           keepfortype: '按时间',
           keepforargs: 90
-        });
+        });*/
+        cb(null, null);
       }
       if (where && where.members !== null) {
         schemas.pbxAutoMonitorWays.findOne({
@@ -3304,7 +3460,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
             if (!exists) {
               fs.mkdir(path, function(err) {
                 if (err) {
-                  cb('无法创建录音需要的目录：'+path, null);
+                  cb('无法创建录音需要的目录：' + path, null);
                 } else {
                   cb(null, path);
                 }
@@ -3324,6 +3480,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
         if (results.checkMonitorWay !== null) {
           if (results.checkMonitorWay.keepfortype === '按时间') {
             var where = {};
+            where.id={"neq":''};
             var olddate = moment().subtract('days', results.checkMonitorWay.keepforargs).format("YYYY-MM-DD");
             where.cretime = {
               'lte': olddate
@@ -3334,7 +3491,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
               cb(err, dbs);
             });
           } else if (results.checkMonitorWay.keepfortype === '按条数') {
-            schemas.pbxRcordFile.count({}, function(err, counts) {
+            schemas.pbxRcordFile.count(null, function(err, counts) {
               if (err) {
                 cb(err, []);
               } else if (counts > results.checkMonitorWay.keepforargs) {
@@ -3360,7 +3517,24 @@ routing.prototype.sysmonitor = function(monitype, callback) {
     //处理已有录音
     handleHasRecords: ['findHasRecords',
       function(cb, results) {
-        cb(null, null);
+        async.each(results.findHasRecords, function(item, callback) {
+          var filepath = item.folder + item.filename + '.' + item.extname;
+          fs.exists(filepath, function(exists) {
+            if (exists) {
+              fs.unlink(filepath, function(err) {
+                callback(err);
+              });
+            } else {
+              callback(null);
+            }
+          });
+        }, function(error) {
+          if (error)
+            logger.error(error);
+          else
+            cb(null, null);
+        });
+
       }
     ],
     //开始录音
@@ -3379,7 +3553,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
     //添加一条录音记录
     addRecords: ['buildForder',
       function(cb, results) {
-        var filename = self.sessionnum + '.wav';
+        var filename = self.sessionnum;
         var extennum = self.routerline === '呼入' ? args.called : vars.agi_callerid;
         var callnumber = self.routerline === '呼出' ? args.called : vars.agi_callerid;
         schemas.pbxRcordFile.create({
@@ -3398,7 +3572,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
   }, function(err, results) {
     if (err) {
       logger.error("自动录音，发生错误：", err);
-      callback(null, err);//录音模块发生错误，不中断正常流程
+      callback(null, err); //录音模块发生错误，不中断正常流程
     } else {
       callback(null, null);
     }

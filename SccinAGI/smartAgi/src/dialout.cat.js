@@ -53,6 +53,11 @@ routing.prototype.dialout = function(linenum, callback) {
         });
       }
     ],
+    automonitor: ["findLine",
+      function(cb) {
+        self.sysmonitor("呼出", cb);
+      }
+    ],
     dial: ['findLine',
       function(cb, results) {
         var trunkproto = results.findLine.trunkproto;

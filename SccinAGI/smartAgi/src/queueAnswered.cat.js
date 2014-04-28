@@ -7,7 +7,7 @@ routing.prototype.queueAnswered = function() {
   var logger = self.logger;
   var args = self.args;
   var vars = self.vars;
-  var sessionnum = args.sessionnum;
+  self.sessionnum=args.sessionnum;
   var queuenum = args.queuenum;
   logger.debug("队列被接听:", vars);
   async.auto({
@@ -25,6 +25,7 @@ routing.prototype.queueAnswered = function() {
           member = RegExp.$1;
         }
         logger.debug("当前应答坐席：", member);
+        self.args.called = member;
         cb(err, member);
       });
     },
@@ -33,7 +34,7 @@ routing.prototype.queueAnswered = function() {
       function(cb, results) {
         schemas.pbxCdr.update({
           where: {
-            id: sessionnum
+            id: self.sessionnum
           },
           update: {
             answerstatus: 'ANSWERED',
@@ -55,15 +56,20 @@ routing.prototype.queueAnswered = function() {
           update: {
             callernumber: vars.agi_callerid,
             callednumber: results.getAnswerMem,
-            sessionnumber: sessionnum,
+            sessionnumber: self.sessionnum,
             status: 'waite',
             routerdype: 1,
-            poptype: 'diallocal',
+            poptype: 'dialqueue',
             updatetime: moment().format("YYYY-MM-DD HH:mm:ss")
           }
         }, function(err, inst) {
           cb(err, inst);
         });
+      }
+    ],
+    automonitor: ['getAnswerMem',
+      function(cb, results) {
+        self.sysmonitor("队列", cb);
       }
     ]
   }, function(err, results) {
