@@ -87,6 +87,7 @@
                   <th class="text-center">被叫</th>
                   <th class="text-center">录音类型</th>
                   <th class="text-center">文件大小</th>
+                  <th class="text-center">扩展名</th>
                   <th class="text-center">创建时间</th>
                   <th class="text-center">
                     <span class="print">操作</span>
@@ -102,6 +103,7 @@
                  <th class="text-center">被叫</th>
                  <th class="text-center">录音类型</th>
                  <th class="text-center">文件大小</th>
+                  <th class="text-center">扩展名</th>
                  <th class="text-center">创建时间</th>
                  <th class="text-center">
                   <span class="print">操作</span>
@@ -239,7 +241,7 @@ return toolswhere;
 }
 
 function getaaSorting(){
-return [[6,'desc']];
+return [[7,'desc']];
 }
 
 function getColums(){
@@ -287,18 +289,25 @@ function getColums(){
     "aTargets": [5]
   }, {
     "sClass": 'center',
+    "sName": "extname",
+    "mData": "extname",
+    "bSortable": false,
+    "bVisible": true,
+    "aTargets": [6]
+  }, {
+    "sClass": 'center',
     "sName": "cretime",
     "mData": "cretime",
     "bSortable": false,
     "bVisible": true,
-    "aTargets": [6]
+    "aTargets": [7]
   }, {
     "sClass": 'center',
     "sName": "id",
     "mData": "id",
     "bSortable": false,
     "bVisible": true,
-    "aTargets": [7],
+    "aTargets": [8],
     "mRender": function(data, type, full) {
       
         var str = '';

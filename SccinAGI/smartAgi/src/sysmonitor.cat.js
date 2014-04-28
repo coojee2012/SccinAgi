@@ -35,11 +35,12 @@ routing.prototype.sysmonitor = function(monitype, callback) {
           'like': '%' + args.called + '%'
         };
       } else {
-        cb(null, {
+        /* cb(null, {
           wayName: '系统自动',
           keepfortype: '按时间',
           keepforargs: 90
-        });
+        });*/
+        cb(null, null);
       }
       if (where && where.members !== null) {
         schemas.pbxAutoMonitorWays.findOne({
@@ -62,7 +63,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
             if (!exists) {
               fs.mkdir(path, function(err) {
                 if (err) {
-                  cb('无法创建录音需要的目录：'+path, null);
+                  cb('无法创建录音需要的目录：' + path, null);
                 } else {
                   cb(null, path);
                 }
@@ -137,7 +138,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
     //添加一条录音记录
     addRecords: ['buildForder',
       function(cb, results) {
-        var filename = self.sessionnum + '.wav';
+        var filename = self.sessionnum;
         var extennum = self.routerline === '呼入' ? args.called : vars.agi_callerid;
         var callnumber = self.routerline === '呼出' ? args.called : vars.agi_callerid;
         schemas.pbxRcordFile.create({
@@ -156,7 +157,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
   }, function(err, results) {
     if (err) {
       logger.error("自动录音，发生错误：", err);
-      callback(null, err);//录音模块发生错误，不中断正常流程
+      callback(null, err); //录音模块发生错误，不中断正常流程
     } else {
       callback(null, null);
     }
