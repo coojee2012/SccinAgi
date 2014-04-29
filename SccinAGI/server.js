@@ -14,7 +14,7 @@ var Schemas = require('./database/schema').Schemas;
 
 var server = AGI.createServer(function(context) {
   logger.debug("当前上下文状态：" + context.state + '，上下文流是否可读：' + context.stream.readable);
-  
+
   var route = new routing({
     context: context,
     Schemas: Schemas,
@@ -27,6 +27,10 @@ var server = AGI.createServer(function(context) {
 
   server.getConnections(function(err, count) {
     logger.info('当前服务器连接数：' + count);
+  });
+
+  server.on("error", function(err) {
+    logger.error(err);
   });
 
   //捕获获取变量事件
@@ -73,7 +77,7 @@ var server = AGI.createServer(function(context) {
           id: route.sessionnum
         },
         update: {
-          alive:'no',
+          alive: 'no',
           endtime: moment().format("YYYY-MM-DD HH:mm:ss")
         }
       }, function(err, inst) {
@@ -82,8 +86,7 @@ var server = AGI.createServer(function(context) {
 
         context.end();
       });
-    }
-    else {
+    } else {
       context.end();
     }
 
@@ -91,7 +94,7 @@ var server = AGI.createServer(function(context) {
 
   //捕获异常
   context.on('error', function(err) {
-    logger.info("agi error", err);
+    logger.info("AGI ERROR:", err);
     context.end();
   });
   //AGI访问关闭

@@ -4,7 +4,7 @@ var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var async = require('async');
 var Schemas = require(basedir+'/database/schema').Schemas;
-
+var commfun = require(basedir + '/lib/comfun');
 var logger = require(basedir+'/lib/logger').logger('web');
 var gets = {};
 var posts = {};
@@ -202,6 +202,11 @@ posts.save = function(req, res,next,baseurl) {
 						});
 					}
 				}
+			],
+			addlocalnum: ["createNew",
+				function(cb, results) {
+					commfun.addlocalnum(results.createNew.id, 'queue', "", cb);
+				}
 			]
 		},
 		function(err, results) {
@@ -243,25 +248,33 @@ posts.delete = function(req, res,next,baseurl) {
 		if (err) {
 			myjson.success = 'ERROR';
 			myjson.msg = '查询数据发生异常,请联系管理员！';
+			res.send(myjson);
 		} else {
 			if (!inst) {
 				myjson.success = 'ERROR';
 				myjson.msg = '没有找到需要删除的数据！';
-			} else {
-
-			}
-			inst.destroy(function(err) {
-				if (err) {
-					myjson.success = 'ERROR';
-					myjson.msg = '删除数据发生异常,请联系管理员！！';
-				} else {
-					myjson.success = 'OK';
-					myjson.msg = '删除成功！';
-				}
 				res.send(myjson);
-
-			});
-
+			} else {
+				inst.destroy(function(err) {
+					if (err) {
+						myjson.success = 'ERROR';
+						myjson.msg = '删除数据发生异常,请联系管理员！！';
+						res.send(myjson);
+					} else {
+						commfun.dellocalnum(id, function(err, o) {
+							if (err) {
+								myjson.success = 'ERROR';
+								myjson.msg = '删除分机本地号码发生异常,请联系管理员！！';
+								res.send(myjson);
+							} else {
+								myjson.success = 'OK';
+								myjson.msg = '删除成功！';
+								res.send(myjson);
+							}
+						});
+					}
+				});
+			}
 		}
 
 	});

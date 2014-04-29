@@ -98,7 +98,7 @@ Context.prototype.setState = function(state) {
 };
 
 Context.prototype.send = function(msg, cb) {
-  console.log(msg);
+  console.log("执行AGI命令:"+msg);
   this.pending = cb;
   this.stream.write(msg);
 };
@@ -137,12 +137,14 @@ Context.prototype.waitForDigit = function(timeout, cb) {
 };
 
 Context.prototype.hangup = function(cb) {
-  this.send('HANGUP' + ENDLINE, cb);
+  console.log("CONTEXT-发起挂机！");
+  this.send('HANGUP ' + ENDLINE, cb);
 };
 
 //应答呼叫
 Context.prototype.answer = function(cb) {
-  this.send('ANSWER' + ENDLINE, cb);
+   console.log("CONTEXT-发起应答！");
+  this.send('ANSWER ' + "\n", cb);
 }
 
 //结束本次AGI会话

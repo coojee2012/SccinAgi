@@ -192,17 +192,17 @@ where.whereValue_2=$('#lable').val();
 if($("#cretimeFrom").val()!='' && $("#cretimeTo").val()==''){
 where.whereCol_3='cretime';
 where.whereWay_3='gte';
-where.whereValue_3=$('#cretimeFrom').val();
+where.whereValue_3=moment($('#cretimeFrom').val()+" 00:00:00").unix();
 }
 else if($("#cretimeFrom").val()!='' && $("#cretimeTo").val()!=''){
 where.whereCol_3='cretime';
 where.whereWay_3='between';
-where.whereValue_3=$('#cretimeFrom').val()+","+$('#cretimeTo').val();
+where.whereValue_3=moment($('#cretimeFrom').val()+" 00:00:00").unix()+","+moment($('#cretimeTo').val()+" 23:59:59").unix();
 }
 else if($("#cretimeFrom").val()=='' && $("#cretimeTo").val()!=''){
 where.whereCol_3='cretime';
 where.whereWay_3='lte';
-where.whereValue_3=$('#cretimeTo').val();
+where.whereValue_3=moment($('#cretimeTo').val()+" 23:59:59").unix();
 }
 return where;
 }
@@ -300,7 +300,10 @@ function getColums(){
     "mData": "cretime",
     "bSortable": false,
     "bVisible": true,
-    "aTargets": [7]
+    "aTargets": [7],
+    "mRender": function(data, type, full) {
+      return moment.unix(data).format("YYYY-MM-DD HH:mm:ss");
+    }
   }, {
     "sClass": 'center',
     "sName": "id",

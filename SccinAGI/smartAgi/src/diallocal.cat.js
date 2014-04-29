@@ -45,6 +45,7 @@ routing.prototype.diallocal = function(localnum, callback) {
             cb(err, inst);
           logger.debug(inst);
           if (inst != null) {
+            logger.debug("本地处理："+inst.localtype);
             self[inst.localtype](localnum, inst.assign, function(err, result) {
               cb(err, result);
             });
@@ -52,7 +53,7 @@ routing.prototype.diallocal = function(localnum, callback) {
           //默认拨打IVR 200 1
           else {
             logger.debug("本地默认处理拨打IVR200");
-            self.ivr(200, 0, function(err, result) {
+            self.ivr(200, 1, function(err, result) {
               cb(err, result);
             })
           }

@@ -21,26 +21,26 @@ routing.prototype.queue = function(queuenum, assign, callback) {
         cb(err, inst);
       });
     },
- /* setchannelvar: function(cb) {
-        context.SetVariable("sessionnum",self.sessionnum,function(err,response){
-          cb(err,response);
-        });
-      },
-   getchannelvar: ["setchannelvar",function(cb) {
-        context.getVariable('sessionnum', function(err, response) {
-          console.log(response);
-        });
-      }],*/
-    queue: ['updateCDR',
+    findQueue: function(cb) {
+      schemas.pbxQueue.find(queuenum, function(err, inst) {
+        if (err || inst == null) {
+          cb("查找队列发生错误！", null);
+        } else {
+          cb(null, inst);
+        }
+      });
+    },
+    queue: ['updateCDR', 'findQueue',
       function(cb, results) {
         //Queue(queuename,options,URL,announceoverride,timeout,agi,cb)
-        context.Queue(queuenum, 'tc', '', '', 30, 'agi://127.0.0.1/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
+        var queuetimeout = results.findQueue.queuetimeout == 0 ? 60 : results.findQueue.queuetimeout;
+        context.Queue(queuenum, 'tc', '', '', queuetimeout, 'agi://127.0.0.1/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
           logger.debug("队列拨打返回结果:", response);
           cb(err, response);
         });
       }
     ],
-  
+
     getQueueStatus: ['queue',
       function(cb, results) {
         context.getVariable('QUEUESTATUS', function(err, response) {

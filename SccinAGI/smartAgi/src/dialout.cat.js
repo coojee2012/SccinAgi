@@ -58,7 +58,7 @@ routing.prototype.dialout = function(linenum, callback) {
         self.sysmonitor("呼出", cb);
       }
     ],
-    dial: ['findLine',
+    dial: ['automonitor',
       function(cb, results) {
         var trunkproto = results.findLine.trunkproto;
         var trunkdevice = results.findLine.trunkdevice;

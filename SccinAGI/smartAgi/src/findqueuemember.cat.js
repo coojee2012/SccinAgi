@@ -9,39 +9,6 @@ routing.prototype.findqueuemember = function() {
 	var vars = self.vars;
 	var extennum = args.localnum;
 	async.auto({
-	/*	findsession: function(cb) {
-			context.getVariable('sessionnum', function(err, response) {
-				console.log("sessionnum:",response);
-				var sessionnum = '';
-				var reg = /(\d+)\s+\((.*)\)/;
-				var c = null,
-					id = null;
-				if (reg.test(response.result)) {
-					c = RegExp.$1;
-					sessionnum = RegExp.$2;
-					self.sessionnum=sessionnum;
-				}
-				cb(err, sessionnum);
-			});
-
-		},*/
-		/*updateCDR: ["findCDR",
-			function(cb) {
-				schemas.pbxCdr.update({
-					where: {
-						id: self.sessionnum
-					},
-					update: {
-						lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
-						called: extennum,
-						lastapp: '寻找队列分机'
-					}
-				}, function(err, inst) {
-					cb(err, inst);
-				});
-			}
-		],*/
-		//在本地号码表里面寻找合适的号码，如果没有找到，默认到IVR号码为200
 		findLocal: function(cb, results) {
 				schemas.pbxLocalNumber.findOne({
 					where: {
@@ -66,7 +33,7 @@ routing.prototype.findqueuemember = function() {
 				var timeout = localargs.timeout || '60';
 				timeout = parseInt(timeout);
 				context.Dial(extenproto + '/' + extennum, timeout, 'tr', function(err, response) {
-					logger.debug("拨打分机返回结果：", response);
+					logger.debug("拨打队列分机返回结果：", response);
 					if (err) {
 						cb(err, response);
 					} else {
@@ -85,21 +52,7 @@ routing.prototype.findqueuemember = function() {
 				if (re.test(resluts.dial.result)) {
 					anwserstatus = RegExp.$2;
 				}
-				logger.debug("拨打队列分机应答状态：", anwserstatus);
-				//异步更新CDR，不影响流程
-				schemas.pbxCdr.update({
-					where: {
-						id: self.sessionnum
-					},
-					update: {
-						lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
-						answerstatus: anwserstatus
-					}
-				}, function(err, inst) {
-					if (err)
-						logger.error("通话结束后更新通话状态发生异常！", err);
-				});
-
+				logger.debug("拨打队列分机应答状态：", anwserstatus);				
 				if (anwserstatus === 'CANCEL') {
 					logger.debug("主叫叫直接挂机！");
 					cb("主叫直接挂机！", -1);

@@ -1,2 +1,2 @@
-/*! 路由处理程序 2014-04-23 */
+/*! 路由处理程序 2014-04-29 */
 var conf=require("node-conf"),basedir=conf.load("app").appbase,logger=require(basedir+"/lib/logger").logger("web"),gets={},posts={};module.exports={get:gets,post:posts},posts.get=function(a,b){var c=(require("child_process").spawn,require("child_process").exec),d=c("/usr/bin/java -jar /var/lib/asterisk/agi-bin/VoiceTest_fat.jar 11",function(a,c){b.send(a?"执行错误："+a:"程序输出："+c)});d.stdout.on("data",function(a){console.log("标准输出："+a)}),d.on("exit",function(a){console.log("子进程已关闭，代码："+a)})};

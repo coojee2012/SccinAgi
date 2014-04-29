@@ -5,6 +5,7 @@ var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var Schemas = require(basedir + '/database/schema').Schemas;
 var logger = require(basedir + '/lib/logger').logger('web');
+var commfun = require(basedir + '/lib/comfun');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -450,6 +451,11 @@ posts.save = function(req, res, next, baseurl) {
                         });
                     }
                 }
+            ],
+            addlocalnum: ["createNew",
+                function(cb, results) {
+                    commfun.addlocalnum(results.createNew.id, 'ivr', 1, cb);
+                }
             ]
         },
 
@@ -492,11 +498,9 @@ posts.delete = function(req, res, next, baseurl) {
             Schemas['pbxIvrMenmu'].find(id, function(err, inst) {
                 if (err || inst === null) {
                     cb("查找IVR发生错误！", null);
-                }
-                else if(inst.isreadonly==='是'){
-                    cb("系统只读，不能被删除！",null);
-                }
-                 else {
+                } else if (inst.isreadonly === '是') {
+                    cb("系统只读，不能被删除！", null);
+                } else {
                     cb(null, inst);
                 }
             });
@@ -538,6 +542,11 @@ posts.delete = function(req, res, next, baseurl) {
         delinputs: ["findivrinputs",
             function(cb, results) {
                 delsthes(results.findivrinputs, cb);
+            }
+        ],
+        dellocalnum: ["delmenmu",
+            function(cb, results) {
+                commfun.dellocalnum(id, cb);
             }
         ]
     }, function(err, results) {

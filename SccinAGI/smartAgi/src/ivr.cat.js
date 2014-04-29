@@ -79,7 +79,10 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
       Answer: ['getIVRActions', 'getIVRInputs',
         function(cb, results) {
           context.answer(function(err, response) {
-             logger.debug("IVR应答成功！");
+            if(err)
+              logger.error(err);
+
+             logger.debug("IVR应答结果：",response);
             cb(err, response);
           });
         }
@@ -88,7 +91,7 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
         function(cb, results) {
           logger.debug("开始执行IVR动作");
           if (!action)
-            action = 0;
+            action = 1;
 
           schemas.pbxCallProcees.create({
             callsession: self.sessionnum,

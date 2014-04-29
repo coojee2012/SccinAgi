@@ -42,9 +42,12 @@ routing.prototype.extension = function(extennum, assign, callback) {
       });
     },
     extenmonitor: function(cb) {
-      self.sysmonitor("呼入", cb);
+      var ty="呼入";
+      if(self.routerline=="呼出")
+        ty="呼出";
+      self.sysmonitor(ty, cb);
     },
-    dial: ['updateCDR',
+    dial: ['updateCDR','extenmonitor',
       function(cb, resluts) {
         var localargs = str2obj(assign);
         var extenproto = localargs.extenproto || 'SIP';

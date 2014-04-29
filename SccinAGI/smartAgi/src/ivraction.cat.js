@@ -90,23 +90,12 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
   var args = self.args;
   var vars = self.vars;
   logger.debug("进入IVR动作执行流程编号:", actionid);
-
-  if (actionid && actionid < actions.length) {
-    logger.debug(actions[actionid].__cachedRelations.Actmode);
-    var actmode = actions[actionid].__cachedRelations.Actmode;
-    var actargs = str2obj(actions[actionid].args);
-    /* if (actions[actionid].args && actions[actionid].args != "") {
-      var tmp = actions[actionid].args.split('&');
-      for (var i in tmp) {
-        var kv = tmp[i].split('=');
-        actargs[kv[0]] = kv[1];
-      }
-    }*/
-
-
-
+  
+  if (actionid>0 && actionid <= actions.length) {
+    logger.debug(actions[actionid-1].__cachedRelations.Actmode);
+    var actmode = actions[actionid-1].__cachedRelations.Actmode;
+    var actargs = str2obj(actions[actionid-1].args);
     logger.debug("Action 参数:", actargs);
-    var autoaction = actionid;
     //async auto 执行action 开始
     async.auto({
       AddProcees: function(cb) {
@@ -115,7 +104,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           caller: vars.agi_callerid,
           called: args.called,
           routerline: args.routerline,
-          passargs: 'actionid=' + actionid + '&' + actions[actionid].args,
+          passargs: 'actionid=' + actionid + '&' + actions[actionid-1].args,
           processname: actmode.modename,
           doneresults: ''
         }, function(err, inst) {
@@ -278,7 +267,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             cb('录音文件名不能为空！', null);
           } else {
             filename += "." + format;
-            var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
+            var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid-1].ivrnumber + '/';
 
             async.auto({
               buildDir: function(callback) {
@@ -348,7 +337,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
         //播放录音 
         else if (actmode.modename === '播放录音') {
           var format = actargs.format || 'wav'; //默认文件后缀名
-          var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid].ivrnumber + '/';
+          var filepath = '/var/spool/asterisk/monitor/IVR/' + actions[actionid-1].ivrnumber + '/';
           var filename = "";
           if (/\<\%(\w+)\%\>(\S+)/.test(actargs.varname)) {
             var hans = RegExp.$1;
@@ -550,7 +539,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
               isok = false;
           }
           var ivrnumber = actargs.ivrnumber;
-          var ivractionid = actargs.actionid || 0;
+          var ivractionid = actargs.actionid || 1;
           if (isok) {
             self.ivr(ivrnumber, ivractionid, cb);
           } else {
@@ -613,7 +602,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
         //跳转到IVR菜单
         else if (actmode.modename === '跳转到IVR菜单') {
           var ivrnumber = actargs.ivrnumber;
-          var ivractionid = actargs.actionid || 0;
+          var ivractionid = actargs.actionid || 1;
           if (!ivrnumber || ivrnumber === '') {
             cb('无法跳转到指定IVR，IVR编号为空！', null);
           } else {
@@ -630,11 +619,11 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           var programs = actargs.programs; //a~1,b~2,c~3,d~<%caller | called | 或其他已知自定义通道变量 %>
           var varprex = actargs.varprex || 　'webapp-'; //设置本次结果需要设置的通道变量前缀，默认为 'webapp-'
           var doneivrnum = actargs.doneivrnum;
-          var doneivractid = actargs.doneivractid || 0;
+          var doneivractid = actargs.doneivractid || 1;
           var failivrnum = actargs.failivrnum;
-          var failivractid = actargs.failivractid || 0;
+          var failivractid = actargs.failivractid || 1;
           var timeoutivrnum = actargs.timeoutivrnum;
-          var timeoutivractid = actargs.timeoutivractid || 0;
+          var timeoutivractid = actargs.timeoutivractid || 1;
           var proto = url.substring(0, url.indexOf(":")) === 'https' ? 'https' : 'http';
           var p = require(proto);
           var options = {
@@ -868,6 +857,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
     }); //async auto 执行action 结束
 
   } else {
+    logger.debug('所有的动作执行完毕!');
     callback('所有的动作执行完毕', -1);
   }
 }

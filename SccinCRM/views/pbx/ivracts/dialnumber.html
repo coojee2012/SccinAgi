@@ -17,8 +17,8 @@
                                         <tr>
                                             <th>拨打以下号码</th>
                                             <td>
-                                                <input type="text" value="" name="digits" id="digits" placeholder="只能是数字，最少3位，不能超过20位"
-                                                       datatype="n3-20"
+                                                <input type="text" value="" name="digits" id="digits" placeholder="只能是数字，最少3位，不能超过20位，可以为空"
+                                                       datatype="n0-20"
                                                         sucmsg="验证通过！"
                                                        errormsg="验证不通过！"
                                                        class="form-control input-sm"/>
@@ -29,8 +29,7 @@
                                             <td>
                                                <input type="text" value="" name="varname" id="varname"
                                                        class="form-control input-sm"
-                                                       placeholder="指定一个通道变量名！" datatype="*"
-                                                       errormsg="不能为空！"/>
+                                                       placeholder="指定一个通道变量名！"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -40,8 +39,7 @@
                                                     <input type="radio" id="addbefore1" name='dialway'
                                                            value="diallocal">本地拨打</label>
                                                 <label class="radio-inline tipmsg" title="">
-                                                    <input type="radio" id="addbefore2" name='dialway' value="dialout"
-                                                           checked='checked'>呼叫外线</label>
+                                                    <input type="radio" id="addbefore2" name='dialway' value="dialout">呼叫外线</label>
                                             </td>
                                         </tr>
                                         
@@ -75,8 +73,7 @@ dialway="<%= args.dialway%>";
 
         $("#digits").val(digits);
         $("#varname").val(varname);
-     $("#dialway").val(dialway);
-
+        $("input[name='dialway'][value='"+dialway+"']").attr("checked","checked");
         $('#savemenmu').click(function (e) {
             if ($('#form1').Validform().check()) {
                 $.ajax({

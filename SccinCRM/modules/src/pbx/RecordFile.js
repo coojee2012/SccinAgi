@@ -11,7 +11,7 @@ var pbxRcordFile=schema.define('pbxRcordFile',{
 	filesize:   {type:Number,default:function () { return 0 }},//文件大小
 	calltype:   {type:String,length:50}, //主叫类型
 	lable:   {type:String,length:50},//录音类型，queue,exten,ivr,voicemail等
-	cretime:    {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},//创建时间
+	cretime:    {type: String, default: function () { return moment().unix(); }},//创建时间
 	extennum:   {type:String,length:50},//被叫
 	folder:     {type:String,length:50}, //目录
 	callnumber: {type:String,length:50}, //主叫

@@ -1,8 +1,9 @@
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
-var Schemas = require(basedir+'/database/schema').Schemas;
+var Schemas = require(basedir + '/database/schema').Schemas;
 var async = require('async');
-var logger = require(basedir+'/lib/logger').logger('web');
+var logger = require(basedir + '/lib/logger').logger('web');
+var commfun = require(basedir + '/lib/comfun');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -43,29 +44,33 @@ checkFun['accountcode'] = function(accountcode, res) {
 };
 
 //分机列表显示
-gets.index = function(req, res, next,baseurl) {
+gets.index = function(req, res, next, baseurl) {
 
-	res.render('pbx/Extension/list.html', {baseurl:baseurl});
+	res.render('pbx/Extension/list.html', {
+		baseurl: baseurl
+	});
 }
 
-gets.upsert = function(req, res, next,baseurl) {
-	res.render('pbx/Extension/upsert.html', {baseurl:baseurl});
+gets.upsert = function(req, res, next, baseurl) {
+	res.render('pbx/Extension/upsert.html', {
+		baseurl: baseurl
+	});
 }
 
 //展现新建页面
 //页面传入deviceproto参数，根据deviceproto值表现不同协议的分机新建页面
-gets.create = function(req, res, next,baseurl) {
+gets.create = function(req, res, next, baseurl) {
 	var deviceproto = req.query['deviceproto'];
 	if (!deviceproto || deviceproto == '')
 		deviceproto = 'SIP';
 	res.render('pbx/Extension/create.html', {
-		baseurl:baseurl,
+		baseurl: baseurl,
 		deviceproto: deviceproto,
 		partv: 'partv' + deviceproto + '.html'
 	});
 }
 //展现编辑页面
-gets.edit = function(req, res, next,baseurl) {
+gets.edit = function(req, res, next, baseurl) {
 	var id = req.query['id'];
 	Schemas['pbxExtension'].find(id, function(err, inst) {
 		if (err)
@@ -73,7 +78,7 @@ gets.edit = function(req, res, next,baseurl) {
 		else {
 			if (inst != null)
 				res.render('pbx/Extension/edit.html', {
-					baseurl:baseurl,
+					baseurl: baseurl,
 					inst: inst,
 					partv: 'partv' + inst.deviceproto + '.html'
 				});
@@ -84,39 +89,46 @@ gets.edit = function(req, res, next,baseurl) {
 	});
 }
 
-posts.delete = function(req, res, next,baseurl) {
+posts.delete = function(req, res, next, baseurl) {
 	var id = req.body['id'];
 	Schemas['pbxExtension'].find(id, function(err, inst) {
 		var myjson = {};
 		if (err) {
 			myjson.success = 'ERROR';
 			myjson.msg = '查询数据发生异常,请联系管理员！';
+			res.send(myjson);
 		} else {
 			if (!inst) {
 				myjson.success = 'ERROR';
 				myjson.msg = '没有找到需要删除的数据！';
-			} else {
-
-			}
-			inst.destroy(function(err) {
-				if (err) {
-					myjson.success = 'ERROR';
-					myjson.msg = '删除数据发生异常,请联系管理员！！';
-				} else {
-					myjson.success = 'OK';
-					myjson.msg = '删除成功！';
-				}
 				res.send(myjson);
-
-			});
-
+			} else {
+				inst.destroy(function(err) {
+					if (err) {
+						myjson.success = 'ERROR';
+						myjson.msg = '删除数据发生异常,请联系管理员！！';
+						res.send(myjson);
+					} else {
+						commfun.dellocalnum(id, function(err, o) {
+							if (err) {
+								myjson.success = 'ERROR';
+								myjson.msg = '删除分机本地号码发生异常,请联系管理员！！';
+								res.send(myjson);
+							} else {
+								myjson.success = 'OK';
+								myjson.msg = '删除成功！';
+								res.send(myjson);
+							}
+						});
+					}
+				});
+			}
 		}
-
 	});
 }
 
 //保存分机信息（适用于新增和修改）
-posts.save = function(req, res, next,baseurl) {
+posts.save = function(req, res, next, baseurl) {
 	var extenObj = {};
 	extenObj.devicestring = '';
 	for (var key in req.body) {
@@ -164,6 +176,11 @@ posts.save = function(req, res, next,baseurl) {
 						});
 					}
 				}
+			],
+			addlocalnum: ["createNew",
+				function(cb, results) {
+					commfun.addlocalnum(results.createNew.id, 'extension', "", cb);
+				}
 			]
 		},
 		function(err, results) {
@@ -184,10 +201,10 @@ posts.save = function(req, res, next,baseurl) {
 					}
 				});
 			} else if (results.updateOld !== -1) {
-						myjson.success = 'OK';
-						myjson.msg = '修改成功!';
-						myjson.id = results.updateOld.id;
-					
+				myjson.success = 'OK';
+				myjson.msg = '修改成功!';
+				myjson.id = results.updateOld.id;
+
 			} else if (err) {
 				console.log(err);
 				myjson.success = 'ERROR';
@@ -198,7 +215,7 @@ posts.save = function(req, res, next,baseurl) {
 }
 
 //处理页面需要的Ajax验证
-posts.checkAjax = function(req, res, next,baseurl) {
+posts.checkAjax = function(req, res, next, baseurl) {
 	var param = req.body['param'];
 	var name = req.body['name'];
 	if (typeof(checkFun[name] === 'function')) {
@@ -214,7 +231,7 @@ posts.checkAjax = function(req, res, next,baseurl) {
 
 
 
-posts.table = function(req, res, next,baseurl) {
+posts.table = function(req, res, next, baseurl) {
 	console.log('BODY:', req.body);
 	var dbName = req.body['dbName'];
 	//查询起始页面，第一页是0
@@ -301,6 +318,6 @@ posts.table = function(req, res, next,baseurl) {
 
 }
 
-posts.xls2all = function(req, res, next,baseurl) {
+posts.xls2all = function(req, res, next, baseurl) {
 
 }

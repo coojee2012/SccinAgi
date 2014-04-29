@@ -55,47 +55,51 @@ routing.prototype.router = function() {
         var match = false;
         logger.debug("该类型路由有：", results.GetRouters.length);
         async.eachSeries(results.GetRouters, function(item, cbk) {
-          if (match)
-            cbk();
-          if (vars.agi_accountcode === item.callergroup || item.callergroup === 'all') {
-            logger.debug("开始进行呼叫路由判断");
-            match = true;
-            var reCaller = new RegExp("^" + item.callerid);
-            var reCalled = new RegExp("^" + item.callednum);
-            if (item.routerline === '呼入') {
-              //匹配主叫以什么号码开头
-              if (item.callerid !== '' && !reCaller.test(vars.agi_callerid))
-                match = false;
-              //匹配主叫长度
-              if (item.callerlen !== -1 && vars.agi_callerid.length !== item.callerlen)
-                match = false;
-            } else if (item.routerline === '呼出') {
-              //匹配被叫以什么号码开头
-              if (item.callednum !== '' && !reCalled.test(args.called))
-                match = false;
-              //匹配被叫长度
-              if (item.calledlen !== -1 && args.called.length !== item.calledlen)
-                match = false;
-            } else {}
+          logger.debug("循环去匹配找到的路由规则：", item);
+          if (match) {
+            logger.debug("已经找到匹配的路由！");
+            cbk("已经找到匹配的路由！");
+          } else {
+            if (vars.agi_accountcode === item.callergroup || item.callergroup === 'all') {
+              logger.debug("开始进行呼叫路由判断");
+              match = true;
+              var reCaller = new RegExp("^" + item.callerid);
+              var reCalled = new RegExp("^" + item.callednum);
+              if (item.routerline === '呼入') {
+                //匹配主叫以什么号码开头
+                if (item.callerid !== '' && !reCaller.test(vars.agi_callerid))
+                  match = false;
+                //匹配主叫长度
+                if (item.callerlen !== -1 && vars.agi_callerid.length !== item.callerlen)
+                  match = false;
+              } else if (item.routerline === '呼出') {
+                //匹配被叫以什么号码开头
+                if (item.callednum !== '' && !reCalled.test(args.called))
+                  match = false;
+                //匹配被叫长度
+                if (item.calledlen !== -1 && args.called.length !== item.calledlen)
+                  match = false;
+              } else {}
 
-            //匹配成功后，对主叫和被叫进行替换
-            if (match) {
-              //主叫替换
-              logger.debug("路由匹配成功，开始进行替换操作");
-              if (item.replacecallerid !== '')
-                vars.agi_callerid = item.replacecallerid;
-              //删除被叫前几位
-              if (item.replacecalledtrim !== -1)
-                args.called = args.called.substr(item.replacecalledtrim);
-              //补充被叫前几位
-              if (item.replacecalledappend !== '')
-                args.called = item.replacecalledappend + args.called;
+              //匹配成功后，对主叫和被叫进行替换
+              if (match) {
+                //主叫替换
+                logger.debug("路由匹配成功，开始进行替换操作");
+                if (item.replacecallerid !== '')
+                  vars.agi_callerid = item.replacecallerid;
+                //删除被叫前几位
+                if (item.replacecalledtrim !== -1)
+                  args.called = args.called.substr(item.replacecalledtrim);
+                //补充被叫前几位
+                if (item.replacecalledappend !== '')
+                  args.called = item.replacecalledappend + args.called;
 
-              processmode = item.processmode;
-              processdefined = item.processdefined || args.called; //如果指匹配设置号码否则采用被叫
+                processmode = item.processmode;
+                processdefined = item.processdefined || args.called; //如果指匹配设置号码否则采用被叫
+              }
             }
+            cbk();
           }
-          cbk();
         }, function(err) {
           if (match) {
             schemas.pbxCallProcees.create({

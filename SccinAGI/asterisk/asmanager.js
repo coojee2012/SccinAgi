@@ -10,5 +10,8 @@ nami.on('namiEventVarSet', function (event) {
 });
 nami.on('namiEventHangup', function (event) {	
 });
+nami.on('error', function (error) {	
+console.log(error);
+});
 nami.open();
 exports.nami=nami;

@@ -35,12 +35,12 @@ routing.prototype.sysmonitor = function(monitype, callback) {
           'like': '%' + args.called + '%'
         };
       } else {
-        /* cb(null, {
-          wayName: '系统自动',
+         cb(null, {
+          wayName: 'sysauto',
           keepfortype: '按时间',
           keepforargs: 90
-        });*/
-        cb(null, null);
+        });
+        //cb(null, null);
       }
       if (where && where.members !== null) {
         schemas.pbxAutoMonitorWays.findOne({
@@ -61,7 +61,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
 
           fs.exists(path, function(exists) {
             if (!exists) {
-              fs.mkdir(path, function(err) {
+              fs.mkdir(path,'0666', function(err) {
                 if (err) {
                   cb('无法创建录音需要的目录：' + path, null);
                 } else {
@@ -140,19 +140,6 @@ routing.prototype.sysmonitor = function(monitype, callback) {
 
       }
     ],
-    //开始录音
-    monitor: ['buildForder',
-      function(cb, results) {
-        var filename = self.sessionnum + '.wav';
-        context.MixMonitor(results.buildForder + filename, '', '', function(err, response) {
-          if (err) {
-            cb('自动录音发生异常.', err);
-          } else {
-            cb(null, response);
-          }
-        });
-      }
-    ],
     //添加一条录音记录
     addRecords: ['buildForder',
       function(cb, results) {
@@ -160,15 +147,29 @@ routing.prototype.sysmonitor = function(monitype, callback) {
         var extennum = self.routerline === '呼入' ? args.called : vars.agi_callerid;
         var callnumber = self.routerline === '呼出' ? args.called : vars.agi_callerid;
         schemas.pbxRcordFile.create({
-          id: self.sessionnum,
+//          id: self.sessionnum,
           filename: filename,
           extname: 'wav',
           calltype: self.routerline,
+          lable:results.checkMonitorWay.wayName,
           extennum: extennum,
           folder: results.buildForder,
           callnumber: callnumber
         }, function(err, inst) {
           cb(err, inst);
+        });
+      }
+    ],
+    //开始录音
+    monitor: ['addRecords',
+      function(cb, results) {
+        var filename = self.sessionnum + '.wav';
+        context.MixMonitor(results.buildForder + filename, 'ab', '', function(err, response) {
+          if (err) {
+            cb('自动录音发生异常.', err);
+          } else {
+            cb(null, response);
+          }
         });
       }
     ]
