@@ -28,13 +28,13 @@ process.on('SIGBREAK',function(){
 	console.log('SIGBREAK');
 });
 
-process.on('SIGHUP',function(){
+/*process.on('SIGHUP',function(){
 	logger.info('窗口被关闭了！');
 	for (var pid in workers) {
 		process.kill(pid);
 	}
 	process.exit(0);
-});
+});*/
  
 
 process.on('exit', function() {
