@@ -3251,12 +3251,19 @@ routing.prototype.sccincallout = function() {
       }
     };
 
+    var hangupcall = function(msg) {
+      if (context.stream && context.stream.readable) {
+        context.hangup(function(err, response) {
+          logger.debug(msg);
+        });
+      }
+    }
+
     if (err) {
       logger.error('外呼程序发生异常：', err);
       upDialResult(110);
-      context.hangup(function(err, response) {
-        logger.error("没有找到需要拨打的号码，挂机！");
-      });
+      hangupcall("没有找到需要拨打的号码");
+      logger.error("没有找到需要拨打的号码，挂机！");
     } else {
       var anwserstatus = results.Dial.dialStatus.Key;
       //异步更新CDR，不影响流程
@@ -3274,50 +3281,32 @@ routing.prototype.sccincallout = function() {
       });
 
       if (anwserstatus === 'CONGESTION') {
-        upDialResult(100);
-        context.hangup(function(err, response) {
-          logger.debug("被叫拒绝接听！");
-        });
+         upDialResult(100);
+         hangupcall("被叫拒绝接听！");
       } else if (anwserstatus === 'CHANUNAVAIL') {
         upDialResult(101);
-        context.hangup(function(err, response) {
-          logger.debug("号码无效！");
-        });
+         hangupcall("号码无效！");     
       } else if (anwserstatus === 'NOANSWER') {
         upDialResult(102);
-        context.hangup(function(err, response) {
-          logger.debug("无应答！");
-        });
+        hangupcall("无应答！");
       } else if (anwserstatus === 'BUSY') {
         upDialResult(103);
-        context.hangup(function(err, response) {
-          logger.debug("电话忙！");
-        });
+        hangupcall("电话忙！");
       } else if (anwserstatus === 'DONTCALL') {
         upDialResult(104);
-        context.hangup(function(err, response) {
-          logger.debug("被叫转移电话1！");
-        });
+        hangupcall("被叫转移电话1！");
       } else if (anwserstatus === 'TORTURE') {
         upDialResult(105);
-        context.hangup(function(err, response) {
-          logger.debug("被叫转移电话2");
-        });
+        hangupcall("被叫转移电话2");
       } else if (anwserstatus === 'INVALIDARGS') {
         upDialResult(106);
-        context.hangup(function(err, response) {
-          logger.debug("无效的呼叫参数！");
-        });
+        hangupcall("无效的呼叫参数！");
       } else if (anwserstatus === 'CANCEL') {
         upDialResult(107);
-        context.hangup(function(err, response) {
-          logger.debug("呼叫取消");
-        });
+        hangupcall("呼叫取消");
       } else if (anwserstatus !== 'ANSWER') {
         upDialResult(108);
-        context.hangup(function(err, response) {
-          logger.debug("其他");
-        });
+        hangupcall("其他");
       } else {
         //upDialResult(10);
         logger.debug("准备开始播放语音文件。");
@@ -3515,7 +3504,7 @@ routing.prototype.sysmonitor = function(monitype, callback) {
     monitor: ['addRecords',
       function(cb, results) {
         var filename = self.sessionnum + '.wav';
-        context.MixMonitor(results.buildForder + filename, 'ab', 'reboot', function(err, response) {
+        context.MixMonitor(results.buildForder + filename, 'ab', '', function(err, response) {
           if (err) {
             cb('自动录音发生异常.', err);
           } else {

@@ -314,7 +314,7 @@ function getColums(){
     "mRender": function(data, type, full) {
       
         var str = '';
-        str += '<a class="btn btn-primary btn-xs" onclick="javascript:setSoudfile(\''+full.filename+'\',\''+full.folder+'\',\''+full.extname+'\')">播放</a>';
+        str += '<a class="btn btn-primary btn-xs" onclick="javascript:setSoudfile(\''+full.filename+'\',\''+full.lable+'\',\''+full.extname+'\')">播放</a>';
      /* str += '<a class="btn btn-danger btn-xs print" href="javascript:delrow(\'' + data + '\');">删除</a>'*/
       return str;
     
@@ -353,7 +353,7 @@ download();
 
 function listenbyphone(){
     var filename= $("#filenameh").val();
-    var tmpdir=$("#soundforder").val()+'/';
+    var tmpdir=$("#soundforder").val()+"/";
     var exten=$("#soundexten").val();
    // alert(tmpdir+filename);
     if(/\d+/.test(exten)){
@@ -361,7 +361,7 @@ function listenbyphone(){
                     cache: true,
                     type: "POST",
                     url: '/pbx/Sounds/listenByPhone',
-                    data: {folder:tmpdir,filename:filename,exten:exten},
+                    data: {dirtype:"monitor",folder:tmpdir,filename:filename,exten:exten},
                     async: true,
                     error: function (request) {
                         $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);

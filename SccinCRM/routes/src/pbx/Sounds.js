@@ -373,12 +373,20 @@ posts.recordByExten = function(req, res, next, baseurl) {
 }
 
 posts.listenByPhone = function(req, res, next, baseurl) {
+    var dirtype=req.body.dirtype || "sounds";
     var folder = req.body.folder;
     var filename = req.body.filename;
     var exten = req.body.exten;
-    var sounddir=conf.asounds;
     if (!/^\/\S+/.test(folder))
-        folder = sounddir + folder;
+    {
+    if(dirtype==='sounds')
+      folder = conf.asounds + folder;  
+    else if(dirtype==='monitor')
+       folder = conf.monitor + folder;   
+    else
+    {}
+    }
+        
     var Variable = "filepath=" + folder + filename; //+basedir+'/uploads/dddddddd.wav';
     var channel = "LOCAL/" + exten + "@sub-listenByPhone";
     var Context = 'sub-listenByPhone-callback';

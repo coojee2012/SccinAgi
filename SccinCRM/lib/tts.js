@@ -5,7 +5,7 @@ var tts=new binding.TTSObject({
 "speed":-300,
 "volume":0,
 "tone":-200,
-"digit":0,
+"digit":2,
 "prompt":false
 });
 exports.tts=tts;

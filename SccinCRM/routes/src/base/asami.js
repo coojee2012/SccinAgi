@@ -292,6 +292,7 @@ posts.autodial = function(req, res, next) {
 		async.auto({
 			//保存初始化数据到拨打记录表
 			addCallRecords: function(callback) {
+				logger.debug("执行：addCallRecords");
 				try {
 					Schemas['crmCallRecords'].create({
 						id: guid.create(),
@@ -305,6 +306,7 @@ posts.autodial = function(req, res, next) {
 				}
 			},
 			getSythState: function(callback) {
+				logger.debug("执行：getSythState");
 				try {
 					Schemas['crmVoiceContent'].find(ProjMoveID, function(err, inst) {
 						callback(err, inst);
@@ -316,6 +318,7 @@ posts.autodial = function(req, res, next) {
 			//保存初始化数据到语音内容表
 			addVoiceContent: ['addCallRecords', 'getSythState',
 				function(callback, results) {
+					logger.debug("执行：addVoiceContent");
 					try {
 						if (results.getSythState === null) {
 							Schemas['crmVoiceContent'].create({
@@ -337,6 +340,7 @@ posts.autodial = function(req, res, next) {
 			//保存初始化数据到拨打电话表
 			addCallPhone: ['addCallRecords',
 				function(callback, results) {
+					logger.debug("执行：addCallPhone");
 					var phones = Phones.split(',');
 					var count = 0;
 					async.whilst(
@@ -367,6 +371,7 @@ posts.autodial = function(req, res, next) {
 			//保存初始化数据到拨打结果表
 			addDialResult: ['addCallRecords',
 				function(callback, results) {
+					logger.debug("执行：addDialResult");
 					Schemas['crmDialResult'].create({
 						CallInfoID: CallInfoID,
 						callrecord: results.addCallRecords
@@ -378,6 +383,7 @@ posts.autodial = function(req, res, next) {
 			//将新插入的合成表数据，更新合成状态为合成中
 			setVoiceContent: ['addVoiceContent',
 				function(callback, results) {
+					logger.debug("执行：setVoiceContent");
 					try {
 						if (results.addVoiceContent.State === 0) {
 							var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
@@ -399,19 +405,22 @@ posts.autodial = function(req, res, next) {
 			//合成通知语音
 			voiceMixNotice: ['setVoiceContent',
 				function(callback, results) {
+					logger.debug("执行：voiceMixNotice");
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -notice.wav
 					if (results.setVoiceContent.State === 1) {
 						tts.synth('/home/share/' + ProjMoveID + '-notice.wav', NoticeContent, function(state, msg) {
+							logger.debug("执行：voiceMixNotice成功？",state);
 							if (state === 'true') {
-								callback(null, null);
+								
+								callback(null, 1);
 							} else {
 								logger.error('合成通知语音失败:', msg);
-								callback('合成通知语音失败！', null);
+								callback({"Error":'合成通知语音失败！'}, null);
 							}
 						});
 					} else {
-						callback(null, null);
+						callback(null, 2);
 					}
 
 				}
@@ -419,19 +428,23 @@ posts.autodial = function(req, res, next) {
 			//合成确认语音
 			voiceMixSure: ['voiceMixNotice',
 				function(callback, results) {
+					logger.debug("执行：voiceMixSure,",results.voiceMixNotice);
+					if(results.voiceMixNotice===null)
+						callback('合成确认语音失败!', null);
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -sure.wav
 					if (results.setVoiceContent.State === 1) {
 						tts.synth('/home/share/' + ProjMoveID + '-sure.wav', SureContent, function(state, msg) {
 							if (state === 'true') {
-								callback(null, null);
+	logger.debug("执行：voiceMixSure成功？:",state);
+								callback(null, 1);
 							} else {
 								logger.error('合成确认语音失败:', msg);
 								callback('合成确认语音失败!', null);
 							}
 						});
 					} else {
-						callback(null, null);
+						callback(null, 2);
 					}
 
 				}
@@ -439,29 +452,37 @@ posts.autodial = function(req, res, next) {
 			//合成查询语音
 			voiceMixQuery: ['voiceMixSure',
 				function(callback, results) {
+					logger.debug("执行：voiceMixQuery,",results.voiceMixSure);
+					if(results.voiceMixSure===null)
+						callback('合成查询语音失败!', null);
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -query.wav
 					if (results.setVoiceContent.State === 1) {
 						tts.synth('/home/share/' + ProjMoveID + '-query.wav', QueryContent, function(state, msg) {
 							if (state === 'true') {
-								callback(null, null);
+								logger.debug("执行：voiceMixQuery成功？");
+								callback(null, 1);
 							} else {
 								logger.error('合成查询语音失败:', msg);
 								callback('合成查询语音失败!', null);
 							}
 						});
 					} else {
-						callback(null, null);
+						callback(null, 2);
 					}
 				}
 			],
 			//更新合成状态为已完成
-			updateVoiceContent: ['voiceMixNotice', 'voiceMixSure', 'voiceMixQuery', 'addVoiceContent',
+			updateVoiceContent: ['voiceMixQuery',
 				//updateVoiceContent: ['addVoiceContent',
 				function(callback, results) {
+					logger.debug("执行：updateVoiceContent，",results.voiceMixQuery);
+					var state = 2;
+					if (results.voiceMixQuery === null)
+						state = 0;
 					try {
 						var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
-						voc.State = 2;
+						voc.State = state;
 						voc.save(function(err, inst) {
 							callback(err, inst);
 						});
@@ -474,6 +495,7 @@ posts.autodial = function(req, res, next) {
 			//验证可用通道是否满足拨打条件
 			checkChans: ['updateVoiceContent',
 				function(callback, results) {
+					logger.debug("执行：checkChans");
 					Schemas['pbxCdr'].count({
 						alive: 'yes'
 					}, function(err, counts) {
@@ -493,6 +515,9 @@ posts.autodial = function(req, res, next) {
 			//开始拨打
 			callDial: ['checkChans',
 				function(callback, results) {
+					if(results.voiceMixNotice === null || results.voiceMixSure === null || results.voiceMixQuery === null)
+						callback("由于语音文件合成失败，不能拨打！",null);
+					logger.debug("执行：callDial");
 					//var Variable = "CHANNEL(language)=cn,Content=" + Content + "CallInfoID=" + CallInfoID;
 					var channel = "LOCAL/" + 200 + "@sub-outgoing";
 					var Context = 'sub-outgoing-callback';
@@ -518,6 +543,7 @@ posts.autodial = function(req, res, next) {
 			]
 
 		}, function(err, results) {
+			logger.debug("执行：callback!");
 
 			if (err) {
 				logger.error('调用拨打服务发生异常：', err);
@@ -531,11 +557,13 @@ posts.autodial = function(req, res, next) {
 					"success": false,
 					"result": "服务器发生内部异常:" + errmsg + ",请联系系统管理员！"
 				});
+
 			} else {
 				res.send({
 					"success": true,
 					"result": "调用成功！"
 				});
+
 			}
 
 		});
@@ -664,14 +692,14 @@ posts.unPark = function(req, res, next) {
 		if (response.Response === 'Success' || response.response === 'Success') {
 			console.log(response);
 			if (response.events != null && response.events.length > 0) {
-                var parked=false;
+				var parked = false;
 				for (var ii = 0; ii < response.events.length; ii++) {
 					if (!response.events[ii].from)
 						continue;
 					var fromexten = response.events[ii].from;
 					var re = new RegExp(type + "/" + exten, "g");
 					if (fromexten.match(re)) {
-						parked=true;
+						parked = true;
 						var channel = response.events[ii].channel;
 						var action = new AsAction.Redirect();
 						action.Channel = channel;
@@ -683,11 +711,11 @@ posts.unPark = function(req, res, next) {
 						break;
 					}
 				}
-				if(!parked){
+				if (!parked) {
 					res.send({
-					response: 'Error',
-					msg: '没有找到取回!'
-				});
+						response: 'Error',
+						msg: '没有找到取回!'
+					});
 				}
 
 			} else {

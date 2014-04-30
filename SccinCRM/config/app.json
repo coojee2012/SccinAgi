@@ -10,7 +10,7 @@
 	"ttsapp":"/var/lib/asterisk/agi-bin/VoiceTTS.jar",
 	"javapath":"/usr/bin/java",
 	"allowips":["127.0.0.1","192.168.0.0"],
-	"monitordir":"D:\\develtest\\monitor\\",
-	"asounds":"D:\\develtest\\sounds\\",
+	"monitor":"/var/spool/asterisk/monitor/",
+	"asounds":"/var/lib/asterisk/sounds/",
 	"debug":true
 }

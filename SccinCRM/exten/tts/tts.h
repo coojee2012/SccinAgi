@@ -105,6 +105,7 @@ TTSRETVAL ConnectCBProc	  (HTTSINSTANCE tts_inst, PTTSConnectStruct connect,
  Proc_TTSSynthTextEx tts_synth_text_ex_;// = NULL;
  Proc_TTSSynthText tts_synth_text_;// = NULL;
  Proc_TTSFetchNext tts_fetch_next_ ;//= NULL;
+ Proc_TTSSetParam tts_set_param_;
 };
 
 #endif

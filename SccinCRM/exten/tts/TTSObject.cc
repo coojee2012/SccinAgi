@@ -51,6 +51,7 @@ tts_initialize_ex_  = NULL;
 tts_synth_text_ex_= NULL;
 tts_synth_text_ = NULL;
 tts_fetch_next_ = NULL;
+tts_set_param_ =NULL;
 }
 
 
@@ -179,6 +180,7 @@ Handle<Value> TTSObject::Synth(const Arguments& args) {
         //ThrowException(Exception::TypeError(String::New("参数个数不对，【文件名/合成内容】")));
         return scope.Close(Undefined());
       }
+    BOOL success=true;
     Local<Function> cb = Local<Function>::Cast(args[2]);
     const unsigned argc = 2;
       TTSData       tts_data;
@@ -193,6 +195,7 @@ Handle<Value> TTSObject::Synth(const Arguments& args) {
        if(ret<0){
         ret=obj->initialize();
         if(ret<0){
+        success=false;
         Local<Value> argv[argc] = { 
         Local<Value>::New(String::New("false")) ,
         Local<Value>::New(String::New("连接TTS服务失败：语音服务器异常！")) 
@@ -221,6 +224,7 @@ Handle<Value> TTSObject::Synth(const Arguments& args) {
       unlink(obj->out_audio_file_);
      }
       if(obj->tts_synth_text_ == NULL){
+        success=false;
         Local<Value> argv[argc] = { 
         Local<Value>::New(String::New("false")) ,
         Local<Value>::New(String::New("初始化失败！")) 
@@ -230,7 +234,8 @@ Handle<Value> TTSObject::Synth(const Arguments& args) {
       }
       ret = obj->tts_synth_text_(obj->instance_, &tts_data);
         if (ret) 
-        {    
+        {
+        success=false;    
           //obj->pre_quit();
         Local<Value> argv[argc] = { 
         Local<Value>::New(String::New("false")) ,
@@ -262,7 +267,7 @@ Handle<Value> TTSObject::Synth(const Arguments& args) {
       if(obj->instance_ != NULL){
         ret=obj->disconnect();
       }
-
+      if(success){
       Local<Value> argv1[argc] = { 
         Local<Value>::New(String::New("true")) ,
         Local<Value>::New(String::New("合成成功！")) 
@@ -270,6 +275,7 @@ Handle<Value> TTSObject::Synth(const Arguments& args) {
       cb->Call(Context::GetCurrent()->Global(), argc, argv1);
 
       return scope.Close(Number::New(1));
+    }
 }
 
 
@@ -295,7 +301,7 @@ int TTSObject::load(const Arguments& args){
   0：WINDOWS PCM(.wav)；1：PCM Raw Data
   */
   if(oo->Has(String::New("format"))){
-   Local<Value> value=oo->Get(String::New("server"));
+   Local<Value> value=oo->Get(String::New("format"));
    int a=value->IntegerValue();
    raw_audio_data_ = (BOOL)a;
  }else{
@@ -363,7 +369,7 @@ synth_param_set_[TTS_PARAM_PITCH] = TRUE;
    bool a=value->IntegerValue();
    synth_param_[TTS_PARAM_READNUMBER] = a;
  }else{
-  synth_param_[TTS_PARAM_READNUMBER] = 3;
+  synth_param_[TTS_PARAM_READNUMBER] = 2;
 }
 
 synth_param_set_[TTS_PARAM_READNUMBER] = TRUE;
@@ -431,8 +437,8 @@ synth_param_set_[TTS_PARAM_READNUMBER] = TRUE;
   int synth_times = 1;
   void* lib_handle = TTSCON_INVALID_HANDLE;
   load_tts_lib(lib,lib_name_);
-  initialize();   
-  return 0;
+ return initialize();   
+ // return 0;
 }
 
 int TTSObject::initialize(){
@@ -447,8 +453,7 @@ int TTSObject::initialize(){
     return -2;
     }
     tts_inited_ = TRUE;    
-    set_synth_param();
-    return 0;
+    return set_synth_param();    
 }
 
 int TTSObject::connect(){
@@ -560,6 +565,15 @@ int TTSObject::load_tts_lib( TTSCON_Dll_Handle& lib, const char* lib_name)
 
   tts_set_synth_param_ = ( Proc_TTSSetSynthParam) lib.get_func_addr(TEXT("TTSSetSynthParam"));
   if ( !tts_set_synth_param_ )
+  {
+   // std::cout << TEXT("open TTSSetSynthParam fail.") << std::endl;  
+    //ThrowException(Exception::TypeError(String::New("open TTSSetSynthParam fail.")));
+    lib.close(1);
+    return -6;
+  }
+
+   tts_set_param_ = ( Proc_TTSSetParam) lib.get_func_addr(TEXT("TTSSetParam"));
+  if ( !tts_set_param_ )
   {
    // std::cout << TEXT("open TTSSetSynthParam fail.") << std::endl;  
     //ThrowException(Exception::TypeError(String::New("open TTSSetSynthParam fail.")));
@@ -726,6 +740,7 @@ int TTSObject::set_synth_param(void)
 //fp = fopen("tts.log", "a");
 
   //print parameters which user set
+
   for( int i = 1; i < MAX_TTS_PARAM; i ++ )
   {
     if ( synth_param_set_[ i ] )
@@ -746,6 +761,7 @@ int TTSObject::set_synth_param(void)
       }
     } 
   }
+ // ret=tts_set_param_(instance_,TTS_PARAM_READNUMBER,npram,1);
  // fclose(fp); 
   return TTSERR_OK;
 }

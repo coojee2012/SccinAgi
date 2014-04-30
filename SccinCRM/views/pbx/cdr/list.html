@@ -286,7 +286,7 @@ function  showcalldetail(id){
         if (data.success === 'OK') {
           var str="";
         for(var i=0;i<data.dbs.length;i++){
-           str+="<tr><td>"+data.dbs[i].cretime+"</td><td>"+data.dbs[i].processname+"</td><td>"+data.dbs[i].passargs+"</td><td>"+data.dbs[i].doneresults+"</td></tr>"
+           str+="<tr><td width='120px;'>"+data.dbs[i].cretime+"</td><td width='200px;'>"+data.dbs[i].processname+"</td><td width='100px;'><a title='"+data.dbs[i].passargs+"'>查看</a></td><td width='100px;'>"+data.dbs[i].doneresults+"</td></tr>"
 
           
 

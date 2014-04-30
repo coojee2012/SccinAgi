@@ -48,7 +48,7 @@ posts.calldetail = function(req, res, next, baseurl) {
 	} else {
 		Schemas.pbxCallProcees.all({
 			where: {
-				id: id
+				callsession: id
 			},
 			order: "cretime ASC"
 		}, function(err, dbs) {
