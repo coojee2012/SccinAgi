@@ -13,8 +13,8 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
         where: {
           callRecordsID: callrecordsid,
           State: 0
-        },
-        order: ['PhoneSequ asc']
+        }//,
+        //order: ['PhoneSequ asc']
       }, function(err, insts) {
         cb(err, insts);
 

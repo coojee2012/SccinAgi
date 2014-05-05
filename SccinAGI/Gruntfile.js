@@ -82,7 +82,7 @@ module.exports = function(grunt) {
     },
     //代码检测
     jshint: {
-      files: ['Gruntfile.js', 'server.js','modules/DBModules.js'],
+      files: ['server.js','modules/DBModules.js'],
       options: {
         globals: {
           exports: true

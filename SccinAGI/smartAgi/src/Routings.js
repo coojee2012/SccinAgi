@@ -39,8 +39,8 @@ routing.prototype.NextDial = function(callrecordsid, keyNum, cb) {
         where: {
           callRecordsID: callrecordsid,
           State: 0
-        },
-        order: ['PhoneSequ asc']
+        }//,
+        //order: ['PhoneSequ asc']
       }, function(err, insts) {
         cb(err, insts);
 
@@ -493,8 +493,8 @@ routing.prototype.calloutback = function() {
             where: {
               callRecordsID: callRecordsID,
               State: 1
-            },
-            order: ['PhoneSequ desc']
+            }//,
+            //order: ['PhoneSequ desc']
           }, function(err, insts) {
             cb(err, insts);
 
@@ -3065,8 +3065,8 @@ routing.prototype.sccincallout = function() {
             where: {
               callRecordsID: callRecordsID,
               State: 0
-            },
-            order: ['PhoneSequ asc']
+            }//,
+            //order: ['PhoneSequ asc']
           }, function(err, insts) {
             cb(err, insts);
           });
@@ -3157,7 +3157,7 @@ routing.prototype.sccincallout = function() {
               try {
                 schemas.crmCallLog.create({
                   Phone: results.getPhones[0].Phone,
-                  PhoneSequ: results.getPhones[0].PhoneSequ,
+                 // PhoneSequ: results.getPhones[0].PhoneSequ,
                   callphone: results.getPhones[0]
                 }, function(err, inst) {
                   cb(err, inst);

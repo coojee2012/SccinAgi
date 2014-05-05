@@ -7,7 +7,7 @@ var crmCallPhone=require('./CallPhone');*/
 
 var crmCallLog = schema.define('crmCallLog', {
     Phone:   { type: String, length: 50},//是否呼叫标志0：未呼叫，1：已经呼叫
-    PhoneSequ:   { type: Number,default:0 },//是否呼叫标志0：未呼叫，1：已经呼叫
+    //PhoneSequ:   { type: Number,default:0 },//是否呼叫标志0：未呼叫，1：已经呼叫
     WorkTime:   { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
 });
 

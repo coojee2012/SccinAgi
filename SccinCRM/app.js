@@ -8,6 +8,7 @@ var cluster = require('cluster');
 var express = require('express');
 var partials = require('express-partials');
 var http = require('http');
+var https = require('https');
 var path = require('path');
 var conf = require('node-conf');
 var nami = require(__dirname + '/asterisk/asmanager').nami;
@@ -26,6 +27,12 @@ var log4js = require('./lib/logger').log4js;
 
 
 var server = http.createServer();
+/*var options = {
+    key: fs.readFileSync('./privatekey.pem'),
+    cert: fs.readFileSync('./certificate.pem')
+};
+var server=https.createServer(options, app);*/
+
 var app = express();
 // 所有环境设置
 app.set('port', process.env.PORT || appconf.hostport);
@@ -102,7 +109,7 @@ if ('development' == app.get('env')) {
 if ('production' == app.get('env')) {
 
 }
-
+app.use(checkbrower);
 //app.use(authentication);
 app.use(safeClient);
 //路由处理
@@ -135,6 +142,7 @@ app.locals({
 
 
 
+
 server.maxHeadersCount = 0;
 server.on('request', app);
 
@@ -157,6 +165,26 @@ process.on('uncaughtException', function(err) {
 });
 
 
+function checkbrower(req,res,next){
+var agent=req.headers["user-agent"];
+ if(/MSIE\s+(\d+)\.\d+/.test(agent)){
+  var banben=RegExp.$1;
+  if(banben<9){
+ app.locals.jquery="1.11.0"; 
+ app.locals.html5='<script src="/js/bootstrap/html5shiv.js"></script>';
+  }else{
+   app.locals.jquery="2.1.0";
+   app.locals.html5="";
+  }
+  
+}else{
+ app.locals.jquery="2.1.0"; 
+ app.locals.html5="";
+}
+
+
+next();
+}
 
 //通常logErrors用来纪录诸如stderr, loggly, 或者类似服务的错误信息：
 

@@ -80,8 +80,8 @@ routing.prototype.calloutback = function() {
             where: {
               callRecordsID: callRecordsID,
               State: 1
-            },
-            order: ['PhoneSequ desc']
+            }//,
+            //order: ['PhoneSequ desc']
           }, function(err, insts) {
             cb(err, insts);
 

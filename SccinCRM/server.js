@@ -139,7 +139,7 @@ if (cluster.isMaster) {
 			count: true
 		});
 	});
-	server.listen('3001', function() {
+	server.listen(appconf.hostport, function() {
 		logger.info('成功启动四川建设网语音拨打服务!');
 	});
 

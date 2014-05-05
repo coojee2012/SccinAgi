@@ -666,8 +666,8 @@ var crmCallRecords=require('./CallRecords');*/
 var crmCallPhone = schema.define('crmCallPhone', {
     callRecordsID:     { type: String, length: 50},
     Phone:   { type: String, length: 50},//电话号码
-    State:   { type: Number,default:0 },//0：未呼叫，1：已经呼叫
-    PhoneSequ:   { type: Number,default:0 }//电话拨打顺序
+    State:   { type: Number,default:0 }//,//0：未呼叫，1：已经呼叫
+    //PhoneSequ:   { type: Number,default:0 }//电话拨打顺序
 });
 
 crmCallPhone.belongsTo(crmCallRecords, {as: 'callrecord', foreignKey: 'callRecordsID'});
@@ -687,7 +687,7 @@ var crmCallPhone=require('./CallPhone');*/
 
 var crmCallLog = schema.define('crmCallLog', {
     Phone:   { type: String, length: 50},//是否呼叫标志0：未呼叫，1：已经呼叫
-    PhoneSequ:   { type: Number,default:0 },//是否呼叫标志0：未呼叫，1：已经呼叫
+    //PhoneSequ:   { type: Number,default:0 },//是否呼叫标志0：未呼叫，1：已经呼叫
     WorkTime:   { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
 });
 
@@ -747,7 +747,7 @@ var crmCallLog=require('./CallLog');
 var crmCallPhone=require('./CallPhone');*/
 var crmUserKeysRecord=schema.define('crmUserKeysRecord',{
     callLogID:     { type: String, length: 50},
-    keyTypeID:     { type: String, length: 50},
+    //keyTypeID:     { type: String, length: 50},
     Key:   { type: String, length: 50},//用户按键
     WorkTime:   { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
 });
@@ -757,16 +757,16 @@ crmUserKeysRecord.Name='crmUserKeysRecord';
 
 
 crmUserKeysRecord.belongsTo(crmCallLog, {as: 'calllog', foreignKey: 'callLogID'});
-crmUserKeysRecord.belongsTo(crmCallPhone, {as: 'keytype', foreignKey: 'keyTypeID'});
+//crmUserKeysRecord.belongsTo(crmCallPhone, {as: 'keytype', foreignKey: 'keyTypeID'});
 
 
 schema.models.crmUserKeysRecord;
 exports.crmUserKeysRecord = crmUserKeysRecord;
 Dbs.crmUserKeysRecord = crmUserKeysRecord;
 var crmVoiceContent=schema.define('crmVoiceContent',{
-    NoticeContents:     {type: Schema.Text},
-    SureContents:     {type: Schema.Text},
-    QueryContents:     {type: Schema.Text},
+   // NoticeContents:     {type: Schema.Text},
+   // SureContents:     {type: Schema.Text},
+   // QueryContents:     {type: Schema.Text},
     State:   {type: Number,default:0 } //0:新插入数据，1：合成中,2：合成完成
 });
 crmVoiceContent.Name='crmVoiceContent';

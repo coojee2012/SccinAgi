@@ -18,10 +18,10 @@ datas = JSON.stringify(datas);
 console.log(datas);
 
 var options = {
-  host: '192.168.0.114',
-  hostname: '192.168.0.114',
-  port: 3001,
-  path: '/base/asami/autodial',
+  host: '61.135.238.158',
+  hostname: '61.135.238.158',
+  port: 80,
+  path: 'http://61.135.238.158/base/asami/autodial',
   headers: {
     "Content-Type": 'application/json',
    // "Content-Length": datas.length,
@@ -38,10 +38,13 @@ var req = http.request(options, function(res) {
   res.on('data', function(chunk) {
     console.log('BODY: ' + chunk);
   });
+  res.on("end",function(){
+    console.log("请求完成！");
+  });
 });
 
 req.on('error', function(e) {
-  console.log('problem with request: ' + e.message);
+  console.log('problem with request: ' + e);
 });
 
 req.write(datas + '\n');

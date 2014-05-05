@@ -19,6 +19,7 @@ module.exports = {
 };
 
 
+
 posts.sippeers = function(req, res, next) {
 	nami.send(new AsAction.SipPeers(), function(response) {
 		console.log(response);
@@ -322,9 +323,9 @@ posts.autodial = function(req, res, next) {
 					try {
 						if (results.getSythState === null) {
 							Schemas['crmVoiceContent'].create({
-								NoticeContents: NoticeContent,
-								SureContents: SureContent,
-								QueryContents: QueryContent,
+								//NoticeContents: NoticeContent,
+								//SureContents: SureContent,
+								//QueryContents: QueryContent,
 								id: ProjMoveID
 							}, function(err, inst) {
 								callback(err, inst);
@@ -353,7 +354,7 @@ posts.autodial = function(req, res, next) {
 							Schemas['crmCallPhone'].create({
 								id: guid.create(),
 								Phone: phones[count - 1],
-								PhoneSequ: count - 1,
+								//PhoneSequ: count - 1,
 								callrecord: results.addCallRecords
 							}, function(err, inst) {
 								cb(err, inst);
@@ -571,6 +572,8 @@ posts.autodial = function(req, res, next) {
 	}
 
 }
+
+
 
 
 
