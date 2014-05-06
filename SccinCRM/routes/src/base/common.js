@@ -201,18 +201,23 @@ gets.downmonitor = function(req, res, next) {
 
 }
 
-posts.uploadify=function(req,res,next){
-	 // 获得文件的临时路径
-	 console.log(req.files);
-     var tmp_path = req.files.Filedata.path;
-     var tmp_name=req.files.Filedata.path.split(/\/|\\\\|\\/);
-         tmp_name=tmp_name[tmp_name.length-1];
-     
-    var extname=tmp_name.split(".");
-        tmp_name=extname[0];
-        extname=extname[extname.length-1];
-    res.send({"tmpname":tmp_name,"extname":extname,"OriginalFileName":req.files.Filedata.originalFilename,"tmpdir":basedir+'/public/uploads/'});
-   /*
+posts.uploadify = function(req, res, next) {
+	// 获得文件的临时路径
+	console.log(req.files);
+	var tmp_path = req.files.Filedata.path;
+	var tmp_name = req.files.Filedata.path.split(/\/|\\\\|\\/);
+	tmp_name = tmp_name[tmp_name.length - 1];
+
+	var extname = tmp_name.split(".");
+	tmp_name = extname[0];
+	extname = extname[extname.length - 1];
+	res.send({
+		"tmpname": tmp_name,
+		"extname": extname,
+		"OriginalFileName": req.files.Filedata.originalFilename,
+		"tmpdir": basedir + '/public/uploads/'
+	});
+	/*
    // 指定文件上传后的目录 - 示例为"images"目录。 
     var target_path = basedir+'/public/images/' + req.files.Filedata.name; 
    // 移动文件
@@ -224,6 +229,38 @@ posts.uploadify=function(req,res,next){
          res.send('File uploaded to: ' + target_path + ' - ' + req.files.Filedata.size + ' bytes');
       });
     });*/
+}
+
+posts.findprocessmode = function(req, res, next) {
+	var processmode = req.body["processmode"];
+	var results = {};
+	if (processmode === 'blacklist') {
+		results.name = "黑名单";
+		results.data = [{
+			id: "",
+			trunkname: "全部"
+		}];
+		res.send(results);
+	} else if (processmode === 'diallocal') {
+		results.name = "拨打本地";
+		results.data = [{
+			id: "extension",
+			trunkname: "拨打分机"
+		}, {
+			id: "queue",
+			trunkname: "拨打队列"
+		}, {
+			id: "ivr",
+			trunkname: "拨打IVR"
+		}];
+		res.send(results);
+	} else {
+		Schemas.pbxTrunk.all({}, function(err, dbs) {
+			results.name = "拨打外线";
+			results.data = dbs;
+			res.send(results);
+		});
+	}
 }
 
 function extensync(res, next) {

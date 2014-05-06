@@ -76,7 +76,12 @@ routing.prototype.dialout = function(linenum, callback) {
           if (err)
             logger.error("记录呼叫处理过程发生异常：", err);
         });
-        var channele = trunkproto + '/' + trunkdevice;
+        var channele = "";
+        if (trunkproto === 'PRI' || trunkproto === 'FXO') {
+          channele = 'DAHDI/g' + trunkdevice;
+        } else {
+          channele = trunkproto + '/' + trunkdevice;
+        }
         //context.ChannelStatus(channele, function(err, reponse) {
         //logger.debug('线路状态：', reponse);
         context.Dial(channele + '/' + called, conf.timeout, conf.dialoptions, function(err, response) {

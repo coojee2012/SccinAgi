@@ -973,7 +973,12 @@ routing.prototype.dialout = function(linenum, callback) {
           if (err)
             logger.error("记录呼叫处理过程发生异常：", err);
         });
-        var channele = trunkproto + '/' + trunkdevice;
+        var channele = "";
+        if (trunkproto === 'PRI' || trunkproto === 'FXO') {
+          channele = 'DAHDI/g' + trunkdevice;
+        } else {
+          channele = trunkproto + '/' + trunkdevice;
+        }
         //context.ChannelStatus(channele, function(err, reponse) {
         //logger.debug('线路状态：', reponse);
         context.Dial(channele + '/' + called, conf.timeout, conf.dialoptions, function(err, response) {
@@ -2711,14 +2716,14 @@ routing.prototype.router = function() {
                 if (item.callerid !== '' && !reCaller.test(vars.agi_callerid))
                   match = false;
                 //匹配主叫长度
-                if (item.callerlen !== -1 && vars.agi_callerid.length !== item.callerlen)
+                if (item.callerlen > 0   && vars.agi_callerid.length !== item.callerlen)
                   match = false;
               } else if (item.routerline === '呼出') {
                 //匹配被叫以什么号码开头
                 if (item.callednum !== '' && !reCalled.test(args.called))
                   match = false;
                 //匹配被叫长度
-                if (item.calledlen !== -1 && args.called.length !== item.calledlen)
+                if (item.calledlen > 0 && args.called.length !== item.calledlen)
                   match = false;
               } else {}
 
@@ -2729,7 +2734,7 @@ routing.prototype.router = function() {
                 if (item.replacecallerid !== '')
                   vars.agi_callerid = item.replacecallerid;
                 //删除被叫前几位
-                if (item.replacecalledtrim !== -1)
+                if (item.replacecalledtrim > 0)
                   args.called = args.called.substr(item.replacecalledtrim);
                 //补充被叫前几位
                 if (item.replacecalledappend !== '')

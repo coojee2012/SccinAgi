@@ -71,6 +71,15 @@
                     </td>
                 </tr>
                 <tr>
+                            <th id="dododoway">黑名单</th>
+                            <td>
+                                <select name="processdefined" id="processdefined" class="form-control input-sm"
+                                        style='width: 100%;'>
+                                   
+                                </select>
+                            </td>
+                        </tr>
+                <tr>
                     <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">高级参数</th>
                 </tr>
                 <tr>
@@ -95,7 +104,7 @@
             </div>
             <div class="panel-footer text-center">
                 <button class="btn btn-primary active" id='savebtn'>保存</button>
-                <a href="javascript:history.go(-1);" class="btn btn-default" role="button">返回</a>
+                <a href="/pbx/RouterCallIn" class="btn btn-default" role="button">返回</a>
             </div>
         </div>
     </div>
@@ -127,5 +136,34 @@ $(function () {
         }
 
     });
+   $("#processmode").change(function(){
+$("#processdefined").empty();
+var processmode=$("#processmode").val();
+findprocessmode(processmode);
+
+        }); 
 });
+
+function findprocessmode(processmode){
+
+   $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '/base/common/findprocessmode',
+                    data: {"processmode":processmode},// 你的formid
+                    async: true,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+             for(var i=0;i<data.data.length;i++){
+  var option = $("<option>").val(data.data[i].id).text(data.data[i].trunkname);
+$("#processdefined").append(option);
+             }
+             $("#dododoway").html(data.name);
+                    }
+                });  
+
+
+}
 </script>

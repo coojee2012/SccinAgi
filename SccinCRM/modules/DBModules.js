@@ -79,8 +79,8 @@ var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxConference=schema.define('pbxConference',{
 	pincode:   {type:String,length:50},//进入会议室的密码
-	playwhenevent:   {type: Number, default: function () { return 0 }},//播放音乐当离开时
-	mohwhenonlyone:   {type: Number, default: function () { return 0 }},//只有一个人是播放等待音乐
+	playwhenevent:   {type: Number, default: function () { return 0; }},//播放音乐当离开时
+	mohwhenonlyone:   {type: Number, default: function () { return 0; }},//只有一个人是播放等待音乐
 	cretime:   {type:String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
 });
 pbxConference.Name='pbxConference';
@@ -143,10 +143,10 @@ var pbxExtension=schema.define('pbxExtension',{
 	deviceproto:   {type:String,length:50},//设备协议
 	devicenumber:{type:String,length:50},//设备号
 	devicestring:  {type:String,length:100},//设备字符串
-	fristchecked:   {type:Number,default: function () { return 0 }},//是否检查过
+	fristchecked:   {type:Number,default: function () { return 0; }},//是否检查过
 	transfernumber:    {type:String,length:50,default: function () { return 'deailway=&number='; }},//deailway-互转方式，diallocal,dialout ; number-呼叫转移号码,非空将强制互转号码到指定号码
 	dndinfo:    {type:String,length:10,default: function () { return 'off'; }},//示忙状态 off/on
-	failed:    {type:String,length:50,default: function () { return 'deailway=hangup&number=' }},//deailway-呼叫失败处理方式:hangup,ivr,voicemail,fllowme,transfer
+	failed:    {type:String,length:50,default: function () { return 'deailway=hangup&number='; }},//deailway-呼叫失败处理方式:hangup,ivr,voicemail,fllowme,transfer
 	cretime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
 });
 
@@ -322,9 +322,9 @@ var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxQueue=schema.define('pbxQueue',{
 	queuename:   {type:String,length:50},//队列名称
 	announce:   {type:String,length:50,default: function () { return ''; }},//将在电话接通的时候播放xxxx,
-	playring:{type:Number,default: function () { return 0 }},//等待用户听到振铃声，0听背景音乐
-	saymember:  {type:Number,default: function () { return 0 }},//是否启用播放坐席工号
-	queuetimeout:   {type:Number,default: function () { return 0 }},//队列等待超时时间
+	playring:{type:Number,default: function () { return 0; }},//等待用户听到振铃声，0听背景音乐
+	saymember:  {type:Number,default: function () { return 0; }},//是否启用播放坐席工号
+	queuetimeout:   {type:Number,default: function () { return 0; }},//队列等待超时时间
 	failedon:    {type:String,length:50,default: function () { return ''; }},//队列呼叫失败的本地处理号码
 	members:    {type:String,length:200},//队列成员，如:8001&8002&8003
 	strategy:    {type:String,length:50,default: function () { return 'random'; }},//振铃策略 
@@ -337,12 +337,12 @@ var pbxQueue=schema.define('pbxQueue',{
                   ;linear    :根据配置文件中的顺序ring（v1.6）
                   ;wrandom   :(V1.6)
                   **/
-	wrapuptime:     {type:Number,default: function () { return 0 }},//接到一个call后，需要等待多长时间方置坐席为空闲
-	timeout:    {type:Number,default: function () { return 0 }},//呼叫坐席超时
+	wrapuptime:     {type:Number,default: function () { return 0; }},//接到一个call后，需要等待多长时间方置坐席为空闲
+	timeout:    {type:Number,default: function () { return 0; }},//呼叫坐席超时
 	musicclass:   {type:String,length:50,default: function () { return 'default'; }},//背景音乐
-	retry:   {type:Number,default: function () { return 0 }},//表示队列呼叫失败后，给多少秒再重新呼叫分机的振铃时间，一般设置为0 
+	retry:   {type:Number,default: function () { return 0; }},//表示队列呼叫失败后，给多少秒再重新呼叫分机的振铃时间，一般设置为0 
 	joinempty: {type:String,length:50,default: function () { return 'no'; }},//是允许否加入空队列-yes or no
-	frequency:{type:Number,default: function () { return 0 }},//每隔多少秒将向队列等待者播放提示录音
+	frequency:{type:Number,default: function () { return 0; }},//每隔多少秒将向队列等待者播放提示录音
 	cretime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss");}}
 });
 pbxQueue.Name='pbxQueue';
@@ -359,7 +359,7 @@ var pbxRcordFile=schema.define('pbxRcordFile',{
 	id:{type:String,length:100,default:function(){return guid.create();}},//关联CDR
 	filename:   {type:String,length:50}, //文件名
 	extname:    {type:String,length:50}, //扩展名
-	filesize:   {type:Number,default:function () { return 0 }},//文件大小
+	filesize:   {type:Number,default:function () { return 0; }},//文件大小
 	calltype:   {type:String,length:50}, //主叫类型
 	lable:   {type:String,length:50},//录音类型，queue,exten,ivr,voicemail等
 	cretime:    {type: String, default: function () { return moment().unix(); }},//创建时间
@@ -381,20 +381,20 @@ var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxRouter=schema.define('pbxRouter',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
     proirety:   {type:Number},//执行顺序（优先级）
-	createmode:   {type:String,length:10,default: function () { return '否' }},//系统默认
-	routerline:   {type:String,length:10,default: function () { return '呼入' }},//路由方式，呼出，呼入
+	createmode:   {type:String,length:10,default: function () { return '否'; }},//系统默认
+	routerline:   {type:String,length:10,default: function () { return '呼入'; }},//路由方式，呼出，呼入
 	routername:{type:String,length:100},//规则名称
 	optextra:  {type:String,length:50},//扩展属性
-	lastwhendone:   {type:String,length:10,default: function () { return '否' }},//最终匹配规则
+	lastwhendone:   {type:String,length:10,default: function () { return '否'; }},//最终匹配规则
 	callergroup:    {type:String,length:50},//匹配主叫组（呼出对应分机分组，呼入对应中继分组）
 	callerid:    {type:String,length:200},//匹配主叫以什么开头
-	callerlen:    {type:Number,default: function () { return -1 ;}},//匹配主叫长度
+	callerlen:    {type:Number,default: function () { return 0 ;}},//匹配主叫长度
 	callednum:     {type:String,length:50},//匹配被叫以什么开头
-	calledlen:    {type:Number,default: function () { return -1 ;}},//匹配被叫长度
+	calledlen:    {type:Number,default: function () { return 0 ;}},//匹配被叫长度
 	replacecallerid:   {type:String,length:50},//匹配后主叫替换
-	replacecalledtrim:   {type:Number,default: function () { return -1 ;}},//匹配后删除被叫前几位
+	replacecalledtrim:   {type:Number,default: function () { return 0 ;}},//匹配后删除被叫前几位
 	replacecalledappend: {type:String,length:50},//匹配后补充被叫前几位
-	processmode:{type:String,length:50},//处理方式 【黑名单，VIP，本地处理，拨打外线】
+	processmode:{type:String,length:50},//处理方式 【黑名单，本地处理，拨打外线】
 	processdefined:   {type:String,length:100}//处理详细参数定义
 });
 pbxRouter.Name='pbxRouter';
@@ -437,7 +437,7 @@ var pbxSounds=schema.define('pbxSounds',{
 	description:{type:String,length:100},//描述
 	label: {type:String,length:50},//标签
 	associate: {type:String,length:50},//关联
-	isreadonly: {type:Number,default: function () { return 0 }},//系统只读
+	isreadonly: {type:Number,default: function () { return 0 ;}},//系统只读
 	cretime:     {type:String,length:50, default: function () {return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	args:    {type:String,length:100}
 });
