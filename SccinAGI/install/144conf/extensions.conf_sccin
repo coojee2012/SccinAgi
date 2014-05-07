@@ -1,0 +1,42 @@
+[from-exten-sip]
+exten => 200,1,NoOp("Call from 200")
+exten => 200,n,Answer()
+;exten => 200,n,AGI(callin.php)
+exten => 200,n,AGI(agi://127.0.0.1:3000/hangup?extennum=${EXTEN})
+[from-exten-iax]
+exten => 200,1,NoOp("Call from 200")
+exten => 200,n,Answer()
+exten => 200,n,AGI(callin.php)
+
+[from-pstn]
+exten => ttt,1,NoOp("Call from ttt")
+exten => ttt,n,Answer()
+exten => ttt,n,DeadAGI(scdialout.php)
+
+exten => s,1,Answer()
+exten => s,n,DeadAGI(scdialout.php)
+
+exten => _X.,1,Answer()
+exten => _X.,n,DeadAGI(scdialout.php)
+
+exten => failed,1,Set(NumberDialed=${CUT(PassedInfo,,1)})
+exten => failed,n,SetCDRUserField(${NumberDialed})
+exten => failed,n,DeadAGI(faild.php,${NumberDialed})
+
+exten =>2884528012,1,NoOp(${CALLERID(num)})
+exten =>2884528012,n,ExecIf($["${CALLERID(num)}"=="15308098290"]|Hangup())
+
+exten =>2884528012,n,answer()
+exten =>2884528012,n,AGI(callin.php)
+
+
+exten => h,1,NoOp("----CALLER HANGUP----")
+exten => h,n,Set(MYCALLERID=${CALLERID(num)})
+;exten => h,n,Wait(5)
+exten => h,n,DeadAGI(hangupreson.php)
+[monitor]
+exten =>s,1,Answer()
+exten =>s,n,AGI(monitor.php)
+;exten=>s,n,Hangup()
+exten => h,1,NoOp("DIAL MONITOR PHONE HANGUP")
+#include extensions_hints.conf
