@@ -12,7 +12,7 @@ var pbxSounds=schema.define('pbxSounds',{
 	description:{type:String,length:100},//描述
 	label: {type:String,length:50},//标签
 	associate: {type:String,length:50},//关联
-	isreadonly: {type:Number,default: function () { return 0 }},//系统只读
+	isreadonly: {type:Number,default: function () { return 0; }},//系统只读
 	cretime:     {type:String,length:50, default: function () {return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	args:    {type:String,length:100}
 });

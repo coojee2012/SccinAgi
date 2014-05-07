@@ -8,7 +8,7 @@ var pbxRcordFile=schema.define('pbxRcordFile',{
 	id:{type:String,length:100,default:function(){return guid.create();}},//关联CDR
 	filename:   {type:String,length:50},
 	extname:    {type:String,length:50},
-	filesize:   {type:Number,default:function () { return 0 }},
+	filesize:   {type:Number,default:function () { return 0; }},
 	calltype:   {type:String,length:50},
 	lable:   {type:String,length:50},//录音类型，queue,exten,ivr,voicemail等
 	cretime:    {type: String, default: function () { return moment().unix(); }},

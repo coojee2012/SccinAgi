@@ -46,19 +46,7 @@
                         <tr>
                             <th>匹配规则</th>
                             <td>
-                                <div class="form-inline">用户拨打的号码是以<input type="text" style="width:45px;" id='callednum'
-                                                                         value="<%= inst.callednum%>" name='callednum'
-                                                                         class="form-control input-sm"/>开头,长度为<input
-                                        type="text" id='calledlen' value="<%= inst.calledlen%>" style="width:30px;"
-                                        name='calledlen' class="form-control input-sm"/>位.从头删除掉<input type="text"
-                                                                                                      value="<%= inst.replacecalledtrim%>"
-                                                                                                      id='replacecalledtrim'
-                                                                                                      style="width:30px;"
-                                                                                                      name='replacecalledtrim'
-                                                                                                      class="form-control input-sm"/>位数字,同时补充<input
-                                        type="text" id='replacecalledappend' style="width:60px;"
-                                        value="<%= inst.replacecalledappend%>" name='replacecalledappend'
-                                        class="form-control input-sm"/>到该号码上.
+                                <div class="form-inline">用户拨打的号码是以<input type="text" style="width:45px;" id='callednum' value="<%= inst.callednum%>" name='callednum' class="form-control input-sm"/>开头,长度为<input type="text" id='calledlen' value="<%= inst.calledlen%>" style="width:30px;" name='calledlen' class="form-control input-sm"/>位.从头删除掉<input type="text" value="<%= inst.replacecalledtrim%>" id='replacecalledtrim' style="width:30px;" name='replacecalledtrim' class="form-control input-sm"/>位数字,同时补充<input type="text" id='replacecalledappend' style="width:60px;" value="<%= inst.replacecalledappend%>" name='replacecalledappend' class="form-control input-sm"/>到该号码上.
                                 </div>
                             </td>
                         </tr>
@@ -76,6 +64,17 @@
                                 </select>
                             </td>
                         </tr>
+
+                        <tr>
+                            <th id="dododoway">黑名单</th>
+                            <td>
+                                <select name="processdefined" id="processdefined" class="form-control input-sm"
+                                        style='width: 100%;'>
+                                   
+                                </select>
+                            </td>
+                        </tr>
+
                         <tr>
                             <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">高级参数</th>
                         </tr>
@@ -102,7 +101,7 @@
             </div>
             <div class="panel-footer text-center">
                 <button class="btn btn-primary active" id='savebtn'>保存</button>
-                <a href="javascript:history.go(-1);" class="btn btn-default" role="button">返回</a>
+                <a href="/pbx/RouterCallOut" class="btn btn-default" role="button">返回</a>
             </div>
         </div>
     </div>
