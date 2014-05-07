@@ -86,7 +86,7 @@
                   <th class="text-center">主叫</th>
                   <th class="text-center">被叫</th>
                   <th class="text-center">录音类型</th>
-                  <th class="text-center">文件大小</th>
+                 
                   <th class="text-center">扩展名</th>
                   <th class="text-center">创建时间</th>
                   <th class="text-center">
@@ -102,7 +102,7 @@
                  <th class="text-center">主叫</th>
                  <th class="text-center">被叫</th>
                  <th class="text-center">录音类型</th>
-                 <th class="text-center">文件大小</th>
+                
                   <th class="text-center">扩展名</th>
                  <th class="text-center">创建时间</th>
                  <th class="text-center">
@@ -217,7 +217,7 @@ for(var key in where){
 toolswhere.sColumns='';
 
 var colums=getColums();
-toolswhere.iSortingCols=0;
+toolswhere.iSortingCols=1;
 for(var i=0;i<colums.length;i++){
  if(toolswhere.sColumns!=='')
   toolswhere.sColumns+=','+colums[i].mData;
@@ -241,7 +241,7 @@ return toolswhere;
 }
 
 function getaaSorting(){
-return [[7,'desc']];
+return [[6,'desc']];
 }
 
 function getColums(){
@@ -249,7 +249,7 @@ function getColums(){
     "sClass": 'center',
     "sName": "filename",
     "mData": "filename",
-    "bSortable": true,
+    "bSortable": false,
     "bVisible": true,
     "aTargets": [0]
   }, {
@@ -280,27 +280,27 @@ function getColums(){
     "bSortable": false,
     "bVisible": true,
     "aTargets": [4]
-  }, {
+  }/*, {
     "sClass": 'center',
     "sName": "filesize",
     "mData": "filesize",
     "bSortable": false,
     "bVisible": true,
     "aTargets": [5]
-  }, {
+  }*/, {
     "sClass": 'center',
     "sName": "extname",
     "mData": "extname",
     "bSortable": false,
     "bVisible": true,
-    "aTargets": [6]
+    "aTargets": [5]
   }, {
     "sClass": 'center',
     "sName": "cretime",
     "mData": "cretime",
-    "bSortable": false,
+    "bSortable": true,
     "bVisible": true,
-    "aTargets": [7],
+    "aTargets": [6],
     "mRender": function(data, type, full) {
       return moment.unix(data).format("YYYY-MM-DD HH:mm:ss");
     }
@@ -310,7 +310,7 @@ function getColums(){
     "mData": "id",
     "bSortable": false,
     "bVisible": true,
-    "aTargets": [8],
+    "aTargets": [7],
     "mRender": function(data, type, full) {
       
         var str = '';

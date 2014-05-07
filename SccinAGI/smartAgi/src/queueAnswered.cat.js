@@ -37,8 +37,9 @@ routing.prototype.queueAnswered = function() {
             id: self.sessionnum
           },
           update: {
-            answerstatus: 'ANSWERED',
+            answerstatus: 'ANSWER',
             called: results.getAnswerMem,
+            accountcode: results.getAnswerMem,
             lastapptime: moment().format("YYYY-MM-DD HH:mm:ss")
           }
         }, function(err, inst) {

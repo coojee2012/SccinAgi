@@ -10,6 +10,7 @@ routing.prototype.router = function() {
   var args = self.args;
   var vars = self.vars;
   self.routerline = args.routerline;
+  //self.args.called=self.args.called ||  self.vars.agi_dnid || self.vars.agi_extension;
   async.auto({
     AddCDR: function(cb) {
       schemas.pbxCdr.create({

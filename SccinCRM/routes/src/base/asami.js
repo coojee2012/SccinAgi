@@ -753,7 +753,8 @@ posts.checkService = function(req, res, next) {
 }
 
 posts.GetCallInfo = function(req, res, next) {
-	var exten = req.body['fromexten'] || req.query['fromexten'];
+	var exten = req.body['exten'] || req.query['exten'];
+	logger.debug("正在获取分机："+exten+"的来去电信息！");
 	if (exten == null || exten == '') {
 		res.send({
 			success: '0'

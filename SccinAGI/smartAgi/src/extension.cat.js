@@ -5,8 +5,10 @@ routing.prototype.extension = function(extennum, assign, callback) {
   var schemas = self.schemas;
   var nami = self.nami;
   var logger = self.logger;
-  var args = self.args;
+  
   var vars = self.vars;
+  self.args.called=extennum;
+  var args = self.args;
   async.auto({
     updateCDR: function(cb) {
       schemas.pbxCdr.update({
@@ -15,6 +17,7 @@ routing.prototype.extension = function(extennum, assign, callback) {
         },
         update: {
           lastapptime: moment().format("YYYY-MM-DD HH:mm:ss"),
+          accountcode:extennum,
           called: extennum,
           lastapp: '拨打分机'
         }

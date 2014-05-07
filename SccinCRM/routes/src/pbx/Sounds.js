@@ -37,7 +37,7 @@ gets.index = function(req, res, next, baseurl) {
         var exec = require('child_process').exec,
             child, used, unused;
 
-        child = exec('df -h',
+        child = exec('df -h /home',
             function(error, stdout, stderr) {
                 console.log('stdout: ' + stdout);
                 console.log('stderr: ' + stderr);

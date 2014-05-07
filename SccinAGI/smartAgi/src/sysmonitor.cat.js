@@ -57,19 +57,20 @@ routing.prototype.sysmonitor = function(monitype, callback) {
         if (results.checkMonitorWay !== null) {
           var fs = require('fs');
           var wayname = results.checkMonitorWay.wayName;
-          var path = '/var/spool/asterisk/monitor/' + wayname + '/';
+          var path = '/var/spool/asterisk/monitor/' + wayname;
 
           fs.exists(path, function(exists) {
             if (!exists) {
-              fs.mkdir(path,'0666', function(err) {
+              fs.mkdir(path,'0777', function(err) {
                 if (err) {
                   cb('无法创建录音需要的目录：' + path, null);
                 } else {
-                  cb(null, path);
+                  fs.chmodSync(path,'0777');
+                  cb(null, path+'/');
                 }
               });
             } else {
-              cb(null, path);
+              cb(null, path+'/');
             }
           });
         } else {
@@ -144,8 +145,10 @@ routing.prototype.sysmonitor = function(monitype, callback) {
     addRecords: ['buildForder',
       function(cb, results) {
         var filename = self.sessionnum;
-        var extennum = self.routerline === '呼入' ? args.called : vars.agi_callerid;
-        var callnumber = self.routerline === '呼出' ? args.called : vars.agi_callerid;
+        //var extennum = self.routerline === '呼入' ? args.called : vars.agi_callerid;
+        //var callnumber = self.routerline === '呼出' ? args.called : vars.agi_callerid;
+        var extennum=args.called;
+        var callnumber=vars.agi_callerid;
         schemas.pbxRcordFile.create({
 //          id: self.sessionnum,
           filename: filename,
