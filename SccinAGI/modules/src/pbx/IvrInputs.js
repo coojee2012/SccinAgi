@@ -6,7 +6,7 @@ var pbxIvrInputs=schema.define('pbxIvrInputs',{
 	generalargs:   {type:String,length:150},//错误响应参数
 	inputnum:   {type: String,length:10},
 	gotoivrnumber:   {type: String,length:50},
-	gotoivractid:   {type: Number,default: function () {return 1;}}
+	gotoivractid:   {type: String,default: function () {return '1';}}
 });
 
 

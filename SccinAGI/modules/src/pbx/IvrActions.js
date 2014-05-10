@@ -3,7 +3,7 @@ var pbxIvrActions=schema.define('pbxIvrActions',{
 	ivrnumber:  {type:String,length:50},
 	ordinal:   {type:Number,default:function(){return 0;}},
 	actmode:   {type:String,length:50,default:function(){return '1';}},
-	args:   {type:String,length:256}
+	args:   {type:String,length:500}
 });
 
 pbxIvrActions.belongsTo(pbxIvrActMode, {as: 'Actmode', foreignKey: 'actmode'});

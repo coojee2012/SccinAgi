@@ -84,6 +84,9 @@
     </div>
 </div>
 </div>
+
+<%- include ../../ivractsfuncs.html %>
+
 <script type='text/javascript'>
 
 var varname="";
@@ -142,48 +145,7 @@ actionid="<%= args.actionid%>";
         });
     });
 
-function getivrbumbers(elmid,value){
-  $.ajax({
-                    cache: true,
-                    type: "POST",
-                    url: '<%- baseurl%>/getivrnums',
-                    data: {},// 你的formid
-                    async: false,
-                    error: function (request) {
-                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
-                    },
-                    success: function (data) {
-                        for(var i=0;i<data.length;i++){
-        var option = $("<option>").val(data[i].id).text(data[i].id+'-'+data[i].ivrname);
-            //option.attr('desc',data[i].description);
-      $("#"+elmid).append(option);
-    }
-    $("#"+elmid).val(value);
-                    }
-                });  
-}
 
-function getivractions(actid,ivrnum,value){
-$("#"+actid).empty();
-$("#"+actid).append($("<option>").val("").text("请选择"));
-    $.ajax({
-                    cache: true,
-                    type: "POST",
-                    url: '<%- baseurl%>/getivracts',
-                    data: {ivrnum:ivrnum},// 你的formid
-                    async: false,
-                    error: function (request) {
-                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
-                    },
-                    success: function (data) {
-                        for(var i=0;i<data.length;i++){
-        var option = $("<option>").val(data[i].ordinal).text(data[i].ordinal+'-'+data[i].text);
-            //option.attr('desc',data[i].description);
-      $("#"+actid).append(option);
-    }
-    $("#"+actid).val(value);
-                    }
-                });  
-}
 
 </script>
+

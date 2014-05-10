@@ -239,7 +239,7 @@ var pbxIvrActions=schema.define('pbxIvrActions',{
 	ivrnumber:  {type:String,length:50},
 	ordinal:   {type:Number,default:function(){return 0;}},
 	actmode:   {type:String,length:50,default:function(){return '1';}},
-	args:   {type:String,length:256}
+	args:   {type:String,length:500}
 });
 
 pbxIvrActions.belongsTo(pbxIvrActMode, {as: 'Actmode', foreignKey: 'actmode'});
@@ -257,7 +257,7 @@ var pbxIvrInputs=schema.define('pbxIvrInputs',{
 	generalargs:   {type:String,length:150},//错误响应参数
 	inputnum:   {type: String,length:10},
 	gotoivrnumber:   {type: String,length:50},
-	gotoivractid:   {type: Number,default: function () {return 1;}}
+	gotoivractid:   {type: String,length:100,default: function () {return '1';}}
 });
 
 

@@ -503,7 +503,7 @@ posts.autodial = function(req, res, next) {
 						if (err)
 							callback(err, null);
 						else {
-							if (counts && counts > 60) {
+							if (counts && counts > conf.load('app').maxchans) {
 								callback('当前可用线路不足，已用:' + counts, counts);
 							} else {
 								callback(null, counts);

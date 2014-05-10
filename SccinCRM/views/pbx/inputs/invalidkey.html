@@ -69,6 +69,9 @@
     </div>
 </div>
 </div>
+
+<%- include ../../ivractsfuncs.html %>
+
 <script type='text/javascript'>
 var gotoivrnumber="";
 var gotoivractid="";
@@ -138,7 +141,7 @@ var desc=$("#filename").find("option:selected").attr('desc');
         });
     });
 
-function getivrbumbers(elmid,value){
+/*function getivrbumbers(elmid,value){
   $.ajax({
                     cache: true,
                     type: "POST",
@@ -180,7 +183,7 @@ $("#"+actid).append($("<option>").val("").text("请选择"));
     $("#"+actid).val(value);
                     }
                 });  
-}
+}*/
 
 function filenameoption(folder,filename){
     $.ajax({

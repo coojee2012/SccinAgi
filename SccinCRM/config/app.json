@@ -12,5 +12,6 @@
 	"allowips":["127.0.0.1","192.168.0.0"],
 	"monitor":"/var/spool/asterisk/monitor/",
 	"asounds":"/var/lib/asterisk/sounds/",
+	"maxchans":3,
 	"debug":true
 }

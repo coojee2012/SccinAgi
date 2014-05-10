@@ -92,6 +92,9 @@
     </div>
 </div>
 </div>
+
+<%- include ../../ivractsfuncs.html %>
+
 <script type='text/javascript'>
 var minutes=["1","2"];
 var hours=[];
@@ -175,7 +178,7 @@ actionid="<%= args.actionid%>";
         });
     });
 
-function getivrbumbers(elmid,value){
+/*function getivrbumbers(elmid,value){
   $.ajax({
                     cache: true,
                     type: "POST",
@@ -217,6 +220,6 @@ $("#"+actid).append($("<option>").val("").text("请选择"));
     $("#"+actid).val(value);
                     }
                 });  
-}
+}*/
 
 </script>

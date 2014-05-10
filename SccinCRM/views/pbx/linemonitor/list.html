@@ -3,22 +3,28 @@
         <div class="column form-column main col form-horizontal">
             <div class="panel panel-default fieldset">
                 <div class="panel-heading">
-                    <a href="#" class="btn btn-primary">语音服务器线路监控</a>
+                    <a href="#" class="btn btn-primary">语音服务器数字语音卡监控</a>
+                    
+                    <button data-toggle="modal" data-target="#confirm_modal"  data-backdrop="static" class="btn btn-warning">重启语音卡</button>
                 </div>
-                <div class="panel-body ">
+        <div class="panel-body ">
           <div class="form-group">
-            <label for="id" class="control-label col-sm-2">监控中继</label>
-            <div class="controls  col-sm-3">
-             <select name="trunkid" id="trunkid" class="form-control input-sm">
-                <option value="-1">全部</option>
-              </select>
-            </div>
+                       
            
-            
-              <div class="controls  col-sm-2">
-                <input type="button" class="btn btn-primary btn-sm" id="search" value="查询">
-              </div>             
-            </div>
+<table class="table table-striped table-hover table-condensed table-bordered" id="trunktable">
+    <thead>
+    <tr>
+        <th class="text-center">中继名称</th>
+        <th class="text-center">总线总量</th>
+        <th class="text-center">使用线路</th>
+        <th class="text-center">空闲线路</th>
+        <th class="text-center">链路状态</th>
+    </tr>
+    </thead>
+    <tbody id="trunktablebody">
+    </tbody>
+</table>
+ </div>
           </div>
               
                 </div>
@@ -35,8 +41,9 @@
         <th class="text-center">中继名称</th>
         <th class="text-center">通道号</th>
         <th class="text-center">语音通道</th>
-        <th class="text-center">状态</th>
-        <th class="text-center">呼叫等级</th>
+        <th class="text-center">使用状态</th>
+        <th class="text-center">呼叫状态</th>
+         <th class="text-center">是否忙线</th>
         <th class="text-center">线路名称</th>
     </tr>
     </thead>
@@ -47,13 +54,32 @@
         <th class="text-center">中继名称</th>
         <th class="text-center">通道号</th>
         <th class="text-center">语音通道</th>
-        <th class="text-center">状态</th>
-        <th class="text-center">呼叫等级</th>
+        <th class="text-center">使用状态</th>
+        <th class="text-center">呼叫状态</th>
+         <th class="text-center">是否忙线</th>
         <th class="text-center">线路名称</th>
     </tr>
     </tfoot>
 </table>
 </div>
+
+
+<div class="modal fade in" id="confirm_modal" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width:400px">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center">
+          <p class="i_Msg_warn"><img src="/images/exclamation.png" />重启语音卡会中断当前所有通话！如果重启语音卡依旧不能解决你的问题，请尝试在重启服务器！</p>
+        </div>
+      </div>
+      <div class="modal-footer">        
+<button  class="btn btn-danger btn-sm"  data-dismiss="modal" data-action="1" id="surerestart" name="surerestart">确定</button>
+<a class="btn btn-default btn-sm" href="#" data-dismiss="modal">取消</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script type='text/javascript'>
 $(function(){
@@ -62,7 +88,7 @@ var oTable=$('#datatable').dataTable({
   sDom: "<'row'<'col-sm-4'l><'col-sm-4'f><'col-sm-4'T>r>t<'row'<'col-sm-4'i><'col-sm-8 center'p>>",
   sPaginationType: "bootstrap", 
   //bDestroy:true,
-  bInfo: true,
+  bInfo: false,
   oLanguage: {
   "sUrl":"/media/olanguage.json"
   },
@@ -103,7 +129,71 @@ var oTable=$('#datatable').dataTable({
     }
    
 });
+
+$("#surerestart").click(function(){
+  $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: '<%- baseurl%>/reloadpri',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: true,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                           
+                        }else{
+                             $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                        }
+                       
+                    }
+                });  
 });
+
+
+setInterval(function(){
+oTable.fnDraw();
+}, 3000);
+
+setInterval(function(){
+   $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: '<%- baseurl%>/getspaninfo',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: true,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            var html="";
+                           for(var i=0;i<data.data.length;i++){
+                            html+="<tr>";
+                            html+='<td class="text-center">span'+data.data[i].span+"</td>";
+                            html+='<td class="text-center">'+data.data[i].total+"</td>";
+                            html+='<td class="text-center">'+data.data[i].used+"</td>";
+                            var less=data.data[i].total-data.data[i].used;
+                            html+='<td class="text-center">'+less+"</td>";
+                            if(/Up/.test(data.data[i].status)){
+                                html+='<td class="text-center">'+'<span style="color:green;">正常</span></td>';
+                            }else{
+                                html+='<td class="text-center">'+'<span style="color:red;">异常:'+data.data[i].status+'</span></td>';
+                            }
+                           }
+                           $("#trunktablebody").html(html);
+                        }else{
+                             $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                        }
+                       
+                    }
+                });   
+}, 3000);
+
+});
+
+
 </script>
 
 <script type='text/javascript'>
@@ -184,7 +274,8 @@ $(function() {
             { "sClass": 'center', "sName": "bchan", "mData": "bchan", "bSortable": false, "bVisible": true, "aTargets": [2] },
             { "sClass": 'center', "sName": "idle", "mData": "idle", "bSortable": false, "bVisible": true, "aTargets": [3] },
             { "sClass": 'center', "sName": "level", "mData": "level", "bSortable": false, "bVisible": true, "aTargets": [4] },
-            { "sClass": 'center', "sName": "channame", "mData": "channame", "bSortable": false, "bVisible": true, "aTargets": [5]}
+            { "sClass": 'center', "sName": "busy", "mData": "busy", "bSortable": false, "bVisible": true, "aTargets": [5] },
+            { "sClass": 'center', "sName": "channame", "mData": "channame", "bSortable": false, "bVisible": true, "aTargets": [6]}
         ];
         return colums;
     }

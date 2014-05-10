@@ -56,6 +56,31 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <th>按键超时时长(s)</th>
+                                            <td>
+                                                <input type="text" value="" name="timeout" id="timeout" placeholder="只能是数字，不能超过20位"
+                                                       datatype="n1-20"
+                                                        sucmsg="验证通过！"
+                                                       errormsg="验证不通过！"
+                                                       class="form-control input-sm"/>
+                                            </td>
+                                        </tr>
+                                          <tr>
+                                        <th>等待按键超时转到IVR</th>
+                                        <td>
+                                            <select  class="form-control input-sm" id="ivrnumber" name="ivrnumber" datatype="*" errormsg="不能为空！">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>跳转到IVR动作</th>
+                                        <td>
+                                            <select  class="form-control input-sm" id="actionid" name="actionid" datatype="*" errormsg="不能为空！"></select>
+                                        </td>
+                                    </tr>
+
+                                        <tr>
                                             <td colspan="4" style="text-align: center">
                                                 <input type="button" class="btn btn-primary btn-sm" id="savemenmu" value="保存">
                                             </td>
@@ -70,16 +95,25 @@
         </div>
     </div>
 </div>
+
+<%- include ../../ivractsfuncs.html %>
+
 <script type='text/javascript'>
 var maxdigits="20";
 var varname="";
 var beep="true";
 var addbefore="fasle";
+var ivrnumber="";
+var actionid="";
+var timeout="";
 <%if(args!==null){%>
 maxdigits="<%= args.maxdigits%>";
 varname="<%= args.varname%>";
 beep="<%= args.beep%>";
 addbefore="<%= args.addbefore%>";
+ivrnumber="<%= args.ivrnumber%>";
+actionid="<%= args.actionid%>";
+timeout="<%= args.timeout%>";
 <%}%>
     $(function () {
         $(".tipmsg").tooltip({placement: 'auto'});
@@ -87,9 +121,19 @@ addbefore="<%= args.addbefore%>";
 
         $("#maxdigits").val(maxdigits);
         $("#varname").val(varname);
+        $("#timeout").val(timeout);
+
         $("input[name='addbefore'][value='"+addbefore+"']").attr("checked","checked");
         $("input[name='beep'][value='"+beep+"']").attr("checked","checked");
-     
+        
+         getivrbumbers('ivrnumber',ivrnumber);
+        getivractions('actionid',ivrnumber,actionid);
+          $("#ivrnumber").change(function(){
+
+         var ivrnum=$("#ivrnumber").val();
+         getivractions('actionid',ivrnum);
+        });
+
 
         $('#savemenmu').click(function (e) {
             if ($('#form1').Validform().check()) {

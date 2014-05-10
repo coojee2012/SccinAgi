@@ -126,6 +126,7 @@ posts.getivracts = function(req, res, next) {
 		var actionList = new Array();
 		for (var i = 0; i < inst.length; i++) {
 			var model = {};
+			model.id=inst[i].id;
 			model.ordinal = inst[i].ordinal;
 			model.text = inst[i].__cachedRelations.Actmode.modename;
 			actionList.push(model);

@@ -24,7 +24,9 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
         return 0;
     }
   }
-  
+
+
+
   if (self.ivrlevel > 50) {
     callback('IVR嵌套过深', -1);
   } else {
@@ -47,12 +49,12 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
       getIVR: ['updateCDR',
         function(cb, results) {
           schemas.pbxIvrMenmu.find(ivrnum, function(err, inst) {
-            if(err || inst==null){
-              cb("查找IVR发生错误或没有找到IVR",null);
-            }else{
-               cb(err, inst);
+            if (err || inst == null) {
+              cb("查找IVR发生错误或没有找到IVR", null);
+            } else {
+              cb(err, inst);
             }
-           
+
           });
         }
       ],
@@ -84,20 +86,37 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
       Answer: ['getIVRActions', 'getIVRInputs',
         function(cb, results) {
           context.answer(function(err, response) {
-            if(err)
+            if (err)
               logger.error(err);
 
-             logger.debug("IVR应答结果：",response);
+            logger.debug("IVR应答结果：", response);
             cb(err, response);
           });
         }
       ],
-      action: ['Answer',
+
+      checkaction: ['Answer',
         function(cb, results) {
-          logger.debug("开始执行IVR动作");
           if (!action)
             action = 1;
-
+          logger.debug("获取到的IVR动作编号:", action);
+          if (/^\d+$/g.test(action)) {
+            cb(null, action);
+          } else {
+            schemas.pbxIvrActions.find(action, function(err, inst) {
+              if (err || inst == null) {
+                cb("获取IVR动作顺序号错误！", null);
+              } else {
+                action = inst.ordinal;
+                cb(null, action);
+              }
+            });
+          }
+        }
+      ],
+      action: ['checkaction',
+        function(cb, results) {
+          logger.debug("开始执行IVR动作");
           schemas.pbxCallProcees.create({
             callsession: self.sessionnum,
             caller: vars.agi_callerid,
