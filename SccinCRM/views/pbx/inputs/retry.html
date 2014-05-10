@@ -84,7 +84,7 @@ var filename="";
 var folder="";
 var retry="3";
 
-<%if(args!==null){%>
+<%if(args!==null  && inst!==null){%>
 gotoivrnumber="<%= inst.gotoivrnumber%>";
 gotoivractid="<%= inst.gotoivractid%>";
 filename="<%= args.filename%>";

@@ -47,18 +47,7 @@
                         <tr>
                             <th>匹配规则</th>
                             <td>
-                                <div class="form-inline">当外线送入的被叫号码以<input type="text" style="width:45px;" id='callerid'
-                                                                           value="<%= inst.callerid%>" name='callerid'
-                                                                           class="form-control input-sm"/>开头且长度为<input
-                                        type="text" id='callerlen' value="<%= inst.callerlen%>" style="width:30px;"
-                                        name='callerlen' class="form-control input-sm"/>位时,从头开始删掉<input type="text"
-                                                                                                        id='replacecalledtrim'
-                                                                                                        value="<%= inst.replacecalledtrim%>"
-                                                                                                        style="width:30px;"
-                                                                                                        name='replacecalledtrim'
-                                                                                                        class="form-control input-sm"/>位且补充信息<input
-                                        type="text" id='replacecalledappend' value="<%= inst.replacecalledappend%>"
-                                        style="width:50px;" name='replacecalledappend' class="form-control input-sm"/>到该号码上.
+                                <div class="form-inline">当外线送入的被叫号码以<input type="text" style="width:60px;" id='callerid' value="<%= inst.callerid%>" name='callerid' class="form-control input-sm"/>开头且长度为<input type="text" id='callerlen' value="<%= inst.callerlen%>" style="width:60px;" name='callerlen' class="form-control input-sm"/>位时,从头开始删掉<input type="text" id='replacecalledtrim' value="<%= inst.replacecalledtrim%>"  style="width:60px;" name='replacecalledtrim' class="form-control input-sm"/>位且补充信息<input type="text" id='replacecalledappend' value="<%= inst.replacecalledappend%>" style="width:80px;" name='replacecalledappend' class="form-control input-sm"/>到该号码上.
                                 </div>
                             </td>
                         </tr>
@@ -142,5 +131,43 @@
                 }
 
             });
+
+ $("#processmode").change(function(){
+$("#processdefined").empty();
+var processmode=$("#processmode").val();
+findprocessmode(processmode);
+
+        }); 
+
+ findprocessmode($("#processmode").val(),"<%= inst.processdefined%>");
+
         });
+
+
+
+        function findprocessmode(processmode,v){
+
+   $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '/base/common/findprocessmode',
+                    data: {"processmode":processmode},// 你的formid
+                    async: true,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+             for(var i=0;i<data.data.length;i++){
+  var option = $("<option>").val(data.data[i].id).text(data.data[i].trunkname);
+$("#processdefined").append(option);
+             }
+             $("#dododoway").html(data.name);
+             if(v!==''){
+              $("#processdefined").val(v);  
+             }
+                    }
+                });  
+
+
+}
     </script>

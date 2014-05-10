@@ -2,48 +2,63 @@
     <div class="page_box">
         <div class="column form-column main col form-horizontal">
             <div class="panel panel-default fieldset">
-                <div class="panel-heading">
-                    <lable><h2>当用户输入了一个没有被设置的选择时应该如何处理?</h2></lable>
-                </div>
+                <div class="panel-heading"></div>
                 <div class="panel-body ">
                     <div class="form-group">
                         <div class="panel panel-default fieldset">
                             <div class="formStyle">
                                 <form action='<%- baseurl%>
                                     /save' method='POST' id='form1'>
-                                    <input type="hidden" id="id" name="id" value="<%= inst.id%>" />
-                                    
+                                    <input type="hidden" id="id" name="id" value="<%= id%>" />
                                     <table>
                                         <colgroup>
                                         <col style="width:20%"></colgroup>
-                                       
-                                        <tr>
-                                            <th>播放语音文件目录</th>
+
+                                       <tr>
+                                            <th>变量名</th>
                                             <td>
-                                                <select  class="form-control input-sm" id="folder" name="folder">
-                                                    <option value="system">系统默认</option>
-                                                    <option value="custom">用户语音</option>
-                                                </select>
+                                                <input type="text" value="" name="varname" id="varname" 
+                                                placeholder="变量的名称。"  datatype="*" errormsg="不能为空！" 
+                                                class="form-control input-sm"/>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th>播放语音文件名</th>
-                                            <td>
-                                                <select  class="form-control input-sm" id="filename" name="filename">
-                                                </select>
-                                            </td>
-                                        </tr>
+
+
                                          <tr>
-                                            <th>文件描述</th>
-                                            <td id="desciption">
-                                               
+                                            <th>比较方式</th>
+                                            <td>
+                                                <label class="radio-inline tipmsg" title="">
+                                                <input type="radio"  name='checkway' value="eq">
+                                                等于</label>
+
+                                                <label class="radio-inline tipmsg" title="">
+                                                <input type="radio"  name='checkway' value="neq">
+                                                不等于</label>
+
+                                                <label class="radio-inline tipmsg" title="">
+                                                <input type="radio"  name='checkway' value="gt">
+                                                大于</label>
+
+                                                <label class="radio-inline tipmsg" title="">
+                                                <input type="radio"  name='checkway' value="lt">
+                                                小于</label>
                                             </td>
                                         </tr>
-                                        
+
+
+                                        <tr>
+                                            <th>变量值</th>
+                                            <td>
+                                               <input type="text" value="" name="varval" id="varval"
+                                                       class="form-control input-sm"
+                                                       placeholder="变量匹配的值。"/>
+                                            </td>
+                                        </tr>
+
                                     <tr>
-                                        <th>跳转到IVR</th>
+                                        <th>符合跳转到IVR</th>
                                         <td>
-                                            <select  class="form-control input-sm" id="gotoivrnumber" name="gotoivrnumber" datatype="*" errormsg="不能为空！">
+                                            <select  class="form-control input-sm" id="ivrnumber" name="ivrnumber" datatype="*" errormsg="不能为空！">
                                                 <option value="">请选择</option>
                                             </select>
                                         </td>
@@ -51,7 +66,7 @@
                                     <tr>
                                         <th>跳转到IVR动作</th>
                                         <td>
-                                            <select  class="form-control input-sm" id="gotoivractid" name="gotoivractid" datatype="*" errormsg="不能为空！"></select>
+                                            <select  class="form-control input-sm" id="actionid" name="actionid" datatype="*" errormsg="不能为空！"></select>
                                         </td>
                                     </tr>
 
@@ -70,55 +85,44 @@
 </div>
 </div>
 <script type='text/javascript'>
-var gotoivrnumber="";
-var gotoivractid="";
-var filename="";
-var folder="";
 
-
-<%if(args!==null && inst!==null){%>
-gotoivrnumber="<%= inst.gotoivrnumber%>";
-gotoivractid="<%= inst.gotoivractid%>";
-filename="<%= args.filename%>";
-folder="<%= args.folder%>";
-
+var varname="";
+var varval="";
+var ivrnumber="";
+var actionid="";
+var checkway="eq";
+<%if(args!==null){%>
+varname="<%= args.varname%>";
+varval="<%= args.varval%>";
+checkway="<%= args.checkway%>";
+ivrnumber="<%= args.ivrnumber%>";
+actionid="<%= args.actionid%>";
 <%}%>
-
     $(function () {
         $(".tipmsg").tooltip({placement: 'auto'});
         $('#form1').Validform();
-        $("#folder").val(folder);
-
-        filenameoption(folder, filename);
-        $("#filename").val(filename);
-
-        $("#folder").change(function() {
-            $("#filename").empty();
-            folder = $("#folder").val();
-            filenameoption(folder, filename);
-            $("#filename").val(filename);
+       $("#varname").val(varname);
+       $("#varval").val(varval);
+       
+         $("input[name='checkway']").each(function(){
+                if($(this).val() === checkway)
+                    $(this).attr("checked","checked"); 
         });
 
-      $("#filename").change(function(){
-var desc=$("#filename").find("option:selected").attr('desc');
-    $("#desciption").html(desc)
+        getivrbumbers('ivrnumber',ivrnumber);
+        getivractions('actionid',ivrnumber,actionid);
+          $("#ivrnumber").change(function(){
+
+         var ivrnum=$("#ivrnumber").val();
+         getivractions('actionid',ivrnum);
         });
-
-        getivrbumbers('gotoivrnumber',gotoivrnumber);
-        getivractions('gotoivractid',gotoivrnumber,gotoivractid);
-          $("#gotoivrnumber").change(function(){
-
-         var ivrnum=$("#gotoivrnumber").val();
-         getivractions('gotoivractid',ivrnum);
-        });
-
 
         $('#savemenmu').click(function (e) {
             if ($('#form1').Validform().check()) {
                 $.ajax({
                     cache: true,
                     type: "POST",
-                    url: '<%- baseurl%>/saveinput',
+                    url: '<%- baseurl%>/save',
                     data: $('#form1').serialize(),// 你的formid
                     async: false,
                     error: function (request) {
@@ -180,30 +184,6 @@ $("#"+actid).append($("<option>").val("").text("请选择"));
     $("#"+actid).val(value);
                     }
                 });  
-}
-
-function filenameoption(folder,filename){
-    $.ajax({
-type: "POST",
-url: '<%- baseurl%>/getFilename',
-data:{folder:folder},
-async: false,
-error: function (request) {
-                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
-                    },
- success: function (data) {
-    for(var i=0;i<data.length;i++){
-        var option = $("<option>").val(data[i].filename).text(data[i].filename);
-            option.attr('desc',data[i].description);
-      $("#filename").append(option);
-    }
-    $("#filename").val(filename);
-    var desc=$("#filename").find("option:selected").attr('desc');
-    $("#desciption").html(desc)
-    
- }
-                    
-    });
 }
 
 </script>

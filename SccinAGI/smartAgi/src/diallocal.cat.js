@@ -53,7 +53,8 @@ routing.prototype.diallocal = function(localnum, callback) {
           //默认拨打IVR 200 1
           else {
             logger.debug("本地默认处理拨打IVR200");
-            self.ivr(200, 1, function(err, result) {
+            var defaultivr=conf.defaultivr || 200;
+            self.ivr(defaultivr, 1, function(err, result) {
               cb(err, result);
             })
           }

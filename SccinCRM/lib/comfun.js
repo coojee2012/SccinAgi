@@ -1,15 +1,20 @@
 var Schemas = require('../database/schema').Schemas;
 var mycommonfun = {};
 mycommonfun.str2obj = function(str, obj) {
-  if (!obj || typeof(obj) !== 'object')
-    obj = {};
+ 
   if (str && str !== '') {
+     if (!obj || typeof(obj) !== 'object')
+    obj = {};
+
     var tmp = str.split('&');
     for (var i in tmp) {
       var kv = tmp[i].split('=');
       obj[kv[0]] = kv[1];
     }
+  }else{
+    obj=null;
   }
+
   return obj;
 }
 

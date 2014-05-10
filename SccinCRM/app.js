@@ -26,12 +26,12 @@ var logger = require('./lib/logger').logger('web');
 var log4js = require('./lib/logger').log4js;
 
 
-var server = http.createServer();
-/*var options = {
-    key: fs.readFileSync('./privatekey.pem'),
-    cert: fs.readFileSync('./certificate.pem')
+//var server = http.createServer();
+var options = {
+    key: fs.readFileSync('./PCA/server.key'),
+    cert: fs.readFileSync('./PCA/server.crt')
 };
-var server=https.createServer(options, app);*/
+var server=https.createServer(options, app);
 
 var app = express();
 // 所有环境设置
@@ -236,7 +236,9 @@ function notAuthentication(req, res, next) {
 }
 
 function safeClient(req, res, next) {
-  var ip = req.ip;
+ 
+  var ip = req.ip || req.header("host");
+  logger.debug("访问客户端IP地址：",ip);
   var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
   if (reg.test(ip)) {
     var safeip = appconf.allowips;
@@ -263,9 +265,9 @@ function safeClient(req, res, next) {
     if (safe)
       next();
     else
-      next("IP地址不被允许访问！");
+      next("IP地址不被允许访问:"+ip);
   } else {
-    next("IP地址不合法！");
+    next("IP地址不合法："+ip);
   }
 }
 

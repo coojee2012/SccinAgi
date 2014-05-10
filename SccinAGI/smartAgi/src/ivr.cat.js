@@ -47,7 +47,12 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
       getIVR: ['updateCDR',
         function(cb, results) {
           schemas.pbxIvrMenmu.find(ivrnum, function(err, inst) {
-            cb(err, inst);
+            if(err || inst==null){
+              cb("查找IVR发生错误或没有找到IVR",null);
+            }else{
+               cb(err, inst);
+            }
+           
           });
         }
       ],

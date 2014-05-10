@@ -46,7 +46,7 @@
                         <tr>
                             <th>匹配规则</th>
                             <td>
-                                <div class="form-inline">用户拨打的号码是以<input type="text" style="width:45px;" id='callednum' value="<%= inst.callednum%>" name='callednum' class="form-control input-sm"/>开头,长度为<input type="text" id='calledlen' value="<%= inst.calledlen%>" style="width:30px;" name='calledlen' class="form-control input-sm"/>位.从头删除掉<input type="text" value="<%= inst.replacecalledtrim%>" id='replacecalledtrim' style="width:30px;" name='replacecalledtrim' class="form-control input-sm"/>位数字,同时补充<input type="text" id='replacecalledappend' style="width:60px;" value="<%= inst.replacecalledappend%>" name='replacecalledappend' class="form-control input-sm"/>到该号码上.
+                                <div class="form-inline">用户拨打的号码是以<input type="text" style="width:60px;" id='callednum' value="<%= inst.callednum%>" name='callednum' class="form-control input-sm"/>开头,长度为<input type="text" id='calledlen' value="<%= inst.calledlen%>" style="width:60px;" name='calledlen' class="form-control input-sm"/>位.从头删除掉<input type="text" value="<%= inst.replacecalledtrim%>" id='replacecalledtrim' style="width:60px;" name='replacecalledtrim' class="form-control input-sm"/>位数字,同时补充<input type="text" id='replacecalledappend' style="width:80px;" value="<%= inst.replacecalledappend%>" name='replacecalledappend' class="form-control input-sm"/>到该号码上.
                                 </div>
                             </td>
                         </tr>
@@ -134,5 +134,44 @@
             }
 
         });
+
+
+         $("#processmode").change(function(){
+$("#processdefined").empty();
+var processmode=$("#processmode").val();
+findprocessmode(processmode);
+
+        }); 
+
+ findprocessmode($("#processmode").val(),"<%= inst.processdefined%>");
+
     });
+
+
+  function findprocessmode(processmode,v){
+
+   $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '/base/common/findprocessmode',
+                    data: {"processmode":processmode},// 你的formid
+                    async: true,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+             for(var i=0;i<data.data.length;i++){
+  var option = $("<option>").val(data.data[i].id).text(data.data[i].trunkname);
+$("#processdefined").append(option);
+             }
+             $("#dododoway").html(data.name);
+             if(v!==''){
+              $("#processdefined").val(v);  
+             }
+                    }
+                });  
+
+
+}
+
 </script>

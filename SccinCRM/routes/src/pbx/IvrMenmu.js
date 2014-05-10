@@ -208,7 +208,7 @@ posts.addaction = function(req, res, next, baseurl) {
                     ivrnumber: ivrnum,
                     ordinal: results.count + 1,
                     actmode: '' + modeid + '',
-                    args: 'varname=&digits=&dialway=diallocal'
+                    args: ''
                 }
                 Schemas.pbxIvrActions.create(node, function(err, inst) {
                     cb(err, inst);

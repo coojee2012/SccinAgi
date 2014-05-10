@@ -36,6 +36,8 @@ gets.index = function(req, res, next) {
 		"通道阀":"maxchannel",
 		"AGI扩展接口":"agiexten",
 		"WEB交互接口":"webchange",
+		"变量判断":"varcheck",
+		"挂机":"hangupcall"
 
 	}
 	Schemas.pbxIvrActions.find(id, function(err, inst) {
@@ -43,6 +45,7 @@ gets.index = function(req, res, next) {
 			res.send("没有能处理该动作！");
 		else {
 			var args = comfun.str2obj(inst.args);
+			logger.debug("IVR动作参数:",args);
 			res.render('pbx/ivracts/' + ch2en[text] + '.html', {
 				baseurl: req.path,
 				id: id,
@@ -73,6 +76,7 @@ gets.einputs = function(req, res, next) {
 	var id = req.query.id;
 	var text = req.query.text;
 	Schemas.pbxIvrInputs.find(id, function(err, inst) {
+		logger.debug(inst);
 		if (err || inst === null)
 			res.send("没有该输入！");
 		else {

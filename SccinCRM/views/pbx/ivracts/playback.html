@@ -18,8 +18,15 @@
                                             <th>语音文件目录</th>
                                             <td>
                                                 <select  class="form-control input-sm" id="folder" name="folder">
-                <option value="system">系统默认</option>
-                <option value="custom">用户语音</option>
+                <option value=".">/</option>
+                <option value="custom">/custom</option>
+                <option value="dictate">/dictate</option>
+                <option value="digits">/digits</option>
+                <option value="followme">/followme</option>
+                <option value="letters">/letters</option>
+                <option value="phonetic">/phonetic</option>
+                <option value="silence">/silence</option>
+                <option value="system">/system</option>
               </select>
                                             </td>
                                         </tr>
@@ -36,6 +43,14 @@
                                                
                                             </td>
                                         </tr>
+
+                                        <tr>
+                                            <th>指定文件</th>
+                                            <td>
+                                                <input type="text"  class="form-control input-sm" id="specfile" name="specfile" placeholder="需要是绝对路径！" />
+                                            </td>
+                                        </tr>
+
                                         <tr>
                                             <th>允许按键中断</th>
                                             <td>
@@ -65,10 +80,12 @@
 <script type='text/javascript'>
 var folder="system";
 var filename="";
+var specfile="";
 var interruptible="true";
 <%if(args!==null){%>
 folder="<%= args.folder%>";
 filename="<%= args.filename%>";
+specfile="<%= args.specfile%>";
 interruptible="<%= args.interruptible%>";
 <%}%>
     $(function () {
@@ -78,7 +95,7 @@ interruptible="<%= args.interruptible%>";
         $("input[name='interruptible'][value='"+interruptible+"']").attr("checked","checked");
         filenameoption(folder,filename);
         $("#filename").val(filename);
-
+        $("#specfile").val(specfile);
         $("#folder").change(function(){
 $("#filename").empty();
 folder=$("#folder").val();
