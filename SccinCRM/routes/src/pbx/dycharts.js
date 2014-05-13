@@ -18,6 +18,14 @@ gets.dycharts = function(req, res, next) {
 		layout: 'highstock.html'
 	});
 }
+
+gets.agentCalls = function(req, res, next) {
+    res.render('pbx/dycharts/agentCalls.html', {
+        layout: 'highchart.html'
+    });
+}
+
+
 posts.exportpic=function(req,res,next){
 var customExportPath = require('path').dirname(require.main.filename) + '/exported_charts';
 nhe.config.set('processingDir', customExportPath);

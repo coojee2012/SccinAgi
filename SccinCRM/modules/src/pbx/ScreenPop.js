@@ -13,7 +13,7 @@ var pbxScreenPop=schema.define('pbxScreenPop',{
 	status:   {type:String,length:10,default:function () { return 'over'; }},//弹出类型:waite,over
 	routerdype:   {type:Number,default:function () { return 1; }},//呼叫路由1内线2外线
 	parked:   {type:String,length:50,default:function () { return 'not'; }},//保持状态：yes ,not
-	poptype:    {type:String,length:50,default:function () { return ''; }}//弹出类型:diallocal,dialout
+	poptype:    {type:String,length:50,default:function () { return ''; }}//弹出类型:diallocal,dialout,dialqueue
 });
 pbxScreenPop.Name='pbxScreenPop';
 schema.models.pbxScreenPop;

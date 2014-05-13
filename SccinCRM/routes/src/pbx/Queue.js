@@ -3,9 +3,10 @@ var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var async = require('async');
-var Schemas = require(basedir+'/database/schema').Schemas;
+var Schemas = require(basedir + '/database/schema').Schemas;
 var commfun = require(basedir + '/lib/comfun');
-var logger = require(basedir+'/lib/logger').logger('web');
+var _ = require('lodash');
+var logger = require(basedir + '/lib/logger').logger('web');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -47,7 +48,7 @@ checkFun['id'] = function(id, res) {
 };
 
 //处理页面需要的Ajax验证
-posts.checkAjax = function(req, res,next,baseurl) {
+posts.checkAjax = function(req, res, next, baseurl) {
 	var param = req.body['param'];
 	var name = req.body['name'];
 	if (typeof(checkFun[name] === 'function')) {
@@ -62,15 +63,15 @@ posts.checkAjax = function(req, res,next,baseurl) {
 }
 
 //分机列表显示
-gets.index = function(req, res,next,baseurl) {
+gets.index = function(req, res, next, baseurl) {
 	res.render('pbx/Queue/list.html', {
-		baseurl:baseurl,
-		modename:'pbxQueue'
+		baseurl: baseurl,
+		modename: 'pbxQueue'
 	});
 }
 
 //新建
-gets.create = function(req, res,next,baseurl) {
+gets.create = function(req, res, next, baseurl) {
 	Schemas['pbxExtension'].all({}, function(err, dbs) {
 		if (err) {
 			next(err);
@@ -80,7 +81,7 @@ gets.create = function(req, res,next,baseurl) {
 				str += '<option value="' + dbs[i].id + '">' + dbs[i].id + ' "' + dbs[i].accountcode + '" </option>';
 			}
 			res.render('pbx/Queue/create.html', {
-				baseurl:baseurl,
+				baseurl: baseurl,
 				hasExtens: str
 			});
 		}
@@ -88,7 +89,7 @@ gets.create = function(req, res,next,baseurl) {
 
 }
 //编辑
-gets.edit = function(req, res,next,baseurl) {
+gets.edit = function(req, res, next, baseurl) {
 	var id = req.query["id"];
 	async.auto({
 		findQueue: function(cb) {
@@ -101,7 +102,7 @@ gets.edit = function(req, res,next,baseurl) {
 		},
 		findMembers: ['findQueue',
 			function(cb, results) {
-				var yyMembers = !results.findQueue.members?[]:results.findQueue.members.toString().split('\,');
+				var yyMembers = !results.findQueue.members ? [] : results.findQueue.members.toString().split('\,');
 				console.log(yyMembers);
 				Schemas['pbxExtension'].all({}, function(err, dbs) {
 					if (err) {
@@ -125,16 +126,16 @@ gets.edit = function(req, res,next,baseurl) {
 						}
 
 						var hasExtens = "";
-						var	yyExtens = "";
+						var yyExtens = "";
 						for (var ii = 0; ii < hasMembers.length; ii++) {
-							
+
 							hasExtens += '<option value="' + hasMembers[ii] + '">' + hasMembers[ii] + ' "' + hasMembers[ii] + '" </option>';
 						}
 						for (var kk = 0; kk < yyMembers.length; kk++) {
-							
+
 							yyExtens += '<option value="' + yyMembers[kk] + '">' + yyMembers[kk] + ' "' + yyMembers[kk] + '" </option>';
 						}
-						
+
 						cb(null, {
 							hasExtens: hasExtens,
 							yyExtens: yyExtens
@@ -146,7 +147,7 @@ gets.edit = function(req, res,next,baseurl) {
 
 	}, function(err, results) {
 		res.render('pbx/Queue/edit.html', {
-			baseurl:baseurl,
+			baseurl: baseurl,
 			hasExtens: results.findMembers.hasExtens,
 			yyExtens: results.findMembers.yyExtens,
 			inst: results.findQueue
@@ -158,12 +159,15 @@ gets.edit = function(req, res,next,baseurl) {
 
 
 //保存（适用于新增和修改）
-posts.save = function(req, res,next,baseurl) {
+posts.save = function(req, res, next, baseurl) {
 	var Obj = {};
 	for (var key in req.body) {
-		Obj[key] = req.body[key];
+		if (key == "members" && _.isArray(req.body[key])) {
+			Obj[key] = req.body[key].join(",");
+		} else
+			Obj[key] = req.body[key];
 	}
-	console.log(Obj);
+	logger.debug(Obj);
 	async.auto({
 			isHaveCheck: function(cb) {
 				if (!Obj.id || Obj.id === '') {
@@ -229,10 +233,10 @@ posts.save = function(req, res,next,baseurl) {
 			} else if (results.updateOld !== -1) {
 				myjson.success = 'OK';
 				myjson.msg = '修改成功!';
-				myjson.id = results.updateOld.id;
+				myjson.id = results.isHaveCheck.id;
 
 			} else if (err) {
-				console.log(err);
+				logger.error("添加或修改队列发生异常：", err);
 				myjson.success = 'ERROR';
 				myjson.msg = '保存数据发生异常,请联系管理员！';
 			}
@@ -241,7 +245,7 @@ posts.save = function(req, res,next,baseurl) {
 }
 
 
-posts.delete = function(req, res,next,baseurl) {
+posts.delete = function(req, res, next, baseurl) {
 	var id = req.body['id'];
 	Schemas['pbxQueue'].find(id, function(err, inst) {
 		var myjson = {};

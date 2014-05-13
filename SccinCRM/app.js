@@ -28,8 +28,8 @@ var log4js = require('./lib/logger').log4js;
 
 //var server = http.createServer();
 var options = {
-    key: fs.readFileSync('./PCA/server.key'),
-    cert: fs.readFileSync('./PCA/server.crt')
+    key: fs.readFileSync(__dirname+'/PCA/server.key'),
+    cert: fs.readFileSync(__dirname+'/PCA/server.crt')
 };
 var server=https.createServer(options, app);
 
@@ -52,7 +52,7 @@ app.use(log4js.connectLogger(logger, {
   format: ':method :url'
 }));
 app.use(express.bodyParser({
-  uploadDir: './public/uploads'
+  uploadDir: __dirname+'/public/uploads'
 }));
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));

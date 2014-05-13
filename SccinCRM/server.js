@@ -12,6 +12,9 @@ var appconf = conf.load('app');
 var SRCFILE = appconf.debug ? '.js' : '.min.js';
 // 获取CPU 的数量
 //var numCPUs = os.cpus().length;
+
+console.log(__dirname);
+
 var numCPUs = 1;
 var workers = {};
 var count = 0;
@@ -107,7 +110,7 @@ if (cluster.isMaster) {
 
 	});
 
-	var normal = require('child_process').fork('Wetnurse'+SRCFILE);
+	var normal = require('child_process').fork(__dirname+'/Wetnurse'+SRCFILE);
 	normal.on('exit',function(code,signal){
     logger.info('奶妈程序退出了：'+code);
 	});

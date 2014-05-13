@@ -411,13 +411,15 @@ posts.autodial = function(req, res, next) {
 					//合成的语音文件名字  results.addCallRecords.id + -notice.wav
 					if (results.setVoiceContent.State === 1) {
 						tts.synth('/home/share/' + ProjMoveID + '-notice.wav', NoticeContent, function(state, msg) {
-							logger.debug("执行：voiceMixNotice成功？",state);
+							logger.debug("执行：voiceMixNotice成功？", state);
 							if (state === 'true') {
-								
+
 								callback(null, 1);
 							} else {
 								logger.error('合成通知语音失败:', msg);
-								callback({"Error":'合成通知语音失败！'}, null);
+								callback({
+									"Error": '合成通知语音失败！'
+								}, null);
 							}
 						});
 					} else {
@@ -429,15 +431,15 @@ posts.autodial = function(req, res, next) {
 			//合成确认语音
 			voiceMixSure: ['voiceMixNotice',
 				function(callback, results) {
-					logger.debug("执行：voiceMixSure,",results.voiceMixNotice);
-					if(results.voiceMixNotice===null)
+					logger.debug("执行：voiceMixSure,", results.voiceMixNotice);
+					if (results.voiceMixNotice === null)
 						callback('合成确认语音失败!', null);
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -sure.wav
 					if (results.setVoiceContent.State === 1) {
 						tts.synth('/home/share/' + ProjMoveID + '-sure.wav', SureContent, function(state, msg) {
 							if (state === 'true') {
-	logger.debug("执行：voiceMixSure成功？:",state);
+								logger.debug("执行：voiceMixSure成功？:", state);
 								callback(null, 1);
 							} else {
 								logger.error('合成确认语音失败:', msg);
@@ -453,8 +455,8 @@ posts.autodial = function(req, res, next) {
 			//合成查询语音
 			voiceMixQuery: ['voiceMixSure',
 				function(callback, results) {
-					logger.debug("执行：voiceMixQuery,",results.voiceMixSure);
-					if(results.voiceMixSure===null)
+					logger.debug("执行：voiceMixQuery,", results.voiceMixSure);
+					if (results.voiceMixSure === null)
 						callback('合成查询语音失败!', null);
 					//处理语音合成
 					//合成的语音文件名字  results.addCallRecords.id + -query.wav
@@ -477,7 +479,7 @@ posts.autodial = function(req, res, next) {
 			updateVoiceContent: ['voiceMixQuery',
 				//updateVoiceContent: ['addVoiceContent',
 				function(callback, results) {
-					logger.debug("执行：updateVoiceContent，",results.voiceMixQuery);
+					logger.debug("执行：updateVoiceContent，", results.voiceMixQuery);
 					var state = 2;
 					if (results.voiceMixQuery === null)
 						state = 0;
@@ -516,8 +518,8 @@ posts.autodial = function(req, res, next) {
 			//开始拨打
 			callDial: ['checkChans',
 				function(callback, results) {
-					if(results.voiceMixNotice === null || results.voiceMixSure === null || results.voiceMixQuery === null)
-						callback("由于语音文件合成失败，不能拨打！",null);
+					if (results.voiceMixNotice === null || results.voiceMixSure === null || results.voiceMixQuery === null)
+						callback("由于语音文件合成失败，不能拨打！", null);
 					logger.debug("执行：callDial");
 					//var Variable = "CHANNEL(language)=cn,Content=" + Content + "CallInfoID=" + CallInfoID;
 					var channel = "LOCAL/" + 200 + "@sub-outgoing";
@@ -572,8 +574,6 @@ posts.autodial = function(req, res, next) {
 	}
 
 }
-
-
 
 
 
@@ -636,7 +636,7 @@ posts.packCall = function(req, res, next) {
 	}
 	var timeout = req.body['timeout'] || req.query['timeout'];
 	getconnectchannel(type, exten, function(channels) {
-		console.log(channels);
+		logger.debug(channels);
 		var action = new AsAction.Park();
 		action.Channel2 = channels.src;
 		action.Channel = channels.dst;
@@ -693,7 +693,7 @@ posts.unPark = function(req, res, next) {
 	}
 	parkCalls(function(response) {
 		if (response.Response === 'Success' || response.response === 'Success') {
-			console.log(response);
+			logger.debug("准备取回保持：", response);
 			if (response.events != null && response.events.length > 0) {
 				var parked = false;
 				for (var ii = 0; ii < response.events.length; ii++) {
@@ -708,6 +708,7 @@ posts.unPark = function(req, res, next) {
 						action.Channel = channel;
 						action.Exten = exten;
 						action.Context = 'app-exten';
+						action.Priority = 1;
 						nami.send(action, function(response) {
 							res.send(response);
 						});
@@ -717,14 +718,14 @@ posts.unPark = function(req, res, next) {
 				if (!parked) {
 					res.send({
 						response: 'Error',
-						msg: '没有找到取回!'
+						message: '没有找到取回!'
 					});
 				}
 
 			} else {
 				res.send({
 					response: 'Error',
-					msg: '当前没有被保持的通话！'
+					message: '当前没有被保持的通话！'
 				});
 			}
 
@@ -754,7 +755,7 @@ posts.checkService = function(req, res, next) {
 
 posts.GetCallInfo = function(req, res, next) {
 	var exten = req.body['exten'] || req.query['exten'];
-	logger.debug("正在获取分机："+exten+"的来去电信息！");
+	logger.debug("正在获取分机：" + exten + "的来去电信息！");
 	if (exten == null || exten == '') {
 		res.send({
 			success: '0'
@@ -762,7 +763,7 @@ posts.GetCallInfo = function(req, res, next) {
 	} else {
 		Schemas.pbxScreenPop.findOne({
 			where: {
-				extensionnumber: exten
+				id: exten
 			}
 		}, function(err, inst) {
 			if (err || inst == null)
@@ -774,7 +775,7 @@ posts.GetCallInfo = function(req, res, next) {
 				if (inst.status == "waite") {
 
 					resjson.success = 1;
-					if (inst.routerdype == "2") {
+					if (inst.routerdype == "dialqueue" || inst.routerdype == "diallocal") {
 
 						resjson.caller = inst.callednumber;
 						resjson.called = inst.callernumber;
@@ -784,9 +785,9 @@ posts.GetCallInfo = function(req, res, next) {
 					}
 
 
-					resjson.unid = inst.uid;
+					resjson.unid = inst.uid || "";
 					resjson.poptype = inst.poptype;
-					resjson.callid = inst.callid;
+					resjson.callid = inst.sessionnumber;
 
 					inst.status = "over";
 					inst.poptype = "";
@@ -796,6 +797,7 @@ posts.GetCallInfo = function(req, res, next) {
 								success: '0'
 							});
 						else {
+							logger.debug("获取到来电信息：",resjson);
 							res.send(resjson);
 						}
 					});
@@ -971,7 +973,7 @@ posts.DndQueueMember = function(req, res, next) {
 			if (response.events.length > 0) {
 				var pased = false;
 				for (var i in response.events) {
-					console.log(response.events[i]);
+					//logger.debug(response.events[i]);
 					if (response.events[i].event == 'QueueMember' && response.events[i].paused === '1') {
 						pased = true;
 					}
@@ -988,7 +990,7 @@ posts.DndQueueMember = function(req, res, next) {
 				act.Interface = "LOCAL/" + exten + "@sub-queuefindnumber/n";
 				act.Reason = "";
 				nami.send(act, function(response2) {
-					console.log(response2);
+					logger.debug(response2);
 					if (response2.response == 'Success')
 						res.send({
 							success: true,

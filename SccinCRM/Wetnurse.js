@@ -21,7 +21,7 @@ var t = setInterval(function() {
 					Result: 4
 				}
 			}, function(err, updates) {
-				logger.debug('这个是奶妈程序的输出:', updates);
+				//logger.debug('这个是奶妈程序的输出:', updates);
 				cb(err, updates);
 			})
 		},
@@ -32,4 +32,4 @@ var t = setInterval(function() {
 
 	})
 	logger.debug('这个是奶妈程序的输出！');
-}, 60000);
+}, 3000);

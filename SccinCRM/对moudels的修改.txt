@@ -35,3 +35,4 @@ function QueueUnpause() {
     QueueUnpause.super_.call(this, 'QueuePause');//将QueueUnPause 修改为 QueuePause
     this.paused = 'false';
 }
+

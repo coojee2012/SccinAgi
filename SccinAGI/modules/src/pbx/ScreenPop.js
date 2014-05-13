@@ -65,7 +65,7 @@ var pbxScreenPop = schema.define('pbxScreenPop', {
 		default: function() {
 			return '';
 		}
-	} //弹出类型:diallocal,dialout
+	} //弹出类型:diallocal,dialout,dialqueue
 });
 pbxScreenPop.Name = 'pbxScreenPop';
 schema.models.pbxScreenPop;
