@@ -1,0 +1,25 @@
+<script type='text/javascript'>
+$(function() {
+
+//针对搜索条件添加清空按钮begin 1
+$(".datetimeserach").each(function () {
+            var self = this;
+            var tet = $(self).children();
+
+
+            var button = $('<button />', {
+                type: "button",
+                val: "",
+                css: { float: "left","margin-left":5},
+                text: "清除"
+            }).addClass("btn btn-sm").click(function () {
+                button.prev().val("");
+            });
+            $(tet[0]).after(button);
+            button.prev().css({ float: "left", width: "120" });
+        });
+//end 1;
+
+
+});//ready end
+</script>

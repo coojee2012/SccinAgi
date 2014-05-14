@@ -42,14 +42,16 @@
 </div>
 
 <div class="form-group">
-    <label for="tfrom" class="control-label col-sm-2 ">统计范围 从</label>
-            <div class="controls  col-sm-4">
-            <input type="text" value="" name="tfrom" id="tfrom"  class="form-control input-sm datetime" placeholder="点击选择适合的统计范围起始" /> 
+    <label for="timefrom" class="control-label col-sm-2 ">统计范围 从</label>
+            <div class="controls  col-sm-4 datetimeserach">
+            <input type="text" value="" name="timefrom" id="timefrom"  class="input-sm datetime" placeholder="选择起始范围" readonly/>  
+           
             </div>
                
-    <label for="tto" class="control-label col-sm-2">到</label>
-            <div class="controls  col-sm-3">
-            <input type="text" value="" name="tto" id="tto"  class="form-control input-sm datetime" placeholder="点击选择适合的统计范围结束"  /> 
+    <label for="timeto" class="control-label col-sm-2">到</label>
+            <div class="controls  col-sm-3 datetimeserach">
+            <input type="text" value="" name="timeto" id="timeto"  class="input-sm datetime" placeholder="选择结束范围"  /> 
+           
             </div>
 
               <div class="controls  col-sm-1">
@@ -61,7 +63,7 @@
       </div>
     </div>
 
- <div class="panel-body ">
+<div class="panel-body ">
 <ul class="nav nav-tabs">
   <li class="active"><a href="#tablelist" data-toggle="tab">统计列表</a></li>
   <li><a href="#zzcart" data-toggle="tab">柱状图</a></li>
@@ -69,35 +71,47 @@
   <li class="navbar-right"><a href="#">导出Excel</a></li>
 </ul>
 </div>
- <div class="panel-body ">
+<div class="panel-body ">
    <div class="tab-content">
         <div class="tab-pane active" id="tablelist">
           <table class="table table-striped table-hover table-condensed table-bordered" id="datatable">
       <thead>
         <tr>
-          <th class="text-center">队列号码</th>
-          <th class="text-center">队列名称</th>
-          <th class="text-center">队列成员</th>
-          <th class="text-center">创建时间</th>
-          <th class="text-center"><span class="print">操作</span></th>
+          <th class="text-center" rowspan="2" style="parding-top:10px;">日期\座席</th>
+          <th class="text-center" colspan="2">赵冠楠</th>
+          <th class="text-center" colspan="2">赵冠楠</th>
+          <th class="text-center" colspan="2">赵冠楠</th>
+          <th class="text-center" colspan="2">赵冠楠</th>
+          <th class="text-center" colspan="2">总计</th>
+        </tr>
+        <tr>
+          <th class="text-center">呼入</th>
+          <th class="text-center">呼出</th>
+          <th class="text-center">呼入</th>
+          <th class="text-center">呼出</th>
+          <th class="text-center">呼入</th>
+          <th class="text-center">呼出</th>
+          <th class="text-center">呼入</th>
+          <th class="text-center">呼出</th>
+          <th class="text-center">呼入</th>
+          <th class="text-center">呼出</th>
         </tr>
       </thead>
       <tbody>
 </tbody>
 <tfoot>
 
-  </tfoot>
+</tfoot>
 </table>
-        </div>
-        <div class="tab-pane active" id="zzcart">
-          
-
-        </div>
-    </div>
+</div>
+      
+</div>
 
 
 </div>
 </div>
+
+<%- include ../../datepicker-exten.html %>
   <script type="text/javascript">
   function setyear(){
         var now = new Date(); //当前日期 
@@ -125,10 +139,30 @@
    ty=nowYear-5;
   $("<option value='" + ty + "'  >" + ty + "年</option>").appendTo("#thisyear");
   }
+
+  function FullToHalf(str){ 
+　　str+=""; 
+　　var result=""; 
+　　for (var i = 0; i < str.length; i++){ 
+　　　if (str.charCodeAt(i)==12288){ 
+　　　　result+= String.fromCharCode(str.charCodeAt(i)-12256); 
+　　　　continue; 
+　　　} 
+　　　if (str.charCodeAt(i)>65280 && str.charCodeAt(i)<65375)
+         result+= String.fromCharCode(str.charCodeAt(i)-65248); 
+　　　else 
+        result+= String.fromCharCode(str.charCodeAt(i)); 
+　　} 
+　　return result; 
+　} 
+
   </script>
 
     <script type="text/javascript">
     $(function(){       
+
+
+
 $('.datetime').datetimepicker({
 format:"yyyy-mm-dd",
 weekStart:1,
@@ -145,7 +179,7 @@ language:'zh-CN'
 $("input[name='iswork']").click(function(){
   var checkval=$("input[name='iswork']:checked").val();
       if ( checkval == 'days' || checkval=='week'  ) {
-         $('.datetime').val("");   
+$('.datetime').val("");   
 $('.datetime').datetimepicker('remove');
 $('.datetime').datetimepicker({
 format:"yyyy-mm-dd",
@@ -160,8 +194,8 @@ language:'zh-CN'
 });
 
       }
-     else if(checkval=='month' || checkval=='jidu'){
-       $('.datetime').val("");   
+ else if(checkval=='month' || checkval=='jidu'){
+$('.datetime').val("");   
 $('.datetime').datetimepicker('remove');
 $('.datetime').datetimepicker({
 format:"yyyy-mm",
@@ -192,7 +226,26 @@ language:'zh-CN'
 });
       
       }
+
+
+
+
+
+
     });
+
+//日历完成
+
+$("#search").click(function(){
+var timefrom=$("#timefrom").val()==""?"1979-01-01":$("#timefrom").val();
+var timeto=$("#timeto").val()==""?"2999-12-31":$("#timeto").val();
+if(timeto < timefrom)
+alert("结束时间小于开始时间");
+return false;
+});
+
+
+
 
 });
 
