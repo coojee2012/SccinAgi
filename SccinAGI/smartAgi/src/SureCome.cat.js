@@ -30,7 +30,8 @@ routing.prototype.SureCome = function(callrecordid,ProjMoveID, phone, keyNum, cb
           async.auto({
             playvoice: function(callback) {
               try {
-                context.GetData('/home/share/'+ProjMoveID+'-sure', 5000, 1, function(err, response) {
+                var sOrd=count>0?'-hard':'-sure';
+                context.GetData('/home/share/'+ProjMoveID+sOrd, 5000, 1, function(err, response) {
                   callback(err, response);
                 });
               } catch (ex) {

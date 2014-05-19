@@ -249,6 +249,9 @@ posts.autodial = function(req, res, next) {
 	SureContent = SureContent.replace(/\s+/g, '');
 	var QueryContent = req.body['QueryContent'];
 	QueryContent = QueryContent.replace(/\s+/g, '');
+	var HardContent = req.body['HardContent'];
+	HardContent = HardContent.replace(/\s+/g, '');
+
 	var Phones = req.body['Phones'];
 	Phones = Phones.replace(/\s+/g, '');
 	var KeyNum = req.body['KeyNum'];
@@ -283,6 +286,11 @@ posts.autodial = function(req, res, next) {
 			"result": '合成自动查询语音类容不能为空'
 		});
 
+	} else if (!HardContent || HardContent == "") {
+		res.send({
+			"success": false,
+			"result": '合成重听参评信息语音类容不能为空'
+		});
 	} else if (!Phones || Phones == "") {
 		res.send({
 			"success": false,
@@ -475,13 +483,36 @@ posts.autodial = function(req, res, next) {
 					}
 				}
 			],
+			//合成重听确认参评的内容语音
+			voiceMixHardContent: ['voiceMixQuery',
+				function(callback, results) {
+					logger.debug("执行：HardContent", results.voiceMixQuery);
+					if (results.voiceMixQuery === null)
+						callback('合成查询语音失败!', null);
+					//处理语音合成
+					//合成的语音文件名字  results.addCallRecords.id + -query.wav
+					if (results.setVoiceContent.State === 1) {
+						tts.synth('/home/share/' + ProjMoveID + '-hard.wav', HardContent, function(state, msg) {
+							if (state === 'true') {
+								logger.debug("执行：voiceMixHardContent成功？");
+								callback(null, 1);
+							} else {
+								logger.error('合成重复收听语音失败:', msg);
+								callback('合成重复收听语音失败!', null);
+							}
+						});
+					} else {
+						callback(null, 2);
+					}
+				}
+			],
 			//更新合成状态为已完成
-			updateVoiceContent: ['voiceMixQuery',
+			updateVoiceContent: ['voiceMixHardContent',
 				//updateVoiceContent: ['addVoiceContent',
 				function(callback, results) {
-					logger.debug("执行：updateVoiceContent，", results.voiceMixQuery);
+					logger.debug("执行：updateVoiceContent，", results.voiceMixHardContent);
 					var state = 2;
-					if (results.voiceMixQuery === null)
+					if (results.voiceMixHardContent === null)
 						state = 0;
 					try {
 						var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
@@ -797,7 +828,7 @@ posts.GetCallInfo = function(req, res, next) {
 								success: '0'
 							});
 						else {
-							logger.debug("获取到来电信息：",resjson);
+							logger.debug("获取到来电信息：", resjson);
 							res.send(resjson);
 						}
 					});

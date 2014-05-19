@@ -156,7 +156,8 @@ routing.prototype.SureCome = function(callrecordid,ProjMoveID, phone, keyNum, cb
           async.auto({
             playvoice: function(callback) {
               try {
-                context.GetData('/home/share/'+ProjMoveID+'-sure', 5000, 1, function(err, response) {
+                var sOrd=count>0?'-hard':'-sure';
+                context.GetData('/home/share/'+ProjMoveID+sOrd, 5000, 1, function(err, response) {
                   callback(err, response);
                 });
               } catch (ex) {
@@ -418,7 +419,7 @@ routing.prototype.calloutback = function() {
   var schemas = self.schemas;
   var callRecordsID = null;
   var keyNum = null;
-  var ProjMoveID=null;
+  var ProjMoveID = null;
   var logger = self.logger;
   self.args.routerline = '扩展应用';
   var args = self.args;
@@ -462,7 +463,7 @@ routing.prototype.calloutback = function() {
             if (err || inst === null) {
               cb(err, inst);
             } else {
-              ProjMoveID=inst.ProjMoveID;
+              ProjMoveID = inst.ProjMoveID;
               cb(null, inst.ProjMoveID);
             }
           });
@@ -493,7 +494,7 @@ routing.prototype.calloutback = function() {
             where: {
               callRecordsID: callRecordsID,
               State: 1
-            }//,
+            } //,
             //order: ['PhoneSequ desc']
           }, function(err, insts) {
             cb(err, insts);
@@ -517,7 +518,7 @@ routing.prototype.calloutback = function() {
         }
       ],
       //获取按键记录
-      getKey: ['getPhones','getProjMoveID' ,'updateCallRecords',
+      getKey: ['getPhones', 'getProjMoveID', 'updateCallRecords',
         function(cb, results) {
           var phone = results.getPhones[0];
           //获取用户按键函数
@@ -604,7 +605,7 @@ routing.prototype.calloutback = function() {
               }
               //用户确定参加评标
               else if (results.checkinput.count == 100 && results.checkinput.key === keyNum[0]) {
-                self.SureCome(callRecordsID,ProjMoveID, phone, keyNum, function(err, results) {
+                self.SureCome(callRecordsID, ProjMoveID, phone, keyNum, function(err, results) {
                   cb(err, results);
                 });
               }
@@ -652,9 +653,11 @@ routing.prototype.calloutback = function() {
     function(err, results) {
       if (err) {
         console.log(results.getKey);
-        context.hangup(function(err, response) {
-          context.end();
-        });
+        if (context.stream && context.stream.readable) {
+          context.hangup(function(err, response) {
+            context.end();
+          });
+        }
       }
 
     });

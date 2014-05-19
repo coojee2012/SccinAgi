@@ -257,7 +257,7 @@ var pbxIvrInputs=schema.define('pbxIvrInputs',{
 	generalargs:   {type:String,length:150},//错误响应参数
 	inputnum:   {type: String,length:10},
 	gotoivrnumber:   {type: String,length:50},
-	gotoivractid:   {type: String,default: function () {return '1';}}
+	gotoivractid:   {type: String,length:100,default: function () {return '1';}}
 });
 
 
@@ -477,7 +477,7 @@ var pbxScreenPop = schema.define('pbxScreenPop', {
 		default: function() {
 			return '';
 		}
-	} //弹出类型:diallocal,dialout
+	} //弹出类型:diallocal,dialout,dialqueue
 });
 pbxScreenPop.Name = 'pbxScreenPop';
 schema.models.pbxScreenPop;
