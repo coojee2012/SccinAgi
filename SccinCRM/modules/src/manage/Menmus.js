@@ -13,7 +13,7 @@ var manageMenmus=schema.define('manageMenmus',{
 	menURL:    {type:String,length:150},
 	iconName:  {type:String,length:150},
     mgID:      {type: Number, default: function () { return 1 }},
-	crtTime:   {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	crtTime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	width:	{type:Number,default:function () { return 960 }},
 	height:	{type:Number,default:function () { return 540 }},
 	ordernum:	{type:Number,default:function () { return 0 }}

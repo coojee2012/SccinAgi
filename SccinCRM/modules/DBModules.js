@@ -417,7 +417,7 @@ var pbxScreenPop=schema.define('pbxScreenPop',{
 	status:   {type:String,length:10,default:function () { return 'over'; }},//弹出类型:waite,over
 	routerdype:   {type:Number,default:function () { return 1; }},//呼叫路由1内线2外线
 	parked:   {type:String,length:50,default:function () { return 'not'; }},//保持状态：yes ,not
-	poptype:    {type:String,length:50,default:function () { return ''; }}//弹出类型:diallocal,dialout
+	poptype:    {type:String,length:50,default:function () { return ''; }}//弹出类型:diallocal,dialout,dialqueue
 });
 pbxScreenPop.Name='pbxScreenPop';
 schema.models.pbxScreenPop;
@@ -504,8 +504,8 @@ var schema = require(basedir+'/database/jdmysql').schema;*/
 var manageDepartments=schema.define('manageDepartments',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
 	depName:   {type:String,length:50},
-	crtTime:   {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
-	lastModify:  {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	crtTime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastModify:  {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	memo:    {type:String,length:200}
 });
 
@@ -532,7 +532,7 @@ var manageMenmuRoleRelations=schema.define('manageMenmuRoleRelations',{
 	id:{type:String,length:100,default:function(){return guid.create();}},
 	roleId:   {type:String,length:100},
 	menmuID:  {type:String,length:100},
-	crtTime:   {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+	crtTime:  {type:String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
 });
 
 manageMenmuRoleRelations.Name='manageMenmuRoleRelations';
@@ -555,7 +555,7 @@ var manageMenmus=schema.define('manageMenmus',{
 	menURL:    {type:String,length:150},
 	iconName:  {type:String,length:150},
     mgID:      {type: Number, default: function () { return 1 }},
-	crtTime:   {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	crtTime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	width:	{type:Number,default:function () { return 960 }},
 	height:	{type:Number,default:function () { return 540 }},
 	ordernum:	{type:Number,default:function () { return 0 }}
@@ -582,8 +582,8 @@ var manageUserRole=schema.define('manageUserRole',{
 	roleName:   {type:String,length:50},
 	isAgent:{type: String,length:10, default: function () { return '否' }},
 	hasPtions:   {type: Number, default: function () { return 0 }},
-	crtTime:   {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
-	lastModify:  {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	crtTime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastModify:  {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	memo:    {type:String,length:200}
 });
 
@@ -622,10 +622,10 @@ var manageUserInfo=schema.define('manageUserInfo',{
 	readOnly:{type:String,length:10,default:function () { return '否' }},
     roleId:{type:String,length:100},
     depId:{type:String,length:100},
-	uMemo:{type:String,limit:50},
-	crtTime:{type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
-	lastChangeTime:{type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
-	lastLoginTime:{type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+	uMemo:{type:String,length:50},
+	crtTime:{type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastChangeTime:{type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastLoginTime:{type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
 });
 
 manageUserInfo.belongsTo(manageUserRole, {as: 'role', foreignKey: 'roleId'});

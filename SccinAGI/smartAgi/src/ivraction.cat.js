@@ -799,6 +799,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
                       getobj = JSON.parse(getstr);
                     } catch (ex) {
                       logger.error("WEB交互返回值不是一个有效的JSON数据：", getstr);
+                      getobj={};
                       getobj.success = false;
                     }
 

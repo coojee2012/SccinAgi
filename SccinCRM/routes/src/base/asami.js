@@ -243,13 +243,13 @@ posts.autodial = function(req, res, next) {
 	//res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
 	var CallInfoID = req.body['CallInfoID'];
 	var ProjMoveID = req.body['ProjMoveID'];
-	var NoticeContent = req.body['NoticeContent'];
+	var NoticeContent = req.body['NoticeContent'] || "";
 	NoticeContent = NoticeContent.replace(/\s+/g, '');
-	var SureContent = req.body['SureContent'];
+	var SureContent = req.body['SureContent'] || "";
 	SureContent = SureContent.replace(/\s+/g, '');
-	var QueryContent = req.body['QueryContent'];
+	var QueryContent = req.body['QueryContent'] || "";
 	QueryContent = QueryContent.replace(/\s+/g, '');
-	var HardContent = req.body['HardContent'];
+	var HardContent = req.body['HardContent'] || "";
 	HardContent = HardContent.replace(/\s+/g, '');
 
 	var Phones = req.body['Phones'];

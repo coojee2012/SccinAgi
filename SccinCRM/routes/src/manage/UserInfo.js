@@ -19,7 +19,7 @@ module.exports = {
 var checkFun = {};
 
 //登陆帐号验证
-checkFun['uLogin'] = function (uLogin, res) {
+checkFun['uLogin'] = function(uLogin, res) {
     //console.log(uLogin);
     if (!uLogin || uLogin == '') {
         res.send({
@@ -31,7 +31,7 @@ checkFun['uLogin'] = function (uLogin, res) {
             where: {
                 uLogin: uLogin
             }
-        }, function (err, inst) {
+        }, function(err, inst) {
             if (err)
                 res.send({
                     "info": "后台验证发生错误！",
@@ -55,7 +55,7 @@ checkFun['uLogin'] = function (uLogin, res) {
 };
 
 //处理页面需要的Ajax验证
-posts.checkAjax = function (req, res, next, baseurl) {
+posts.checkAjax = function(req, res, next, baseurl) {
     var param = req.body['param'];
     var name = req.body['name'];
     if (typeof(checkFun[name] === 'function')) {
@@ -70,7 +70,7 @@ posts.checkAjax = function (req, res, next, baseurl) {
 }
 
 //用户列表显示
-gets.index = function (req, res, next, baseurl) {
+gets.index = function(req, res, next, baseurl) {
     res.render('manage/UserInfo/list.html', {
         baseurl: baseurl,
         modename: 'manageUserInfo'
@@ -78,8 +78,8 @@ gets.index = function (req, res, next, baseurl) {
 }
 
 //新建
-gets.create = function (req, res, next, baseurl) {
-    Schemas['manageDepartments'].all({}, function (err, dbs) {
+gets.create = function(req, res, next, baseurl) {
+    Schemas['manageDepartments'].all({}, function(err, dbs) {
         if (err) {
             next(err);
         } else {
@@ -88,16 +88,14 @@ gets.create = function (req, res, next, baseurl) {
                 str += '<option value="' + dbs[i].id + '"> ' + dbs[i].depName + ' </option>';
             }
 
-            Schemas["manageUserRole"].all({}, function (roleerr, roledbs) {
+            Schemas["manageUserRole"].all({}, function(roleerr, roledbs) {
                 if (roleerr) {
                     next(roleerr);
-                }
-                else {
+                } else {
                     var rolestr = "";
                     for (var i = 0; i < roledbs.length; i++) {
                         rolestr += '<option value="' + roledbs[i].id + '"> ' + roledbs[i].roleName + ' </option>';
-                    }
-                    ;
+                    };
                     res.render('manage/UserInfo/create.html', {
                         baseurl: baseurl,
                         departments: str,
@@ -109,11 +107,11 @@ gets.create = function (req, res, next, baseurl) {
     });
 }
 //编辑
-gets.edit = function (req, res, next, baseurl) {
+gets.edit = function(req, res, next, baseurl) {
     var id = req.query["id"];
     async.auto({
-            findUser: function (cb) {
-                Schemas['manageUserInfo'].find(id, function (err, inst) {
+            findUser: function(cb) {
+                Schemas['manageUserInfo'].find(id, function(err, inst) {
                     if (err || inst == null)
                         cb('编辑查找用户发生错误或用户不存在！', inst);
                     else
@@ -121,8 +119,8 @@ gets.edit = function (req, res, next, baseurl) {
                 });
             },
             findDepartment: ['findUser',
-                function (cb, results) {
-                    Schemas['manageDepartments'].all({}, function (err, dbs) {
+                function(cb, results) {
+                    Schemas['manageDepartments'].all({}, function(err, dbs) {
                         if (err) {
                             cb('编辑用户查找部门发生错误', -1);
                         } else {
@@ -133,19 +131,17 @@ gets.edit = function (req, res, next, baseurl) {
                                 else
                                     str += '<option value="' + dbs[i].id + '"> ' + dbs[i].depName + ' </option>';
                             }
-                            Schemas["manageUserRole"].all({}, function (roleerr, roledbs) {
+                            Schemas["manageUserRole"].all({}, function(roleerr, roledbs) {
                                 if (roleerr) {
                                     cb('编辑用户查找角色发生错误', -1);
-                                }
-                                else {
+                                } else {
                                     var rolestr = "";
                                     for (var i = 0; i < roledbs.length; i++) {
                                         if (roledbs[i].id === results.findUser.roleId)
                                             rolestr += '<option selected="selected" value="' + roledbs[i].id + '"> ' + roledbs[i].roleName + ' </option>';
                                         else
                                             rolestr += '<option value="' + roledbs[i].id + '"> ' + roledbs[i].roleName + ' </option>';
-                                    }
-                                    ;
+                                    };
                                     cb(null, {
                                         departments: str,
                                         roles: rolestr
@@ -157,7 +153,7 @@ gets.edit = function (req, res, next, baseurl) {
                 }
             ]
         },
-        function (err, results) {
+        function(err, results) {
             res.render('manage/UserInfo/edit.html', {
                 baseurl: baseurl,
                 inst: results.findUser,
@@ -169,39 +165,39 @@ gets.edit = function (req, res, next, baseurl) {
 
 
 //保存（适用于新增和修改）
-posts.save = function (req, res, next, baseurl) {
+posts.save = function(req, res, next, baseurl) {
     var Obj = {};
     for (var key in req.body) {
         Obj[key] = req.body[key];
     }
     //console.log(Obj);
     async.auto({
-            isHaveCheck: function (cb) {
+            isHaveCheck: function(cb) {
                 if (!Obj.uLogin || Obj.uLogin === '') {
                     cb('登陆用户不能为空', -1);
                 } else {
-                    Schemas['manageUserInfo'].find(Obj.id, function (err, inst) {
+                    Schemas['manageUserInfo'].find(Obj.id, function(err, inst) {
                         cb(err, inst);
                     });
                 }
             },
             createNew: ['isHaveCheck',
-                function (cb, results) {
+                function(cb, results) {
                     if (results.isHaveCheck !== null) { //如果存在本函数什么都不做
                         cb(null, -1);
                     } else {
-
+                        Obj.id = guid.create();
                         var md5 = crypto.createHash('md5');
                         Obj.uPass = md5.update(Obj.uPass).digest('hex').toUpperCase();
 
-                        Schemas['manageUserInfo'].create(Obj, function (err, inst) {
+                        Schemas['manageUserInfo'].create(Obj, function(err, inst) {
                             cb(err, inst);
                         });
                     }
                 }
             ],
             updateOld: ['isHaveCheck',
-                function (cb, results) {
+                function(cb, results) {
                     if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
                         cb(null, -1);
                     } else {
@@ -213,21 +209,21 @@ posts.save = function (req, res, next, baseurl) {
                                 id: Obj.id
                             },
                             update: Obj
-                        }, function (err, inst) {
+                        }, function(err, inst) {
                             cb(err, inst);
                         });
                     }
                 }
             ]
         },
-        function (err, results) {
+        function(err, results) {
             var myjson = {
                 success: '',
                 id: '',
                 msg: ''
             };
             if (results.createNew !== -1) {
-                results.createNew.isValid(function (valid) {
+                results.createNew.isValid(function(valid) {
                     if (!valid) {
                         myjson.success = 'ERROR';
                         myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
@@ -252,9 +248,9 @@ posts.save = function (req, res, next, baseurl) {
 }
 
 
-posts.delete = function (req, res, next, baseurl) {
+posts.delete = function(req, res, next, baseurl) {
     var id = req.body['id'];
-    Schemas['manageUserInfo'].find(id, function (err, inst) {
+    Schemas['manageUserInfo'].find(id, function(err, inst) {
         var myjson = {};
         if (err) {
             myjson.success = 'ERROR';
@@ -266,7 +262,7 @@ posts.delete = function (req, res, next, baseurl) {
             } else {
 
             }
-            inst.destroy(function (err) {
+            inst.destroy(function(err) {
                 if (err) {
                     myjson.success = 'ERROR';
                     myjson.msg = '删除数据发生异常,请联系管理员！！';

@@ -4,6 +4,7 @@ var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var Schemas = require(basedir + '/database/schema').Schemas;
 var moment = require('moment');
+var async = require("async");
 
 var logger = require(basedir + '/lib/logger').logger('web');
 var gets = {};
@@ -17,7 +18,7 @@ module.exports = {
 var checkFun = {};
 
 //登陆帐号验证
-checkFun['depName'] = function (depName, res) {
+checkFun['depName'] = function(depName, res) {
     //console.log(depName);
     if (!depName || depName == '') {
         res.send({
@@ -29,7 +30,7 @@ checkFun['depName'] = function (depName, res) {
             where: {
                 depName: depName
             }
-        }, function (err, inst) {
+        }, function(err, inst) {
             if (err)
                 res.send({
                     "info": "后台验证发生错误！",
@@ -53,7 +54,7 @@ checkFun['depName'] = function (depName, res) {
 };
 
 //处理页面需要的Ajax验证
-posts.checkAjax = function (req, res, next, baseurl) {
+posts.checkAjax = function(req, res, next, baseurl) {
     var param = req.body['param'];
     var name = req.body['name'];
     if (typeof(checkFun[name] === 'function')) {
@@ -68,7 +69,7 @@ posts.checkAjax = function (req, res, next, baseurl) {
 }
 
 //部门列表显示
-gets.index = function (req, res, next, baseurl) {
+gets.index = function(req, res, next, baseurl) {
     res.render('manage/Departments/list.html', {
         baseurl: baseurl,
         modename: 'manageDepartments'
@@ -76,24 +77,24 @@ gets.index = function (req, res, next, baseurl) {
 }
 
 //新建
-gets.create = function (req, res, next, baseurl) {
+gets.create = function(req, res, next, baseurl) {
     res.render('manage/Departments/create.html', {
         baseurl: baseurl
     });
 }
 //编辑
-gets.edit = function (req, res, next, baseurl) {
+gets.edit = function(req, res, next, baseurl) {
     var id = req.query["id"];
     async.auto({
-        findUser: function (cb) {
-            Schemas['manageDepartments'].find(id, function (err, inst) {
+        findUser: function(cb) {
+            Schemas['manageDepartments'].find(id, function(err, inst) {
                 if (err || inst == null)
                     cb('编辑查找部门发生错误或部门不存在！', inst);
                 else
                     cb(err, inst);
             });
         }
-    }, function (err, results) {
+    }, function(err, results) {
         res.render('manage/Departments/edit.html', {
             baseurl: baseurl,
             inst: results.findUser
@@ -103,36 +104,36 @@ gets.edit = function (req, res, next, baseurl) {
 
 
 //保存（适用于新增和修改）
-posts.save = function (req, res, next, baseurl) {
+posts.save = function(req, res, next, baseurl) {
     var Obj = {};
     for (var key in req.body) {
         Obj[key] = req.body[key];
     }
     //console.log(Obj);
     async.auto({
-            isHaveCheck: function (cb) {
+            isHaveCheck: function(cb) {
                 if (!Obj.depName || Obj.depName === '') {
                     cb('部门不能为空', -1);
                 } else {
-                    Schemas['manageDepartments'].find(Obj.id, function (err, inst) {
+                    Schemas['manageDepartments'].find(Obj.id, function(err, inst) {
                         cb(err, inst);
                     });
                 }
             },
             createNew: ['isHaveCheck',
-                function (cb, results) {
+                function(cb, results) {
                     if (results.isHaveCheck !== null) { //如果存在本函数什么都不做
                         cb(null, -1);
                     } else {
-
-                        Schemas['manageDepartments'].create(Obj, function (err, inst) {
+                        Obj.id = guid.create();
+                        Schemas['manageDepartments'].create(Obj, function(err, inst) {
                             cb(err, inst);
                         });
                     }
                 }
             ],
             updateOld: ['isHaveCheck',
-                function (cb, results) {
+                function(cb, results) {
                     if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
                         cb(null, -1);
                     } else {
@@ -142,21 +143,21 @@ posts.save = function (req, res, next, baseurl) {
                                 id: Obj.id
                             },
                             update: Obj
-                        }, function (err, inst) {
+                        }, function(err, inst) {
                             cb(err, inst);
                         });
                     }
                 }
             ]
         },
-        function (err, results) {
+        function(err, results) {
             var myjson = {
                 success: '',
                 id: '',
                 msg: ''
             };
             if (results.createNew !== -1) {
-                results.createNew.isValid(function (valid) {
+                results.createNew.isValid(function(valid) {
                     if (!valid) {
                         myjson.success = 'ERROR';
                         myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
@@ -181,9 +182,9 @@ posts.save = function (req, res, next, baseurl) {
 }
 
 
-posts.delete = function (req, res, next, baseurl) {
+posts.delete = function(req, res, next, baseurl) {
     var id = req.body['id'];
-    Schemas['manageDepartments'].find(id, function (err, inst) {
+    Schemas['manageDepartments'].find(id, function(err, inst) {
         var myjson = {};
         if (err) {
             myjson.success = 'ERROR';
@@ -195,7 +196,7 @@ posts.delete = function (req, res, next, baseurl) {
             } else {
 
             }
-            inst.destroy(function (err) {
+            inst.destroy(function(err) {
                 if (err) {
                     myjson.success = 'ERROR';
                     myjson.msg = '删除数据发生异常,请联系管理员！！';

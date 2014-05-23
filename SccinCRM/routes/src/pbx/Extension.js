@@ -133,8 +133,9 @@ posts.save = function(req, res, next, baseurl) {
 	extenObj.devicestring = '';
 	for (var key in req.body) {
 		if (/^str\_(\S+)/.test(key)) {
-			console.log(RegExp.$1);
-			extenObj.devicestring += RegExp.$1 + '=' + req.body[key] + '&';
+			var t=RegExp.$1;
+			console.log(t);
+			extenObj.devicestring += t + '=' + req.body[key] + '&';
 		} else {
 			extenObj[key] = req.body[key];
 		}

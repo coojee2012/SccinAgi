@@ -11,8 +11,8 @@ var manageUserRole=schema.define('manageUserRole',{
 	roleName:   {type:String,length:50},
 	isAgent:{type: String,length:10, default: function () { return '否' }},
 	hasPtions:   {type: Number, default: function () { return 0 }},
-	crtTime:   {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
-	lastModify:  {type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	crtTime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastModify:  {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
 	memo:    {type:String,length:200}
 });
 

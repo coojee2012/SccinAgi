@@ -21,10 +21,10 @@ var manageUserInfo=schema.define('manageUserInfo',{
 	readOnly:{type:String,length:10,default:function () { return '否' }},
     roleId:{type:String,length:100},
     depId:{type:String,length:100},
-	uMemo:{type:String,limit:50},
-	crtTime:{type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
-	lastChangeTime:{type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
-	lastLoginTime:{type: Date, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+	uMemo:{type:String,length:50},
+	crtTime:{type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastChangeTime:{type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastLoginTime:{type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
 });
 
 manageUserInfo.belongsTo(manageUserRole, {as: 'role', foreignKey: 'roleId'});
