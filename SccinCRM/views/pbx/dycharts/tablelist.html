@@ -1,34 +1,39 @@
-    <html>
-    <head></head>
-    <body>
-      
-
-    <table class="table table-striped table-hover table-condensed table-bordered" id="datatable">
+<table class="table table-striped table-hover table-condensed table-bordered" id="datatable">
       <thead>
         <tr>
-          <th class="text-center" rowspan="2" style="parding-top:10px;">日期\座席</th>
-          <th class="text-center" colspan="2">赵冠楠</th>
-          <th class="text-center" colspan="2">赵冠楠</th>
-          <th class="text-center" colspan="2">赵冠楠</th>
-          <th class="text-center" colspan="2">赵冠楠</th>
+          <th class="text-center" rowspan="2" style="padding-bottom:25px;">日期\座席</th>
+          <% for(var item in userinfo.unames){%>
+
+          <th class="text-center" colspan="2"><%= userinfo.unames[item]%></th>
+          <%}%>
+         
           <th class="text-center" colspan="2">总计</th>
         </tr>
         <tr>
-          <th class="text-center">呼入</th>
+         
+           <% for(var item in userinfo.unames){%>
+           <th class="text-center">呼入</th>
           <th class="text-center">呼出</th>
-          <th class="text-center">呼入</th>
-          <th class="text-center">呼出</th>
-          <th class="text-center">呼入</th>
-          <th class="text-center">呼出</th>
-          <th class="text-center">呼入</th>
-          <th class="text-center">呼出</th>
+          <%}%>
           <th class="text-center">呼入</th>
           <th class="text-center">呼出</th>
         </tr>
       </thead>
       <tbody>
-</tbody>
+        <%for(var db in datas){%>
+        <tr>
+         <td class="text-center"><%= db%></td>
+        <% for(var ii in userinfo.extens){%>
+<td class="text-center"><%= datas[db][userinfo.extens[ii]]["呼入"]%></td>
+<td class="text-center"><%= datas[db][userinfo.extens[ii]]["呼出"]%></td>
+        <%}%>
+       <td class="text-center"><%= datas[db]['总计']["呼入"]%></td>
+       <td class="text-center"><%= datas[db]['总计']["呼出"]%></td>
+         </tr>
+        <%}%>
+      </tbody>
 <tfoot>
 
 </tfoot>
-</table>    </body></html>
+</table>   
+

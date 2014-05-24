@@ -76,8 +76,8 @@
 <div class="panel-body ">
 <ul class="nav nav-tabs">
   <li class="active" id="tablelist"><a href="javascript:tabclick('tablelist')"  data-toggle="tab">统计列表</a></li>
-  <li id="zzcart"><a href="#zzcart" data-toggle="tab">柱状图</a></li>
-  <li id="bzcart"><a href="#" data-toggle="tab">饼状图</a></li>
+  <li id="zzcart"><a href="javascript:tabzzcart('zzcart')" data-toggle="tab">柱状图</a></li>
+  <li id="bzcart"><a href="javascript:tabbzcart('bzcart')" data-toggle="tab">饼状图</a></li>
   <li class="navbar-right"><a href="#">导出Excel</a></li>
 </ul>
 </div>
@@ -141,6 +141,25 @@
         });
 
   }
+
+  function tabzzcart(id){
+     $(".active").each(function(){
+     var self=this;
+     $(self).removeClass("active");
+    });
+    $("#"+id).addClass("active");
+    $("#tabcontent").html("");
+  }
+
+   function tabbzcart(id){
+     $(".active").each(function(){
+     var self=this;
+     $(self).removeClass("active");
+    });
+    $("#"+id).addClass("active");
+    $("#tabcontent").html("");
+  }
+
 
 
   </script>
@@ -228,7 +247,9 @@ alert("结束时间小于开始时间");
 return false;
 });
 
-
+$("#search").click(function(){
+tabclick('tablelist');
+});
 
 tabclick('tablelist');
 });
