@@ -1,0 +1,19 @@
+{
+  "name": "proxyBlance",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "YongLin",
+  "license": "ISC",
+   "dependencies": {
+    "node-conf": "*",
+    "log4js": "*",
+    "lodash":">=2.4.1",
+    "async": ">=0.2.9",
+    "moment": "*",
+    "http-proxy": ">=1.1.4"
+  }
+}

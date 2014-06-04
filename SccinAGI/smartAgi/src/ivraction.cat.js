@@ -497,7 +497,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             var datetimestr = "";
             var formatstr = "";
             if (actargs.sayway && actargs.sayway === 'date') {
-              formatstr = "YYMMDD";
+              formatstr = "YYYYMMDD";
             } else if (actargs.sayway && actargs.sayway === 'time') {
               formatstr = "HHmm";
             } else {
