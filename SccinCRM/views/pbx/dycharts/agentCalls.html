@@ -46,7 +46,7 @@
     <label for="timefrom" class="control-label col-sm-2 ">统计范围</label>
             <div class="controls  col-sm-4 ">
               <div class="input-group">
-            <input type="text" value="" name="timefrom" id="timefrom" data-id="time-from" class=" form-control input-sm datetimeserach datetime" placeholder="选择起始范围" readonly/>  
+            <input type="text" value="" name="timefrom" id="timefrom" data-id="time-from" class=" form-control input-sm datetimeserach datetime" placeholder="选择起始范围" />  
             <span class="input-group-addon">x</span>
              <input type="text" value="" name="timeto" id="timeto" data-id="time-to"  class=" form-control input-sm datetimeserach datetime" placeholder="选择结束范围"  /> 
             <span class="input-group-addon">x</span>
@@ -59,6 +59,7 @@
               <select class="form-control input-sm" id="dept" name="dept" data-selectdom="departments">
                 
               </select>
+              <input type="hidden" name="searchtype" id="searchtype" value="" />
             </div>
 
               <div class="controls  col-sm-1">
@@ -76,7 +77,7 @@
 <div class="panel-body ">
 <ul class="nav nav-tabs">
   <li class="active" id="tablelist"><a href="javascript:tabclick('tablelist');" >统计列表</a></li>
-  <li id="zzcart"><a href="javascript:tabzzcart('zzcart');" >柱状图</a></li>
+  <li id="zzcart"><a href="javascript:tabzzcart('zzcart');" >线形图</a></li>
   <li id="bzcart"><a href="javascript:tabbzcart('bzcart');" >饼状图</a></li>
   <li class="navbar-right"><a href="#">导出Excel</a></li>
 </ul>
@@ -92,7 +93,8 @@
 
 
 <script type="text/javascript">
-  function setyear(){
+
+ function setyear(){
         var now = new Date(); //当前日期 
   var nowYear = now.getFullYear(); //当前年 
   var ty=nowYear+5;
@@ -125,11 +127,12 @@
      $(self).removeClass("active");
     });
     $("#"+id).addClass("active");
-    
+    $("#searchtype").val(id);
+
      $.ajax({
             cache: true,
             type: "POST",
-            url: '/pbx/dycharts/'+id,
+            url: '/pbx/dycharts/chartDone',
             data: $('#form1').serialize(),
             async: false,
             error: function(request) {
@@ -147,83 +150,29 @@
      var self=this;
      $(self).removeClass("active");
     });
+
     $("#"+id).addClass("active");
-    alert(1);
-   // $("#tabcontent").html("");
-    $('#tabcontent').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Efficiency Optimization by Branch'
-        },
-        xAxis: {
-            categories: [
-                'Seattle HQ',
-                'San Francisco',
-                'Tokyo'
-            ]
-        },
-        yAxis: [{
-            min: 0,
-            title: {
-                text: 'Employees'
+    $("#searchtype").val(id);
+
+    $.ajax({
+            cache: true,
+            type: "POST",
+            url: '/pbx/dycharts/chartDone',
+            data: $('#form1').serialize(),
+            async: false,
+            error: function(request) {
+                $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+            },
+            success: function(data) {
+              try{        
+              $('#tabcontent').highcharts(JSON.parse(data)); 
+              }
+              catch(e){
+                alert(e);
+              }
+              
             }
-        },{
-            title: {
-                text: 'Profit (millions)'
-            },
-            opposite: true
-        }],
-        legend: {
-            shadow: false
-        },
-        tooltip: {
-            shared: true
-        },
-        plotOptions: {
-            column: {
-                grouping: false,
-                shadow: false,
-                borderWidth: 0
-            }
-        },
-        series: [{
-            name: 'Employees',
-            color: 'rgba(165,170,217,1)',
-            data: [150, 73, 20],
-            pointPadding: 0.3,
-            pointPlacement: -0.2
-        }, {
-            name: 'Employees Optimized',
-            color: 'rgba(126,86,134,.9)',
-            data: [140, 90, 40],
-            pointPadding: 0.4,
-            pointPlacement: -0.2
-        },{
-            name: 'Profit',
-            color: 'rgba(248,161,63,1)',
-            data: [183.6, 178.8, 198.5],
-            tooltip: {
-                valuePrefix: '$',
-                valueSuffix: ' M'
-            },
-            pointPadding: .3,
-            pointPlacement: 0.2,
-            yAxis: 1
-        },{
-            name: 'Profit Optimized',
-            color: 'rgba(186,60,61,.9)',
-            data: [203.6, 198.8, 208.5],
-            tooltip: {
-                valuePrefix: '$',
-                valueSuffix: ' M'
-            },
-            pointPadding: .4,
-            pointPlacement: 0.2,
-            yAxis: 1
-        }]
-    });
+        });
   }
 
    function tabbzcart(id){
@@ -232,7 +181,27 @@
      $(self).removeClass("active");
     });
     $("#"+id).addClass("active");
-    $("#tabcontent").html("");
+    $("#searchtype").val(id);
+
+     $.ajax({
+            cache: true,
+            type: "POST",
+            url: '/pbx/dycharts/chartDone',
+            data: $('#form1').serialize(),
+            async: false,
+            error: function(request) {
+                $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+            },
+            success: function(data) {
+              try{        
+              $('#tabcontent').highcharts(JSON.parse(data)); 
+              }
+              catch(e){
+                alert(e);
+              }
+              
+            }
+        });
   }
 
 
@@ -241,7 +210,7 @@
 
 <script type="text/javascript">
 $(function(){       
-$('.datetime').datetimepicker({
+/*$('.datetime').datetimepicker({
 format:"yyyy-mm-dd",
 weekStart:1,
 autoclose:true,//false,true
@@ -251,15 +220,28 @@ maxView:"year",//default:decade
 todayBtn:false,//Default: false
 todayHighlight:true,
 language:'zh-CN'
-});
+});*/
 
 
 $("input[name='iswork']").click(function(){
   var checkval=$("input[name='iswork']:checked").val();
-      if ( checkval == 'days' || checkval=='week'  ) {
-$('.datetime').val("");   
-$('.datetime').datetimepicker('remove');
-$('.datetime').datetimepicker({
+
+
+if ( checkval == 'days' || checkval=='week'  ) {
+$('.datetime').each(function(){
+  var self=this;
+  $(self).val("");
+});
+
+$('.datetime').each(function(){
+  var self=this;
+  $(self).datetimepicker().unbind('changeDate');
+  $(self).datetimepicker('remove');
+});  
+
+$('.datetime').each(function(){
+  var self=this;
+  $(self).datetimepicker({
 format:"yyyy-mm-dd",
 weekStart:1,
 autoclose:true,//false,true
@@ -269,27 +251,124 @@ maxView:"year",//default:decade
 todayBtn:false,//Default: false
 todayHighlight:true,
 language:'zh-CN'
+}).on('changeDate', function(ev){
+   var self=this;
+   var k = $(self).data("id") || $(self).attr("data-id");
+            if (k && k != "") {
+                var k2 = k.split("\-");
+                if (k2[1] && k2[1] == "from") {
+                    var vto = $("[data-id='" + k2[0] + "-to']")[0];
+                    vto = $(vto).val() + " 23:59:59";
+                    // var vto = $("#" + k2[0] + "-to").val() + " 23:59:59";
+                    var vfrom = ev.date.valueOf();
+                    var myDate = new Date(vto);
+                    var vtov = myDate.valueOf();
+                    if (vto != "" && ev.date.valueOf() > vtov) {
+                        alert("开始时间不能大于结束时间！");
+                        $(self).val("");
+                        return false;
+                    }
+
+                } else if (k2[1] && k2[1] == 'to') {
+                    var vto = $("[data-id='" + k2[0] + "-from']")[0];
+                    vto = $(vto).val() + " 00:00:00";
+
+                    //var vto = $("#" + k2[0] + "-from").val() + " 00:00:00";
+                    var vfrom = ev.date.valueOf();
+                    var myDate = new Date(vto);
+                    var vtov = myDate.valueOf();
+                    if (vto != "" && ev.date.valueOf() < vtov) {
+                        alert("结束时间不能小于开始时间！");
+                        $(self).val("");
+                        return false;
+                    }
+
+                } else {
+
+                }
+            }
 });
 
-      }
+});
+}
+
  else if(checkval=='month' || checkval=='jidu'){
-$('.datetime').val("");   
-$('.datetime').datetimepicker('remove');
-$('.datetime').datetimepicker({
+
+  $('.datetime').each(function(){
+  var self=this;
+  $(self).val("");
+});
+
+$('.datetime').each(function(){
+  var self=this;
+   $(self).datetimepicker().unbind('changeDate');
+  $(self).datetimepicker('remove');
+});  
+
+$('.datetime').each(function(){
+  var self=this;
+  $(self).datetimepicker({
 format:"yyyy-mm",
 weekStart:1,
 autoclose:true,//false,true
-startView:'decade',//hour,day,month,year,decade
+startView:'year',//hour,day,month,year,decade
 minView:'year',//default:hour
 maxView:"decade",//default:decade
 todayBtn:false,//Default: false
 todayHighlight:true,
 language:'zh-CN'
+}).on('changeDate', function(ev){
+  var self=this;
+  var k = $(self).data("id") || $(self).attr("data-id");
+            if (k && k != "") {
+                var k2 = k.split("\-");
+                if (k2[1] && k2[1] == "from") {
+                    var vto = $("[data-id='" + k2[0] + "-to']")[0];
+                    if( $(vto).val()=="")
+                      return true;
+                    vto = $(vto).val() + "-01 23:59:59";
+                    var vfrom = ev.date.valueOf();
+                    var myDate = new Date(vto);
+                    var vtov = myDate.getFullYear();
+                    if (vto != "" && ev.date.getFullYear() != vtov) {
+                        alert("不能跨年统计！");
+                        $(self).val("");
+                        return false;
+                        
+                    }
+
+                } else if (k2[1] && k2[1] == 'to') {
+                    var vto = $("[data-id='" + k2[0] + "-from']")[0];
+                    if( $(vto).val()=="")
+                      return true;
+                    vto = $(vto).val() + "-01 00:00:00";
+
+                    //var vto = $("#" + k2[0] + "-from").val() + " 00:00:00";
+                    var vfrom = ev.date.getFullYear();
+                    var myDate = new Date(vto);
+                    var vtov = myDate.getFullYear();
+                    if (vto != "" && ev.date.getFullYear() != vtov) {
+                        alert("不能跨年统计！");
+                        $(self).val("");
+                        return false;
+                        
+                    }
+
+                } else {
+
+                }
+            }
 });
+
+});
+
+
+
 
       }
       else{
- $('.datetime').val("");       
+ $('.datetime').val("");
+$('.datetime').datetimepicker().unbind('changeDate');       
 $('.datetime').datetimepicker('remove');
 $('.datetime').datetimepicker({
 format:"yyyy",
@@ -312,6 +391,7 @@ language:'zh-CN'
 
     });
 
+$("#days").click();
 //日历完成
 
 $("#search").click(function(){

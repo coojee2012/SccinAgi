@@ -61,17 +61,22 @@
                 <label for="lable" class="control-label col-sm-2">录音类型</label>
                 <div class="controls  col-sm-2">
                   <input type="text" value="" name="lable" id="lable"  class="form-control input-sm"></div>
-                  <label for="cretimeFrom" class="control-label col-sm-2">记录时间 从</label>
-                  <div class="controls  col-sm-2">
-                    <input type="text" value="" name="cretimeFrom" id="cretimeFrom"  class="form-control input-sm"></div>
 
-                    <label for="cretimeTo" class="control-label col-sm-2">到</label>
-                    <div class="controls  col-sm-2">
-                      <input type="text" value="" name="cretimeTo" id="cretimeTo"  class="form-control input-sm"></div>
-                      <label for="search" class="control-label col-sm-2"></label>
+
+                  <label for="cretimeFrom" class="control-label col-sm-2">记录时间</label>
+                  <div class="controls  col-sm-4">
+                    <div class="input-group">
+                    <input type="text" value="" name="cretimeFrom" id="cretimeFrom" data-id="a-from"  class="form-control input-sm datetimeserach" placeholder="选择起始">
+                    <span class="input-group-addon">x</span>
+                      <input type="text" value="" name="cretimeTo" id="cretimeTo" data-id="a-to" class="form-control input-sm datetimeserach" placeholder="选择结束">
+                      <span class="input-group-addon">x</span>
+                    </div>
+                    </div>
+                      
                       <div class="controls  col-sm-2">
                         <input type="button" class="btn btn-primary btn-sm" id="search" value="查询"></div>
                       </div>
+                      <div class="controls  col-sm-4"></div>
                     </div>
                   </div>
                 </div>

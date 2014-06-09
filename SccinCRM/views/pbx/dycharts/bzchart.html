@@ -1,0 +1,47 @@
+{
+        "chart": {
+            "plotBackgroundColor": null,
+            "plotBorderWidth": null,
+            "plotShadow": false
+        },
+        "title": {
+            "text": "<%= title%>"
+        },
+        "subtitle":{
+"text": "<%= subtitle%>"
+    },
+        "credits":{
+                        "enabled": true,
+                        "href": "http://www.beic.gov.cn/",
+                        "text": "北京市经济信息中心"
+                    },
+        "tooltip": {
+    	    "pointFormat": "{series.name}: <b>{point.percentage:.1f}%</b>"
+        },
+        "plotOptions": {
+            "pie": {
+                "allowPointSelect": true,
+                "cursor": "pointer",
+                "dataLabels": {
+                    "enabled": true,
+                    "format": "<b>{point.name}</b>: {point.percentage:.1f} %",
+                    "style": {
+                        "color":"black"
+                    }
+                }
+            }
+        },
+        "series": [{
+            "type": "pie",
+            "name": "所占比例",
+            "data": [
+                ["呼入",   <%= callin%>],
+                {
+                    "name": "呼出",
+                    "y": <%= callout%>,
+                    "sliced": true,
+                    "selected": true
+                }
+            ]
+        }]
+    }

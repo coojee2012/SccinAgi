@@ -23,18 +23,20 @@
               </select>
       </div>
           
-            <label for="startime" class="control-label col-sm-2">开始时间 从</label>
-            <div class="controls  col-sm-2">
-             <input type="text" value="" name="startime" id="startime"  class="form-control input-sm">
+            <label for="startime" class="control-label col-sm-2">呼叫时间</label>
+            <div class="controls  col-sm-4">
+               <div class="input-group">
+             <input type="text" value="" name="startime" id="startime" data-id="a-from" class="form-control input-sm datetimeserach" placeholder="选择起始">
+            <span class="input-group-addon">x</span>
+              <input type="text" value="" name="endtime" id="endtime"  data-id="a-to" class="form-control input-sm datetimeserach" placeholder="选择结束">
+               <span class="input-group-addon">x</span>
             </div>
+          </div>  
 
-             <label for="endtime" class="control-label col-sm-2">到</label>
             <div class="controls  col-sm-2">
-              <input type="text" value="" name="endtime" id="endtime"  class="form-control input-sm">
-            </div>
- <label for="search" class="control-label col-sm-2"></label>
-            <div class="controls  col-sm-2">
-              <input type="button" class="btn btn-primary btn-sm" id="search" value="查询"></div>
+              <input type="button" class="btn btn-primary btn-sm" id="search" value="查询">
+              </div
+              <div class="controls  col-sm-4"></div>
           </div>
         </div>
       </div>

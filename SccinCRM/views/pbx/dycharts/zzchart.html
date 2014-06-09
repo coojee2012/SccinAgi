@@ -1,76 +1,44 @@
-$(function () {
-    $('#container').highcharts({
-        chart: {
-            type: 'column'
+{
+        "chart": {
+            "type": "line"
         },
-        title: {
-            text: 'Efficiency Optimization by Branch'
+        "title": {
+            "text": "<%- title%>"
         },
-        xAxis: {
-            categories: [
-                'Seattle HQ',
-                'San Francisco',
-                'Tokyo'
-            ]
+        "credits":{
+                        "enabled": true,
+                        "href": "http://www.beic.gov.cn/",
+                        "text": "北京市经济信息中心"
+                    },
+        "xAxis": {
+            "categories": [<%- categories%>],
+            "labels":{
+            "rotation":45
+        }
         },
-        yAxis: [{
-            min: 0,
-            title: {
-                text: 'Employees'
+        "yAxis": [{
+            "min": 0,
+            "title": {
+                "text": "呼入"
             }
         },{
-            title: {
-                text: 'Profit (millions)'
+            "title": {
+                "text": "呼出"
             },
-            opposite: true
+            "opposite": true
         }],
-        legend: {
-            shadow: false
+        "legend": {
+            "shadow": false
         },
-        tooltip: {
-            shared: true
+        "tooltip": {
+            "shared": true
         },
-        plotOptions: {
-            column: {
-                grouping: false,
-                shadow: false,
-                borderWidth: 0
+        "plotOptions": {
+            "column": {
+                "grouping": false,
+                "shadow": false,
+                "borderWidth": 0
             }
         },
-        series: [{
-            name: 'Employees',
-            color: 'rgba(165,170,217,1)',
-            data: [150, 73, 20],
-            pointPadding: 0.3,
-            pointPlacement: -0.2
-        }, {
-            name: 'Employees Optimized',
-            color: 'rgba(126,86,134,.9)',
-            data: [140, 90, 40],
-            pointPadding: 0.4,
-            pointPlacement: -0.2
-        },{
-            name: 'Profit',
-            color: 'rgba(248,161,63,1)',
-            data: [183.6, 178.8, 198.5],
-            tooltip: {
-                valuePrefix: '$',
-                valueSuffix: ' M'
-            },
-            pointPadding: .3,
-            pointPlacement: 0.2,
-            yAxis: 1
-        },{
-            name: 'Profit Optimized',
-            color: 'rgba(186,60,61,.9)',
-            data: [203.6, 198.8, 208.5],
-            tooltip: {
-                valuePrefix: '$',
-                valueSuffix: ' M'
-            },
-            pointPadding: .4,
-            pointPlacement: 0.2,
-            yAxis: 1
-        }]
-    });
-});
+        "series": [<%- series%>]
+    }
