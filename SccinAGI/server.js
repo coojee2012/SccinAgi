@@ -13,6 +13,7 @@ logger.setLevel('DEBUG');
 var Schemas = require('./database/schema').Schemas;
 
 var server = AGI.createServer(function(context) {
+
   logger.debug("当前上下文状态：" + context.state + '，上下文流是否可读：' + context.stream.readable);
 
   var route = new routing({
@@ -59,7 +60,6 @@ var server = AGI.createServer(function(context) {
     else {
       route.dodefault();
     }
-
     logger.info('捕获到来自' + vars.agi_callerid + '的新呼叫， 呼叫编号为: ' + vars.agi_uniqueid);
   });
   //监听事件返回结果

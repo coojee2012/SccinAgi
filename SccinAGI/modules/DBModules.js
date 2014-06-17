@@ -709,7 +709,7 @@ exports.Dbs = Dbs;
     });
 }*/
 
-schema.isActual(function(err, actual) {
+/*schema.isActual(function(err, actual) {
 	if (!actual) {
 		schema.autoupdate(function(err) {
 			console.log('更新表！');
@@ -717,6 +717,6 @@ schema.isActual(function(err, actual) {
 	}else{
 		console.log('所有的表是最新的！');
 	}
-});
+});*/
 
 //console.log(Dbs);

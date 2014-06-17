@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b6521b4b-dff4-40cc-929a-ea8e4d5f4410" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/AsyncConfig.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/AsyncConfig.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Card.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Card.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Cdr.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Cdr.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/DBModules.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/DBModules.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/modules/DBModules.min.js" afterPath="$PROJECT_DIR$/SccinAGI/modules/DBModules.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/DBModules.min.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/DBModules.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/src/manage/Departments.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/src/manage/Departments.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/manage/Departments.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/manage/Departments.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/manage/Departments.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/Departments.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ExtenGroup.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ExtenGroup.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Extension.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Extension.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Extension.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Extension.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/IvrMenmu.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/IvrMenmu.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/src/manage/MenmuRoleRelations.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/src/manage/MenmuRoleRelations.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/src/manage/Menmus.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/src/manage/Menmus.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Queue.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Queue.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RecordFile.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RecordFile.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RouterCallIn.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RouterCallIn.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RouterCallOut.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RouterCallOut.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/smartAgi/build/Routings.js" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/build/Routings.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/smartAgi/src/Routings.js" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/src/Routings.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Sounds.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Sounds.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/SystemConfig.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/SystemConfig.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Trunk.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Trunk.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/src/manage/UserInfo.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/src/manage/UserInfo.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserInfo.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserInfo.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/manage/UserInfo.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/UserInfo.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/src/manage/UserRole.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/src/manage/UserRole.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserRole.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserRole.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/manage/UserRole.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/UserRole.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/app.min.js" afterPath="$PROJECT_DIR$/SccinCRM/app.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/base/asami.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/base/asami.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/base/autoDial.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/base/autoDial.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/test/builddbdata.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/test/builddbdata.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/smartAgi/src/calloutback.cat.js" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/src/calloutback.cat.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/base/common.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/base/common.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/Departments/create.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/Departments/create.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/create.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/create.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/UserRole/create.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/UserRole/create.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/dback.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/dback.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/dycharts.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/dycharts.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/Departments/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/Departments/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/UserRole/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/UserRole/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/index.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/linemonitor.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/linemonitor.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/login.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/login.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/logout.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/logout.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Extension/partvSIP.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Extension/partvSIP.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ivracts/playback.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ivracts/playback.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ivracts/recorddigits.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ivracts/recorddigits.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/server.min.js" afterPath="$PROJECT_DIR$/SccinAGI/server.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/user.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/user.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/test/webagi.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/test/webagi.js" />
+    </list>
+    <ignored path="SccinAgi.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="SccinAgi" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="app.min.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/app.min.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="189">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="getip.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/getip.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="1" selection-start="379" selection-end="379" vertical-scroll-proportion="-2.892857" vertical-offset="1458" max-vertical-offset="2322">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="SYNC_SETTING" value="DONT" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/SccinCRM/getip.js" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="10" />
+    <option name="y" value="5" />
+    <option name="width" value="1260" />
+    <option name="height" value="760" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <OptionsSetting value="true" id="添加" />
+    <OptionsSetting value="true" id="移除" />
+    <OptionsSetting value="true" id="检出" />
+    <OptionsSetting value="true" id="更新" />
+    <OptionsSetting value="true" id="状态" />
+    <OptionsSetting value="true" id="编辑" />
+    <ConfirmationsSetting value="0" id="添加" />
+    <ConfirmationsSetting value="0" id="移除" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="options.lastSelected" value="vcs.Git" />
+    <property name="FullScreen" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="last_opened_file_path" value="D:/Git/bin/git.exe" />
+    <property name="recentsLimit" value="5" />
+  </component>
+  <component name="RunManager" selected="Node.js.getip.js">
+    <configuration default="false" name="getip.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-node="D:/Program Files/nodejs/node" path-to-js-file="getip.js" working-dir="$PROJECT_DIR$/SccinCRM">
+      <browser start="false" url="" with-js-debugger="false" />
+      <RunnerSettings RunnerId="NodeJS.run" />
+      <ConfigurationWrapper RunnerId="NodeJS.run" />
+      <method />
+    </configuration>
+    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="name" value="Dart" />
+      <option name="saveOutputToFile" value="false" />
+      <option name="showConsoleOnStdErr" value="false" />
+      <option name="showConsoleOnStdOut" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="scope" value="ALL" />
+      <option name="testName" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" singleton="true" config-file="">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
+      <setting name="configLocationType" value="CONFIG_FILE" />
+      <setting name="settingsFile" value="" />
+      <setting name="serverType" value="INTERNAL" />
+      <setting name="preferredDebugBrowser" value="CHROME" />
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeunitConfigurationType" factoryName="Nodeunit">
+      <setting name="nodePath" value="D:/Program Files/nodejs/node" />
+      <envs />
+      <setting name="passParentEnvVars" value="true" />
+      <setting name="nodeunitModuleDir" value="" />
+      <setting name="workingDirectory" value="$PROJECT_DIR$" />
+      <setting name="testType" value="JS_FILE" />
+      <setting name="jsFile" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSRemoteDebug" factoryName="Node.js Remote Debug">
+      <node-js-remote-debug />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
+      <working-directory>$PROJECT_DIR$</working-directory>
+      <test-directory />
+      <pass-parent-env>true</pass-parent-env>
+      <envs />
+      <ui>BDD</ui>
+      <require />
+      <recursive>false</recursive>
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" working-dir="">
+      <browser start="false" url="" with-js-debugger="false" />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Node.js.getip.js" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Node.js.getip.js" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b6521b4b-dff4-40cc-929a-ea8e4d5f4410" name="Default" comment="" />
+      <created>1400727120665</created>
+      <updated>1400727120665</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="10" y="5" width="1260" height="760" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32852563" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="变化" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="调试" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3276923" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USERS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/app.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="189">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/getip.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="46" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="216" max-vertical-offset="2322">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/asterisk/asmanager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="18" selection-start="419" selection-end="419" vertical-scroll-proportion="0.6934189" vertical-offset="0" max-vertical-offset="623" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/app.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="189">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/getip.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="1" selection-start="379" selection-end="379" vertical-scroll-proportion="-2.892857" vertical-offset="1458" max-vertical-offset="2322">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

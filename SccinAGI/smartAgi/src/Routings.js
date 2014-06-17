@@ -2897,7 +2897,8 @@ routing.prototype.router = function() {
   //self.args.called=self.args.called ||  self.vars.agi_dnid || self.vars.agi_extension;
   async.auto({
     AddCDR: function(cb) {
-      schemas.pbxCdr.create({
+     
+        schemas.pbxCdr.create({
         id: self.sessionnum,
         caller: vars.agi_callerid,
         called: args.called,
@@ -2914,6 +2915,8 @@ routing.prototype.router = function() {
       }, function(err, inst) {
         cb(err, inst);
       });
+
+      
     },
     MixMonitor: ['AddCDR',
       function(cb, results) {

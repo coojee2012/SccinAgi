@@ -659,6 +659,58 @@ posts.getresult = function(req, res, next) {
 	}
 }
 
+gets.getresult = function(req, res, next) {
+	var Userkey = req.get('User-key');
+	var UserAgent = req.get('User-Agent');
+	logger.debug('获取结果服务获取到的头信息：', Userkey, UserAgent);
+
+	res.setHeader('Content-type', 'application/json');
+	res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+	var CallInfoID = req.query['CallInfoID'];
+	logger.debug("开始获取：" + CallInfoID + '的呼叫结果！');
+
+	if (!CallInfoID || CallInfoID == "") {
+		res.send({
+			"success": false,
+			"result": '抽取编号不能为空'
+		});
+
+	} else {
+		try {
+			Schemas['crmDialResult'].findOne({
+				where: {
+					CallInfoID: CallInfoID
+				}
+			}, function(err, inst) {
+				if (err) {
+					res.send({
+						"success": false,
+						"result": '获取拨打结果时服务器发生异常'
+					});
+				} else if (inst == null) {
+					res.send({
+						"success": false,
+						"result": '在服务器上没有找到该数据'
+					});
+				} else {
+					res.send({
+						"success": true,
+						"result": inst.Result.toString()
+					});
+				}
+			});
+		} catch (ex) {
+			logger.error("获取拨打结果发生异常：", ex);
+			res.send({
+				"success": false,
+				"result": '获取拨打结果时服务器发生异常'
+			});
+
+		}
+	}
+}
+
+
 posts.packCall = function(req, res, next) {
 	var exten = req.body['exten'] || req.query['exten'];
 	var type = req.body['type'] || req.query['type'];
