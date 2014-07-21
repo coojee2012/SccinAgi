@@ -7,6 +7,6 @@
 web.log
 *.dll
 *.exe
-SccinAGI/node_modules
-SccinCRM/node_modules
+/SccinAGI/node_modules
+/SccinCRM/node_modules
 /SccinCRM/.idea
