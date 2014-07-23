@@ -1,0 +1,134 @@
+<div class="panel panel-default fieldset">
+    <div class="formStyle">
+        <form action='<%- baseurl%>/baseConfSave' method='POST' id='form1'>
+            <table>
+                <colgroup>
+                    <col style="width:20%">
+                </colgroup>
+                <tr>
+                    <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">基本设置</th>
+                </tr>
+                <tr>
+                    <th>应用系统名称</th>
+                    <td>
+                        <input type="text" id='appname'  name='appname' value="<%- baseConf.appname%>" class="form-control input-sm"  placeholder="请指定一个系统名称！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>主机IP地址</th>
+                    <td>
+                        <input type="text" id='hostip'  name='hostip' value="<%- baseConf.hostip%>" class="form-control input-sm"  placeholder="请指定系统IP地址！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>主机域名称</th>
+                    <td>
+                        <input type="text" id='hostname'  name='hostname' value="<%- baseConf.hostname%>" class="form-control input-sm"  placeholder="请指定系统域名！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>服务端口</th>
+                    <td>
+                        <input type="text" id='hostport'  name='hostport' value="<%- baseConf.hostport%>" class="form-control input-sm"  placeholder="请指定程序运行端口！" datatype="n2-4" errormsg="端口范围在10~9999之间！"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>主应用程序目录</th>
+                    <td>
+                        <input type="text" id='appbase'  name='appbase' value="<%- baseConf.appbase%>" class="form-control input-sm"  placeholder="请指定应用系统安装目录！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>录音文件存放目录</th>
+                    <td>
+                        <input type="text" id='monitor'  name='monitor' value="<%- baseConf.monitor%>" class="form-control input-sm"  placeholder="请指定录音文件目录！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>系统语音存放目录</th>
+                    <td>
+                        <input type="text" id='asounds'  name='asounds' value="<%- baseConf.asounds%>" class="form-control input-sm"  placeholder="请指定系统语音文件目录！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>JAVA程序路径</th>
+                    <td>
+                        <input type="text" id='javapath'  name='javapath' value="<%- baseConf.javapath%>" class="form-control input-sm"  placeholder="请指定JAVA程序路径！" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>文本转语音程序路径</th>
+                    <td>
+                        <input type="text" id='ttsapp'  name='ttsapp' value="<%- baseConf.ttsapp%>" class="form-control input-sm"  placeholder="请指定TTS安装路径！" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>运行环境</th>
+                    <td>
+                        <input type="radio" name='env' value="development" <% if(baseConf.env=='development'){%>checked="checked"<%}%>/>开发环境
+                        <input type="radio"  name='env' value="production" <% if(baseConf.env=='production'){%>checked="checked"<%}%> />生产环境
+
+                    </td>
+                </tr>
+                <tr>
+                    <th>开启调试模式</th>
+                    <td>
+                        <input type="radio" name='debug' value=1 <% if(baseConf.debug){%>checked="checked"<%}%>/>是
+                        <input type="radio"  name='debug' value=0 <% if(!baseConf.debug){%>checked="checked"<%}%> />否
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">安全设置</th>
+                </tr>
+                <tr>
+                    <th>系统管理员电话</th>
+                    <td>
+                        <input type="text" id='phone'  name='phone' value="<%- baseConf.phone%>" class="form-control input-sm"  placeholder="请指定一个系统管理员联系电话。" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>系统管理员e-mail</th>
+                    <td>
+                        <input type="text" id='email'  name='email' value="<%- baseConf.email%>" class="form-control input-sm"  placeholder="请指定一个系统管理员联系邮件。" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>访问允许范围</th>
+                    <td>
+                        <input type="text" id='allowips'  name='allowips' value="<%- baseConf.allowips%>" class="form-control input-sm"  placeholder="请指定系统允许访问范围" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <a  class="btn btn-danger" href="javascript:savebase();">保存</a>
+
+                    </td>
+                </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+        <script type="application/javascript">
+          function  savebase(){
+              $.ajax({
+                  cache: true,
+                  type: "POST",
+                  url: '/manage/SysSet/baseConfSave',
+                  data: $('#form1').serialize(),
+                  async: false,
+                  error: function(request) {
+                      $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                  },
+                  success: function(data) {
+                      if(data.success){
+                          $.scojs_message('保存成功！', $.scojs_message.TYPE_OK);
+                      }else{
+                          $.scojs_message(data.msg, $.scojs_message.TYPE_ERROR);
+                      }
+
+                  }
+              });
+          }
+        </script>

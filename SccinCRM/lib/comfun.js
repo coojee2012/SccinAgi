@@ -18,6 +18,15 @@ mycommonfun.str2obj = function(str, obj) {
   return obj;
 }
 
+mycommonfun.cloneobj=function(obj){
+    var newobj={};
+    if (obj && obj !== null) {
+        for (var key in obj) {
+            newobj[key]=obj[key];
+        }}
+    return newobj;
+}
+
 mycommonfun.obj2str = function(obj) {
   var str = "";
   if (obj && obj !== null) {

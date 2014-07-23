@@ -1,0 +1,188 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+                <div class="panel-heading">
+                    <button data-toggle="modal" data-target="#rebootApp"   data-backdrop="static" class="btn btn-warning">重启应用</button>
+                    <button data-toggle="modal" data-target="#rebootSys"   data-backdrop="static" class="btn btn-danger">重启系统</button>
+                    <button data-toggle="modal" data-target="#haltSys"   data-backdrop="static" class="btn btn-danger">关机系统</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel-body ">
+    <ul class="nav nav-tabs">
+        <li class="active" id="tablelist"><a href="javascript:tabclick('tablelist');" >基本信息</a></li>
+        <li id="zzcart"><a href="javascript:tabzzcart('zzcart');" >数据库配置管理</a></li>
+        <li id="asteriskconf"><a href="javascript:tabasterisk('asteriskconf');" >语音系统配置管理</a></li>
+        <li id="bzcart"><a href="javascript:tabbzcart('bzcart');" >系统日志</a></li>
+    </ul>
+</div>
+<div class="panel-body ">
+    <div class="tab-content" id="tabcontent">
+
+    </div>
+
+
+</div>
+
+<div class="modal fade in" id="rebootApp" tabindex="-3" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <p class="i_Msg_warn"><img src="/images/exclamation.png" />重启应用可能短暂影响在线人员操作，确认要重启吗？</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button  class="btn btn-danger btn-sm"  data-dismiss="modal" data-action="1" id="sureRebootApp" >确定</button>
+                <a class="btn btn-default btn-sm" href="#" data-dismiss="modal">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade in" id="rebootSys" tabindex="-3" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <p class="i_Msg_warn"><img src="/images/exclamation.png" />工作时间重启系统可能影响正常业务，确认要重启吗？</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button  class="btn btn-danger btn-sm"  data-dismiss="modal" data-action="1" id="sureRebootSys" >确定</button>
+                <a class="btn btn-default btn-sm" href="#" data-dismiss="modal">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade in" id="haltSys" tabindex="-3" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <p class="i_Msg_warn"><img src="/images/exclamation.png" />关机后将不能远程开机，确认要关机吗？</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button  class="btn btn-danger btn-sm"  data-dismiss="modal" data-action="1" id="sureHaltSys" >确定</button>
+                <a class="btn btn-default btn-sm" href="#" data-dismiss="modal">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+       <script type="text/javascript">
+           $(function(){
+               tabclick('tablelist');
+               $('#sureRebootApp').click(function(){
+                   optionSys('sureRebootApp');
+               });
+               $('#sureRebootSys').click(function(){
+                   optionSys('sureRebootSys');
+               });
+               $('#sureHaltSys').click(function(){
+                   optionSys('sureHaltSys');
+               });
+           });
+           function optionSys(optionType){
+               $.ajax({
+                   cache: true,
+                   type: "POST",
+                   url: '/manage/SysSet/SysOption',
+                   async: false,
+                   data:{optionType:optionType},
+                   error: function(request) {
+                       $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                   },
+                   success: function(data) {
+                       if(data.success){
+                           $.scojs_message('操作成功！', $.scojs_message.TYPE_OK);
+                       }else{
+                           $.scojs_message(data.msg, $.scojs_message.TYPE_ERROR);
+                       }
+                   }
+               });
+           }
+           function tabclick(id){
+               $(".active").each(function(){
+                   var self=this;
+                   $(self).removeClass("active");
+               });
+               $("#"+id).addClass("active");
+               $.ajax({
+                   cache: true,
+                   type: "POST",
+                   url: '/manage/SysSet/baseConf',
+                   async: false,
+                   error: function(request) {
+                       $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                   },
+                   success: function(data) {
+                       $("#tabcontent").html(data);
+                   }
+               });
+           }
+
+           function tabasterisk(id){
+               $(".active").each(function(){
+                   var self=this;
+                   $(self).removeClass("active");
+               });
+               $("#"+id).addClass("active");
+               $.ajax({
+                   cache: true,
+                   type: "POST",
+                   url: '/manage/SysSet/AsConf',
+                   async: false,
+                   error: function(request) {
+                       $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                   },
+                   success: function(data) {
+                       $("#tabcontent").html(data);
+                   }
+               });
+           }
+
+           function tabzzcart(id){
+               $(".active").each(function(){
+                   var self=this;
+                   $(self).removeClass("active");
+               });
+               $("#"+id).addClass("active");
+               $.ajax({
+                   cache: true,
+                   type: "POST",
+                   url: '/manage/SysSet/DbConf',
+                   async: false,
+                   error: function(request) {
+                       $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                   },
+                   success: function(data) {
+                       $("#tabcontent").html(data);
+                   }
+               });
+           }
+
+           function tabbzcart(id){
+               $(".active").each(function(){
+                   var self=this;
+                   $(self).removeClass("active");
+               });
+               $("#"+id).addClass("active");
+               $.ajax({
+                   cache: true,
+                   type: "POST",
+                   url: '/manage/SysSet/SysLog',
+                   async: false,
+                   error: function(request) {
+                       $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                   },
+                   success: function(data) {
+                       $("#tabcontent").html(data);
+                   }
+               });
+           }
+
+       </script>

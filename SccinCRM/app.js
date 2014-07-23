@@ -59,7 +59,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(domainMiddleware({
   server: server,
-  killTimeout: 30000,
+  killTimeout: 30000
 }));
 
 app.use(express.json());
@@ -124,7 +124,7 @@ readroutes(__dirname + '/routes/' + SRCFILE + '/');
 app.use(function(req, res, next) {
   res.render('404.html', {
     status: 404,
-    title: '',
+    title: ''
   });
 });
 
@@ -262,8 +262,11 @@ function safeClient(req, res, next) {
         }
       }
     });
-    if (safe)
-      next();
+    if (safe){
+
+        next();
+    }
+
     else
       next("IP地址不被允许访问:"+ip);
   } else {

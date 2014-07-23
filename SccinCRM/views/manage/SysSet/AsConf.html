@@ -1,0 +1,75 @@
+<div class="panel panel-default fieldset">
+    <div class="formStyle">
+        <form action='<%- baseurl%>/DbConfSave' method='POST' id='form1'>
+            <table>
+                <colgroup>
+                    <col style="width:20%">
+                </colgroup>
+                <tr>
+                    <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">基本设置</th>
+                </tr>
+                <tr>
+                    <th>语音服务器地址</th>
+                    <td>
+                        <input type="text" id='host' name='host' value="<%- AsConf.host%>" class="form-control input-sm"
+                               placeholder="请指定语音服务器地址！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>语音服务器端口</th>
+                    <td>
+                        <input type="text" id='port' name='port' value="<%- AsConf.port%>" class="form-control input-sm"
+                               placeholder="请指定语音服务器端口！" datatype="n4-6"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>登陆名</th>
+                    <td>
+                        <input type="text" id='username' name='username' value="<%- AsConf.username%>"
+                               class="form-control input-sm"
+                               placeholder="请指定登录名！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>登陆密码</th>
+                    <td>
+                        <input type="password" id='secret' name='secret' value="<%- AsConf.secret%>"
+                               class="form-control input-sm"
+                               placeholder="请指定登录密码！" datatype="*"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th></th>
+                    <td>
+                        <a  class="btn btn-danger" href="javascript:saveAsConf();">保存</a>
+
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<script type="application/javascript">
+    function  saveAsConf(){
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: '/manage/SysSet/AsConfSave',
+            data: $('#form1').serialize(),
+            async: false,
+            error: function(request) {
+                $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+            },
+            success: function(data) {
+                if(data.success){
+                    $.scojs_message('保存成功！', $.scojs_message.TYPE_OK);
+                }else{
+                    $.scojs_message(data.msg, $.scojs_message.TYPE_ERROR);
+                }
+
+            }
+        });
+    }
+</script>

@@ -1,0 +1,35 @@
+<textarea id="textarealog" style="width: 100%" rows="30">
+<%- Log%>
+</textarea>
+        <div class="container-fluid">
+            <div class="col-md-5">
+
+            </div>
+            <div class="col-md-7">
+                <a href="javascript:clearLog();" class="btn btn-danger">清空日志</a>
+            </div>
+
+        </div>
+        <script type="application/javascript">
+            function clearLog(){
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '/manage/SysSet/ClearSysLog',
+                    async: false,
+                    error: function(request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function(data) {
+                        if(data.success){
+                            $.scojs_message('清理成功！', $.scojs_message.TYPE_OK);
+                            $("#textarealog").html('');
+                        }else{
+                            $.scojs_message(data.msg, $.scojs_message.TYPE_ERROR);
+                        }
+
+                    }
+                });
+
+            }
+        </script>

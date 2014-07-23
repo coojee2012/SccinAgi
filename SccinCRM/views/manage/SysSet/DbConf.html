@@ -1,0 +1,102 @@
+<div class="panel panel-default fieldset">
+    <div class="formStyle">
+        <form action='<%- baseurl%>/DbConfSave' method='POST' id='form1'>
+            <table>
+                <colgroup>
+                    <col style="width:20%">
+                </colgroup>
+                <tr>
+                    <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">基本设置</th>
+                </tr>
+                <tr>
+                    <th>服务器地址</th>
+                    <td>
+                        <input type="text" id='host' name='host' value="<%- DbConf.host%>" class="form-control input-sm"
+                               placeholder="请指定数据库服务器地址！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>服务器端口</th>
+                    <td>
+                        <input type="text" id='port' name='port' value="<%- DbConf.port%>" class="form-control input-sm"
+                               placeholder="请指定数据库服务器端口！" datatype="n4-6"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>数据库名称</th>
+                    <td>
+                        <input type="text" id='database' name='database' value="<%- DbConf.database%>"
+                               class="form-control input-sm"
+                               placeholder="请指定数据库名称！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>登陆名</th>
+                    <td>
+                        <input type="text" id='username' name='username' value="<%- DbConf.username%>"
+                               class="form-control input-sm"
+                               placeholder="请指定数据库登录名！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>登陆密码</th>
+                    <td>
+                        <input type="password" id='password' name='password' value="<%- DbConf.password%>"
+                               class="form-control input-sm"
+                               placeholder="请指定数据库登录名！" datatype="*"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>开启日志信息</th>
+                    <td>
+                        <input type="radio" name='log' value=1 <% if(DbConf.log){%>checked="checked"<%}%>/>是
+                        <input type="radio" name='log' value=0 <% if(!DbConf.log){%>checked="checked"<%}%> />否
+                    </td>
+                </tr>
+                <tr>
+                    <th>开启同步</th>
+                    <td>
+                        <input type="radio" name='slave' value=1 <% if(DbConf.slave){%>checked="checked"<%}%>/>是
+                        <input type="radio" name='slave' value=0 <% if(!DbConf.slave){%>checked="checked"<%}%> />否
+                    </td>
+                </tr>
+                <tr>
+                    <th>开启调试信息</th>
+                    <td>
+                        <input type="radio" name='debug' value=1 <% if(DbConf.debug){%>checked="checked"<%}%>/>是
+                        <input type="radio" name='debug' value=0 <% if(!DbConf.debug){%>checked="checked"<%}%> />否
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <a  class="btn btn-danger" href="javascript:saveDbConf();">保存</a>
+
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<script type="application/javascript">
+    function  saveDbConf(){
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: '/manage/SysSet/DbConfSave',
+            data: $('#form1').serialize(),
+            async: false,
+            error: function(request) {
+                $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+            },
+            success: function(data) {
+                if(data.success){
+                    $.scojs_message('保存成功！', $.scojs_message.TYPE_OK);
+                }else{
+                    $.scojs_message(data.msg, $.scojs_message.TYPE_ERROR);
+                }
+
+            }
+        });
+    }
+</script>
