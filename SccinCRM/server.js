@@ -1,8 +1,12 @@
+#!/usr/local/bin/node  -e
 /**
 强悍的NODE WEB服务器
 根据CPU的个数开启响应数量的子进程多并发异步服务
 可以负载均衡
 **/
+
+console.log(__dirname);
+
 var http = require('http');
 var cluster = require('cluster');
 var logger = require('./lib/logger').logger('web');
@@ -12,8 +16,6 @@ var appconf = conf.load('app');
 var SRCFILE = appconf.debug ? '.js' : '.min.js';
 // 获取CPU 的数量
 //var numCPUs = os.cpus().length;
-
-console.log(__dirname);
 
 var numCPUs = 1;
 var workers = {};

@@ -1,35 +1,40 @@
 #!/bin/bash
 #
-# Script to run Shadowsocks in daemon mode at boot time.
-# ScriptAuthor: icyboy
+# 四川建设网呼叫中心应用系统启动脚本
+# ScriptAuthor: 林勇
 # Revision 1.0 - 14th Sep 2013
 #====================================================================
 # Run level information:
 # chkconfig: 2345 99 99
-# Description: lightweight secured scoks5 proxy
-# processname: ss-server
-# Author: Max Lv <max.c.lv@gmail.com>;
-# Run "/sbin/chkconfig --add shadowsocks" to add the Run levels.
+# Description: 四川建设网呼叫中心应用系统
+# processname: sccinweb
+# Author:林勇 <11366846@qq.com>;
+# Run "/sbin/chkconfig --add sccinweb" to add the Run levels.
 #====================================================================
 
 #====================================================================
-# Paths and variables and system checks.
-# /etc/init.d/shadowsocks
-
+# 将该脚本放到下面的目录.
+# mv sccinweb.sh /etc/init.d/sccinweb
+# 添加自启动项
+# chkconfig --add sccinweb
+# 手动改变脚本权限
+# chmod 033 /etc/init.d/sccinweb
+# 维护命令：service sccinweb start|stop|restart
 # Source function library
 . /etc/rc.d/init.d/functions
 
-# Check that networking is up.
+# 检查网络是否启动.
 #
 [ ${NETWORKING} ="yes" ] || exit 0
 
 # Daemon
-NAME=shadowsocks-server
-DAEMON=/usr/local/bin/ss-server
+NAME=sccinweb
+DAEMON=/usr/local/bin/node
 
 # Path to the configuration file.
 #
-CONF=/etc/shadowsocks/config.json
+DIR=/opt/CRM
+APP=/opt/CRM/server.js
 
 #USER="nobody"
 #GROUP="nobody"
@@ -40,14 +45,14 @@ mkdir /var/run/$NAME 2>/dev/null || true
 
 # Check the configuration file exists.
 #
-if [ ! -f $CONF ] ; then
-echo "The configuration file cannot be found!"
-exit 0
-fi
+ if [ ! -f $APP ] ; then
+ echo "The configuration file cannot be found!"
+ exit 0
+ fi
 
 # Path to the lock file.
 #
-LOCK_FILE=/var/lock/subsys/shadowsocks
+LOCK_FILE=/var/lock/subsys/sccinweb
 
 # Path to the pid file.
 #
@@ -59,9 +64,11 @@ PID=/var/run/$NAME/pid
 #====================================================================
 # Run controls:
 
+cd $DIR
+
 RETVAL=0
 
-# Start shadowsocks as daemon.
+# Start sccinweb as daemon.
 #
 start() {
 if [ -f $LOCK_FILE ]; then
@@ -70,7 +77,7 @@ exit 0
 else
 echo -n $"Starting ${NAME}: "
 #daemon --check $DAEMON --user $USER "$DAEMON -f $PID -c $CONF > /dev/null"
-daemon $DAEMON -c $CONF -f $PID
+daemon $DAEMON $APP >/dev/null &
 fi
 
 RETVAL=$?
@@ -81,15 +88,14 @@ return $RETVAL
 }
 
 
-# Stop shadowsocks.
+# Stop sccinweb.
 #
 stop() {
 echo -n $"Shutting down ${NAME}: "
-killproc -p ${PID}
+kill -9 $(ps -ef | grep $APP | grep -v grep | awk '{print $2}')
 RETVAL=$?
-[ $RETVAL -eq 0 ]
+[ $RETVAL -eq 0 ] && success
 rm -f $LOCK_FILE
-rm -f ${PID}
 echo
 return $RETVAL
 }
