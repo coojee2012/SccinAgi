@@ -99,6 +99,7 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 					}
 				]
 			}, function(err, results) {
+                logger.debug("读出时间日期完成：",err);
 				callback(err, results);
 			});
 		}

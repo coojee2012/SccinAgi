@@ -2093,7 +2093,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             var datetimestr = "";
             var formatstr = "";
             if (actargs.sayway && actargs.sayway === 'date') {
-              formatstr = "YYMMDD";
+              formatstr = "YYYYMMDD";
             } else if (actargs.sayway && actargs.sayway === 'time') {
               formatstr = "HHmm";
             } else {
@@ -2114,7 +2114,9 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             }
 
             if (datetimestr !== '') {
+                logger.debug("读出的日期：", datetimestr);
               self.sayDateTime(datetimestr, actargs.sayway, function(err, result) {
+                logger.debug("读出的日期时间完成！", err);
                 cb(err, result);
               });
             } else {
@@ -2279,7 +2281,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             var methods = actargs.methods; //get | post
             var timeout = actargs.timeout || 10; //默认10秒
             var programs = actargs.programs; //a~1,b~2,c~3,d~<%caller | called | 或其他已知自定义通道变量 %>
-            var varprex = actargs.varprex || 　'webapp-'; //设置本次结果需要设置的通道变量前缀，默认为 'webapp-'
+            var varprex = actargs.varprex||'webapp-'; //设置本次结果需要设置的通道变量前缀，默认为 'webapp-'
             var doneivrnum = actargs.doneivrnum;
             var doneivractid = actargs.doneivractid || 1;
             var failivrnum = actargs.failivrnum;
@@ -2536,8 +2538,11 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
           }
         }
       }, function(err, results) {
-        if (err)
-          callback(err, -1);
+        if (err){
+            logger.error("执行IVR动作中发生错误：", err);
+            callback(err, -1);
+        }
+
         else {
           actionid++;
           self.ivraction(actionid, actions, inputs, callback);
@@ -2897,8 +2902,7 @@ routing.prototype.router = function() {
   //self.args.called=self.args.called ||  self.vars.agi_dnid || self.vars.agi_extension;
   async.auto({
     AddCDR: function(cb) {
-     
-        schemas.pbxCdr.create({
+      schemas.pbxCdr.create({
         id: self.sessionnum,
         caller: vars.agi_callerid,
         called: args.called,
@@ -2915,8 +2919,6 @@ routing.prototype.router = function() {
       }, function(err, inst) {
         cb(err, inst);
       });
-
-      
     },
     MixMonitor: ['AddCDR',
       function(cb, results) {
@@ -3088,6 +3090,7 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 		hour=hour.replace(/^0/,'');
 		var minute = t.substr(2, 2);
 		minute=minute.replace(/^0/,'');
+        logger.debug("年-月-日-时-分：",year+"-"+month+"-"+ day+"-"+hour+"-"+minute);
 		if (sayway === 'date') {
 			async.auto({
 				sayyear: function(cb) {
@@ -3144,6 +3147,7 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 					}
 				]
 			}, function(err, results) {
+                logger.debug("读出时间日期完成：",err);
 				callback(err, results);
 			});
 		}
