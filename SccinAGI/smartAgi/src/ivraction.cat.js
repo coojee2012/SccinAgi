@@ -518,6 +518,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             }
 
             if (datetimestr !== '') {
+                logger.debug("读出的日期：", datetimestr);
               self.sayDateTime(datetimestr, actargs.sayway, function(err, result) {
                 cb(err, result);
               });

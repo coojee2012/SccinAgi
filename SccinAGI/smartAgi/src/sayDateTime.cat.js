@@ -42,6 +42,7 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 		hour=hour.replace(/^0/,'');
 		var minute = t.substr(2, 2);
 		minute=minute.replace(/^0/,'');
+        logger.debug("年-月-日-时-分：",year+"-"+month+"-"+ day+"-"+hour+"-"+minute);
 		if (sayway === 'date') {
 			async.auto({
 				sayyear: function(cb) {

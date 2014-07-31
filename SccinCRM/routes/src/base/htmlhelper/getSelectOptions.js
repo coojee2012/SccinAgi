@@ -31,3 +31,17 @@ posts.departments = function(req, res, next) {
 
 	});
 }
+
+posts.menmuGroups=function(req,res,next){
+    Schemas.manageMenmuGroup.all({}, function(err, dbs) {
+        async.map(dbs, function(item, callback) {
+            var obj = {};
+            obj.v = item.id;
+            obj.t = item.groupName;
+            callback(null, obj);
+        }, function(err, results) {
+            res.send(results);
+        });
+
+    });
+}

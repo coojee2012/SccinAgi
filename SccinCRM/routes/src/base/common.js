@@ -114,12 +114,21 @@ posts.pagination = function(req, res, next) {
 			for (var i = 0; i < results.search.length; i++) {
 				var tempobj = {};
 				for (var j = 0; j < sColumns.length; j++) {
-					if (results.search[i].__cachedRelations[sColumns[j]] && results.search[i].__cachedRelations[sColumns[j]] !== null) {
+
+				/*	if (results.search[i].__cachedRelations[sColumns[j]] && results.search[i].__cachedRelations[sColumns[j]] !== null) {
+
 						tempobj[sColumns[j]] = results.search[i].__cachedRelations[sColumns[j]];
-					} else {
+					} else {*/
 						tempobj[sColumns[j]] = results.search[i][sColumns[j]];
-					}
+					//}
 				}
+                for(var k=0;k<include.length;k++){
+                    if (results.search[i].__cachedRelations[include[k]] && results.search[i].__cachedRelations[include[k]] !== null) {
+                        tempobj[include[k]]= results.search[i].__cachedRelations[include[k]];
+                    }else{
+                        tempobj[include[k]]=null;
+                    }
+                }
 				output.aaData[i] = tempobj;
 
 
