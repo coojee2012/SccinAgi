@@ -2,47 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b6521b4b-dff4-40cc-929a-ea8e4d5f4410" name="Default" comment="添加系统配置">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/LinYong.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/Menmus/list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/AsyncConfig.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/AsyncConfig.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Card.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Card.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Cdr.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Cdr.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/DBModules.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/DBModules.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/DBModules.min.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/DBModules.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/manage/Departments.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/manage/Departments.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ExtenGroup.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ExtenGroup.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Extension.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Extension.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/IvrMenmu.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/IvrMenmu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/src/manage/MenmuGroup.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/src/manage/MenmuGroup.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/src/manage/Menmus.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/src/manage/Menmus.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Queue.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Queue.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RecordFile.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RecordFile.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RouterCallIn.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RouterCallIn.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RouterCallOut.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/RouterCallOut.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/SccinAgi.iml" afterPath="$PROJECT_DIR$/.idea/SccinAgi.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Sounds.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Sounds.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Trunk.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Trunk.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserInfo.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserInfo.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserRole.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserRole.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/app.min.js" afterPath="$PROJECT_DIR$/SccinCRM/app.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/base/asami.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/base/asami.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/base/autoDial.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/base/autoDial.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/test/builddbdata.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/test/builddbdata.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/base/common.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/base/common.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/base/common.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/base/common.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/dycharts.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/dycharts.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/base/htmlhelper/getSelectOptions.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/base/htmlhelper/getSelectOptions.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/index.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/linemonitor.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/linemonitor.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/login.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/login.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/logout.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/logout.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ivracts/playback.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ivracts/playback.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/smartAgi/src/sayDateTime.cat.js" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/src/sayDateTime.cat.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/user.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/user.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/test/webagi.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/test/webagi.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SccinAgi.iws" />
@@ -906,13 +865,18 @@
       <created>1406280914105</created>
       <updated>1406280914105</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="添加系统配置">
+      <created>1406790500339</created>
+      <updated>1406790500339</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="24" y="4" width="1400" height="860" extended-state="0" />
     <editor active="false" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292011" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="变化" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292011" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292011" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -928,7 +892,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292011" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292011" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32852563" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1254,6 +1217,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
           <caret line="22" column="57" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="57" />
+          <folding />
         </state>
       </provider>
     </entry>
