@@ -16,7 +16,7 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
     action = args.action;
   }
 
-  if (!callback || typeof(!callback) !== 'function') {
+  if (!callback || typeof(callback) !== 'function') {
     callback = function(err, results) {
       if (err)
         context.hangup(function(err, rep) {});

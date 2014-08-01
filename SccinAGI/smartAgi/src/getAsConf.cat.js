@@ -10,7 +10,7 @@ routing.prototype.getAsConf = function(filename, callback) {
 	if (!filename || filename === '') {
 		filename = args.filename;
 	}
-	if (!callback || typeof(!callback) !== 'function') {
+	if (!callback || typeof(callback) !== 'function') {
 		callback = function(err, results) {
 			if (err)
 				context.hangup(function(err, rep) {});

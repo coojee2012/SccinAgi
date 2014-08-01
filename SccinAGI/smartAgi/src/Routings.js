@@ -3122,6 +3122,7 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 					}
 				]
 			}, function(err, results) {
+                logger.debug("Date读出时间日期完成：",err);
 				callback(err, results);
 			});
 
@@ -3147,7 +3148,7 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 					}
 				]
 			}, function(err, results) {
-                logger.debug("读出时间日期完成：",err);
+                logger.debug("Time读出时间日期完成：",err);
 				callback(err, results);
 			});
 		}
@@ -3200,6 +3201,7 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 					}
 				]
 			}, function(err, results) {
+                logger.debug("读出时间日期完成!",err);
 				callback(err, results);
 			});
 		}

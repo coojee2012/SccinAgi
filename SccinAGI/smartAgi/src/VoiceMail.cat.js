@@ -13,7 +13,7 @@ routing.prototype.VoiceMail = function(number, callback) {
 	if (!number || number === '') {
 		number = args.number;
 	}
-	if (!callback || typeof(!callback) !== 'function') {
+	if (!callback || typeof(callback) !== 'function') {
 		callback = function(err, results) {
 			if (err)
 				context.hangup(function(err, rep) {});

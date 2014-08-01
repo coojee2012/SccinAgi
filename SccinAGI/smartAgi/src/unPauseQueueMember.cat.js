@@ -17,7 +17,7 @@ routing.prototype.unPauseQueueMember = function(queuenum, assign, callback) {
     action = args.queuenum;
   }
 
-  if (!callback || typeof(!callback) !== 'function') {
+  if (!callback || typeof(callback) !== 'function') {
     callback = function(err, results) {
       if (err)
         context.hangup(function(err, rep) {});

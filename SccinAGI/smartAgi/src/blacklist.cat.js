@@ -9,7 +9,7 @@ routing.prototype.blacklist = function(caller, callback) {
 	if (!caller || caller === '' || caller === args.called) {
 		caller = vars.agi_callerid;
 	}
-	if (!callback || typeof(!callback) !== 'function') {
+	if (!callback || typeof(callback) !== 'function') {
 		callback = function(err, results) {
 			if (err)
 				context.hangup(function(err, rep) {});

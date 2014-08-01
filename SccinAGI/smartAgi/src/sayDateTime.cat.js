@@ -17,11 +17,15 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 	if (!sayway || sayway === '') {
 		sayway = args.sayway;
 	}
-
-	if (!callback || typeof(!callback) !== 'function') {
+    logger.debug("CALLBACK",callback,typeof(callback));
+	if (!callback || typeof(callback) !== 'function') {
 		callback = function(err, results) {
-			if (err)
-				context.hangup(function(err, rep) {});
+            logger.debug("IVR动作-读出日期时间，执行了自定义回调函数!");
+			if (err){
+
+                context.hangup(function(err, rep) {});
+            }
+
 			else
 				 context.end();
 		}
@@ -152,6 +156,7 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 					}
 				]
 			}, function(err, results) {
+                logger.debug("读出时间日期完成!",err);
 				callback(err, results);
 			});
 		}
