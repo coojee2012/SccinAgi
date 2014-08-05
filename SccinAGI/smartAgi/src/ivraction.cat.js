@@ -692,6 +692,14 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             var failivractid = actargs.failivractid || 1;
             var timeoutivrnum = actargs.timeoutivrnum;
             var timeoutivractid = actargs.timeoutivractid || 1;
+
+             if(!/^http/.test(url)){
+                 var webAppPrev=conf.webAppPrev;
+                 webAppPrev=webAppPrev.replace(/\/+$/,'');
+                 url=url.replace(/^\/+/,'');
+                 url=webAppPrev+"/"+url;
+             }
+
             var proto = url.substring(0, url.indexOf(":")) === 'https' ? 'https' : 'http';
             var p = require(proto);
             var options = {

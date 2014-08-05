@@ -255,7 +255,7 @@ routing.prototype.VoiceMail = function(number, callback) {
 	if (!number || number === '') {
 		number = args.number;
 	}
-	if (!callback || typeof(!callback) !== 'function') {
+	if (!callback || typeof(callback) !== 'function') {
 		callback = function(err, results) {
 			if (err)
 				context.hangup(function(err, rep) {});
@@ -386,7 +386,7 @@ routing.prototype.blacklist = function(caller, callback) {
 	if (!caller || caller === '' || caller === args.called) {
 		caller = vars.agi_callerid;
 	}
-	if (!callback || typeof(!callback) !== 'function') {
+	if (!callback || typeof(callback) !== 'function') {
 		callback = function(err, results) {
 			if (err)
 				context.hangup(function(err, rep) {});
@@ -1399,7 +1399,7 @@ routing.prototype.getAsConf = function(filename, callback) {
 	if (!filename || filename === '') {
 		filename = args.filename;
 	}
-	if (!callback || typeof(!callback) !== 'function') {
+	if (!callback || typeof(callback) !== 'function') {
 		callback = function(err, results) {
 			if (err)
 				context.hangup(function(err, rep) {});
@@ -1470,7 +1470,7 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
     action = args.action;
   }
 
-  if (!callback || typeof(!callback) !== 'function') {
+  if (!callback || typeof(callback) !== 'function') {
     callback = function(err, results) {
       if (err)
         context.hangup(function(err, rep) {});
@@ -2288,6 +2288,14 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             var failivractid = actargs.failivractid || 1;
             var timeoutivrnum = actargs.timeoutivrnum;
             var timeoutivractid = actargs.timeoutivractid || 1;
+
+             if(!/^http/.test(url)){
+                 var webAppPrev=conf.webAppPrev;
+                 webAppPrev=webAppPrev.replace(/\/+$/,'');
+                 url=url.replace(/^\/+/,'');
+                 url=webAppPrev+"/"+url;
+             }
+
             var proto = url.substring(0, url.indexOf(":")) === 'https' ? 'https' : 'http';
             var p = require(proto);
             var options = {
@@ -3065,11 +3073,15 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 	if (!sayway || sayway === '') {
 		sayway = args.sayway;
 	}
-
-	if (!callback || typeof(!callback) !== 'function') {
+    logger.debug("CALLBACK",callback,typeof(callback));
+	if (!callback || typeof(callback) !== 'function') {
 		callback = function(err, results) {
-			if (err)
-				context.hangup(function(err, rep) {});
+            logger.debug("IVR动作-读出日期时间，执行了自定义回调函数!");
+			if (err){
+
+                context.hangup(function(err, rep) {});
+            }
+
 			else
 				 context.end();
 		}
@@ -3122,7 +3134,6 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 					}
 				]
 			}, function(err, results) {
-                logger.debug("Date读出时间日期完成：",err);
 				callback(err, results);
 			});
 
@@ -3148,7 +3159,7 @@ routing.prototype.sayDateTime = function(datetime, sayway, callback) {
 					}
 				]
 			}, function(err, results) {
-                logger.debug("Time读出时间日期完成：",err);
+                logger.debug("读出时间日期完成：",err);
 				callback(err, results);
 			});
 		}
@@ -3798,7 +3809,7 @@ routing.prototype.unPauseQueueMember = function(queuenum, assign, callback) {
     action = args.queuenum;
   }
 
-  if (!callback || typeof(!callback) !== 'function') {
+  if (!callback || typeof(callback) !== 'function') {
     callback = function(err, results) {
       if (err)
         context.hangup(function(err, rep) {});

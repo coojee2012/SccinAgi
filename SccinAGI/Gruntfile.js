@@ -28,7 +28,7 @@ module.exports = function(grunt) {
           banner: '/*! 数据库表结构 <%= grunt.template.today("yyyy-mm-dd") %> */\n'
         },
         files: {
-          'modules/DBModules.min.js':['modules/DBModules.js'],
+          'modules/DBModules.min.js':['modules/DBModules.js']
         }
       }
     },

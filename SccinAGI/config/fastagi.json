@@ -6,5 +6,6 @@
 	"replaykey":"*",
 	"channelMax":"DHADI=25&SIP=4&IAX2=5",
 	"defaultivr":200,
+    "webAppPrev":"http://61.135.238.171",
 	"debug":false
 }
