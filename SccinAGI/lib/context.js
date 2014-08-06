@@ -221,6 +221,7 @@ Context.prototype.SayDigits = function(number, escape, cb) {
 Context.prototype.saydigits = function(number, cb) {
   var digit = null;
   var self = this;
+    number+="";
   if (number.length == 1) {
     digit = number;
     self.Playback('digits/' + digit, function(err, response) {
