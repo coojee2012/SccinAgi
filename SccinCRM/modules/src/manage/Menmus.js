@@ -22,6 +22,8 @@ var manageMenmus=schema.define('manageMenmus',{
 
 manageMenmus.belongsTo(manageMenmuGroup, {as: 'menmugroup', foreignKey: 'mgID'});
 
+manageMenmuGroup.hasMany(manageMenmus, {as:'menmus',foreignKey: 'mgID'});
+
 manageMenmus.validatesPresenceOf('menName', 'menURL','iconName');//验证非空
 
 manageMenmus.Name='manageMenmus';

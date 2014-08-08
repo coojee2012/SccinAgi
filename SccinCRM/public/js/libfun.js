@@ -43,6 +43,16 @@ function DBC2SBC(str) {
     return result;
 }
 
+function itemInArray(item,array){
+    var b=false;
+    for(var i=0;i<array.length;i++){
+        if(array[i]==item){
+            b=true;
+            break;
+        }
+    }
+    return b;
+}
 
 //页面加载完毕后执行的通用初始化 
 
@@ -109,7 +119,8 @@ $(function() {
     $("[data-selectdom]").each(function() {
         var self = this;
         var ModelName = $(self).data('selectdom');
-        var oldVal = $(self).val() || "";
+        var SelectedVal=$(self).data('selectval') || '';
+        var oldVal = $(self).val() || SelectedVal+"" ||"";
         $(self).css("maxWidth","150");
         $(self).empty();
         $(self).append($("<option>").val("").text("请选择"));

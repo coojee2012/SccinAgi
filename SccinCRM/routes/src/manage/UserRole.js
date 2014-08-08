@@ -18,7 +18,7 @@ module.exports = {
 var checkFun = {};
 
 //角色名验证
-checkFun['roleName'] = function(roleName, res) {
+checkFun['roleName'] = function (roleName, res) {
     if (!roleName || roleName == '') {
         res.send({
             "info": "输入不能为空！",
@@ -29,7 +29,7 @@ checkFun['roleName'] = function(roleName, res) {
             where: {
                 roleName: roleName
             }
-        }, function(err, inst) {
+        }, function (err, inst) {
             if (err)
                 res.send({
                     "info": "后台验证发生错误！",
@@ -53,7 +53,7 @@ checkFun['roleName'] = function(roleName, res) {
 };
 
 //处理页面需要的Ajax验证
-posts.checkAjax = function(req, res, next, baseurl) {
+posts.checkAjax = function (req, res, next, baseurl) {
     var param = req.body['param'];
     var name = req.body['name'];
     if (typeof(checkFun[name] === 'function')) {
@@ -68,7 +68,7 @@ posts.checkAjax = function(req, res, next, baseurl) {
 }
 
 //角色列表显示
-gets.index = function(req, res, next, baseurl) {
+gets.index = function (req, res, next, baseurl) {
     res.render('manage/UserRole/list.html', {
         baseurl: baseurl,
         modename: 'manageUserRole'
@@ -76,24 +76,24 @@ gets.index = function(req, res, next, baseurl) {
 }
 
 //新建
-gets.create = function(req, res, next, baseurl) {
+gets.create = function (req, res, next, baseurl) {
     res.render('manage/UserRole/create.html', {
         baseurl: baseurl
     });
 }
 //编辑
-gets.edit = function(req, res, next, baseurl) {
+gets.edit = function (req, res, next, baseurl) {
     var id = req.query["id"];
     async.auto({
-        findUser: function(cb) {
-            Schemas['manageUserRole'].find(id, function(err, inst) {
+        findUser: function (cb) {
+            Schemas['manageUserRole'].find(id, function (err, inst) {
                 if (err || inst == null)
                     cb('编辑查找角色发生错误或角色不存在！', inst);
                 else
                     cb(err, inst);
             });
         }
-    }, function(err, results) {
+    }, function (err, results) {
         res.render('manage/UserRole/edit.html', {
             baseurl: baseurl,
             inst: results.findUser
@@ -103,36 +103,36 @@ gets.edit = function(req, res, next, baseurl) {
 
 
 //保存（适用于新增和修改）
-posts.save = function(req, res, next, baseurl) {
+posts.save = function (req, res, next, baseurl) {
     var Obj = {};
     for (var key in req.body) {
         Obj[key] = req.body[key];
     }
     //console.log(Obj);
     async.auto({
-            isHaveCheck: function(cb) {
+            isHaveCheck: function (cb) {
                 if (!Obj.roleName || Obj.roleName === '') {
                     cb('角色不能为空', -1);
                 } else {
-                    Schemas['manageUserRole'].find(Obj.id, function(err, inst) {
+                    Schemas['manageUserRole'].find(Obj.id, function (err, inst) {
                         cb(err, inst);
                     });
                 }
             },
             createNew: ['isHaveCheck',
-                function(cb, results) {
+                function (cb, results) {
                     if (results.isHaveCheck !== null) { //如果存在本函数什么都不做
                         cb(null, -1);
                     } else {
                         Obj.id = guid.create();
-                        Schemas['manageUserRole'].create(Obj, function(err, inst) {
+                        Schemas['manageUserRole'].create(Obj, function (err, inst) {
                             cb(err, inst);
                         });
                     }
                 }
             ],
             updateOld: ['isHaveCheck',
-                function(cb, results) {
+                function (cb, results) {
                     if (results.isHaveCheck === null) { //如果不存在本函数什么都不做
                         cb(null, -1);
                     } else {
@@ -144,21 +144,21 @@ posts.save = function(req, res, next, baseurl) {
                                 id: Obj.id
                             },
                             update: Obj
-                        }, function(err, inst) {
+                        }, function (err, inst) {
                             cb(err, inst);
                         });
                     }
                 }
             ]
         },
-        function(err, results) {
+        function (err, results) {
             var myjson = {
                 success: '',
                 id: '',
                 msg: ''
             };
             if (results.createNew !== -1) {
-                results.createNew.isValid(function(valid) {
+                results.createNew.isValid(function (valid) {
                     if (!valid) {
                         myjson.success = 'ERROR';
                         myjson.msg = "服务器感知到你提交的数据非法，不予受理！";
@@ -182,10 +182,99 @@ posts.save = function(req, res, next, baseurl) {
         });
 }
 
+posts.getMenmus = function (req, res, next, baseurl) {
+    var roleid = req.body.roleid;
+    async.auto({
+        allmenmus: function (cb) {
+            var include = new Array();
+            for (var key in Schemas['manageMenmuGroup'].relations) {
+                include.push(key);
+            }
+            logger.debug("具有的关系：", include);
+            Schemas['manageMenmuGroup'].all({
+                include: include,
+                order: 'id ASC'
+            }, function (err, dbs) {
+                logger.debug(dbs[0].__cachedRelations);
+                var menmus = {};
+                for (var i = 0; i < dbs.length; i++) {
+                    menmus[dbs[i].groupName] = dbs[i].__cachedRelations.menmus;
+                }
+                cb(err, menmus);
+            });
+        },
+        rolemenmus: function (cb) {
+            Schemas['manageMenmuRoleRelations'].all({
+                where: {roleId: roleid}
+            }, function (err, dbs) {
+                var menmuIds = new Array();
+                for (var m = 0; m < dbs.length; m++) {
+                    menmuIds.push(dbs[m].menmuID);
+                }
+                cb(err, menmuIds);
+            })
 
-posts.delete = function(req, res, next, baseurl) {
+        }
+    }, function (err, results) {
+        if (err)
+            res.send({success: 'ERROR', msg: '获取角色菜单错误！'});
+        else
+            res.send({success: 'OK', msg: '', allmenmus: results.allmenmus, rolemenmus: results.rolemenmus})
+    });
+}
+
+posts.saveRoleMenmus = function (req, res, next, baseurl) {
+    var menmuIds = req.body.menmuIds || "";
+        menmuIds = menmuIds.replace(/\,$/, "");
+
+    var roleId = req.body.roleId;
+    if (!roleId || roleId == "" || menmuIds == "")
+        res.send({success: 'ERROR', msg: "角色编号或分配菜单不能为空！"});
+    else {
+        var MenmuIds = menmuIds.split(',');
+        async.auto({
+            allRoleMenmus: function (cb) {
+                Schemas['manageMenmuRoleRelations'].all({
+                    where: {roleId: roleId}
+                }, function (err, dbs) {
+                    cb(err, dbs);
+                });
+            },
+            delAllRoleMenmus: ['allRoleMenmus', function (cb, results) {
+                async.each(results.allRoleMenmus, function (item, callback) {
+                    item.destroy(function (err) {
+                        callback(err);
+                    });
+                }, function (err) {
+                    cb(err);
+                });
+            }],
+            addRoleMenmus: ["delAllRoleMenmus", function (cb, results) {
+                async.each(MenmuIds, function (item, callback) {
+                    var obj = {};
+                    obj.roleId = roleId;
+                    obj.menmuID = item;
+                    Schemas['manageMenmuRoleRelations'].create(obj, function (err, inst) {
+                        callback(err, inst);
+                    });
+                }, function (err) {
+                    cb(err);
+                });
+            }]
+        }, function (err, results) {
+            if (err)
+                res.send({success: 'ERROR', msg: '保存角色菜单错误！'});
+            else
+                res.send({success: 'OK', msg: '保存成功！'})
+        });
+
+    }
+
+}
+
+posts.delete = function (req, res, next, baseurl) {
     var id = req.body['id'];
-    Schemas['manageUserRole'].find(id, function(err, inst) {
+    Schemas['manageUserRole'].find(id, function (err, inst) {
         var myjson = {};
         if (err) {
             myjson.success = 'ERROR';
@@ -197,7 +286,7 @@ posts.delete = function(req, res, next, baseurl) {
             } else {
 
             }
-            inst.destroy(function(err) {
+            inst.destroy(function (err) {
                 if (err) {
                     myjson.success = 'ERROR';
                     myjson.msg = '删除数据发生异常,请联系管理员！！';

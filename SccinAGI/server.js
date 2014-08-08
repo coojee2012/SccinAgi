@@ -30,6 +30,7 @@ var server = AGI.createServer(function(context) {
     logger.info('当前服务器连接数：' + count);
   });
 
+  server.setMaxListeners(0);
   server.on("error", function(err) {
     logger.error(err);
   });

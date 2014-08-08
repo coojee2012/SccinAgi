@@ -3,6 +3,7 @@
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$/SccinAGI/server.js" libraries="{Node.js Globals, Node.js v0.10.23 Core Modules}" />
     <file url="file://$PROJECT_DIR$/SccinCRM/app.js" libraries="{Node.js Globals, Node.js v0.10.23 Core Modules}" />
+    <file url="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js" libraries="{Node.js Globals, Node.js v0.10.23 Core Modules}" />
     <file url="file://$PROJECT_DIR$/SccinCRM/server.js" libraries="{Node.js Globals, Node.js v0.10.23 Core Modules}" />
   </component>
 </project>

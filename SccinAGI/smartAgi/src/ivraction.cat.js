@@ -484,7 +484,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             if (actargs.digits && /\d+/.test(actargs.digits))
               digits = actargs.digits;
             logger.debug('数学读出：', digits);
-            if (digits && digits !== '') {
+            if (/\d+/.test(digits)) {
               self.sayNumber(digits, function(err, result) {
                 cb(err, result);
               });
@@ -580,12 +580,16 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             } else {
               cb(null, null);
             }
-          } else if (actmode.modename === '变量判断') {
+          }
+          else if (actmode.modename === '变量判断') {
             logger.debug("进行变量判断");
 
             if (actargs.varname && actargs.varname !== '') {
               var tempvarname = actargs.varname;
-              var tmpvalue = self.activevar[tempvarname] + "";
+              var tmpvalue =  "";
+                if(self.activevar[tempvarname]){
+                    tmpvalue=self.activevar[tempvarname]+"";
+                }
               var varval = actargs.varval + "";
               var checkway = actargs.checkway === "" ? "eq" : actargs.checkway;
               if (checkway === "eq" && varval == tmpvalue) {

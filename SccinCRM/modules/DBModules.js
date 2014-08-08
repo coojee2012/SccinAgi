@@ -542,8 +542,9 @@ Dbs.manageMenmuRoleRelations = manageMenmuRoleRelations;
 var manageMenmuGroup=schema.define('manageMenmuGroup',{
     id:{type:String,length:100,default:function(){return guid.create();}},
     groupName:   {type:String,length:50},
-    crtTime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+    crtTime:   {type: String,length:50,index: true, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
 });
+
 
 
 
@@ -576,6 +577,8 @@ var manageMenmus=schema.define('manageMenmus',{
 
 
 manageMenmus.belongsTo(manageMenmuGroup, {as: 'menmugroup', foreignKey: 'mgID'});
+
+manageMenmuGroup.hasMany(manageMenmus, {as:'menmus',foreignKey: 'mgID'});
 
 manageMenmus.validatesPresenceOf('menName', 'menURL','iconName');//验证非空
 
