@@ -1,64 +1,64 @@
 /*-----------------------------------------------------------------------------
-*version:1.0  , 时间：2011-09-14
-*desktop需引入myLib.js创建命名空间，和jquery 及 jquery ui,contextMenu jquery插件
------------------------------------------------------------------------------*/
+ *version:1.0  , 时间：2011-09-14
+ *desktop需引入myLib.js创建命名空间，和jquery 及 jquery ui,contextMenu jquery插件
+ -----------------------------------------------------------------------------*/
 //声明desktop空间,封装相关操作
 myLib.NS("desktop");
 myLib.desktop = {
     //用于存储桌面的高度和宽度
-    winWH: function() {
+    winWH: function () {
         $('body').data('winWh', {
             'w': $(window).width(),
             'h': $(window).height()
         });
     },
     //初始化桌面数据，放入pannel
-    desktopPanel: function() {
+    desktopPanel: function () {
         $('body')
             .data(
-                'panel', {
-                    'taskBar': {
-                        '_this': $('#taskBar'),
-                        'task_lb': $('#task_lb')
-                    },
-                    'navBar': $('#navBar'),
-                    'wallpaper': $('#wallpapers'),
-                    'lrBar': {
-                        '_this': $('#lr_bar'),
-                        'default_app': $('#default_app'),
-                        'start_block': $('#start_block'),
-                        'start_btn': $('#start_btn'),
-                        'start_item': $('#start_item'),
-                        'default_tools': $('#default_tools')
-                    },
-                    'desktopPanel': {
-                        '_this': $('#desktopPanel'),
-                        'innerPanel': $('#desktopInnerPanel'),
-                        'deskIcon': $('ul.deskIcon')
-                    }
-                    //,
-                    //'powered_by': $('a.powered_by')
-                });
+            'panel', {
+                'taskBar': {
+                    '_this': $('#taskBar'),
+                    'task_lb': $('#task_lb')
+                },
+                'navBar': $('#navBar'),
+                'wallpaper': $('#wallpapers'),
+                'lrBar': {
+                    '_this': $('#lr_bar'),
+                    'default_app': $('#default_app'),
+                    'start_block': $('#start_block'),
+                    'start_btn': $('#start_btn'),
+                    'start_item': $('#start_item'),
+                    'default_tools': $('#default_tools')
+                },
+                'desktopPanel': {
+                    '_this': $('#desktopPanel'),
+                    'innerPanel': $('#desktopInnerPanel'),
+                    'deskIcon': $('ul.deskIcon')
+                }
+                //,
+                //'powered_by': $('a.powered_by')
+            });
     },
     //初始化桌面图标
-    iconDataInit: function(data) {
+    iconDataInit: function (data) {
         for (var a in data) {
             $("#" + a).data("iconData", data[a]);
         }
     },
-    getMydata: function() {
+    getMydata: function () {
         return $('body').data();
     },
     //获取鼠标坐标
-    mouseXY: function() {
+    mouseXY: function () {
         var mouseXY = [];
-        $(document).bind('mousemove', function(e) {
+        $(document).bind('mousemove', function (e) {
             mouseXY[0] = e.pageX;
             mouseXY[1] = e.pageY;
         });
         return mouseXY;
     },
-    contextMenu: function(jqElem, data, menuName, textLimit) {
+    contextMenu: function (jqElem, data, menuName, textLimit) {
         var _this = this,
             mXY = _this.mouseXY();
 
@@ -66,7 +66,7 @@ myLib.desktop = {
             .smartMenu(data, {
                 name: menuName,
                 textLimit: textLimit,
-                afterShow: function() {
+                afterShow: function () {
                     var menu = $("#smartMenu_" + menuName);
                     var myData = myLib.desktop.getMydata(),
                         wh = myData.winWh; //获取当前document宽高
@@ -81,7 +81,7 @@ myLib.desktop = {
                     }
                 }
             });
-        $(document.body).click(function(event) {
+        $(document.body).click(function (event) {
             event.preventDefault();
             $.smartMenu.hide();
         });
@@ -91,28 +91,28 @@ myLib.desktop = {
 //弹出窗口，支持拖曳，改变大小，关闭，最大化，最小化
 myLib.NS("desktop.win");
 myLib.desktop.win = {
-    winHtml: function(title, url, id) {
+    winHtml: function (title, url, id) {
         return "<div class='windows corner' id=" + id + "><div class='win_title'><b>" + title + "</b><span class='win_btnblock'><a href='#' class='winMinimize' title='最小化'></a><a href='#' class='winMaximize' title='最大化'></a><a href='#' class='winHyimize' title='还原'></a><a href='#' class='winClose' title='关闭'></a></span></div><iframe frameborder='0' name='myFrame_" + id + "' id='myFrame_" + id + "' class='winframe' scrolling='auto' width='100%' src=''></iframe></div>";
     },
     //添加遮障层，修复iframe 鼠标经过事件bug	
-    iframFix: function(obj) {
-        obj.each(function() {
+    iframFix: function (obj) {
+        obj.each(function () {
             var o = $(this);
             if (o.find('.zzDiv').size() <= 0)
                 o.append($("<div class='zzDiv' style='width:100%;height:" + (o.innerHeight() - 26) + "px;position:absolute;z-index:900;left:0;top:26px;'></div>"));
         })
     },
     //获取当前窗口最大的z-index值
-    maxWinZindex: function($win) {
-        return Math.max.apply(null, $.map($win, function(e, n) {
+    maxWinZindex: function ($win) {
+        return Math.max.apply(null, $.map($win, function (e, n) {
             if ($(e).css('position') == 'absolute')
                 return parseInt($(e).css('z-index')) || 1;
         }));
     },
     //获取当前最顶层窗口		
-    findTopWin: function($win, maxZ) {
+    findTopWin: function ($win, maxZ) {
         var topWin;
-        $win.each(function(index) {
+        $win.each(function (index) {
             if ($(this).css("z-index") == maxZ) {
                 topWin = $(this);
                 return false;
@@ -121,12 +121,12 @@ myLib.desktop.win = {
         return topWin;
     },
     //关闭窗口	
-    closeWin: function(obj) {
+    closeWin: function (obj) {
         var _this = this,
             $win = $('div.windows').not(".hideWin"),
             maxZ, topWin;
         myLib.desktop.taskBar.delWinTab(obj);
-        obj.hide(200, function() {
+        obj.hide(200, function () {
             $(this).remove();
         });
         //当关闭窗口后寻找最大z-index的窗口并使其出入选择状态
@@ -137,7 +137,7 @@ myLib.desktop.win = {
         }
     },
     //最小化窗口	
-    minimize: function(obj) {
+    minimize: function (obj) {
         var _this = this,
             $win = $('div.windows').not(".hideWin"),
             maxZ, topWin, objTab;
@@ -158,7 +158,7 @@ myLib.desktop.win = {
         }
     },
     //最大化窗口函数	
-    maximizeWin: function(obj) {
+    maximizeWin: function (obj) {
         var myData = myLib.desktop.getMydata(),
             panel = $("#desktopInnerPanel").offset(),
             wh = myData.winWh; //获取当前document宽高
@@ -179,7 +179,7 @@ myLib.desktop.win = {
             });
     },
     //还原窗口函数	
-    hyimizeWin: function(obj) {
+    hyimizeWin: function (obj) {
         var myData = obj.data(),
             winLocation = myData.winLocation; //获取窗口最大化前的位置大小
 
@@ -198,7 +198,7 @@ myLib.desktop.win = {
             });
     },
     //交换窗口z-index值		
-    switchZindex: function(obj) {
+    switchZindex: function (obj) {
         var myData = myLib.desktop.getMydata(),
             $topWin = myData.topWin,
             $topWinTab = myData.topWinTab,
@@ -219,7 +219,7 @@ myLib.desktop.win = {
         }
     },
     //新建一个窗口	
-    newWin: function(options) {
+    newWin: function (options) {
 
         var myData = myLib.desktop.getMydata(),
             wh = myData.winWh, //获取当前document宽高
@@ -282,7 +282,7 @@ myLib.desktop.win = {
             //在任务栏里添加tab
             myLib.desktop.taskBar.addWinTab(options['WindowTitle'], options['WindowsId']);
             //初始化新窗口并显示
-            $(_this.winHtml(options['WindowTitle']+wLeft+'x'+wTop, options['iframSrc'], id)).appendTo('#desktopInnerPanel');
+            $(_this.winHtml(options['WindowTitle'] + wLeft + 'x' + wTop, options['iframSrc'], id)).appendTo('#desktopInnerPanel');
 
             var $newWin = $("#" + id),
                 $icon = $("#" + options['WindowsId']),
@@ -320,8 +320,8 @@ myLib.desktop.win = {
                         "z-index": zindex
                     })
                     .addClass("loading")
-                    .show(10, function() {
-                        $(this).find(".winframe").attr("src", options['iframSrc']).load(function() {
+                    .show(10, function () {
+                        $(this).find(".winframe").attr("src", options['iframSrc']).load(function () {
                             $(this).show();
                         });
                     });
@@ -341,30 +341,30 @@ myLib.desktop.win = {
                         height: options['WindowHeight'],
                         top: wTop,
                         left: wLeft
-                    }, 100, function() {
-                        $(this).find(".winframe").attr("src", options['iframSrc']).load(function() {
+                    }, 100, function () {
+                        $(this).find(".winframe").attr("src", options['iframSrc']).load(function () {
                             $(this).show();
                         });
                     });
             }
 
             $newWin
-            //存储窗口当前位置大小
-            .data('winLocation', {
-                'w': options['WindowWidth'],
-                'h': options['WindowHeight'],
-                'left': wLeft,
-                'top': wTop
-            })
-            //鼠标点击，切换窗口，使此窗口显示到最上面
-            .bind({
-                "mousedown": function(event) {
-                    _this.switchZindex($(this));
-                },
-                "mouseup": function() {
-                    $(this).find('.zzDiv').remove();
-                }
-            })
+                //存储窗口当前位置大小
+                .data('winLocation', {
+                    'w': options['WindowWidth'],
+                    'h': options['WindowHeight'],
+                    'left': wLeft,
+                    'top': wTop
+                })
+                //鼠标点击，切换窗口，使此窗口显示到最上面
+                .bind({
+                    "mousedown": function (event) {
+                        _this.switchZindex($(this));
+                    },
+                    "mouseup": function () {
+                        $(this).find('.zzDiv').remove();
+                    }
+                })
                 .find(".winframe")
                 .css({
                     "width": options['WindowWidth'],
@@ -381,7 +381,7 @@ myLib.desktop.win = {
             }
 
             //双击窗口标题栏
-            $winTitle.dblclick(function() {
+            $winTitle.dblclick(function () {
                 var hasMaximizeBtn = $(this).find(winMaximize_btn);
 
                 if (!hasMaximizeBtn.is(":hidden")) {
@@ -393,12 +393,12 @@ myLib.desktop.win = {
             });
 
             //窗口最大化，最小化，及关闭
-            winClose_btn.click(function(event) {
+            winClose_btn.click(function (event) {
                 event.stopPropagation();
                 _this.closeWin($newWin);
             });
             //最大化
-            winMaximize_btn.click(function(event) {
+            winMaximize_btn.click(function (event) {
                 event.stopPropagation();
                 if (options['WindowStatus'] == "regular") {
                     _this.maximizeWin($newWin);
@@ -410,13 +410,13 @@ myLib.desktop.win = {
             });
 
             //如果浏览器窗口大小改变，则更新窗口大小
-            $(window).wresize(function() {
+            $(window).wresize(function () {
                 if (options['WindowStatus'] == "maximized") {
                     _this.maximizeWin($newWin);
                 }
             });
             //还原窗口
-            winHyimize_btn.click(function(event) {
+            winHyimize_btn.click(function (event) {
                 event.stopPropagation();
                 if (options['WindowStatus'] == "maximized") {
                     _this.hyimizeWin($newWin);
@@ -427,7 +427,7 @@ myLib.desktop.win = {
                 }
             });
             //最小化窗口
-            winMinimize_btn.click(function() {
+            winMinimize_btn.click(function () {
                 _this.minimize($newWin);
             });
         } else {
@@ -444,7 +444,7 @@ myLib.desktop.win = {
             }
         }
     },
-    upWinResize_block: function(win) {
+    upWinResize_block: function (win) {
 
         //更新窗口可改变大小范围,wh为浏览器窗口大小
         var offset = win.offset();
@@ -453,7 +453,7 @@ myLib.desktop.win = {
             'maxHeight': $(window).height() - offset.top - 35
         })
     },
-    drag: function(arr, $newWin, wh) {
+    drag: function (arr, $newWin, wh) {
         var _this = this;
         $newWin
             .draggable({
@@ -461,11 +461,11 @@ myLib.desktop.win = {
                 iframeFix: false,
                 scroll: false
             })
-            .bind("dragstart", function(event, ui) {
+            .bind("dragstart", function (event, ui) {
                 _this.iframFix($(this));
                 $("#desktopPanel").css("z-index", 95);
             })
-            .bind("dragstop", function(event, ui) {
+            .bind("dragstop", function (event, ui) {
                 $("#desktopPanel").css("z-index", 70);
 
                 var obj_this = $(this);
@@ -475,13 +475,13 @@ myLib.desktop.win = {
                 _this.upWinResize_block(obj_this);
 
                 obj_this
-                //更新窗口存储的位置属性
-                .data('winLocation', {
-                    'w': obj_this.width(),
-                    'h': obj_this.height(),
-                    'left': offset.left,
-                    'top': offset.top
-                })
+                    //更新窗口存储的位置属性
+                    .data('winLocation', {
+                        'w': obj_this.width(),
+                        'h': obj_this.height(),
+                        'left': offset.left,
+                        'top': offset.top
+                    })
                     .find('.zzDiv')
                     .remove();
 
@@ -495,7 +495,7 @@ myLib.desktop.win = {
         $("div.win_title").css("cursor", "move");
 
     },
-    resize: function(minW, minH, maxW, maxH, $newWin, wh) {
+    resize: function (minW, minH, maxW, maxH, $newWin, wh) {
         var _this = this;
         $newWin
             .resizable({
@@ -506,7 +506,7 @@ myLib.desktop.win = {
                 maxHeight: maxH
             })
             .css("position", "absolute")
-            .bind("resize", function(event, ui) {
+            .bind("resize", function (event, ui) {
                 var h = $(this).innerHeight(),
                     w = $(this).innerWidth();
                 _this.iframFix($(this));
@@ -518,22 +518,22 @@ myLib.desktop.win = {
                 });
 
             })
-            .bind("resizestop", function(event, ui) {
+            .bind("resizestop", function (event, ui) {
                 var obj_this = $(this);
                 var offset = obj_this.offset();
                 var h = obj_this.innerHeight(),
                     w = obj_this.innerWidth();
 
                 obj_this
-                //更新窗口存储的位置属性
-                .data('winLocation', {
-                    'w': w,
-                    'h': h,
-                    'left': offset.left,
-                    'top': offset.top
-                })
-                //删除遮障iframe的层
-                .find(".zzDiv")
+                    //更新窗口存储的位置属性
+                    .data('winLocation', {
+                        'w': w,
+                        'h': h,
+                        'left': offset.left,
+                        'top': offset.top
+                    })
+                    //删除遮障iframe的层
+                    .find(".zzDiv")
                     .remove();
             });
     }
@@ -542,7 +542,7 @@ myLib.desktop.win = {
 //侧边工具栏
 myLib.NS("desktop.lrBar");
 myLib.desktop.lrBar = {
-    upLrBar: function() {
+    upLrBar: function () {
         var myData = myLib.desktop.getMydata(),
             $lrBar = myData.panel.lrBar['_this'],
             wh = myData.winWh;
@@ -551,7 +551,7 @@ myLib.desktop.lrBar = {
         });
 
     },
-    init: function(iconData) {
+    init: function (iconData) {
         //读取元素对象数据
         var myData = myLib.desktop.getMydata(),
             $default_tools = myData.panel.lrBar['default_tools'],
@@ -571,22 +571,22 @@ myLib.desktop.lrBar = {
         myLib.desktop.iconDataInit(iconData);
 
         //如果窗口大小改变，则更新侧边栏位置
-        $(window).wresize(function() {
+        $(window).wresize(function () {
             myLib.desktop.winWH(); //更新窗口大小数据			   
             _this.upLrBar();
         });
 
         //任务栏右边默认组件区域交互效果	
-        $def_tools_Btn.hover(function() {
+        $def_tools_Btn.hover(function () {
             $(this).css("background-color", "#999");
-        }, function() {
+        }, function () {
             $(this).css("background-color", "transparent");
         });
         //默认应用程序区
         $default_app
             .droppable({
                 scope: 'a',
-                drop: function(event, ui) {
+                drop: function (event, ui) {
                     var title = ui.draggable.find(".text").text();
                     ui.draggable
                         .removeClass("desktop_icon")
@@ -603,13 +603,13 @@ myLib.desktop.lrBar = {
                 }
             })
             .find('li')
-            .hover(function() {
+            .hover(function () {
                 $(this).addClass('btnOver');
-            }, function() {
+            }, function () {
                 $(this).removeClass('btnOver');
             })
             .unbind('click')
-            .click(function() {
+            .click(function () {
 
                 var data = $(this).data("iconData"),
                     id = this.id;
@@ -622,7 +622,7 @@ myLib.desktop.lrBar = {
                         async: false,
                         data: data.postdata,
                         timeout: 300,
-                        success: function(ajaxdata, textStatus) {
+                        success: function (ajaxdata, textStatus) {
                             if (ajaxdata.Response == "Error") {
                                 alert("操作失败");
                             } else {
@@ -630,7 +630,7 @@ myLib.desktop.lrBar = {
                             }
 
                         },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
                             alert('服务器处理异常！请联系管理员');
                         }
 
@@ -644,7 +644,7 @@ myLib.desktop.lrBar = {
                         async: false,
                         data: data.postdata,
                         timeout: 300,
-                        success: function(ajaxdata, textStatus) {
+                        success: function (ajaxdata, textStatus) {
                             if (ajaxdata.Response == "Error") {
                                 alert("操作失败:" + ajaxdata.Msg);
                             } else {
@@ -662,7 +662,7 @@ myLib.desktop.lrBar = {
                             }
 
                         },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
                             alert('服务器处理异常！请联系管理员');
                         }
 
@@ -680,7 +680,7 @@ myLib.desktop.lrBar = {
                         async: false,
                         data: data.postdata,
                         timeout: 300,
-                        success: function(ajaxdata, textStatus) {
+                        success: function (ajaxdata, textStatus) {
                             if (ajaxdata.response == "Error" && _PARKSTATUS == 0) {
                                 alert("保持操作失败");
                             } else if (ajaxdata.response == "Error" && _PARKSTATUS == 1) {
@@ -700,7 +700,7 @@ myLib.desktop.lrBar = {
                             }
 
                         },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
                             alert('服务器处理异常！请联系管理员');
                         }
 
@@ -730,13 +730,13 @@ myLib.desktop.lrBar = {
                 opacity: 0.7,
                 scope: 'a',
                 appendTo: 'parent',
-                start: function() {
+                start: function () {
                     $lrBar.css("z-index", 90);
                 }
             })
             .droppable({
                 scope: 'a',
-                drop: function(event, ui) {
+                drop: function (event, ui) {
 
                     var title = ui.draggable.find(".text").text();
                     ui.draggable
@@ -755,7 +755,7 @@ myLib.desktop.lrBar = {
             });
 
         //开始按钮、菜单交互效果
-        $start_btn.unbind('click').click(function(event) {
+        $start_btn.unbind('click').click(function (event) {
             event.preventDefault();
             event.stopPropagation();
             if ($start_item.is(":hidden"))
@@ -766,31 +766,41 @@ myLib.desktop.lrBar = {
 
         //子菜单交互开始
 
-        $("#starmenmu_pbx").mouseover(function(e) {
-            setTimeout("$('#sub_item_pbx').css('display','block')", 300);
+        $("#starmenmu_pbx").mouseover(function (e) {
+            $('#sub_item_pbx').css('display', 'block');
+            $('#sub_item_xtsz').css('display','none');
+            // setTimeout("$('#sub_item_pbx').css('display','block')", 300);
         });
-        $("#starmenmu_pbx").mouseout(function(e) {
-            setTimeout("$('#sub_item_pbx').css('display','none')", 300);
-        });
-
-        $("#sub_item_pbx").mouseover(function(e) {
-            setTimeout("$('#sub_item_pbx').css('display','block')", 300);
-        });
-
-        $("#starmenmu_xtsz").mouseover(function(e) {
-            setTimeout("$('#sub_item_xtsz').css('display','block')", 300);
-        });
-        $("#starmenmu_xtsz").mouseout(function(e) {
-            setTimeout("$('#sub_item_xtsz').css('display','none')", 300);
+        $("#starmenmu_pbx").mouseout(function (e) {
+            //$('#sub_item_pbx').css('display','none');
+           /* setTimeout(function () {
+                $('#sub_item_pbx').css('display', 'none');
+            }, 300);*/
         });
 
-        $("#sub_item_xtsz").mouseover(function(e) {
-            setTimeout("$('#sub_item_xtsz').css('display','block')", 300);
+        $("#sub_item_pbx").mouseout(function (e) {
+            //$('#sub_item_pbx').css('display','none');
+            // $('#sub_item_pbx').css('display','block');
+            //setTimeout("$('#sub_item_pbx').css('display','block')", 300);
+        });
+
+        $("#starmenmu_xtsz").mouseover(function (e) {
+            $('#sub_item_xtsz').css('display','block');
+            $('#sub_item_pbx').css('display','none');
+            //setTimeout("$('#sub_item_xtsz').css('display','block')", 300);
+        });
+        $("#starmenmu_xtsz").mouseout(function (e) {
+           // setTimeout("$('#sub_item_xtsz').css('display','none')", 300);
+        });
+
+        $("#sub_item_xtsz").mouseout(function (e) {
+           // $('#sub_item_xtsz').css('display','none');
+           // setTimeout("$('#sub_item_xtsz').css('display','block')", 300);
         });
 
         //字菜单交互结束
 
-        $("body").unbind('click').click(function(event) {
+        $("body").unbind('click').click(function (event) {
             event.preventDefault();
             $start_item.hide();
         });
@@ -802,11 +812,15 @@ myLib.desktop.lrBar = {
         //        });
 
         //开始菜单动作
-        $start_item.find("li").unbind('click').click(function() {
+
+        $start_item.find("li").unbind('click').click(function () {
 
             var data = $(this).data("iconData"),
                 id = this.id;
-            if (data.apptype == 'haschild') {} else if (data.apptype == 'loginout') {
+            if (!data || data.apptype == 'haschild') {
+
+            } else if (data.apptype == 'loginout') {
+
                 window.location.href = "/logout";
             } else {
                 myLib.desktop.win.newWin({
@@ -823,61 +837,61 @@ myLib.desktop.lrBar = {
         });
         // 全屏
         $("#showZm_btn").unbind('toggle')
-            .toggle(function() {
-                    myLib.fullscreenIE();
-                    myLib.fullscreen();
-                },
-                function() {
-                    myLib.fullscreenIE();
-                    myLib.exitFullscreen();
-                });
+            .toggle(function () {
+                myLib.fullscreenIE();
+                myLib.fullscreen();
+            },
+            function () {
+                myLib.fullscreenIE();
+                myLib.exitFullscreen();
+            });
         // 时钟
         $("#shizhong_btn").unbind('toggle')
-            .toggle(function() {
-                    myLib.desktop.win.newWin({
-                        WindowTitle: "工作提醒",
-                        iframSrc: '/RemindReacords/index?uid=' + _USERID,
-                        WindowsId: "welcome",
-                        WindowAnimation: 'none',
-                        WindowWidth: 800,
-                        WindowHeight: 600
-                    });
-                },
-                function() {
-
+            .toggle(function () {
+                myLib.desktop.win.newWin({
+                    WindowTitle: "工作提醒",
+                    iframSrc: '/RemindReacords/index?uid=' + _USERID,
+                    WindowsId: "welcome",
+                    WindowAnimation: 'none',
+                    WindowWidth: 800,
+                    WindowHeight: 600
                 });
+            },
+            function () {
+
+            });
         // 天气
         $("#weather_btn").unbind('toggle')
-            .toggle(function() {
-                    alert("当前系统暂不提供天气预报服务！");
-                },
-                function() {
+            .toggle(function () {
+                alert("当前系统暂不提供天气预报服务！");
+            },
+            function () {
 
-                });
+            });
         // 皮肤
         $("#them_btn").unbind('toggle')
-            .toggle(function() {
-                    alert("当前系统无权限换肤！");
-                },
-                function() {
+            .toggle(function () {
+                alert("当前系统无权限换肤！");
+            },
+            function () {
 
-                });
+            });
     }
 }
 /*----------------------------------------------------------------------------------	
-//声明任务栏空间，任务栏相关js操作
-----------------------------------------------------------------------------------*/
+ //声明任务栏空间，任务栏相关js操作
+ ----------------------------------------------------------------------------------*/
 myLib.NS("desktop.taskBar");
 myLib.desktop.taskBar = {
-    timer: function(obj) {
+    timer: function (obj) {
         var curDaytime = new Date().toLocaleString().split(" ");
         obj.innerHTML = curDaytime[1];
         obj.title = curDaytime[0];
-        setInterval(function() {
+        setInterval(function () {
             obj.innerHTML = new Date().toLocaleString().split(" ")[1];
         }, 1000);
     },
-    upTaskWidth: function() {
+    upTaskWidth: function () {
         var myData = myLib.desktop.getMydata(),
             $task_bar = myData.panel.taskBar['_this'];
         var maxHdTabNum = Math.floor($(window).width() / 100);
@@ -886,7 +900,7 @@ myLib.desktop.taskBar = {
         //存储活动任务栏tab默认组数
         $('body').data("maxHdTabNum", maxHdTabNum - 2);
     },
-    init: function() {
+    init: function () {
         //读取元素对象数据
         var myData = myLib.desktop.getMydata();
         var $task_lb = myData.panel.taskBar['task_lb'],
@@ -896,37 +910,42 @@ myLib.desktop.taskBar = {
         var _this = this;
         _this.upTaskWidth();
         //当改变浏览器窗口大小时，重新计算任务栏宽度
-        $(window).wresize(function() {
+        $(window).wresize(function () {
             _this.upTaskWidth();
         });
 
     },
-    contextMenu: function(tab, id) {
+    contextMenu: function (tab, id) {
         var _this = this;
         //初始化任务栏Tab右键菜单
         var data = [
-            [{
-                text: "最大化",
-                func: function() {
-                    $("#myWin_" + tab.data('win')).find('a.winMaximize').trigger('click');
+            [
+                {
+                    text: "最大化",
+                    func: function () {
+                        $("#myWin_" + tab.data('win')).find('a.winMaximize').trigger('click');
+                    }
+                },
+                {
+                    text: "最小化",
+                    func: function () {
+                        myLib.desktop.win.minimize($("#myWin_" + tab.data('win')));
+                    }
                 }
-            }, {
-                text: "最小化",
-                func: function() {
-                    myLib.desktop.win.minimize($("#myWin_" + tab.data('win')));
+            ],
+            [
+                {
+                    text: "关闭",
+                    func: function () {
+                        $("#smartMenu_taskTab_menu" + id).remove();
+                        myLib.desktop.win.closeWin($("#myWin_" + tab.data('win')));
+                    }
                 }
-            }],
-            [{
-                text: "关闭",
-                func: function() {
-                    $("#smartMenu_taskTab_menu" + id).remove();
-                    myLib.desktop.win.closeWin($("#myWin_" + tab.data('win')));
-                }
-            }]
+            ]
         ];
         myLib.desktop.contextMenu(tab, data, "taskTab_menu" + id, 10);
     },
-    addWinTab: function(text, id) {
+    addWinTab: function (text, id) {
         var myData = myLib.desktop.getMydata();
         var $task_lb = myData.panel.taskBar['task_lb'],
             $task_bar = myData.panel.taskBar['_this'],
@@ -951,7 +970,7 @@ myLib.desktop.taskBar = {
         $newTab
             .data('win', id)
             .addClass('selectTab')
-            .click(function() {
+            .click(function () {
                 var win = $("#myWin_" + $(this).data('win')),
                     tabId = this.id,
                     iconId = tabId.split("_")[1],
@@ -991,7 +1010,7 @@ myLib.desktop.taskBar = {
 
                         $(this).removeClass('defaultTab').addClass('selectTab'); //当只有一个窗口时
                         myLib.desktop.win.switchZindex(win);
-                    }else {
+                    } else {
                         if ($(this).hasClass('selectTab')) {
                             myLib.desktop.win.minimize(win);
                         } else {
@@ -1014,7 +1033,7 @@ myLib.desktop.taskBar = {
             LeftBtn
                 .show()
                 .find("a")
-                .click(function() {
+                .click(function () {
                     var pos = $task_lb.position();
                     if (pos.top < 0) {
                         $task_lb.animate({
@@ -1026,7 +1045,7 @@ myLib.desktop.taskBar = {
             rightBtn
                 .show()
                 .find("a")
-                .click(function() {
+                .click(function () {
                     var pos = $task_lb.position(),
                         h = $task_lb.height(),
                         row = h / 40;
@@ -1041,7 +1060,7 @@ myLib.desktop.taskBar = {
         }
 
     },
-    delWinTab: function(wObj) {
+    delWinTab: function (wObj) {
         var myData = myLib.desktop.getMydata(),
             $task_lb = myData.panel.taskBar['task_lb'],
             $task_bar = myData.panel.taskBar['_this'],
@@ -1061,11 +1080,11 @@ myLib.desktop.taskBar = {
             $task_lb.parent().css("margin", 0);
         }
     },
-    findWinTab: function(wObj) {
+    findWinTab: function (wObj) {
         var myData = myLib.desktop.getMydata(),
             $task_lb = myData.panel.taskBar['task_lb'],
             objTab;
-        $task_lb.find('a').each(function(index) {
+        $task_lb.find('a').each(function (index) {
             var id = "#myWin_" + $(this).data("win");
             if ($(id).is(wObj)) {
                 objTab = $(this);
@@ -1077,7 +1096,7 @@ myLib.desktop.taskBar = {
 //navbar桌面导航
 myLib.NS("desktop.navBar");
 myLib.desktop.navBar = {
-    init: function() {
+    init: function () {
         var myData = myLib.desktop.getMydata(),
             $navBar = myData.panel.navBar,
             $innerPanel = myData.panel.desktopPanel.innerPanel,
@@ -1094,13 +1113,13 @@ myLib.desktop.navBar = {
         $navTab
             .droppable({
                 scope: 'a',
-                over: function(event, ui) {
+                over: function (event, ui) {
                     $(this).trigger("click");
                     var i = $navTab.index($(this));
                     //ui.draggable
                     //.css({left:event.pageX+$deskIcon.width()*i});
                 },
-                drop: function(event, ui) {
+                drop: function (event, ui) {
                     var i = $navTab.index($(this));
                     ui.draggable
                         .addClass("desktop_icon")
@@ -1111,7 +1130,7 @@ myLib.desktop.navBar = {
                     myLib.desktop.lrBar.init();
                 }
             })
-            .click(function(event) {
+            .click(function (event) {
                 event.preventDefault();
                 event.stopPropagation();
                 var i = $navTab.index($(this));
@@ -1123,7 +1142,7 @@ myLib.desktop.navBar = {
 //桌面背景
 myLib.NS("desktop.wallpaper");
 myLib.desktop.wallpaper = {
-    init: function(imgUrl) {
+    init: function (imgUrl) {
 
         //将当前窗口宽度和高度数据存储在body元素上
         myLib.desktop.winWH();
@@ -1137,7 +1156,7 @@ myLib.desktop.wallpaper = {
             wallpaper.html("<img src='" + imgUrl + "'></img>");
             var img = wallpaper.find("img");
 
-            myLib.getImgWh(imgUrl, function(imgW, imgH) {
+            myLib.getImgWh(imgUrl, function (imgW, imgH) {
                 if (imgW <= winWh.w) {
                     img.css('width', winWh.w);
                 } else {
@@ -1156,7 +1175,7 @@ myLib.desktop.wallpaper = {
         }
 
         //如果窗口大小改变，更新背景布局大小
-        window.onresize = function() {
+        window.onresize = function () {
             _this.init(imgUrl);
         };
     }
@@ -1166,12 +1185,12 @@ myLib.desktop.wallpaper = {
 myLib.NS("desktop.deskIcon");
 myLib.desktop.deskIcon = {
     //桌面图标排列
-    arrangeIcons: function(desktop) {
+    arrangeIcons: function (desktop) {
         var myData = myLib.desktop.getMydata(),
             winWh = myData.winWh,
             $navBar = myData.panel.navBar,
             navBarHeight = $navBar.outerHeight()
-            //计算一共有多少图标
+        //计算一共有多少图标
             ,
             iconNum = desktop.find("li").size();
 
@@ -1186,18 +1205,18 @@ myLib.desktop.deskIcon = {
             currow = 0;
 
         desktop.
-        find("li")
+            find("li")
             .css({
                 "position": "absolute",
                 "margin": 0,
-                "left": function(index, value) {
+                "left": function (index, value) {
                     var v = curcol * gW + 30;
                     if ((index + 1) % rows == 0) {
                         curcol = curcol + 1;
                     }
                     return v;
                 },
-                "top": function(index, value) {
+                "top": function (index, value) {
                     var v = (index - rows * currow) * gH + 20;
                     if ((index + 1) % rows == 0) {
                         currow = currow + 1;
@@ -1206,7 +1225,7 @@ myLib.desktop.deskIcon = {
                 }
             });
     },
-    upDesktop: function($deskIcon, $deskIconBlock, $innerPanel, $deskIconNum, navBarHeight, lBarWidth) {
+    upDesktop: function ($deskIcon, $deskIconBlock, $innerPanel, $deskIconNum, navBarHeight, lBarWidth) {
         var myData = myLib.desktop.getMydata(),
             winWh = myData.winWh,
             w = winWh['w'] - lBarWidth,
@@ -1231,13 +1250,13 @@ myLib.desktop.deskIcon = {
             'margin-bottom': 75 + "px"
         });
 
-        $deskIcon.each(function() {
+        $deskIcon.each(function () {
             _this.arrangeIcons($(this));
 
             $(this)
                 .droppable({
                     scope: 'a',
-                    drop: function(event, ui) {
+                    drop: function (event, ui) {
                         ui.draggable
                             .addClass("desktop_icon")
                             .insertBefore($(this).find(".add_icon"))
@@ -1249,12 +1268,12 @@ myLib.desktop.deskIcon = {
                 });
         });
     },
-    desktopMove: function($innerPanel, $deskIcon, $navTab, dates, moveDx, nextIndex) {
+    desktopMove: function ($innerPanel, $deskIcon, $navTab, dates, moveDx, nextIndex) {
         $innerPanel
             .stop()
             .animate({
                 left: -(nextIndex) * moveDx
-            }, dates, function() {
+            }, dates, function () {
                 $deskIcon
                     .removeClass("currDesktop")
                     .eq(nextIndex)
@@ -1266,7 +1285,7 @@ myLib.desktop.deskIcon = {
                     .addClass("currTab");
             });
     },
-    init: function(iconData) {
+    init: function (iconData) {
 
         var myData = myLib.desktop.getMydata(),
             winWh = myData.winWh,
@@ -1283,7 +1302,7 @@ myLib.desktop.deskIcon = {
         _this.upDesktop($deskIcon, $deskIconBlock, $innerPanel, $deskIconNum, navBarHeight, lBarWidth);
 
         //如果窗口大小改变，则重新排列图标
-        $(window).wresize(function() {
+        $(window).wresize(function () {
             myLib.desktop.winWH(); //更新窗口大小数据
             _this.upDesktop($deskIcon, $deskIconBlock, $innerPanel, $deskIconNum, navBarHeight, lBarWidth);
         });
@@ -1296,13 +1315,13 @@ myLib.desktop.deskIcon = {
         $innerPanel
             .draggable({
                 axis: 'x',
-                start: function(event, ui) {
+                start: function (event, ui) {
 
                     $(this).css("cursor", "move");
                     timeStart = new Date().getTime();
                     dxStart = event.pageX;
                 },
-                stop: function(event, ui) {
+                stop: function (event, ui) {
                     $(this).css("cursor", "inherit");
                     timeEnd = new Date().getTime();
                     dxEnd = event.pageX;
@@ -1332,26 +1351,26 @@ myLib.desktop.deskIcon = {
         //图标鼠标经过效果
         $deskIcon
             .find("li")
-            .hover(function() {
-                    $(this).addClass("desktop_icon_over");
-                },
-                function() {
-                    $(this).removeClass("desktop_icon_over");
-                })
+            .hover(function () {
+                $(this).addClass("desktop_icon_over");
+            },
+            function () {
+                $(this).removeClass("desktop_icon_over");
+            })
             .not("li.add_icon")
-        //双击图标打开窗口
-        .click(function() {
-            var data = $(this).data("iconData"),
-                id = this.id;
-            myLib.desktop.win.newWin({
-                WindowTitle: data.title,
-                iframSrc: data.url,
-                WindowsId: id,
-                WindowAnimation: 'none',
-                WindowWidth: data.winWidth,
-                WindowHeight: data.winHeight
-            });
-        })
+            //双击图标打开窗口
+            .click(function () {
+                var data = $(this).data("iconData"),
+                    id = this.id;
+                myLib.desktop.win.newWin({
+                    WindowTitle: data.title,
+                    iframSrc: data.url,
+                    WindowsId: id,
+                    WindowAnimation: 'none',
+                    WindowWidth: data.winWidth,
+                    WindowHeight: data.winHeight
+                });
+            })
             .draggable({
                 helper: "clone",
                 scroll: false,
@@ -1359,13 +1378,13 @@ myLib.desktop.deskIcon = {
                 scope: 'a',
                 appendTo: 'body',
                 zIndex: 91,
-                start: function(event, ui) {
+                start: function (event, ui) {
                     ui.helper.removeClass("desktop_icon_over");
                 }
             })
             .droppable({
                 scope: 'a',
-                drop: function(event, ui) {
+                drop: function (event, ui) {
                     ui.draggable
                         .unbind("dblclick")
                         .addClass("desktop_icon")
@@ -1379,12 +1398,14 @@ myLib.desktop.deskIcon = {
 
         //初始化桌面右键菜单
         var data = [
-            [{
-                text: "退出系统",
-                func: function() {
-                    window.location.href = "/logout";
+            [
+                {
+                    text: "退出系统",
+                    func: function () {
+                        window.location.href = "/logout";
+                    }
                 }
-            }]
+            ]
 
         ];
         myLib.desktop.contextMenu($(document.body), data, "body", 10);

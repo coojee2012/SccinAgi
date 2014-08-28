@@ -11,6 +11,7 @@ datas.CallInfoID = s;
 datas.NoticeContent = '专家您好，这里是北京市发改委专家库系统，2013年12月31日在北京天安门有一评标项目,评标时间为1天，确认参加请按1，不参加请按2，重听请按9！';
 datas.SureContent = '您已确定参加评标，请携带有效证件于2013年12月31日12点30分前到北京市西城区东街123号海博大厦1308室，参加评标！联系电话010-88878678，联系手机：15308098290.';
 datas.QueryContent = '查询信息。';
+datas.HardContent='重听确认参评的信息！';
 datas.ProjMoveID = moment().format('YYYYMMDD-HHmm');
 datas.Phones = '13269298234';
 datas.KeyNum = '1|2|9';//确认参加评标/不参加/重听

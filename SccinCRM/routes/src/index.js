@@ -112,28 +112,28 @@ gets.index = function(req, res, next) {
 
 					if (results.getMenmus.length > 0) {
 						for (var i = 0; i < results.getMenmus.length; i++) {
-							if (results.getMenmus[i].mgID === 7) {
+							if (results.getMenmus[i].mgID == 7) {
 								startmenmus['sub_item_xtsz_' + results.getMenmus[i].id] = {
 									title: results.getMenmus[i].menName,
 									url: results.getMenmus[i].menURL,
 									apptype: 'appwin',
-									postdata: {},
+									postdata: {}
 									//winWidth: results.getMenmus[i].width,
 									//winHeight: results.getMenmus[i].height
 								};
-							} else if (results.getMenmus[i].mgID === 8) {
+							} else if (results.getMenmus[i].mgID == 8) {
 								startmenmus['sub_item_pbx_' + results.getMenmus[i].id] = {
 									title: results.getMenmus[i].menName,
 									url: results.getMenmus[i].menURL,
 									apptype: 'appwin',
-									postdata: {},
+									postdata: {}
 									//winWidth: results.getMenmus[i].width,
 									//winHeight: results.getMenmus[i].height
 								};
 							} else {
 								menmus["menmu_" + results.getMenmus[i].id] = {
 									title: results.getMenmus[i].menName,
-									url: results.getMenmus[i].menURL,
+									url: results.getMenmus[i].menURL
 									//winWidth: results.getMenmus[i].width,
 									//winHeight: results.getMenmus[i].height
 								}

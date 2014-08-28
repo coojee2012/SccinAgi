@@ -1,41 +1,30 @@
 {
 
-"appname": "北京市评标专家库呼叫中心系统",
+    "appname": "北京市评标专家库呼叫中心系统",
 
-"hostip": "127.0.0.1",
+    "hostip": "127.0.0.1",
 
-"hostname": "www.baidu.com",
+    "hostname": "www.baidu.com",
 
-"hostport": 3001,
+    "hostport": 3001,
 
-"appbase": "D:/GitHub/SccinAgi/SccinCRM",
+    "appbase": "D:/GitHub/SccinAgi/SccinCRM",
 
-"monitor": "/var/spool/asterisk/monitor/",
+    "monitor": "/var/spool/asterisk/monitor/",
 
-"asounds": "/var/lib/asterisk/sounds/",
+    "asounds": "/var/lib/asterisk/sounds/",
 
-"javapath": "/usr/bin/java",
+    "javapath": "/usr/bin/java",
 
-"ttsapp": "/var/lib/asterisk/agi-bin/VoiceTTS.jar",
+    "ttsapp": "/var/lib/asterisk/agi-bin/VoiceTTS.jar",
 
-"env": "production",
+    "env": "production",
 
-"debug": true,
+    "debug": true,
 
-"phone": "root",
+    "phone": "root",
 
-"email": "12345678",
+    "email": "12345678",
 
-"allowips": [
-
-
-"127.0.0.1",
-
-
-"192.168.0.0",
-
-
-"192.168.1.0"
-
-]
+    "allowips": ["127.0.0.1", "192.168.0.0", "192.168.1.0", "192.168.2.0","192.0.0.0"]
 }

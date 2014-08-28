@@ -1,7 +1,7 @@
 /*
 全角转半角函数
 */
-
+"use strict";
 function FullToHalf(str) {
     str += "";
     var result = "";
@@ -28,7 +28,7 @@ function DBC2SBC(str) {
     var i;
     var result = '';
     for (i = 0; i < str.length; i++) {
-        str1 = str.charCodeAt(i);
+      var  str1 = str.charCodeAt(i);
         if (str1 > 65344 && str1 < 65375) {
             result += String.fromCharCode(str.charCodeAt(i) - 65248);
             continue;
