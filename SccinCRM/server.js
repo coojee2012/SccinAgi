@@ -112,13 +112,13 @@ if (cluster.isMaster) {
 
 	});
 
-	var normal = require('child_process').fork(__dirname+'/Wetnurse'+SRCFILE);
+/*	var normal = require('child_process').fork(__dirname+'/Wetnurse'+SRCFILE);
 	normal.on('exit',function(code,signal){
     logger.info('奶妈程序退出了：'+code);
 	});
 	normal.on('error',function(err){
     logger.error('奶妈程序发生异常：'+err);
-	});
+	});*/
 
 } else if (cluster.isWorker) {
 	logger.info(' 子进程-> ' + "启动子进程 ..." + cluster.worker.id);

@@ -49,8 +49,14 @@ gets.index = function(req, res, next) {
 			getMenmus: ['getRoleMenmus',
 				function(cb, results) {
 					var where = {};
+                    console.log("角色拥有的菜单：", results.getRoleMenmus);
 					if (util.isArray(results.getRoleMenmus)) {
+                        var menmuids=[];
+                        for(var i in results.getRoleMenmus){
+                            menmuids.push(results.getRoleMenmus[i].menmuID) ;
+                        }
 
+                        where.id={'inq': menmuids};
 					} else {
 						where.id = {
 							'neq': ''

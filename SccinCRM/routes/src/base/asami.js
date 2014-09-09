@@ -168,16 +168,33 @@ posts.transfer = function (req, res, next) {
     }
 
     getconnectchannel(fromtype, extenfrom, function (channels) {
+
+        console.log(channels);
         var action = new AsAction.Redirect();
-        action.Channel = channels.src;
+        //action.Channel = channels.src;
+        action.Channel = channels.dst;
+        //action.ExtraChannel=channels.dst;
         action.Exten = extento;
-        action.Context = 'from-exten-sip';
-        nami.send(action, function (response) {
-            res.send(response);
-        });
+       // action.ExtraExten=444;
+        action.Context= 'app-exten';
+       // action.ExtraContext = 'app-exten';
+
+       /* var action2=new AsAction.Setvar();
+        action2.Channel = channels.dst;
+        action2.Variable="transfernum";
+        action2.Value=extento;*/
+        //nami.send(action2, function (response) {
+
+            nami.send(action, function (response) {
+                console.log(response);
+                res.send(response);
+            });
+      //  });
     });
 
 }
+
+
 /**
  * Originate Action
  * @constructor
@@ -947,10 +964,10 @@ gets.GetCallInfo = function (req, res, next) {
 posts.DadOn = function (req, res, next) {
     var exten = req.body['exten'] || req.query['exten'];
     var type = req.body['type'] || req.query['type'];
-    var extDB = require('../modules/ippbx/extension.js');
+
 
     try {
-        extDB.all({
+        Schemas['pbxExtension'].all({
             where: {
                 accountcode: exten
             }
@@ -1149,18 +1166,29 @@ function getconnectchannel(type, exten, cb) {
     var action = new AsAction.CoreShowChannels();
     nami.send(action, function (response) {
         if (response.response == 'Success') {
-
+            console.log(response.events);
             for (var i in response.events) {
                 //console.log("测试：");
-                //console.log(response.events[i]);
+
                 if (re.exec(response.events[i].channel) || response.events[i].accountcode == exten) {
                     src = response.events[i].channel;
                     dst = response.events[i].bridgedchannel;
+                   /* var parent2=new RegExp("^Local"  + '\\/' + exten,"gi");
+                    if(parent2.test(dst)){
+                        console.log("二次匹配！");
+                        for (var j in response.events) {
+                            if (parent2.exec(response.events[j].channel) && response.events[j].bridgedchannel != src && !parent2.exec(response.events[j].bridgedchannel)) {
+                                dst= response.events[j].bridgedchannel;
+                                break;
+                            }
+
+                        }
+                    }*/
                     break;
                 }
             }
         }
-
+        console.log("src:" + src + "dst:" + dst);
         cb({
             src: src,
             dst: dst

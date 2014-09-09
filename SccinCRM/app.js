@@ -26,12 +26,12 @@ var logger = require('./lib/logger').logger('web');
 var log4js = require('./lib/logger').log4js;
 
 
-//var server = http.createServer();
+var server = http.createServer();
 var options = {
     key: fs.readFileSync(__dirname+'/PCA/server.key'),
     cert: fs.readFileSync(__dirname+'/PCA/server.crt')
 };
-var server=https.createServer(options, app);
+//var server=https.createServer(options, app);
 
 var app = express();
 // 所有环境设置

@@ -114,6 +114,7 @@ function setsession(user, exten, req, callback) {
 
 function findexten(exten, callback) {
 	Schemas['pbxExtension'].find(exten, function(err, inst) {
+        console.log(inst);
 		if (err) {
 			callback('查找分机发生异常!', null);
 		} else if (inst === null) {
