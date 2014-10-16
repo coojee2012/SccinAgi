@@ -2053,7 +2053,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             logger.debug("准备从变量" + tempvarname + "读出数字字符:" + digits);
             if (actargs.digits && /\d+/.test(actargs.digits))
               digits = actargs.digits;
-            if (digits && digits !== '') {
+            if (/\d+/.test(digits)) {
               async.auto({
                 saydigits: function(callback) {
                   logger.debug("需要读出数字字符:", digits);
@@ -2183,6 +2183,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             if (actargs.varname && actargs.varname !== '') {
               var tempvarname = actargs.varname;
               var tmpvalue =  "";
+                logger.debug("变量值："+self.activevar[tempvarname]+",期望值:"+actargs.varval);
                 if(self.activevar[tempvarname]){
                     tmpvalue=self.activevar[tempvarname]+"";
                 }
@@ -2737,6 +2738,7 @@ routing.prototype.queue = function(queuenum, assign, callback) {
           logger.debug("队列拨打返回结果:", response);
           cb(err, response);
         });
+
       }
     ],
 
@@ -2997,7 +2999,13 @@ routing.prototype.router = function() {
                   args.called = item.replacecalledappend + args.called;
 
                 processmode = item.processmode;
-                processdefined = item.routerline === '呼入'? args.called :item.processdefined; //如果指匹配设置号码否则采用被叫
+                //processdefined = item.routerline === '呼入'? args.called :item.processdefined; //如果指匹配设置号码否则采用被叫
+                 if( processmode==='dialout'){
+                     processdefined=item.processdefined;
+
+                 }else{
+                     processdefined=args.called;
+                 }
               }
             }
             cbk();
@@ -3834,3 +3842,24 @@ routing.prototype.unPauseQueueMember = function(queuenum, assign, callback) {
     callback(err, results);
   });
 };
+/**
+ * Created by LinYong on 2014/10/16.
+ */
+routing.prototype.voiceNoticeCallback = function() {
+    var self = this;
+    var context = self.context;
+    var schemas = self.schemas;
+    var nami = self.nami;
+    var logger = self.logger;
+    var args = self.args;
+    var vars = self.vars;
+
+    context.Playback('/home/share/' + args.fileID + '-api.wav', function(err, response) {
+        if(err){
+            context.hangup(function(err, response) {});
+        }else{
+            context.end();
+        }
+
+    });
+}

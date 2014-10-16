@@ -96,7 +96,13 @@ routing.prototype.router = function() {
                   args.called = item.replacecalledappend + args.called;
 
                 processmode = item.processmode;
-                processdefined = item.routerline === '呼入'? args.called :item.processdefined; //如果指匹配设置号码否则采用被叫
+                //processdefined = item.routerline === '呼入'? args.called :item.processdefined; //如果指匹配设置号码否则采用被叫
+                 if( processmode==='dialout'){
+                     processdefined=item.processdefined;
+
+                 }else{
+                     processdefined=args.called;
+                 }
               }
             }
             cbk();

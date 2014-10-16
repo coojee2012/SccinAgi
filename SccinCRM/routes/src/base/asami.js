@@ -175,21 +175,21 @@ posts.transfer = function (req, res, next) {
         action.Channel = channels.dst;
         //action.ExtraChannel=channels.dst;
         action.Exten = extento;
-       // action.ExtraExten=444;
-        action.Context= 'app-exten';
-       // action.ExtraContext = 'app-exten';
+        // action.ExtraExten=444;
+        action.Context = 'app-exten';
+        // action.ExtraContext = 'app-exten';
 
-       /* var action2=new AsAction.Setvar();
-        action2.Channel = channels.dst;
-        action2.Variable="transfernum";
-        action2.Value=extento;*/
+        /* var action2=new AsAction.Setvar();
+         action2.Channel = channels.dst;
+         action2.Variable="transfernum";
+         action2.Value=extento;*/
         //nami.send(action2, function (response) {
 
-            nami.send(action, function (response) {
-                console.log(response);
-                res.send(response);
-            });
-      //  });
+        nami.send(action, function (response) {
+            console.log(response);
+            res.send(response);
+        });
+        //  });
     });
 
 }
@@ -622,7 +622,80 @@ posts.autodial = function (req, res, next) {
 
 }
 
+posts.VoiceNotice = function (req, res, next) {
+    var tts = require(basedir + '/lib/tts').tts;
+    var phoneStr = req.body["phones"] || "";
+    var voiceText = req.body["voiceText"] || "";
+    if (voiceText == "" || phoneStr == "") {
+        res.send({
+            "success": false,
+            "result": '联系电话或通知语音内容不能为空！'
+        });
+    }
+    else {
+        var phones = phoneStr.split(",");
+        async.auto({
+                MixVoice: function (cb) {
+                    var noticeID = new Date().getTime();//guid.create();
 
+                    tts.synth('/home/share/' + noticeID + '-api.wav', voiceText, function (state, msg) {
+                        if (state === 'true') {
+                            cb(null, noticeID);
+                        } else {
+                            cb("合成通知语音失败！", null);
+
+                        }
+                    });
+                },
+                notice:["MixVoice",function(cb,results){
+                    var voiceFileID=results.MixVoice;
+                    async.each(phones,function(item,callback){
+                        var channel = "LOCAL/" + item + "@sub-voiceNotice/n";
+                        var Context = 'sub-voiceNotice-callback';
+                        //var Context='app-exten';
+                        var action = new AsAction.Originate();
+                        action.Channel = channel;
+                        //action.Timeout=30;
+                        action.Async = true;
+                        action.Account = item;
+                        action.CallerID = item;
+                        action.Context = Context;
+                        action.Variable = 'voiceFile='+ voiceFileID ;
+                        action.Exten = voiceFileID;
+                        if (nami.connected) {
+                            nami.send(action, function (response) {
+                                callback(null, response);
+                            });
+                        } else {
+                            callback('无法连接到语音服务器！', null);
+
+                        }
+                    },function(err){
+                        cb(err,null);
+                    });
+
+
+                }]
+
+            }, function (err, results) {
+                if (err) {
+                    res.send({
+                        "success": false,
+                        "result": err
+                    });
+                } else {
+                    res.send({
+                        "success": true,
+                        "result": "通知成功!"
+                    });
+                }
+            }
+        );
+
+    }
+
+
+}
 posts.getresult = function (req, res, next) {
     var Userkey = req.get('User-key');
     var UserAgent = req.get('User-Agent');
@@ -1173,17 +1246,17 @@ function getconnectchannel(type, exten, cb) {
                 if (re.exec(response.events[i].channel) || response.events[i].accountcode == exten) {
                     src = response.events[i].channel;
                     dst = response.events[i].bridgedchannel;
-                   /* var parent2=new RegExp("^Local"  + '\\/' + exten,"gi");
-                    if(parent2.test(dst)){
-                        console.log("二次匹配！");
-                        for (var j in response.events) {
-                            if (parent2.exec(response.events[j].channel) && response.events[j].bridgedchannel != src && !parent2.exec(response.events[j].bridgedchannel)) {
-                                dst= response.events[j].bridgedchannel;
-                                break;
-                            }
+                    /* var parent2=new RegExp("^Local"  + '\\/' + exten,"gi");
+                     if(parent2.test(dst)){
+                     console.log("二次匹配！");
+                     for (var j in response.events) {
+                     if (parent2.exec(response.events[j].channel) && response.events[j].bridgedchannel != src && !parent2.exec(response.events[j].bridgedchannel)) {
+                     dst= response.events[j].bridgedchannel;
+                     break;
+                     }
 
-                        }
-                    }*/
+                     }
+                     }*/
                     break;
                 }
             }

@@ -1,2 +1,2 @@
-/*! 路由处理程序 2014-09-03 */
+/*! 路由处理程序 2014-10-16 */
 var conf=require("node-conf"),basedir=conf.load("app").appbase,Schemas=require(basedir+"/database/schema").Schemas,guid=require("guid"),async=require("async"),gets={},posts={};module.exports={get:gets,post:posts},gets.index=function(a,b){console.error("访问到了这里！"),b.send({success:!0,expertid:"12345678",projectid:"1cf4431a-2fde-4227-8559-c0d595dab7e6",status:1})},posts.index=function(a,b){a.body.a||"10010";b.send({success:!0,expertid:"12345678",projectid:"1cf4431a-2fde-4227-8559-c0d595dab7e6",status:1})};

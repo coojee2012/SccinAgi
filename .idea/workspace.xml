@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b6521b4b-dff4-40cc-929a-ea8e4d5f4410" name="Default" comment="改变工作空间">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SccinCRM/views/crm/screenPop/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/crm/screenPop.js" />
+    <list default="true" id="b6521b4b-dff4-40cc-929a-ea8e4d5f4410" name="Default" comment="建设网呼叫中心修改">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/src/voiceNoticeCallback.cat.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/AsyncConfig.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/AsyncConfig.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Card.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Card.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Cdr.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Cdr.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/modules/DBModules.js" afterPath="$PROJECT_DIR$/SccinAGI/modules/DBModules.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/DBModules.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/DBModules.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/modules/DBModules.min.js" afterPath="$PROJECT_DIR$/SccinAGI/modules/DBModules.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/DBModules.min.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/DBModules.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/DbBack.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/DbBack.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/manage/Departments.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/manage/Departments.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/modules/src/crm/DialResult.js" afterPath="$PROJECT_DIR$/SccinAGI/modules/src/crm/DialResult.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/modules/src/crm/DialResult.js" afterPath="$PROJECT_DIR$/SccinCRM/modules/src/crm/DialResult.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ExtenGroup.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ExtenGroup.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Extension.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Extension.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/IvrMenmu.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/IvrMenmu.js" />
@@ -31,8 +26,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Trunk.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/Trunk.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserInfo.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserInfo.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserRole.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/manage/UserRole.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/Wetnurse.js" afterPath="$PROJECT_DIR$/SccinCRM/Wetnurse.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/app.js" afterPath="$PROJECT_DIR$/SccinCRM/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/app.min.js" afterPath="$PROJECT_DIR$/SccinCRM/app.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/base/asami.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/base/asami.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js" />
@@ -41,19 +34,13 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/base/common.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/base/common.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/dycharts.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/dycharts.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/base/htmlhelper/getSelectOptions.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/base/htmlhelper/getSelectOptions.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/index.html" afterPath="$PROJECT_DIR$/SccinCRM/views/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/index.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/index.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/linemonitor.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/linemonitor.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/login.html" afterPath="$PROJECT_DIR$/SccinCRM/views/login.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/login.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/login.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/login.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/login.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/logout.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/logout.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/Install/baseSqlData/pbxivractmode.sql" afterPath="$PROJECT_DIR$/SccinCRM/Install/baseSqlData/pbxivractmode.sql" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ivracts/playback.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/pbx/ivracts/playback.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/smartAgi/src/queue.cat.js" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/src/queue.cat.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/smartAgi/src/router.cat.js" afterPath="$PROJECT_DIR$/SccinAGI/smartAgi/src/router.cat.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/server.js" afterPath="$PROJECT_DIR$/SccinCRM/server.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinAGI/server.min.js" afterPath="$PROJECT_DIR$/SccinAGI/server.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/user.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/user.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/build/test/webagi.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/build/test/webagi.js" />
@@ -80,101 +67,125 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="cdr_manager.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinAGI/install/asbaseconf/cdr_manager.conf">
+      <file leaf-file-name="router.cat.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/router.cat.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="228">
-              <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1368" max-vertical-offset="3192">
+              <caret line="103" column="48" selection-start-line="103" selection-start-column="48" selection-end-line="103" selection-end-column="48" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="features.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinAGI/install/asbaseconf/features.conf">
+      <file leaf-file-name="diallocal.cat.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/diallocal.cat.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="349" max-vertical-offset="1026">
+            <state vertical-scroll-proportion="0.0" vertical-offset="399" max-vertical-offset="1387">
+              <caret line="55" column="50" selection-start-line="55" selection-start-column="50" selection-end-line="55" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sayNumber.cat.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/sayNumber.cat.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
+              <caret line="20" column="16" selection-start-line="20" selection-start-column="16" selection-end-line="20" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="voiceNoticeCallback.cat.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/voiceNoticeCallback.cat.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.53323483" vertical-offset="0" max-vertical-offset="677">
+              <caret line="19" column="7" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="asami.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="6156" max-vertical-offset="17803">
+              <caret line="639" column="0" selection-start-line="639" selection-start-column="0" selection-end-line="639" selection-end-column="0" />
+              <folding>
+                <element signature="e#4958#5997#0" expanded="false" />
+                <element signature="e#6666#7552#0" expanded="false" />
+                <element signature="e#10376#10707#0" expanded="false" />
+                <element signature="e#10766#11687#0" expanded="false" />
+                <element signature="e#11743#12822#0" expanded="false" />
+                <element signature="e#12879#13306#0" expanded="false" />
+                <element signature="e#13373#14284#0" expanded="false" />
+                <element signature="e#14335#15344#0" expanded="false" />
+                <element signature="e#15393#16449#0" expanded="false" />
+                <element signature="e#16499#17545#0" expanded="false" />
+                <element signature="e#17608#18664#0" expanded="false" />
+                <element signature="e#18723#19513#0" expanded="false" />
+                <element signature="e#19568#20293#0" expanded="false" />
+                <element signature="e#21764#22425#0" expanded="false" />
+                <element signature="e#25075#26552#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Routings.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/Routings.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-29.8" vertical-offset="72652" max-vertical-offset="73530">
+              <caret line="3863" column="7" selection-start-line="3863" selection-start-column="7" selection-end-line="3863" selection-end-column="7" />
+              <folding>
+                <marker date="1413440699981" expanded="true" signature="89939:94500" placeholder="{...}" />
+                <marker date="1413440699981" expanded="true" signature="91008:94496" placeholder="[...]" />
+                <marker date="1413440699981" expanded="true" signature="91092:94490" placeholder="{...}" />
+                <marker date="1413440699981" expanded="true" signature="91361:93211" placeholder="{...}" />
+                <marker date="1413440699981" expanded="true" signature="91719:93170" placeholder="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="queue.cat.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/queue.cat.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="513" max-vertical-offset="1330">
+              <caret line="64" column="1" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="queueAnswered.cat.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/queueAnswered.cat.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1615">
+              <caret line="74" column="5" selection-start-line="74" selection-start-column="5" selection-end-line="74" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ivr.cat.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/ivr.cat.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2793">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="enum.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinAGI/install/asbaseconf/enum.conf">
+      <file leaf-file-name="ivraction.cat.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dsp.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinAGI/install/asbaseconf/dsp.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="247">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="agents.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinAGI/install/asbaseconf/agents.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="969">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/server.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.82831323" vertical-offset="2338" max-vertical-offset="3002">
-              <caret line="152" column="1" selection-start-line="152" selection-start-column="1" selection-end-line="152" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1539" max-vertical-offset="6536">
-              <caret line="114" column="6" selection-start-line="114" selection-start-column="6" selection-end-line="114" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="extensions_dialplan.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinAGI/install/asbaseconf/extensions_dialplan.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1425" max-vertical-offset="4028">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="extensions_dialplan.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinAGI/install/144conf/extensions_dialplan.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="912" max-vertical-offset="3724">
-              <caret line="70" column="19" selection-start-line="70" selection-start-column="19" selection-end-line="70" selection-end-column="68" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cdr_mysql.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinAGI/install/asbaseconf/cdr_mysql.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="304">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="6764" max-vertical-offset="18620">
+              <caret line="375" column="11" selection-start-line="375" selection-start-column="11" selection-end-line="377" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -199,7 +210,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/sayDateTime.cat.js" />
         <option value="$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/ivrtree.html" />
         <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/blacklist.cat.js" />
         <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/getAsConf.cat.js" />
@@ -213,7 +223,6 @@
         <option value="$PROJECT_DIR$/SccinCRM/views/pbx/ivracts/saynumber.html" />
         <option value="$PROJECT_DIR$/SccinAGI/lib/context.js" />
         <option value="$PROJECT_DIR$/SccinAGI/lib/index.js" />
-        <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js" />
         <option value="$PROJECT_DIR$/SccinAGI/server.js" />
         <option value="$PROJECT_DIR$/SccinCRM/views/manage/Menmus/create.html" />
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js" />
@@ -239,7 +248,6 @@
         <option value="$PROJECT_DIR$/SccinAGI/modules/src/crm/DialResult.js" />
         <option value="$PROJECT_DIR$/SccinCRM/modules/src/crm/DialResult.js" />
         <option value="$PROJECT_DIR$/SccinCRM/Wetnurse.js" />
-        <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/router.cat.js" />
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/index.js" />
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/login.js" />
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/crm/creenPop.js" />
@@ -247,9 +255,12 @@
         <option value="$PROJECT_DIR$/SccinCRM/views/crm/index.html" />
         <option value="$PROJECT_DIR$/SccinCRM/views/index.html" />
         <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/queue.cat.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js" />
         <option value="$PROJECT_DIR$/SccinCRM/app.js" />
         <option value="$PROJECT_DIR$/SccinCRM/server.js" />
+        <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js" />
+        <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/router.cat.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js" />
+        <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/voiceNoticeCallback.cat.js" />
       </list>
     </option>
   </component>
@@ -311,6 +322,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -353,153 +365,12 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="SccinCRM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinCRM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinCRM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="node_modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinCRM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="node_modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nami" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinCRM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="node_modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nami" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinCRM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="node_modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nami" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="message" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinCRM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="asterisk" />
+              <option name="myItemId" value="SccinAGI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -509,7 +380,7 @@
     <property name="FullScreen" value="false" />
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="last_opened_file_path" value="E:/work_palte/cody-master/cody-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
@@ -745,7 +616,11 @@
       <created>1409637672437</created>
       <updated>1409637672437</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="建设网呼叫中心修改">
+      <created>1410255263567</created>
+      <updated>1410255263567</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -757,7 +632,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24962743" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27753934" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2846924" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39835164" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24962743" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32763532" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -827,7 +702,8 @@
     <MESSAGE value="添加-菜单分组（CRUD）" />
     <MESSAGE value="修改-播放数字字符页面保存必须填写digits的BUG&#10;修改-context.js" />
     <MESSAGE value="改变工作空间" />
-    <option name="LAST_COMMIT_MESSAGE" value="改变工作空间" />
+    <MESSAGE value="建设网呼叫中心修改" />
+    <option name="LAST_COMMIT_MESSAGE" value="建设网呼叫中心修改" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -847,151 +723,19 @@
           <line>129</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js</url>
+          <line>250</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="20" />
+      <option name="time" value="21" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/routing.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="18677">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/ivr.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2793">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/modules/src/pbx/LocalNumber.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/diallocal.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="596" max-vertical-offset="1387">
-          <caret line="48" column="41" selection-start-line="48" selection-start-column="33" selection-end-line="48" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/dialout.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="399" max-vertical-offset="2831">
-          <caret line="26" column="37" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/modules/src/manage/Menmus.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/modules/src/manage/MenmuRoleRelations.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="342">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/modules/src/manage/MenmuGroup.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="380">
-          <caret line="14" column="11" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/modules/src/manage/UserRole.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="551">
-          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/对moudels的修改.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="836">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/autoDial.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="463" max-vertical-offset="1311">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/common.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="399" max-vertical-offset="7847">
-          <caret line="18" column="33" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="33" />
-          <folding>
-            <element signature="e#634#4674#0" expanded="false" />
-            <element signature="e#4720#5021#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/Cdr.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1406">
-          <caret line="44" column="29" selection-start-line="44" selection-start-column="29" selection-end-line="44" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/SysSet.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2432">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/UserInfo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="287" max-vertical-offset="4788">
-          <caret line="73" column="2" selection-start-line="73" selection-start-column="2" selection-end-line="76" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/views/crm/screenPop/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.785714" vertical-offset="0" max-vertical-offset="304">
-          <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/modules/src/pbx/Router.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
-          <caret line="23" column="18" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/login.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="957" max-vertical-offset="1938">
-          <caret line="106" column="40" selection-start-line="106" selection-start-column="40" selection-end-line="106" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2850" max-vertical-offset="3819">
@@ -1017,7 +761,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1025,35 +768,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4104" max-vertical-offset="9044">
           <caret line="233" column="25" selection-start-line="233" selection-start-column="25" selection-end-line="233" selection-end-column="25" />
-          <folding>
-            <marker date="1409819475604" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1409819475604" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1409819475604" expanded="false" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/queueAnswered.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="938" max-vertical-offset="1615">
-          <caret line="74" column="5" selection-start-line="74" selection-start-column="5" selection-end-line="74" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/queue.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="570" max-vertical-offset="1330">
-          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/router.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2268" max-vertical-offset="3116">
-          <caret line="49" column="7" selection-start-line="49" selection-start-column="7" selection-end-line="49" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1061,7 +775,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1656" max-vertical-offset="5624">
           <caret line="102" column="0" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1069,15 +782,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="10786" max-vertical-offset="18905">
           <caret line="605" column="18" selection-start-line="605" selection-start-column="18" selection-end-line="605" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3268" max-vertical-offset="22990">
-          <caret line="172" column="42" selection-start-line="172" selection-start-column="34" selection-end-line="172" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1085,7 +789,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2071">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1093,7 +796,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="16416">
           <caret line="36" column="19" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1101,7 +803,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1767">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1109,7 +810,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2052">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1117,7 +817,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3097">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1125,7 +824,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2299">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1133,7 +831,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1141,7 +838,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1824" max-vertical-offset="3097">
           <caret line="22" column="9" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1149,7 +845,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1157,7 +852,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1165,7 +859,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2394" max-vertical-offset="3116">
           <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1243,8 +936,221 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SccinCRM/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.82831323" vertical-offset="2338" max-vertical-offset="3002">
-          <caret line="152" column="1" selection-start-line="152" selection-start-column="1" selection-end-line="152" selection-end-column="1" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2280" max-vertical-offset="3002">
+          <caret line="122" column="2" selection-start-line="122" selection-start-column="2" selection-end-line="122" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/monitor.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="679">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/agi.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="679">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/build/base/asami.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="664">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/sccincallout.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6821">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="e#86#10144#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/findqueuemember.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1653">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/routing.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/sayDateTime.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3230">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/blacklist.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="798">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/calloutback.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6916">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/channelMax.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/commonfun.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="57" max-vertical-offset="2318">
+          <caret line="22" column="36" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/dialout.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1938" max-vertical-offset="2831">
+          <caret line="26" column="37" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/NextDial.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1235">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/queue.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1330">
+          <caret line="64" column="1" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/queueAnswered.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1615">
+          <caret line="74" column="5" selection-start-line="74" selection-start-column="5" selection-end-line="74" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/ivr.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2793">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="6764" max-vertical-offset="18620">
+          <caret line="375" column="11" selection-start-line="375" selection-start-column="11" selection-end-line="377" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/sayNumber.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
+          <caret line="20" column="16" selection-start-line="20" selection-start-column="16" selection-end-line="20" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/Routings.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-29.8" vertical-offset="72652" max-vertical-offset="73530">
+          <caret line="3863" column="7" selection-start-line="3863" selection-start-column="7" selection-end-line="3863" selection-end-column="7" />
+          <folding>
+            <marker date="1413440699981" expanded="true" signature="89939:94500" placeholder="{...}" />
+            <marker date="1413440699981" expanded="true" signature="91008:94496" placeholder="[...]" />
+            <marker date="1413440699981" expanded="true" signature="91092:94490" placeholder="{...}" />
+            <marker date="1413440699981" expanded="true" signature="91361:93211" placeholder="{...}" />
+            <marker date="1413440699981" expanded="true" signature="91719:93170" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/diallocal.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="399" max-vertical-offset="1387">
+          <caret line="55" column="50" selection-start-line="55" selection-start-column="50" selection-end-line="55" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/router.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1368" max-vertical-offset="3192">
+          <caret line="103" column="48" selection-start-line="103" selection-start-column="48" selection-end-line="103" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="6156" max-vertical-offset="17803">
+          <caret line="639" column="0" selection-start-line="639" selection-start-column="0" selection-end-line="639" selection-end-column="0" />
+          <folding>
+            <element signature="e#4958#5997#0" expanded="false" />
+            <element signature="e#6666#7552#0" expanded="false" />
+            <element signature="e#10376#10707#0" expanded="false" />
+            <element signature="e#10766#11687#0" expanded="false" />
+            <element signature="e#11743#12822#0" expanded="false" />
+            <element signature="e#12879#13306#0" expanded="false" />
+            <element signature="e#13373#14284#0" expanded="false" />
+            <element signature="e#14335#15344#0" expanded="false" />
+            <element signature="e#15393#16449#0" expanded="false" />
+            <element signature="e#16499#17545#0" expanded="false" />
+            <element signature="e#17608#18664#0" expanded="false" />
+            <element signature="e#18723#19513#0" expanded="false" />
+            <element signature="e#19568#20293#0" expanded="false" />
+            <element signature="e#21764#22425#0" expanded="false" />
+            <element signature="e#25075#26552#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/voiceNoticeCallback.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.53323483" vertical-offset="0" max-vertical-offset="677">
+          <caret line="19" column="7" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="7" />
           <folding />
         </state>
       </provider>
