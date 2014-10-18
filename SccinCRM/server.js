@@ -72,7 +72,7 @@ if (cluster.isMaster) {
 		worker.on('message', function(msg) {
 			if (msg && typeof(msg) === 'object' && msg.count) {
 				count++;
-				logger.info('当前服务器总访问次数：' + count);
+				//logger.info('当前服务器总访问次数：' + count);
 			}
 		});
 
@@ -139,7 +139,7 @@ if (cluster.isMaster) {
 	var count = 0;
 	server.on('connection', function() {
 		count++;
-		logger.info('当前子进程：' + cluster.worker.id + '。访问次数: ' + count);
+		//logger.info('当前子进程：' + cluster.worker.id + '。访问次数: ' + count);
 		process.send({
 			count: true
 		});

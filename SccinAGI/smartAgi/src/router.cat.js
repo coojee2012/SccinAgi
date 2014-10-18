@@ -41,7 +41,7 @@ routing.prototype.router = function() {
       function(cb, results) {
         schemas.pbxRouter.all({
           where: {
-            routerline: args.routerline,
+            routerline: args.routerline
           },
           order: ['proirety asc']
         }, function(err, insts) {

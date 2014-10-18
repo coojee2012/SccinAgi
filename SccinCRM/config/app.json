@@ -12,7 +12,7 @@
 
     "monitor": "/var/spool/asterisk/monitor/",
 
-    "asounds": "/var/lib/asterisk/sounds/",
+    "asounds": "/var/lib/asterisk/sounds/cn/",
 
     "javapath": "/usr/bin/java",
 

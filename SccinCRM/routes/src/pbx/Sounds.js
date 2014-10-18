@@ -95,6 +95,7 @@ gets.edit = function(req, res, next, baseurl) {
         });
     });
 }
+
 posts.delete = function(req, res, next, baseurl) {
     var id = req.body['id'];
     Schemas['pbxSounds'].find(id, function(err, inst) {
@@ -114,16 +115,19 @@ posts.delete = function(req, res, next, baseurl) {
                 var oldfilename = inst.filename;
                 var oldextname = inst.extname;
                 var oldpath = oldfolder + oldfilename + '.' + oldextname;
-                inst.destroy(function(err) {
+
+                fs.unlink(oldpath, function(err) {
                     if (err) {
+                        logger.error(err);
                         myjson.success = 'ERROR';
-                        myjson.msg = '删除数据发生异常,请联系管理员！！';
+                        myjson.msg = '删除语音文件发生异常,请联系管理员！！';
                         res.send(myjson);
                     } else {
-                        fs.unlink(oldpath, function(err) {
+                        inst.destroy(function(err) {
                             if (err) {
+                                logger.error(err);
                                 myjson.success = 'ERROR';
-                                myjson.msg = '删除语音文件发生异常,请联系管理员！！';
+                                myjson.msg = '删除数据库记录发生异常,请联系管理员！！';
                                 res.send(myjson);
                             } else {
                                 myjson.success = 'OK';
@@ -131,10 +135,10 @@ posts.delete = function(req, res, next, baseurl) {
                                 res.send(myjson);
                             }
                         });
-
                     }
-
                 });
+
+
             }
         }
     });
@@ -175,15 +179,19 @@ posts.save = function(req, res, next, baseurl) {
                     if (tmpdir !== '' && tmpname !== '' && results.isHaveCheck === null) {
                         var tmp_path = tmpdir + tmpname + '.' + extname;
                         var target_path = newfolder + newname + '.' + extname;
+                        logger.info("新增语音文件-需要将文件移动到:"+target_path);
                         // 移动文件
                         fs.rename(tmp_path, target_path, function(err) {
-                            if (err)
+                            if (err){
+                               // logger.error(err);
                                 cb(err, null);
+                            }
+
                             else
                             // 删除临时文件夹文件, 
                                 fs.unlink(tmp_path, function() {
-                                    if (err)
-                                        cb(err, null);
+                                   if (err)
+                                       cb(err, null);
                                     else
                                         cb(null, null);
                                 });
@@ -205,7 +213,7 @@ posts.save = function(req, res, next, baseurl) {
                         var oldpath = oldfolder + oldfilename + '.' + oldextname;
                         var tmp_path = tmpdir + tmpname + '.' + extname;
                         var target_path = newfolder + newname + '.' + extname;
-
+                        logger.info("修改语音文件-需要将文件移动到:"+target_path);
                         fs.unlink(oldpath, function(err) {
                             if (err)
                                 cb(err, null);
@@ -290,7 +298,7 @@ posts.save = function(req, res, next, baseurl) {
                 myjson.id = results.isHaveCheck.id;
 
             } else if (err) {
-                console.log(err);
+                logger.error(err);
                 myjson.success = 'ERROR';
                 myjson.msg = '保存数据发生异常,请联系管理员！';
             }
