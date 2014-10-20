@@ -5,6 +5,7 @@ var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var Schemas = require(basedir + '/database/schema').Schemas;
 var logger = require(basedir + '/lib/logger').logger('web');
+var commfun = require(basedir + '/lib/comfun');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -34,6 +35,8 @@ posts.checkAjax = function(req, res, next, baseurl) {
 gets.index = function(req, res, next, baseurl) {
 	res.render('.' + baseurl + '/list.html', {
 		baseurl: baseurl,
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
 		modename: 'pbxCdr'
 	});
 }

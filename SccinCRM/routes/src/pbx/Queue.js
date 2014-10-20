@@ -65,6 +65,8 @@ posts.checkAjax = function(req, res, next, baseurl) {
 //分机列表显示
 gets.index = function(req, res, next, baseurl) {
 	res.render('pbx/Queue/list.html', {
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
 		baseurl: baseurl,
 		modename: 'pbxQueue'
 	});
@@ -150,6 +152,8 @@ gets.edit = function(req, res, next, baseurl) {
 			baseurl: baseurl,
 			hasExtens: results.findMembers.hasExtens,
 			yyExtens: results.findMembers.yyExtens,
+            displayStart:req.query["displayStart"] || 0,
+            where:req.query["where"] || "",
 			inst: results.findQueue
 		});
 	});

@@ -7,7 +7,7 @@ var async = require('async');
 var nhe = require('node-highcharts-exporter');
 var moment = require('moment');
 var util = require('util');
-
+var commfun = require(basedir + '/lib/comfun');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -135,11 +135,18 @@ posts.chartDone = function(req, res, next) {
                             }
 
                             async.eachSeries(dbs, function(item, callback) {
-                                datas[item.tag][item.accountcode][item.routerline] = item.lhvly;
-                                datas[item.tag]["总计"][item.routerline] += item.lhvly;
-                                datas["总计"][item.accountcode][item.routerline] += item.lhvly;
-                                datas["总计"]["总计"][item.routerline] += item.lhvly;
-                                callback();
+                                logger.info(item);
+                                if(item.routerline=='扩展应用')
+                                {
+                                    callback();
+                                }else{
+                                    datas[item.tag][item.accountcode][item.routerline] = item.lhvly;
+                                    datas[item.tag]["总计"][item.routerline] += item.lhvly;
+                                    datas["总计"][item.accountcode][item.routerline] += item.lhvly;
+                                    datas["总计"]["总计"][item.routerline] += item.lhvly;
+                                    callback();
+                                }
+
 
                             }, function(err) {
                                 logger.debug(datas);
@@ -192,11 +199,16 @@ posts.chartDone = function(req, res, next) {
                             }
 
                             async.eachSeries(dbs, function(item, callback) {
-                                datas[weekcn[item.tag]][item.accountcode][item.routerline] = item.lhvly;
-                                datas[weekcn[item.tag]]["总计"][item.routerline] += item.lhvly;
-                                datas["总计"][item.accountcode][item.routerline] += item.lhvly;
-                                datas["总计"]["总计"][item.routerline] += item.lhvly;
-                                callback();
+                                if(item.routerline=='扩展应用')
+                                {
+                                    callback();
+                                }else {
+                                    datas[weekcn[item.tag]][item.accountcode][item.routerline] = item.lhvly;
+                                    datas[weekcn[item.tag]]["总计"][item.routerline] += item.lhvly;
+                                    datas["总计"][item.accountcode][item.routerline] += item.lhvly;
+                                    datas["总计"]["总计"][item.routerline] += item.lhvly;
+                                    callback();
+                                }
 
                             }, function(err) {
                                 logger.debug(datas);
@@ -251,11 +263,16 @@ posts.chartDone = function(req, res, next) {
                             }
 
                             async.eachSeries(dbs, function(item, callback) {
-                                datas[months[item.tag]][item.accountcode][item.routerline] = item.lhvly;
-                                datas[months[item.tag]]["总计"][item.routerline] += item.lhvly;
-                                datas["总计"][item.accountcode][item.routerline] += item.lhvly;
-                                datas["总计"]["总计"][item.routerline] += item.lhvly;
-                                callback();
+                                if(item.routerline=='扩展应用')
+                                {
+                                    callback();
+                                }else {
+                                    datas[months[item.tag]][item.accountcode][item.routerline] = item.lhvly;
+                                    datas[months[item.tag]]["总计"][item.routerline] += item.lhvly;
+                                    datas["总计"][item.accountcode][item.routerline] += item.lhvly;
+                                    datas["总计"]["总计"][item.routerline] += item.lhvly;
+                                    callback();
+                                }
 
                             }, function(err) {
                                 logger.debug(datas);
@@ -307,11 +324,16 @@ posts.chartDone = function(req, res, next) {
                             }
 
                             async.eachSeries(dbs, function(item, callback) {
-                                datas[weekcn[item.tag]][item.accountcode][item.routerline] = item.lhvly;
-                                datas[weekcn[item.tag]]["总计"][item.routerline] += item.lhvly;
-                                datas["总计"][item.accountcode][item.routerline] += item.lhvly;
-                                datas["总计"]["总计"][item.routerline] += item.lhvly;
-                                callback();
+                                if(item.routerline=='扩展应用')
+                                {
+                                    callback();
+                                }else {
+                                    datas[weekcn[item.tag]][item.accountcode][item.routerline] = item.lhvly;
+                                    datas[weekcn[item.tag]]["总计"][item.routerline] += item.lhvly;
+                                    datas["总计"][item.accountcode][item.routerline] += item.lhvly;
+                                    datas["总计"]["总计"][item.routerline] += item.lhvly;
+                                    callback();
+                                }
 
                             }, function(err) {
                                 logger.debug(datas);
@@ -375,11 +397,16 @@ posts.chartDone = function(req, res, next) {
                             }
 
                             async.eachSeries(dbs, function(item, callback) {
-                                datas[item.tag][item.accountcode][item.routerline] = item.lhvly;
-                                datas[item.tag]["总计"][item.routerline] += item.lhvly;
-                                datas["总计"][item.accountcode][item.routerline] += item.lhvly;
-                                datas["总计"]["总计"][item.routerline] += item.lhvly;
-                                callback();
+                                if(item.routerline=='扩展应用')
+                                {
+                                    callback();
+                                }else {
+                                    datas[item.tag][item.accountcode][item.routerline] = item.lhvly;
+                                    datas[item.tag]["总计"][item.routerline] += item.lhvly;
+                                    datas["总计"][item.accountcode][item.routerline] += item.lhvly;
+                                    datas["总计"]["总计"][item.routerline] += item.lhvly;
+                                    callback();
+                                }
 
                             }, function(err) {
                                 logger.debug(datas);

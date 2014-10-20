@@ -47,6 +47,8 @@ checkFun['accountcode'] = function(accountcode, res) {
 gets.index = function(req, res, next, baseurl) {
 
 	res.render('pbx/Extension/list.html', {
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
 		baseurl: baseurl
 	});
 }
@@ -80,6 +82,8 @@ gets.edit = function(req, res, next, baseurl) {
 				res.render('pbx/Extension/edit.html', {
 					baseurl: baseurl,
 					inst: inst,
+                    displayStart:req.query["displayStart"] || 0,
+                    where:req.query["where"] || "",
 					partv: 'partv' + inst.deviceproto + '.html'
 				});
 			else {

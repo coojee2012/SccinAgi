@@ -4,7 +4,7 @@ var Schemas = require(basedir + '/database/schema').Schemas;
 var logger = require(basedir + '/lib/logger').logger('web');
 var guid = require('guid');
 var async = require('async');
-
+var commfun = require(basedir + '/lib/comfun');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -16,6 +16,8 @@ module.exports = {
 gets.index = function(req, res, next) {
 	res.render('pbx/Card/list.html', {
 		baseurl: req.path,
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
 		modename: 'pbxCard'
 	});
 }

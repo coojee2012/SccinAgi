@@ -7,6 +7,7 @@ var moment = require('moment');
 var async = require('async');
 var logger = require(basedir + '/lib/logger').logger('web');
 var fs = require("fs");
+var commfun = require(basedir + '/lib/comfun');
 var nami = require(basedir + '/asterisk/asmanager').nami,
     util = require('util'),
     AsAction = require("nami").Actions;
@@ -18,11 +19,12 @@ module.exports = {
     post: posts
 };
 
-//呼出规则列表显示
+//系统语音列表显示
 gets.index = function(req, res, next, baseurl) {
     var os = require("os");
     var systype = os.type();
     var sysrelease = os.release();
+    var displayStart=req.query["displayStart"] || 0;
     if (/Windows_\w+/.test(systype)) {
         res.render('pbx/Sounds/list.html', {
             osinfo: systype + " " + sysrelease,
@@ -30,6 +32,8 @@ gets.index = function(req, res, next, baseurl) {
             unused: '-.-',
             baifenbi: '1%',
             baseurl: baseurl,
+            pageIndex:displayStart,
+            where:util.inspect(commfun.searchContions(req.query["where"])),
             modename: 'pbxSounds'
         });
     } else {
@@ -60,6 +64,8 @@ gets.index = function(req, res, next, baseurl) {
                         used: used,
                         unused: unused,
                         baifenbi: baifenbi,
+                        pageIndex:displayStart,
+                        where:util.inspect(commfun.searchContions(req.query["where"])),
                         baseurl: baseurl,
                         modename: 'pbxSounds'
                     });
@@ -79,6 +85,8 @@ gets.create = function(req, res, next, baseurl) {
 //编辑
 gets.edit = function(req, res, next, baseurl) {
     var id = req.query["id"];
+    //var where=req.query["where"] || "";
+    //    where=where.replace(/``/g,"&").replace(/~~/g,"=");
     async.auto({
         find: function(cb) {
             Schemas['pbxSounds'].find(id, function(err, inst) {
@@ -91,6 +99,8 @@ gets.edit = function(req, res, next, baseurl) {
     }, function(err, results) {
         res.render('pbx/Sounds/edit.html', {
             baseurl: baseurl,
+            displayStart:req.query["displayStart"] || 0,
+            where:req.query["where"] || "",
             inst: results.find
         });
     });

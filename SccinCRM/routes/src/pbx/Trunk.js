@@ -5,6 +5,7 @@ var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var Schemas = require(basedir+'/database/schema').Schemas;
 var logger = require(basedir+'/lib/logger').logger('web');
+var commfun = require(basedir + '/lib/comfun');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -33,6 +34,8 @@ posts.checkAjax = function(req, res, next,baseurl) {
 //列表显示
 gets.index = function(req, res, next,baseurl) {
 	res.render('.'+baseurl+'/list.html', {
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
 		baseurl:baseurl,
 		modename: 'pbxTrunk'
 	});
@@ -109,6 +112,8 @@ gets.edit = function(req, res, next,baseurl) {
 				hasChannels: results.getHasChannels,
 				yyChannels: results.getyyChannels,
 				partv: 'part' + results.findTrunk.trunkproto + '.html',
+                displayStart:req.query["displayStart"] || 0,
+                where:req.query["where"] || "",
 				inst: results.findTrunk
 			});
 		});

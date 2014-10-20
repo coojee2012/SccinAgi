@@ -69,6 +69,8 @@ posts.checkAjax = function(req, res, next, baseurl) {
 gets.index = function(req, res, next, baseurl) {
     res.render('.' + baseurl + '/list.html', {
         baseurl: baseurl,
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
         modename: 'pbxIvrMenmu'
     });
 }
@@ -95,6 +97,8 @@ gets.edit = function(req, res, next, baseurl) {
     }, function(err, results) {
         res.render('.' + baseurl + '/edit.html', {
             baseurl: baseurl,
+            displayStart:req.query["displayStart"] || 0,
+            where:req.query["where"] || "",
             inst: results.findUser
         });
     });

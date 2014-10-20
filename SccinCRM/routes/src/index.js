@@ -73,8 +73,8 @@ gets.index = function(req, res, next) {
 			],
 			setMenmus: ['getMenmus',
 				function(cb, results) {
-					var startmenmus = {};
-					var menmus = {};
+					var startmenmus = {};//开始菜单数据
+					var menmus = {};//桌面菜单的数据
 					startmenmus.starmenmu_grsz = {
 						title: '个人设置',
 						url: '/UserManager/EditSelf',
@@ -177,7 +177,7 @@ gets.index = function(req, res, next) {
 						proto: exten.deviceproto
 					},
 					umenmus: results.getMenmus,
-					menmus: util.inspect(results.setMenmus.startmenmus),
+					menmus: util.inspect(results.setMenmus.menmus),
 					startmenmus: util.inspect(results.setMenmus.startmenmus)
 				});
 			}

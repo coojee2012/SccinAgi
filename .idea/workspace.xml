@@ -1,8 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b6521b4b-dff4-40cc-929a-ea8e4d5f4410" name="Default" comment="修改CRM方面的BUG">
+    <list default="true" id="b6521b4b-dff4-40cc-929a-ea8e4d5f4410" name="Default" comment="调整修改页面可返回到查询条件，及翻页页码">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/AsyncConfig.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/AsyncConfig.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Card.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Card.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Cdr.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Cdr.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/ExtenGroup.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/ExtenGroup.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Extension.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Extension.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/IvrMenmu.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/IvrMenmu.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Queue.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Queue.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RecordFile.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RecordFile.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallIn.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallIn.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallOut.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallOut.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Sounds.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Sounds.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Trunk.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Trunk.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/lib/comfun.js" afterPath="$PROJECT_DIR$/SccinCRM/lib/comfun.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Extension/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Extension/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Queue/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Queue/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/RecordFile/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/RecordFile/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallIn/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallIn/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallOut/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallOut/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/index.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Extension/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Extension/list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Queue/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Queue/list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallIn/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallIn/list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallOut/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallOut/list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/listbasefunc.html" afterPath="$PROJECT_DIR$/SccinCRM/views/listbasefunc.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/listtable.html" afterPath="$PROJECT_DIR$/SccinCRM/views/listtable.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/public/js/desktop/mydesktop.js" afterPath="$PROJECT_DIR$/SccinCRM/public/js/desktop/mydesktop.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partCUSTOM.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partCUSTOM.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partFXO.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partFXO.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partIAX2.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partIAX2.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partPRI.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partPRI.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partSIP.html" afterPath="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partSIP.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="D:\GitHub\SccinAgi\SccinCRM\routes\src\pbx\dycharts.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/DyCharts.js" />
+      <change type="MOVED" beforePath="D:\GitHub\SccinAgi\SccinCRM\routes\src\pbx\linemonitor.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/LineMonitor.js" />
     </list>
     <ignored path="SccinAgi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,137 +63,105 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Card.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/Card.js">
+      <file leaf-file-name="list.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="628" max-vertical-offset="4522">
-              <caret line="61" column="13" selection-start-line="61" selection-start-column="13" selection-end-line="61" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DyCharts.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/DyCharts.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="9258" max-vertical-offset="10184">
-              <caret line="508" column="41" selection-start-line="508" selection-start-column="41" selection-end-line="508" selection-end-column="41" />
+            <state vertical-scroll-proportion="-65.82143" vertical-offset="1881" max-vertical-offset="5111">
+              <caret line="265" column="8" selection-start-line="265" selection-start-column="8" selection-end-line="265" selection-end-column="133" />
               <folding>
-                <element signature="e#25592#26276#0" expanded="false" />
+                <element signature="tag#div#0" expanded="false" />
+                <element signature="e#5948#6676#0" expanded="false" />
+                <element signature="e#6701#6725#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SysSet.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/SysSet.js">
+      <file leaf-file-name="listtable.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/views/listtable.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.78581977" vertical-offset="969" max-vertical-offset="2432">
-              <caret line="79" column="41" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="41" />
+            <state vertical-scroll-proportion="-18.321428" vertical-offset="0" max-vertical-offset="1653">
+              <caret line="27" column="26" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="对moudels的修改.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/对moudels的修改.txt">
+      <file leaf-file-name="list.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RecordFile/list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="836">
-              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mysql.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/jugglingdb-mysql/lib/mysql.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="19589">
+            <state vertical-scroll-proportion="254.46428" vertical-offset="7125" max-vertical-offset="7809">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="schema.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/jugglingdb/lib/schema.js">
+      <file leaf-file-name="list.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Queue/list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="10887" max-vertical-offset="11552">
-              <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+            <state vertical-scroll-proportion="-13.214286" vertical-offset="2613" max-vertical-offset="3268">
+              <caret line="157" column="8" selection-start-line="157" selection-start-column="8" selection-end-line="157" selection-end-column="8" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/jugglingdb/lib/model.js">
+      <file leaf-file-name="list.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5380" max-vertical-offset="6460">
-              <caret line="937" column="40" selection-start-line="937" selection-start-column="40" selection-end-line="937" selection-end-column="40" />
-              <folding>
-                <element signature="e#1004#3478#0" expanded="false" />
-                <element signature="e#3642#3707#0" expanded="false" />
-                <element signature="e#3759#4009#0" expanded="false" />
-                <element signature="e#4207#4505#0" expanded="false" />
-                <element signature="e#4815#5432#0" expanded="false" />
-                <element signature="e#5641#6069#0" expanded="false" />
-                <element signature="e#6131#6186#0" expanded="false" />
-                <element signature="e#6458#9273#0" expanded="false" />
-                <element signature="n#!!block;n#stillConnecting#0" expanded="false" />
-                <element signature="e#9672#10617#0" expanded="false" />
-                <element signature="e#11028#11527#0" expanded="false" />
-                <element signature="e#11759#11989#0" expanded="false" />
-                <element signature="e#12168#12613#0" expanded="false" />
-                <element signature="e#13141#14470#0" expanded="false" />
-                <element signature="e#14989#16865#0" expanded="false" />
-                <element signature="e#17147#17494#0" expanded="false" />
-                <element signature="e#17632#17857#0" expanded="false" />
-                <element signature="e#18066#18291#0" expanded="false" />
-                <element signature="e#18420#18468#0" expanded="false" />
-                <element signature="e#18748#20596#0" expanded="false" />
-                <element signature="e#20779#20814#0" expanded="false" />
-                <element signature="e#21199#21873#0" expanded="false" />
-                <element signature="e#22121#22152#0" expanded="false" />
-                <element signature="e#22319#22738#0" expanded="false" />
-                <element signature="e#23078#23167#0" expanded="false" />
-                <element signature="e#23504#25145#0" expanded="false" />
-                <element signature="e#25200#25298#0" expanded="false" />
-                <element signature="e#25518#25576#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="agentCalls.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/dycharts/agentCalls.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="77.35714" vertical-offset="2166" max-vertical-offset="7942">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="-13.892858" vertical-offset="2024" max-vertical-offset="2679">
+              <caret line="127" column="9" selection-start-line="127" selection-start-column="9" selection-end-line="127" selection-end-column="9" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="common.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/common.js">
+      <file leaf-file-name="asami.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7277">
-              <caret line="18" column="4" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="4" />
-              <folding>
-                <element signature="e#634#4674#0" expanded="false" />
-                <element signature="e#4720#5021#0" expanded="false" />
-                <element signature="e#5065#5444#0" expanded="false" />
-                <element signature="e#5490#5870#0" expanded="false" />
-              </folding>
+            <state vertical-scroll-proportion="0.9427711" vertical-offset="5302" max-vertical-offset="24377">
+              <caret line="312" column="0" selection-start-line="312" selection-start-column="0" selection-end-line="313" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Menmus.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js">
+      <file leaf-file-name="list.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Extension/list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2166" max-vertical-offset="4313">
-              <caret line="136" column="27" selection-start-line="136" selection-start-column="27" selection-end-line="139" selection-end-column="39" />
+            <state vertical-scroll-proportion="-14.928572" vertical-offset="5814" max-vertical-offset="6897">
+              <caret line="328" column="8" selection-start-line="328" selection-start-column="8" selection-end-line="328" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="list.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-13.571428" vertical-offset="4047" max-vertical-offset="4750">
+              <caret line="233" column="21" selection-start-line="233" selection-start-column="21" selection-end-line="233" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="list.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallOut/list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.607142" vertical-offset="2508" max-vertical-offset="3230">
+              <caret line="155" column="0" selection-start-line="155" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="list.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallIn/list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-13.214286" vertical-offset="2784" max-vertical-offset="3439">
+              <caret line="166" column="18" selection-start-line="166" selection-start-column="18" selection-end-line="166" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -180,41 +186,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/unPauseQueueMember.cat.js" />
-        <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/VoiceMail.cat.js" />
-        <option value="$PROJECT_DIR$/SccinAGI/nagi.sh" />
-        <option value="$PROJECT_DIR$/SccinAGI/Gruntfile.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/views/manage/MenmuGroup/list.html" />
-        <option value="$PROJECT_DIR$/SccinCRM/routes/src/manage/MenmuGroup.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/ivracts/saynumber.html" />
-        <option value="$PROJECT_DIR$/SccinAGI/lib/context.js" />
-        <option value="$PROJECT_DIR$/SccinAGI/lib/index.js" />
-        <option value="$PROJECT_DIR$/SccinAGI/server.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/views/manage/Menmus/create.html" />
-        <option value="$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/views/manage/Menmus/edit.html" />
-        <option value="$PROJECT_DIR$/SccinCRM/modules/DBModules.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/modules/src/manage/Menmus.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/routes/src/base/common.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/modules/src/manage/MenmuGroup.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/views/manage/UserRole/list.html" />
-        <option value="$PROJECT_DIR$/SccinCRM/routes/src/manage/UserRole.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/views/index_left.html" />
-        <option value="$PROJECT_DIR$/SccinCRM/public/js/libfun.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/public/js/desktop/mydesktop.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/public/themes/default/css/desktop.css" />
-        <option value="$PROJECT_DIR$/SccinCRM/config/asterisk.json" />
-        <option value="$PROJECT_DIR$/SccinCRM/config/jdmysql.json" />
-        <option value="$PROJECT_DIR$/SccinCRM/config/mysql.json" />
-        <option value="$PROJECT_DIR$/SccinAGI/config/fastagi.json" />
-        <option value="$PROJECT_DIR$/SccinAGI/config/asterisk.json" />
-        <option value="$PROJECT_DIR$/SccinCRM/test/autodial.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/views/login.html" />
-        <option value="$PROJECT_DIR$/SccinAGI/modules/src/crm/DialResult.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/modules/src/crm/DialResult.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/Wetnurse.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/routes/src/index.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/routes/src/login.js" />
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/crm/creenPop.js" />
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/crm/screenPop.js" />
         <option value="$PROJECT_DIR$/SccinCRM/views/crm/index.html" />
@@ -227,10 +198,45 @@
         <option value="$PROJECT_DIR$/SccinAGI/smartAgi/src/router.cat.js" />
         <option value="$PROJECT_DIR$/SccinCRM/lib/logger.js" />
         <option value="$PROJECT_DIR$/SccinCRM/server.js" />
-        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Sounds.js" />
         <option value="$PROJECT_DIR$/SccinCRM/config/app.json" />
-        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Card.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/public/js/desktop/mydesktop.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/index.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/list.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/listtable.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/edit.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/listbasefunc.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/lib/comfun.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Sounds.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/AsyncConfig.js" />
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/DyCharts.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Card.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Cdr.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/ExtenGroup.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/LineMonitor.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Trunk.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallOut.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallIn.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RecordFile.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Queue.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/IvrMenmu.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Extension.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partCUSTOM.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partFXO.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partIAX2.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partPRI.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partSIP.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallOut/edit.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallIn/edit.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/RecordFile/edit.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Queue/edit.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/edit.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Extension/edit.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/list.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallOut/list.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallIn/list.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Queue/list.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/list.html" />
+        <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Extension/list.html" />
       </list>
     </option>
   </component>
@@ -364,6 +370,318 @@
               <option name="myItemId" value="pbx" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sounds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="RouterCallOut" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="RouterCallIn" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="RecordFile" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Queue" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linemonitor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IvrMenmu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ivracts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="inputs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Extension" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ExtenGroup" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -405,57 +723,61 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="routes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinCRM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="routes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinAgi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SccinCRM" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="routes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
+              <option name="myItemId" value="views" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="pbx" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Cdr" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pbx" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Card" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="routes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -476,10 +798,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="manage" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -509,6 +827,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -520,7 +856,7 @@
     <property name="FullScreen" value="false" />
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../jzycrm" />
     <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
@@ -768,7 +1104,11 @@
       <created>1413623262588</created>
       <updated>1413623262588</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="修改CRM方面的BUG">
+      <created>1413623281231</created>
+      <updated>1413623281231</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -819,31 +1159,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32967034" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
     </layout>
-    <layout-to-restore>
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="变化" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32763532" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32857144" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282967" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935917" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39835164" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24962743" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32763532" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292011" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292011" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32852563" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24962743" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23891273" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="调试" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33714285" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32967034" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -873,7 +1188,8 @@
     <MESSAGE value="建设网呼叫中心修改" />
     <MESSAGE value="北京专家库，添加预警语音接口" />
     <MESSAGE value="修改CRM方面的BUG" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改CRM方面的BUG" />
+    <MESSAGE value="调整修改页面可返回到查询条件，及翻页页码" />
+    <option name="LAST_COMMIT_MESSAGE" value="调整修改页面可返回到查询条件，及翻页页码" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -893,11 +1209,6 @@
           <line>129</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js</url>
-          <line>250</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
@@ -906,451 +1217,453 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/SccinAGI/install/asbaseconf/extensions_dialplan.conf">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/ivractsfuncs.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4028">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="969">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/install/144conf/extensions_dialplan.conf">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/layoutblank.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="912" max-vertical-offset="3724">
-          <caret line="70" column="19" selection-start-line="70" selection-start-column="19" selection-end-line="70" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/monitor.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="679">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/agi.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="679">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/build/base/asami.js">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/listprogressbar.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="664">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/findqueuemember.cat.js">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/listsuredelmodal.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/listsyncmodal.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="664">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/layout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="16.285715" vertical-offset="456" max-vertical-offset="1159">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/index_left.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1653">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/routing.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/sayDateTime.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3230">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/blacklist.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="798">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/calloutback.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6916">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/channelMax.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/commonfun.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="57" max-vertical-offset="2318">
-          <caret line="22" column="36" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/dialout.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1938" max-vertical-offset="2831">
-          <caret line="26" column="37" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/NextDial.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1235">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/queue.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1330">
-          <caret line="64" column="1" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/queueAnswered.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1615">
-          <caret line="74" column="5" selection-start-line="74" selection-start-column="5" selection-end-line="74" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/ivr.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2793">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/ivraction.cat.js">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6764" max-vertical-offset="18620">
-          <caret line="375" column="11" selection-start-line="375" selection-start-column="11" selection-end-line="377" selection-end-column="15" />
+        <state vertical-scroll-proportion="-6.107143" vertical-offset="684" max-vertical-offset="9044">
+          <caret line="45" column="33" selection-start-line="45" selection-start-column="33" selection-end-line="45" selection-end-column="33" />
+          <folding>
+            <marker date="1409819475604" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1409819475604" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1409819475604" expanded="false" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2964" max-vertical-offset="3819">
+          <caret line="179" column="28" selection-start-line="179" selection-start-column="28" selection-end-line="179" selection-end-column="40" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/Routings.js">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/listbasefunc.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="72652" max-vertical-offset="73530">
-          <caret line="3863" column="7" selection-start-line="3863" selection-start-column="7" selection-end-line="3863" selection-end-column="7" />
+        <state vertical-scroll-proportion="-14.928572" vertical-offset="1539" max-vertical-offset="2204">
+          <caret line="103" column="71" selection-start-line="103" selection-start-column="58" selection-end-line="103" selection-end-column="71" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/diallocal.cat.js">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/lib/comfun.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="399" max-vertical-offset="1387">
-          <caret line="55" column="50" selection-start-line="55" selection-start-column="50" selection-end-line="55" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6156" max-vertical-offset="17803">
-          <caret line="639" column="0" selection-start-line="639" selection-start-column="0" selection-end-line="639" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/proxyBlance/node_modules/http-proxy/examples/helpers/store.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.0384047" vertical-offset="0" max-vertical-offset="1330">
-          <caret line="37" column="45" selection-start-line="37" selection-start-column="45" selection-end-line="37" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nagios/libexec/check_traffic.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2123494" vertical-offset="201" max-vertical-offset="16815">
-          <caret line="18" column="2" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/test/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1311" max-vertical-offset="4636">
-          <caret line="75" column="50" selection-start-line="75" selection-start-column="50" selection-end-line="75" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/voiceNoticeCallback.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="494">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/sayNumber.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
-          <caret line="20" column="16" selection-start-line="20" selection-start-column="16" selection-end-line="20" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/sccincallout.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3477" max-vertical-offset="6802">
-          <caret line="200" column="40" selection-start-line="200" selection-start-column="40" selection-end-line="200" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/config/log4js.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="679">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/router.cat.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3192">
-          <caret line="33" column="26" selection-start-line="33" selection-start-column="26" selection-end-line="33" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/config/jdmysql.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="679">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="456" max-vertical-offset="6536">
-          <caret line="114" column="6" selection-start-line="114" selection-start-column="6" selection-end-line="114" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3002">
-          <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/lib/logger.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="494">
-          <caret line="20" column="3" selection-start-line="20" selection-start-column="3" selection-end-line="20" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/config/asterisk.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/config/app.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.5" vertical-offset="0" max-vertical-offset="665">
-          <caret line="14" column="44" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="970" max-vertical-offset="1653">
+          <caret line="66" column="26" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/Sounds.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="855">
-          <caret line="96" column="1" selection-start-line="96" selection-start-column="1" selection-end-line="96" selection-end-column="1" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1618" max-vertical-offset="5339">
+          <caret line="101" column="12" selection-start-line="101" selection-start-column="12" selection-end-line="102" selection-end-column="43" />
           <folding>
-            <element signature="e#607#2173#0" expanded="false" />
-            <element signature="e#2223#2302#0" expanded="false" />
-            <element signature="e#2354#2820#0" expanded="false" />
-            <element signature="e#2871#4512#0" expanded="false" />
-            <element signature="e#4578#10808#0" expanded="false" />
-            <element signature="e#5471#6389#0" expanded="false" />
-            <element signature="e#6518#6591#0" expanded="false" />
-            <element signature="e#6721#6784#0" expanded="false" />
-            <element signature="e#6917#8283#0" expanded="false" />
-            <element signature="e#10861#11578#0" expanded="false" />
-            <element signature="e#11636#12864#0" expanded="false" />
-            <element signature="e#12922#14366#0" expanded="false" />
+            <element signature="e#2572#2651#0" expanded="false" />
+            <element signature="e#3424#5065#0" expanded="false" />
+            <element signature="e#6024#6942#0" expanded="false" />
+            <element signature="e#7071#7144#0" expanded="false" />
+            <element signature="e#7274#7337#0" expanded="false" />
+            <element signature="e#7470#8836#0" expanded="false" />
+            <element signature="e#11414#12131#0" expanded="false" />
+            <element signature="e#12189#13417#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/nami/src/message/action.js">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/Trunk.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="18905">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/nami/src/message/event.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="950">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/nami/src/message/message.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2280">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/nami/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1938">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/nami/src/nami.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="513" max-vertical-offset="6251">
-          <caret line="44" column="27" selection-start-line="44" selection-start-column="27" selection-end-line="44" selection-end-column="27" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2166" max-vertical-offset="4313">
-          <caret line="136" column="27" selection-start-line="136" selection-start-column="27" selection-end-line="139" selection-end-column="39" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1881" max-vertical-offset="8018">
+          <caret line="115" column="47" selection-start-line="115" selection-start-column="47" selection-end-line="115" selection-end-column="47" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/common.js">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallOut.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7277">
-          <caret line="18" column="4" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="4" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="570" max-vertical-offset="4351">
+          <caret line="48" column="43" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallIn.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="456" max-vertical-offset="4465">
+          <caret line="48" column="43" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/RecordFile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1862" max-vertical-offset="4788">
+          <caret line="172" column="43" selection-start-line="172" selection-start-column="43" selection-end-line="172" selection-end-column="43" />
           <folding>
-            <element signature="e#634#4674#0" expanded="false" />
-            <element signature="e#4720#5021#0" expanded="false" />
-            <element signature="e#5065#5444#0" expanded="false" />
-            <element signature="e#5490#5870#0" expanded="false" />
+            <element signature="e#680#1476#0" expanded="false" />
+            <element signature="e#1545#1816#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/Card.js">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/Queue.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="628" max-vertical-offset="4522">
-          <caret line="61" column="13" selection-start-line="61" selection-start-column="13" selection-end-line="61" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/dycharts/agentCalls.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="77.35714" vertical-offset="2166" max-vertical-offset="7942">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/对moudels的修改.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="836">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/jugglingdb-mysql/lib/mysql.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="19589">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/jugglingdb/lib/schema.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="10887" max-vertical-offset="11552">
-          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/node_modules/jugglingdb/lib/model.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5380" max-vertical-offset="6460">
-          <caret line="937" column="40" selection-start-line="937" selection-start-column="40" selection-end-line="937" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1691" max-vertical-offset="4826">
+          <caret line="155" column="43" selection-start-line="155" selection-start-column="43" selection-end-line="155" selection-end-column="43" />
           <folding>
-            <element signature="e#1004#3478#0" expanded="false" />
-            <element signature="e#3642#3707#0" expanded="false" />
-            <element signature="e#3759#4009#0" expanded="false" />
-            <element signature="e#4207#4505#0" expanded="false" />
-            <element signature="e#4815#5432#0" expanded="false" />
-            <element signature="e#5641#6069#0" expanded="false" />
-            <element signature="e#6131#6186#0" expanded="false" />
-            <element signature="e#6458#9273#0" expanded="false" />
-            <element signature="n#!!block;n#stillConnecting#0" expanded="false" />
-            <element signature="e#9672#10617#0" expanded="false" />
-            <element signature="e#11028#11527#0" expanded="false" />
-            <element signature="e#11759#11989#0" expanded="false" />
-            <element signature="e#12168#12613#0" expanded="false" />
-            <element signature="e#13141#14470#0" expanded="false" />
-            <element signature="e#14989#16865#0" expanded="false" />
-            <element signature="e#17147#17494#0" expanded="false" />
-            <element signature="e#17632#17857#0" expanded="false" />
-            <element signature="e#18066#18291#0" expanded="false" />
-            <element signature="e#18420#18468#0" expanded="false" />
-            <element signature="e#18748#20596#0" expanded="false" />
-            <element signature="e#20779#20814#0" expanded="false" />
-            <element signature="e#21199#21873#0" expanded="false" />
-            <element signature="e#22121#22152#0" expanded="false" />
-            <element signature="e#22319#22738#0" expanded="false" />
-            <element signature="e#23078#23167#0" expanded="false" />
-            <element signature="e#23504#25145#0" expanded="false" />
-            <element signature="e#25200#25298#0" expanded="false" />
-            <element signature="e#25518#25576#0" expanded="false" />
+            <element signature="e#510#937#0" expanded="false" />
+            <element signature="e#1008#1228#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/LineMonitor.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="209" max-vertical-offset="4294">
+          <caret line="27" column="71" selection-start-line="27" selection-start-column="71" selection-end-line="27" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/IvrMenmu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="686" max-vertical-offset="9576">
+          <caret line="100" column="43" selection-start-line="100" selection-start-column="43" selection-end-line="100" selection-end-column="43" />
+          <folding>
+            <element signature="e#481#1308#0" expanded="false" />
+            <element signature="e#1379#1650#0" expanded="false" />
+            <element signature="e#2805#5226#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/Extension.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="798" max-vertical-offset="5795">
+          <caret line="85" column="51" selection-start-line="85" selection-start-column="51" selection-end-line="85" selection-end-column="51" />
+          <folding>
+            <element signature="e#444#908#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/ExtenGroup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="95" max-vertical-offset="2546">
+          <caret line="18" column="75" selection-start-line="18" selection-start-column="75" selection-end-line="18" selection-end-column="75" />
+          <folding>
+            <element signature="e#734#3139#0" expanded="false" />
+            <element signature="e#3192#4015#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/DyCharts.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="9258" max-vertical-offset="10184">
-          <caret line="508" column="41" selection-start-line="508" selection-start-column="41" selection-end-line="508" selection-end-column="41" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="10184">
+          <caret line="9" column="47" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
           <folding>
-            <element signature="e#25592#26276#0" expanded="false" />
+            <element signature="e#25639#26323#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/SysSet.js">
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/Cdr.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.78581977" vertical-offset="969" max-vertical-offset="2432">
-          <caret line="79" column="41" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="41" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="235" max-vertical-offset="931">
+          <caret line="38" column="71" selection-start-line="38" selection-start-column="71" selection-end-line="38" selection-end-column="71" />
+          <folding>
+            <element signature="e#1056#1463#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/Card.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="96" max-vertical-offset="1026">
+          <caret line="161" column="0" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="0" />
+          <folding>
+            <element signature="e#691#1879#0" expanded="false" />
+            <element signature="e#1922#3871#0" expanded="false" />
+            <element signature="n#!!block;n#savedata#0" expanded="false" />
+            <element signature="n#!!block;n#addTline#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/AsyncConfig.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5396">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.571428" vertical-offset="1331" max-vertical-offset="1995">
+          <caret line="93" column="86" selection-start-line="93" selection-start-column="36" selection-end-line="93" selection-end-column="86" />
+          <folding>
+            <element signature="tag#script#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="20.357143" vertical-offset="570" max-vertical-offset="1558">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partCUSTOM.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.142858" vertical-offset="0" max-vertical-offset="1045">
+          <caret line="12" column="69" selection-start-line="12" selection-start-column="69" selection-end-line="12" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partFXO.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.928572" vertical-offset="399" max-vertical-offset="2413">
+          <caret line="43" column="69" selection-start-line="43" selection-start-column="69" selection-end-line="43" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partIAX2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.0357144" vertical-offset="2451" max-vertical-offset="3515">
+          <caret line="126" column="69" selection-start-line="126" selection-start-column="69" selection-end-line="126" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partPRI.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.0" vertical-offset="453" max-vertical-offset="2413">
+          <caret line="43" column="69" selection-start-line="43" selection-start-column="69" selection-end-line="43" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/partSIP.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.142858" vertical-offset="2109" max-vertical-offset="3705">
+          <caret line="123" column="69" selection-start-line="123" selection-start-column="69" selection-end-line="123" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallOut/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.785714" vertical-offset="1767" max-vertical-offset="3477">
+          <caret line="103" column="93" selection-start-line="103" selection-start-column="93" selection-end-line="103" selection-end-column="93" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallIn/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.821428" vertical-offset="1710" max-vertical-offset="3401">
+          <caret line="103" column="92" selection-start-line="103" selection-start-column="92" selection-end-line="103" selection-end-column="92" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RecordFile/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.392857" vertical-offset="1995" max-vertical-offset="3819">
+          <caret line="110" column="110" selection-start-line="110" selection-start-column="110" selection-end-line="110" selection-end-column="110" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Queue/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.464286" vertical-offset="3078" max-vertical-offset="4902">
+          <caret line="173" column="77" selection-start-line="173" selection-start-column="77" selection-end-line="173" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="24.107143" vertical-offset="1530" max-vertical-offset="2166">
+          <caret line="45" column="72" selection-start-line="45" selection-start-column="72" selection-end-line="45" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Extension/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="4.75" vertical-offset="1140" max-vertical-offset="1805">
+          <caret line="53" column="81" selection-start-line="53" selection-start-column="81" selection-end-line="53" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Extension/partvIAX2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="741">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Extension/partvSIP.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="760">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Extension/partvVIRTUAL.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="677">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Trunk/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.571428" vertical-offset="4047" max-vertical-offset="4750">
+          <caret line="233" column="21" selection-start-line="233" selection-start-column="21" selection-end-line="233" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallOut/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.607142" vertical-offset="2508" max-vertical-offset="3230">
+          <caret line="155" column="0" selection-start-line="155" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RouterCallIn/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.214286" vertical-offset="2784" max-vertical-offset="3439">
+          <caret line="166" column="18" selection-start-line="166" selection-start-column="18" selection-end-line="166" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RecordFile/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="254.46428" vertical-offset="7125" max-vertical-offset="7809">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Queue/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.214286" vertical-offset="2613" max-vertical-offset="3268">
+          <caret line="157" column="8" selection-start-line="157" selection-start-column="8" selection-end-line="157" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/IvrMenmu/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.892858" vertical-offset="2024" max-vertical-offset="2679">
+          <caret line="127" column="9" selection-start-line="127" selection-start-column="9" selection-end-line="127" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Extension/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.928572" vertical-offset="5814" max-vertical-offset="6897">
+          <caret line="328" column="8" selection-start-line="328" selection-start-column="8" selection-end-line="328" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-65.82143" vertical-offset="1881" max-vertical-offset="5111">
+          <caret line="265" column="8" selection-start-line="265" selection-start-column="8" selection-end-line="265" selection-end-column="133" />
+          <folding>
+            <element signature="tag#div#0" expanded="false" />
+            <element signature="e#5948#6676#0" expanded="false" />
+            <element signature="e#6701#6725#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/views/listtable.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.321428" vertical-offset="0" max-vertical-offset="1653">
+          <caret line="27" column="26" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9427711" vertical-offset="5302" max-vertical-offset="24377">
+          <caret line="312" column="0" selection-start-line="312" selection-start-column="0" selection-end-line="313" selection-end-column="0" />
           <folding />
         </state>
       </provider>
