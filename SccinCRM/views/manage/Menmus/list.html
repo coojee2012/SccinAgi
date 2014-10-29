@@ -148,7 +148,8 @@
             { "sClass": 'center', "sName": "ordernum", "mData": "ordernum", "bSortable": false, "bVisible": true, "aTargets": [6] },
             {"asSorting": [ "desc" ], "sClass": 'center', "sName": "crtTime", "mData": "crtTime", "bSortable": true, "bVisible": true, "aTargets": [7] },
             { "sClass": 'center', "sName": "id", "mData": "id", "bSortable": false, "bVisible": true, "aTargets": [8], "mRender": function (data, type, full) {
-                var str = '<a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id=' + data + '">编辑</a>';
+                //var str = '<a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id=' + data + '">编辑</a>';
+                var str = '<a class="btn btn-primary btn-xs print" href="javascript:editBase(\''+data+'\',\'<%- baseurl%>/edit\')">编辑</a>';
                 str += '<a class="btn btn-danger btn-xs print" href="javascript:delrow(\'' + data + '\');">删除</a>'
                 return str;
             }}

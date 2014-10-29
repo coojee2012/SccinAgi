@@ -7,6 +7,7 @@ var Schemas = require(basedir + '/database/schema').Schemas;
 var commfun = require(basedir + '/lib/comfun');
 var _ = require('lodash');
 var logger = require(basedir + '/lib/logger').logger('web');
+var util = require('util');
 var gets = {};
 var posts = {};
 module.exports = {

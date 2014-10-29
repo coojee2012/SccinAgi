@@ -8,7 +8,8 @@ var basedir = conf.load('app').appbase;
 var async = require('async');
 var Schemas = require(basedir + '/database/schema').Schemas;
 var moment = require('moment');
-
+var util = require('util');
+var commfun = require(basedir + '/lib/comfun');
 var logger = require(basedir + '/lib/logger').logger('web');
 var gets = {};
 var posts = {};
@@ -68,6 +69,8 @@ posts.checkAjax = function (req, res, next, baseurl) {
 gets.index = function (req, res, next, baseurl) {
     res.render('manage/Menmus/list.html', {
         baseurl: baseurl,
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
         modename: 'manageMenmus'
     });
 }
@@ -94,6 +97,8 @@ gets.edit = function (req, res, next, baseurl) {
     }, function (err, results) {
         res.render('manage/Menmus/edit.html', {
             baseurl: baseurl,
+            displayStart:req.query["displayStart"] || 0,
+            where:req.query["where"] || "",
             inst: results.findUser
         });
     });

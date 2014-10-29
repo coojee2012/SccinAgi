@@ -5,6 +5,7 @@ var logger = require(basedir + '/lib/logger').logger('web');
 var guid = require('guid');
 var async = require('async');
 var commfun = require(basedir + '/lib/comfun');
+var util = require('util');
 var gets = {};
 var posts = {};
 module.exports = {

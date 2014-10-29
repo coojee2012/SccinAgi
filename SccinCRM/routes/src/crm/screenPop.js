@@ -8,6 +8,7 @@ var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var Schemas = require(basedir + '/database/schema').Schemas;
 var logger = require(basedir + '/lib/logger').logger('web');
+var util = require('util');
 var gets = {};
 var posts = {};
 module.exports = {

@@ -7,6 +7,7 @@ var moment = require('moment');
 var async = require('async');
 var commfun = require(basedir + '/lib/comfun');
 var logger = require(basedir + '/lib/logger').logger('web');
+var util = require('util');
 var gets = {};
 var posts = {};
 module.exports = {
