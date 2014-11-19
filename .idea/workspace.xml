@@ -5,33 +5,9 @@
     <option name="CUSTOM_SCOPE_NAME" value="Current File" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6521b4b-dff4-40cc-929a-ea8e4d5f4410" name="Default" comment="调整修改页面可返回到查询条件，及翻页页码">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Card.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Card.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Cdr.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Cdr.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/manage/Departments.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/Departments.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/ExtenGroup.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/ExtenGroup.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Extension.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Extension.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/IvrMenmu.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/IvrMenmu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/manage/MenmuGroup.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/MenmuGroup.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Queue.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Queue.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallIn.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallIn.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallOut.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/RouterCallOut.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/manage/SysSet.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/SysSet.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Trunk.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/pbx/Trunk.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/manage/UserInfo.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/UserInfo.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/manage/UserRole.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/manage/UserRole.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/node_modules/nami/src/message/action.js" afterPath="$PROJECT_DIR$/SccinCRM/node_modules/nami/src/message/action.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/Departments/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/Departments/edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/Menmus/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/Menmus/edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/UserRole/edit.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/UserRole/edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/Departments/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/Departments/list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/Menmus/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/Menmus/list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/views/manage/UserRole/list.html" afterPath="$PROJECT_DIR$/SccinCRM/views/manage/UserRole/list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/crm/screenPop.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/crm/screenPop.js" />
+    <list default="true" id="b6521b4b-dff4-40cc-929a-ea8e4d5f4410" name="Default" comment="调整manage修改页面可返回到查询条件，及翻页页码">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js" afterPath="$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js" />
     </list>
     <ignored path="SccinAgi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -54,21 +30,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="listtable.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/views/listtable.html">
+      <file leaf-file-name="RecordFile.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/RecordFile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-42.75" vertical-offset="0" max-vertical-offset="1653">
-              <caret line="63" column="4" selection-start-line="63" selection-start-column="4" selection-end-line="63" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1311" max-vertical-offset="5605">
+              <caret line="164" column="9" selection-start-line="164" selection-start-column="9" selection-end-line="164" selection-end-column="9" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RecordFile.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/RecordFile.js">
+      <file leaf-file-name="asami.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.7349043" vertical-offset="2679" max-vertical-offset="5605">
-              <caret line="79" column="12" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="53" />
+            <state vertical-scroll-proportion="-0.8748159" vertical-offset="6940" max-vertical-offset="24472">
+              <caret line="334" column="30" selection-start-line="334" selection-start-column="30" selection-end-line="334" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sccincallout.cat.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/sccincallout.cat.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="6053" max-vertical-offset="6821">
+              <caret line="297" column="27" selection-start-line="297" selection-start-column="27" selection-end-line="297" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -77,12 +63,9 @@
       <file leaf-file-name="IvrMenmu.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/IvrMenmu.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="246" max-vertical-offset="10906">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1976" max-vertical-offset="11761">
               <caret line="104" column="7" selection-start-line="104" selection-start-column="7" selection-end-line="104" selection-end-column="7" />
-              <folding>
-                <element signature="e#509#1336#0" expanded="false" />
-                <element signature="e#1407#1678#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -90,11 +73,9 @@
       <file leaf-file-name="UserRole.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/UserRole.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="361" max-vertical-offset="5358">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1406" max-vertical-offset="5966">
               <caret line="74" column="49" selection-start-line="74" selection-start-column="49" selection-end-line="74" selection-end-column="49" />
-              <folding>
-                <element signature="e#563#1391#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -102,14 +83,9 @@
       <file leaf-file-name="UserInfo.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/UserInfo.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="152" max-vertical-offset="3325">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1463" max-vertical-offset="5529">
               <caret line="77" column="7" selection-start-line="77" selection-start-column="7" selection-end-line="77" selection-end-column="71" />
-              <folding>
-                <element signature="e#591#1437#0" expanded="false" />
-                <element signature="e#1508#1779#0" expanded="false" />
-                <element signature="e#2132#3198#0" expanded="false" />
-                <element signature="e#3297#5575#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -117,11 +93,9 @@
       <file leaf-file-name="Menmus.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="302" max-vertical-offset="3838">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1349" max-vertical-offset="4408">
               <caret line="71" column="8" selection-start-line="71" selection-start-column="8" selection-end-line="72" selection-end-column="71" />
-              <folding>
-                <element signature="e#595#1396#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -129,12 +103,9 @@
       <file leaf-file-name="MenmuGroup.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/MenmuGroup.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="24" max-vertical-offset="760">
+            <state vertical-scroll-proportion="0.0" vertical-offset="513" max-vertical-offset="2945">
               <caret line="27" column="71" selection-start-line="27" selection-start-column="71" selection-end-line="27" selection-end-column="71" />
-              <folding>
-                <element signature="e#898#3492#0" expanded="false" />
-                <element signature="e#3544#4697#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -142,12 +113,9 @@
       <file leaf-file-name="Departments.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/manage/Departments.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="570" max-vertical-offset="3401">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1444" max-vertical-offset="4256">
               <caret line="76" column="71" selection-start-line="76" selection-start-column="71" selection-end-line="76" selection-end-column="71" />
-              <folding>
-                <element signature="e#561#1415#0" expanded="false" />
-                <element signature="e#1486#1757#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -157,16 +125,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="152" max-vertical-offset="8550">
               <caret line="34" column="12" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="list.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-37.82143" vertical-offset="1411" max-vertical-offset="2736">
-              <caret line="130" column="133" selection-start-line="130" selection-start-column="133" selection-end-line="130" selection-end-column="133" />
               <folding />
             </state>
           </provider>
@@ -191,7 +149,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/SccinCRM/views/listtable.html" />
         <option value="$PROJECT_DIR$/SccinCRM/views/pbx/Sounds/edit.html" />
         <option value="$PROJECT_DIR$/SccinCRM/views/listbasefunc.html" />
         <option value="$PROJECT_DIR$/SccinCRM/lib/comfun.js" />
@@ -242,6 +199,7 @@
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/manage/Menmus.js" />
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/manage/Departments.js" />
         <option value="$PROJECT_DIR$/SccinCRM/routes/src/manage/MenmuGroup.js" />
+        <option value="$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js" />
       </list>
     </option>
   </component>
@@ -321,6 +279,140 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="routes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="routes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinCRM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="routes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAGI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAGI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="smartAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SccinAGI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="smartAgi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -333,7 +425,7 @@
     <property name="FullScreen" value="false" />
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../jzycrm" />
     <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
@@ -589,7 +681,11 @@
       <created>1413796325770</created>
       <updated>1413796325770</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="调整manage修改页面可返回到查询条件，及翻页页码">
+      <created>1414550554157</created>
+      <updated>1414550554157</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -614,14 +710,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="变化" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32554945" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32692307" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282967" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24962743" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32904148" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20600858" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22317597" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39835164" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24962743" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292011" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -670,7 +766,8 @@
     <MESSAGE value="北京专家库，添加预警语音接口" />
     <MESSAGE value="修改CRM方面的BUG" />
     <MESSAGE value="调整修改页面可返回到查询条件，及翻页页码" />
-    <option name="LAST_COMMIT_MESSAGE" value="调整修改页面可返回到查询条件，及翻页页码" />
+    <MESSAGE value="调整manage修改页面可返回到查询条件，及翻页页码" />
+    <option name="LAST_COMMIT_MESSAGE" value="调整manage修改页面可返回到查询条件，及翻页页码" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -698,13 +795,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/RecordFile/edit.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.392857" vertical-offset="1995" max-vertical-offset="3819">
-          <caret line="110" column="110" selection-start-line="110" selection-start-column="110" selection-end-line="110" selection-end-column="110" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SccinCRM/views/pbx/Queue/edit.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-7.464286" vertical-offset="3078" max-vertical-offset="4902">
@@ -779,7 +869,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2613" max-vertical-offset="3268">
           <caret line="157" column="8" selection-start-line="157" selection-start-column="8" selection-end-line="157" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -787,7 +876,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2024" max-vertical-offset="2679">
           <caret line="127" column="9" selection-start-line="127" selection-start-column="9" selection-end-line="127" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -795,15 +883,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="5814" max-vertical-offset="6897">
           <caret line="328" column="8" selection-start-line="328" selection-start-column="8" selection-end-line="328" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5017" max-vertical-offset="24377">
-          <caret line="285" column="0" selection-start-line="285" selection-start-column="0" selection-end-line="285" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -811,7 +890,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="157" max-vertical-offset="836">
           <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -819,7 +897,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="15861" max-vertical-offset="18905">
           <caret line="811" column="41" selection-start-line="811" selection-start-column="41" selection-end-line="811" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -827,7 +904,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="741" max-vertical-offset="3002">
           <caret line="15" column="38" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -835,7 +911,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="798" max-vertical-offset="6536">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -843,7 +918,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="684">
           <caret line="10" column="27" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -851,7 +925,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="8.142858" vertical-offset="228" max-vertical-offset="2793">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -859,7 +932,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-10.857142" vertical-offset="4731" max-vertical-offset="6422">
           <caret line="265" column="9" selection-start-line="265" selection-start-column="9" selection-end-line="265" selection-end-column="133" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -867,7 +939,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.142858" vertical-offset="2394" max-vertical-offset="4313">
           <caret line="138" column="139" selection-start-line="138" selection-start-column="139" selection-end-line="138" selection-end-column="139" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -875,7 +946,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-16.285715" vertical-offset="1311" max-vertical-offset="4446">
           <caret line="93" column="36" selection-start-line="93" selection-start-column="36" selection-end-line="93" selection-end-column="86" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -883,7 +953,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.821428" vertical-offset="798" max-vertical-offset="1805">
           <caret line="55" column="83" selection-start-line="55" selection-start-column="83" selection-end-line="55" selection-end-column="83" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -891,7 +960,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.142858" vertical-offset="1596" max-vertical-offset="2584">
           <caret line="96" column="83" selection-start-line="96" selection-start-column="83" selection-end-line="96" selection-end-column="83" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -899,7 +967,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.785714" vertical-offset="1710" max-vertical-offset="3781">
           <caret line="100" column="89" selection-start-line="100" selection-start-column="89" selection-end-line="100" selection-end-column="89" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -907,9 +974,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.5" vertical-offset="0" max-vertical-offset="1444">
           <caret line="14" column="28" selection-start-line="14" selection-start-column="28" selection-end-line="14" selection-end-column="28" />
-          <folding>
-            <element signature="n#style#0;n#col#0;n#colgroup#0;n#table#0;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -917,7 +981,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2451">
           <caret line="12" column="27" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -925,7 +988,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4579">
           <caret line="7" column="27" selection-start-line="7" selection-start-column="27" selection-end-line="7" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -933,7 +995,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1482">
           <caret line="8" column="27" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -941,10 +1002,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="59" max-vertical-offset="760">
           <caret line="17" column="13" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="13" />
-          <folding>
-            <element signature="e#812#25592#0" expanded="false" />
-            <element signature="e#25639#26323#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -952,7 +1009,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2565">
           <caret line="7" column="27" selection-start-line="7" selection-start-column="27" selection-end-line="7" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -960,7 +1016,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6346">
           <caret line="6" column="27" selection-start-line="6" selection-start-column="27" selection-end-line="6" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -968,7 +1023,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4294">
           <caret line="27" column="71" selection-start-line="27" selection-start-column="71" selection-end-line="27" selection-end-column="71" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -976,10 +1030,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4845">
           <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
-          <folding>
-            <element signature="e#538#965#0" expanded="false" />
-            <element signature="e#1036#1256#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -987,7 +1037,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4484">
           <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -995,7 +1044,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4370">
           <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1003,7 +1051,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8037">
           <caret line="8" column="27" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1011,7 +1058,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-15.607142" vertical-offset="1767" max-vertical-offset="2470">
           <caret line="116" column="139" selection-start-line="116" selection-start-column="139" selection-end-line="116" selection-end-column="139" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1019,23 +1065,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-14.928572" vertical-offset="2451" max-vertical-offset="3135">
           <caret line="151" column="139" selection-start-line="151" selection-start-column="139" selection-end-line="151" selection-end-column="139" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SccinCRM/views/manage/UserInfo/list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-37.82143" vertical-offset="1411" max-vertical-offset="2736">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1411" max-vertical-offset="2736">
           <caret line="130" column="133" selection-start-line="130" selection-start-column="133" selection-end-line="130" selection-end-column="133" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SccinCRM/views/listtable.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-42.75" vertical-offset="0" max-vertical-offset="1653">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1197" max-vertical-offset="1653">
           <caret line="63" column="4" selection-start-line="63" selection-start-column="4" selection-end-line="63" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1051,10 +1094,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3666" max-vertical-offset="10906">
           <caret line="104" column="7" selection-start-line="104" selection-start-column="7" selection-end-line="104" selection-end-column="7" />
-          <folding>
-            <element signature="e#509#1336#0" expanded="false" />
-            <element signature="e#1407#1678#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1062,9 +1102,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="361" max-vertical-offset="5358">
           <caret line="74" column="49" selection-start-line="74" selection-start-column="49" selection-end-line="74" selection-end-column="49" />
-          <folding>
-            <element signature="e#563#1391#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1072,12 +1110,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="152" max-vertical-offset="3325">
           <caret line="77" column="7" selection-start-line="77" selection-start-column="7" selection-end-line="77" selection-end-column="71" />
-          <folding>
-            <element signature="e#591#1437#0" expanded="false" />
-            <element signature="e#1508#1779#0" expanded="false" />
-            <element signature="e#2132#3198#0" expanded="false" />
-            <element signature="e#3297#5575#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1085,9 +1118,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="302" max-vertical-offset="3838">
           <caret line="71" column="8" selection-start-line="71" selection-start-column="8" selection-end-line="72" selection-end-column="71" />
-          <folding>
-            <element signature="e#595#1396#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1095,10 +1126,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="24" max-vertical-offset="760">
           <caret line="27" column="71" selection-start-line="27" selection-start-column="71" selection-end-line="27" selection-end-column="71" />
-          <folding>
-            <element signature="e#898#3492#0" expanded="false" />
-            <element signature="e#3544#4697#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1106,17 +1134,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="228" max-vertical-offset="3401">
           <caret line="76" column="71" selection-start-line="76" selection-start-column="71" selection-end-line="76" selection-end-column="71" />
-          <folding>
-            <element signature="e#561#1415#0" expanded="false" />
-            <element signature="e#1486#1757#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/pbx/RecordFile.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.7349043" vertical-offset="2679" max-vertical-offset="5605">
-          <caret line="79" column="12" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="53" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1311" max-vertical-offset="5605">
+          <caret line="164" column="9" selection-start-line="164" selection-start-column="9" selection-end-line="164" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinAGI/smartAgi/src/sccincallout.cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="6053" max-vertical-offset="6821">
+          <caret line="297" column="27" selection-start-line="297" selection-start-column="27" selection-end-line="297" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SccinCRM/routes/src/base/asami.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.8748159" vertical-offset="6940" max-vertical-offset="24472">
+          <caret line="334" column="30" selection-start-line="334" selection-start-column="30" selection-end-line="334" selection-end-column="30" />
           <folding />
         </state>
       </provider>

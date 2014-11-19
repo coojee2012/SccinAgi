@@ -268,6 +268,11 @@ posts.autodial = function (req, res, next) {
     var HardContent = req.body['HardContent'] || "";
     HardContent = HardContent.replace(/\s+/g, '');
 
+    var ForcedSynthesis = false;
+    if( req.body['ForcedSynthesis'] &&  req.body['ForcedSynthesis']  === '1')
+        ForcedSynthesis=true;
+    console.log("ForcedSynthesis:",ForcedSynthesis);
+
     var Phones = req.body['Phones'];
     Phones = Phones.replace(/\s+/g, '');
     var KeyNum = req.body['KeyNum'];
@@ -410,7 +415,7 @@ posts.autodial = function (req, res, next) {
                 function (callback, results) {
                     logger.debug("执行：setVoiceContent");
                     try {
-                        if (results.addVoiceContent.State === 0) {
+                        if (results.addVoiceContent.State === 0  ||  ForcedSynthesis) {
                             var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
                             voc.State = 1;
                             voc.save(function (err, inst) {
