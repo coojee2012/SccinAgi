@@ -1,0 +1,6 @@
+# Created by .gitignore support plugin (hsz.mobi)
+/App/node_modules
+/node_modules
+/cache
+/build
+/App/public
