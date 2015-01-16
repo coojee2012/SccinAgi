@@ -10,3 +10,5 @@ web.log
 /SccinAGI/node_modules
 /SccinCRM/node_modules
 /SccinCRM/.idea
+
+ReportAPI/App/public
