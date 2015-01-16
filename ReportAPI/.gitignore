@@ -3,5 +3,4 @@
 /node_modules
 /cache
 /build
-/App/public
-App/public
+/App/public/javascript
