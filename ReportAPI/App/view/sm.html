@@ -1,0 +1,32 @@
+<div>
+    <p style="margin-left: 10px;">使用下方的按钮开始或结束报表服务.</p>
+    <a href="#" id="button" class="easyui-linkbutton c1" style="width:80px;margin-left: 10px;">
+        <div id="btnText">结束</div>
+    </a>
+</div>
+<div style="margin:20px 0 10px 0;"></div>
+<div id="log" class="easyui-panel" title="服务日志" style="width:100%;height:auto;padding:10px;">
+</div>
+        <script>
+            $(function () {
+                $("#button").bind("click", function () {
+                    var self = this;
+                    if (isStartApp) {
+                        httpServer.start(function () {
+                            $("#btnText").html("结束");
+                            isStartApp = false;
+                        });
+                        //process.mainModule.exports.start();
+                    } else {
+                        $(self).attr("disabled", "disabled");
+                        $("#log").append(">请稍后,整在关闭REST API服务......\r\n</br>");
+                        httpServer.stop(function () {
+                            $("#btnText").html("开始");
+                            isStartApp = true;
+                            $(self).removeAttr("disabled");
+                        });
+                        // process.mainModule.exports.stop();
+                    }
+                });
+            });
+        </script>
