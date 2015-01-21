@@ -5,9 +5,11 @@
     <title>欢迎使用北京市评标专家库报表REST API</title>
     <link rel="stylesheet" type="text/css" href="public/javascript/jquery-easyui-1.4.1/themes/bootstrap/easyui.css">
     <link rel="stylesheet" type="text/css" href="public/javascript/jquery-easyui-1.4.1/themes/icon.css">
-
     <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+    <script>
+        //window.Q=require('q');
+    </script>
 </head>
 <body>
 
@@ -30,6 +32,17 @@
 </script>
 <script type="text/javascript">
     var isStartApp = false;
+    var gui = require('nw.gui'); //or global.window.nwDispatcher.requireNwGui() (see https://github.com/rogerwang/node-webkit/issues/707)
+    var app=gui.App;
+    alert(app.dataPath);
+    // Get the current window
+    var win = gui.Window.get();
+
+    // Listen to the minimize event
+    win.on('minimize', function() {
+        alert('Window is minimized');
+    });
+
     $(function () {
         $("#menmus").tree({
             url: "./view/menmu.json",
@@ -50,7 +63,6 @@
         $("#content").panel({
             href:'./view/sm.html',
             onLoad:function(){
-
                 httpServer.start(function(){
                     $.messager.show({
                         title:'友情提示',

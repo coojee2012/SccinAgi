@@ -19,7 +19,7 @@
                         //process.mainModule.exports.start();
                     } else {
                         $(self).attr("disabled", "disabled");
-                        $("#log").append(">请稍后,整在关闭REST API服务......\r\n</br>");
+                        $("#log").prepend("*****请稍后,正在关闭REST API服务......\r\n</br>");
                         httpServer.stop(function () {
                             $("#btnText").html("开始");
                             isStartApp = true;
