@@ -11,3 +11,4 @@ web.log
 /SccinCRM/node_modules
 /SccinCRM/.idea
 .idea/*
+.idea
