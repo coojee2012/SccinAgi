@@ -33,13 +33,13 @@
 <script type="text/javascript">
     var isStartApp = false;
     var gui = require('nw.gui'); //or global.window.nwDispatcher.requireNwGui() (see https://github.com/rogerwang/node-webkit/issues/707)
-    var app=gui.App;
+    var app = gui.App;
     alert(app.dataPath);
     // Get the current window
     var win = gui.Window.get();
 
     // Listen to the minimize event
-    win.on('minimize', function() {
+    win.on('minimize', function () {
         alert('Window is minimized');
     });
 
@@ -50,24 +50,26 @@
             animate: true,
             lines: true,
             onClick: function (node) {//单击事件
-                $("#content").panel({
-                    href:"./view/"+node.attributes.url,
-                    onLoad:function(){
-                        //alert(node.id);
-                    }
-                })
+                if (node.attributes && node.attributes.url) {
+                    $("#content").panel({
+                        href: "./view/" + node.attributes.url,
+                        onLoad: function () {
+                            //alert(node.id);
+                        }
+                    });
 
+                }
             }
         });
 
         $("#content").panel({
-            href:'./view/sm.html',
-            onLoad:function(){
-                httpServer.start(function(){
+            href: './view/sm.html',
+            onLoad: function () {
+                httpServer.start(function () {
                     $.messager.show({
-                        title:'友情提示',
-                        msg:'REST API启动成功.',
-                        showType:'show'
+                        title: '友情提示',
+                        msg: 'REST API启动成功.',
+                        showType: 'show'
                     });
                 });
             }
