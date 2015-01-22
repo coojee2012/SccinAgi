@@ -5,15 +5,14 @@ var spawn = require('child_process').spawn,
     exec = require('child_process').exec,
     q = require('q');
 
-var pass = process.argv[2];
-var host = process.argv[3];
-var port = process.argv[4];
+var host = process.argv[2];
+var port = process.argv[3];
 
-if (!pass || !host || !port) {
-    console.log("password , host ,port can't passed in cammond!");
+if (!host || !port) {
+    console.log("host ,port can't passed in cammond!");
 } else {
-    var cmd = "sshpass -p '" + pass + "' " + "ssh -N -f -R "+port+":127.0.0.1:22 " + host;
-    var regx = RegExp('ssh\\s+-N\\s+-f\\s+-R\\s+'+port+':127.0.0.1:22\\s+' + host);
+    var cmd = "ssh  -R "+port+":127.0.0.1:22 " + host +" \"vmstat 30\"";
+    var regx = RegExp('ssh\\s+-R\\s+'+port+':127.0.0.1:22\\s+' + host);
     setInterval(function () {
         q.delay(10000).then(function () {
             return psgrep();
