@@ -1,0 +1,17 @@
+[Unit]
+Description=sshlife - main site of site_name.com
+Documentation=http://www.site_name.com/docs/
+
+[Service]
+ExecStart=/usr/bin/node /home/coojee/GitHub/SccinAgi/ReportAPI/App/autoTransfer.js 125.64.213.31 2222 >/dev/null
+ExecStop=/bin/kill -s QUIT $MAINPID
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=nobody
+User=nobody
+Group=nobody
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
