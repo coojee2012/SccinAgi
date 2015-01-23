@@ -7,17 +7,189 @@
     <link rel="stylesheet" type="text/css" href="public/javascript/jquery-easyui-1.4.1/themes/icon.css">
     <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+
     <script>
-        //window.Q=require('q');
+        window.Q = require('q');//定义全局的promise
+        window.reportApp = {};
+        reportApp.gui = require('nw.gui');
+        reportApp.win = reportApp.gui.Window.get();
+        reportApp.app = reportApp.gui.App;
+
+        reportApp.appDir = localStorage.getItem('appdir');
+
+        /**
+         * @description 检查并设置程序数据存放目录
+         * @returns {*}
+         * */
+        function checkAppdir() {
+            var deferred = Q.defer();
+            if (!reportApp.appDir) {
+                try {
+                    $('#dd').dialog({
+                        title: '&nbsp;&nbsp;请选择数据保存目录',
+                        width: 400,
+                        height: 200,
+                        closed: true,
+                        cache: false,
+                        iconCls: 'icon-save',
+                        href: './view/appdir.html',
+                        closable: false,
+                        modal: true,
+                        buttons: [
+                            {
+                                text: '选择目录',
+                                handler: function () {
+                                    chooseDir('#fileDialog').then(function (dir) {
+                                        reportApp.appDir = dir;
+                                        localStorage.setItem('appdir', dir);
+                                        $('#dd').dialog('close');
+
+                                        deferred.resolve(dir);
+                                    });
+                                }
+                            }
+                        ],
+                        onMove: function (e) {
+                            /// TODO 尝试禁止拖动对话框
+                            //  $('#dd').panel().draggable('disabled', true);
+                        }
+                    });
+                    $('#dd').dialog('open');
+                    $("#dd").panel("move", {
+                        top: $(document).scrollTop() + ($(window).height() - 200) * 0.5,
+                        left: $(document).scrollLeft() + ($(window).width() - 400) * 0.5
+                    });
+
+                } catch (err) {
+                    deferred.reject(err);
+                }
+
+            } else {
+                $('#dd').dialog({
+                    title: '&nbsp;&nbsp;请选择数据保存目录',
+                    width: 400,
+                    height: 200,
+                    closed: true});
+                deferred.resolve(reportApp.appDir);
+            }
+            return deferred.promise;
+        }
+        /***
+         * @description 选择目录
+         * @param name - 目录元素的ID
+         * @returns {*}
+         */
+        function chooseDir(name) {
+            var deferred = Q.defer();
+            var chooser = $(name);
+            try {
+                chooser.change(function (evt) {
+                    console.log($(this).val());
+                    deferred.resolve($(this).val());
+                });
+                chooser.trigger('click');
+            } catch (err) {
+                deferred.reject(err);
+            }
+
+            return deferred.promise;
+        }
+        /***
+         * @descript 初始化应用程序
+         */
+        function initApp() {
+            var fs = require('fs');
+
+        }
+
+        function editConfig(config,allowClose) {
+            var closable = allowClose || false;
+            var filename = reportApp.appDir + "/setting.json";
+            var fs = require('fs');
+                config = config|| {};
+            var deferred = Q.defer();
+            try {
+                $('#dd').dialog({
+                    title: '&nbsp;&nbsp;请配置应用程序',
+                    width: 400,
+                    height: 400,
+                    closed: true,
+                    cache: false,
+                    iconCls: 'icon-save',
+                    href: './view/config.html',
+                    modal: true,
+                    closable: closable,
+                    buttons: [
+                        {
+                            text: '保&nbsp;&nbsp;&nbsp;&nbsp;存',
+                            handler: function () {
+                                config.listen=$("#listenPort").val();
+                                fs.writeFile(filename,JSON.stringify(config),function(err){
+                                   if(err){
+                                       $('#dd').dialog('close');
+                                       deferred.reject(err);
+                                   } else{
+                                       $('#dd').dialog('close');
+                                       deferred.resolve(config);
+                                   }
+                                });
+                            }
+                        }
+                    ],
+                    onMove: function (e) {
+                        /// TODO 尝试禁止拖动对话框
+                        //  $('#dd').panel().draggable('disabled', true);
+                    }
+                });
+                $('#dd').dialog('open');
+                $("#dd").panel("move", {
+                    top: $(document).scrollTop() + ($(window).height() - 400) * 0.5,
+                    left: $(document).scrollLeft() + ($(window).width() - 400) * 0.5
+                });
+
+            } catch (err) {
+                deferred.reject(err);
+            }
+            return deferred.promise;
+        }
+        /***
+         * @description 读取配置文件
+         */
+        function readConfig() {
+            var deferred = Q.defer();
+            var fs = require('fs');
+            var filename = reportApp.appDir + "/setting.json";
+            fs.exists(filename, function (exists) {
+                if (exists) {
+                    fs.readFile(filename, function (err, data) {
+                        if (err) {
+                            deferred.reject(err);
+                        } else {
+                            reportApp.config = JSON.parse(data);
+                            alert(reportApp.config);
+                            deferred.resolve(reportApp.config);
+                        }
+                    });
+                } else {
+                    editConfig().then(function(config){
+                        deferred.resolve(config);
+                    });
+                }
+            });
+            return deferred.promise;
+        }
+
     </script>
+
 </head>
 <body>
+<input style="display:none;" id="fileDialog" type="file" nwdirectory/>
 
 <h2> 欢迎使用北京市评标专家库报表REST API服务！</h2>
 
 <div style="margin:20px 0;"></div>
-<div class="easyui-layout" style="width:100%;height:400px;">
-    <div id="appMenmu" data-options="region:'west'" title="应用管理" style="width:20%;padding:10px">
+<div class="easyui-layout" style="width:100%;height:640px;">
+    <div id="appMenmu" data-options="region:'west'" title="应用管理" style="width:20%;padding:10px;height:620px;">
         <ul id="menmus"></ul>
     </div>
     <div data-options="region:'center'" title="服务管理">
@@ -25,57 +197,59 @@
         <div id="content">
         </div>
     </div>
+    <div id="dd" class="easyui-dialog">
+    </div>
 </div>
 
 
-<script type="text/javascript" src="Server.js">
-</script>
 <script type="text/javascript">
-    var isStartApp = false;
-    var gui = require('nw.gui'); //or global.window.nwDispatcher.requireNwGui() (see https://github.com/rogerwang/node-webkit/issues/707)
-    var app = gui.App;
-
-    // Get the current window
-    var win = gui.Window.get();
 
     // Listen to the minimize event
-    win.on('minimize', function () {
+    reportApp.win.on('minimize', function () {
         ///alert('Window is minimized');
     });
-
+    // var Server = require('./Server.js');
+    // var server = new Server();
     $(function () {
-        $("#menmus").tree({
-            url: "./view/menmu.json",
-            method: 'get',
-            animate: true,
-            lines: true,
-            onClick: function (node) {//单击事件
-                if (node.attributes && node.attributes.url) {
-                    $("#content").panel({
-                        href: "./view/" + node.attributes.url,
-                        onLoad: function () {
-                            //alert(node.id);
-                        }
-                    });
 
+        checkAppdir().then(function (dir) {
+            return  readConfig();
+        }).then(function (dir) {
+            $("#menmus").tree({
+                url: "./view/menmu.json",
+                method: 'get',
+                animate: true,
+                lines: true,
+                onClick: function (node) {//单击事件
+                    if (node.attributes && node.attributes.url) {
+                        $("#content").panel({
+                            href: "./view/" + node.attributes.url,
+                            onLoad: function () {
+                                //alert(node.id);
+                            }
+                        });
+
+                    }
                 }
-            }
+            });
+        }).then(function () {
+            $("#content").panel({
+                href: './view/log.html',
+                onLoad: function () {
+                    /*  httpServer.start(function () {
+                     $.messager.show({
+                     title: '友情提示',
+                     msg: 'REST API启动成功.',
+                     showType: 'show'
+                     });
+                     });*/
+                }
+            });
+
+        }).catch(function (err) {
+            alert(err);
         });
 
-        $("#content").panel({
-            href: './view/sm.html',
-            onLoad: function () {
-                httpServer.start(function () {
-                    $.messager.show({
-                        title: '友情提示',
-                        msg: 'REST API启动成功.',
-                        showType: 'show'
-                    });
-                });
-            }
-        });
-
-        alert(app.dataPath);
     });
 </script>
 

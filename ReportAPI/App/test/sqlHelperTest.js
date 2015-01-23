@@ -1,7 +1,7 @@
 /**
  * Created by LinYong on 2015-01-21.
  */
-var sqlHelper=require('./lib/mssqlQ');
+var sqlHelper=require('mssql-q');
 
 var config = {
  user: 'sa',
