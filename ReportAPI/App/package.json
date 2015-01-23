@@ -10,11 +10,11 @@
         "width": 800,
         "height": 500,
         "frame": true,
-        "position": "mouse",
+        "position": "center",
         "min_width": 400,
         "min_height": 200,
-        "max_width": 8000,
-        "max_height": 8000
+        "max_width": 1024,
+        "max_height": 768
     },
     "node-main":"",
     "single-instance":true,

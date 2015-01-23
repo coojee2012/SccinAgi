@@ -34,13 +34,13 @@
     var isStartApp = false;
     var gui = require('nw.gui'); //or global.window.nwDispatcher.requireNwGui() (see https://github.com/rogerwang/node-webkit/issues/707)
     var app = gui.App;
-    alert(app.dataPath);
+
     // Get the current window
     var win = gui.Window.get();
 
     // Listen to the minimize event
     win.on('minimize', function () {
-        alert('Window is minimized');
+        ///alert('Window is minimized');
     });
 
     $(function () {
@@ -74,6 +74,8 @@
                 });
             }
         });
+
+        alert(app.dataPath);
     });
 </script>
 
