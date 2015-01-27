@@ -9,23 +9,29 @@
 </div>
         <script>
             $(function () {
+                if (reportApp.isAppStart) {
+                    $("#btnText").html("结束");
+                }else{
+                    $("#btnText").html("开始");
+                }
+                loadLog();
                 $("#button").bind("click", function () {
                     var self = this;
-                    if (isStartApp) {
-                        httpServer.start(function () {
+                    if (!reportApp.isAppStart) {
+                        reportApp.server.start(function () {
                             $("#btnText").html("结束");
-                            isStartApp = false;
+                            reportApp.isAppStart = true;
                         });
-                        //process.mainModule.exports.start();
+
                     } else {
                         $(self).attr("disabled", "disabled");
-                        $("#log").prepend("*****请稍后,正在关闭REST API服务......\r\n</br>");
-                        httpServer.stop(function () {
+                        //$("#log").append("*****请稍后,正在关闭REST API服务......\r\n</br>");
+                        reportApp.server.stop(function () {
                             $("#btnText").html("开始");
-                            isStartApp = true;
+                            reportApp.isAppStart = false;
                             $(self).removeAttr("disabled");
                         });
-                        // process.mainModule.exports.stop();
+
                     }
                 });
             });

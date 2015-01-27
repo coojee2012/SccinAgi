@@ -16,87 +16,39 @@ var fs = require('fs'),
     session = require('express-session'),
     serverDm = domain.create(),
     log4js = require('log4js'),
+    mssqlq = require('mssql-q'),
+    format = require('date-format'),
     processPath = path.dirname(process.argv[1]);
 
 
 //初始化日志记录方式
 
 
-serverDm.on('error', function (error) {
-    delete error.domain;
-    log("应用程序发生异常：" + error);
-});
-
-var appConf = {
-    port: 18082,
-    dir: "D:\\RestApiLogs\\"
-};
-
-
-var initConfig = function (db) {
-    var deferred = Q.defer();
-    // Create table and insert one line
-    window.console.log('11111');
-    Q.fcall(function () {
-        db.transaction(function (tx) {
-            tx.executeSql('DROP TABLE IF  EXISTS config');
-            tx.executeSql('CREATE TABLE IF NOT EXISTS config (id unique, listenPort,logDir)');
-        });
-    }).then(function () {
-        db.transaction(function (tx) {
-            tx.executeSql('SELECT * FROM config', [], function (tx, results, error) {
-                if (error) {
-                    deferred.reject(error.toString().red);
-                } else {
-                    console.log(results.rows);
-                    var len = results.rows.length, i;
-                    if (len < 1) {
-                        tx.executeSql('INSERT INTO config (id, listenPort,logDir) VALUES (1, "18081","D:\\Bjexpert\\")', function () {
-                            return initConfig(db);
-                        });
-
-                    } else {
-                        window.console.log('222222');
-                        deferred.resolve(results.rows.item(0));
-                    }
-                }
-            });
-        });
-    });
-
-
-    return deferred.promise;
-}
-
-
-function CreateServer(logger) {
+Server.prototype.CreateServer = function () {
+    var self = this;
     var server = http.createServer();
 
-    server.on('request', handler);
+    server.on('request', self.app);
     server.maxHeadersCount = 0;
     server.timeout = 10000;//3秒
     server.on('error', function (error) {
-        log('REST API服务发生严重错误: ' + error, logger.error);
+        self.log('REST API服务发生严重错误: ', 'error');
     });
     server.on('close', function () {
-        log('REST API服务关闭! ', logger.error);
+        self.log('REST API服务关闭! ', 'error');
         serverDm.exit();
     });
     server.on('timeout', function (socket) {
         socket.destroy();
-        log('Connection TimeOut!', logger.error);
+        self.log('Connection TimeOut!', 'error');
     });
-    return server;
+    self.server = server;
 }
 
-function CreateApp(logger) {
+Server.prototype.CreateApp = function () {
+    var self = this;
     var app = express();
-    app.set('port', appConf.port || process.env.PORT);
-//app.set('views', path.join(__dirname, 'app/dist'));
-//app.set('view engine', 'ejs');
-//app.set('env', "development" || YuanCRM.conf.appConf.env);
-// app.engine('html', require('ejs').renderFile);
-//app.use(bodyParser());
+    app.set('port', self.conf.port || process.env.PORT);
     app.use(session({
         secret: 'say web cat!'
     }));
@@ -105,68 +57,87 @@ function CreateApp(logger) {
         extended: true
     }));
     app.use(bodyParser.json());
-
     app.use(methodOverride());
-
+    app.use(express.static('./public'));
     app.use(function (req, res, next) {
+        try {
+            var path = req.path.toLowerCase().replace(/^\//, "").split("/");
+            var fileName = path[0] || 'index';
+            var fnName = path[1] || 'index';
 
-        res.send("aaaaa");
+            var router = require('./router/' + fileName + '.js');
+            //req.method === 'POST'
+            if (typeof(router[fnName]) === 'function') {
+                router[fnName](req, res, next, self.db, self.logger);
+            } else {
+                throw new Error("访问的API不存在！");
+            }
+        } catch (err) {
+            res.send({success: "false", error: err});
+        }
     });
-    return app;
+    self.app = app;
 }
 
 
 function Server(config) {
+    this.conf = config || {};
     this.connects = 0;
     this.server = null;
     this.app = null;
-    //this.db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);
-    this.port = 18081;
-    this.dir = "D:\\RestApiLogs\\";
+    // this.port = conf.port || 18081;
+    // this.dir = conf.dir || "D:\\RestApiLogs\\";
     this.ready = false;
     this.logger = null;
-    this.init(config);
+    this.db = null;
+    this.logDiv =
+        // this.dbServer = conf.dbServer;
+        //this.dbPort = conf.dbPort;
+        // this.dbUser = conf.dbUser;
+        // this.dbPass = conf.dbPass;
+        // this.dbName = conf.dbName;
 
+        this.init();
 };
 
-Server.prototype.init = function (callback) {
+Server.prototype.init = function () {
     var self = this;
-    initConfig(self.db).then(function (data) {
-        self.port = data.listenPort;
-        self.dir = data.logDir;
-        window.console.log('11111');
-    }).then(function () {
-        if (!fs.existsSync(self.dir)) {
-            fs.mkdirSync(self.dir);
+    var dbconfig = {
+        user: self.conf.dbUser || 'sa',
+        password: self.conf.dbPass || '123456Aa',
+        server: self.conf.dbServer || '192.168.7.234', // You can use 'localhost\\instance' to connect to named instance
+        database: self.conf.dbName || 'bjexpert',
+        connectionTimeout: 3000,
+        requestTimeout: 15000,
+        options: {
+            //encrypt: true // Use this if you're on Windows Azure
         }
-        console.log(2);
-    }).then(function () {
-        log4js.configure({
-            "appenders": [
-                {
-                    "type": "dateFile",
-                    "category": 'date',
-                    "filename": appConf.dir + "\\restApi.log",
-                    "pattern": "-yyyy-MM-dd",
-                    "alwaysIncludePattern": true
-                }
-            ],
-            replaceConsole: true
-        });
-        self.logger = log4js.getLogger('date');
-        self.logger.setLevel('DEBUG');
-        console.log(3);
-    }).then(function () {
-        self.server = CreateServer(self.logger);
-        self.app = CreateApp(self.logger);
-    }).then(function () {
-        self.ready = true;
-    }).then(function () {
-        // self.start();
-    }).catch(function (err) {
-        console.log(err);
-    });
+    };
+    self.db = new mssqlq(dbconfig);
 
+    log4js.configure({
+        "appenders": [
+            {
+                "type": "dateFile",
+                "category": 'date',
+                "filename": self.conf.dir + "\\restApi.log",
+                "pattern": "-yyyy-MM-dd",
+                "alwaysIncludePattern": true
+            }
+        ],
+        replaceConsole: true
+    });
+    self.logger = log4js.getLogger('date');
+    self.logger.setLevel('DEBUG');
+    self.CreateApp();
+    self.CreateServer();
+
+    self.ready = true;
+
+    serverDm.on('error', function (error) {
+        delete error.domain;
+        self.log("应用程序发生异常：" + error, 'error');
+    });
 
 }
 
@@ -180,10 +151,10 @@ Server.prototype.start = function (callback) {
         } else {
             self.server.listen(self.app.get('port'), function (err) {
                 if (err) {
-                    log('REST API启动失败！原因： ' + err, self.logger.error);
+                    self.log('REST API启动失败！原因： ' + err, 'error');
                 } else {
-                    log('Current directory: ' + process.cwd(), self.logger.error);
-                    log('REST API启动成功！监听端口： ' + self.app.get('port'), self.logger.error);
+                    self.log('Current directory: ' + process.cwd(), 'error');
+                    self.log('REST API启动成功！监听端口： ' + self.app.get('port'), 'error');
                     if (typeof(callback) === 'function') {
                         callback();
                     }
@@ -206,19 +177,13 @@ function handler(req, res) {
     app(req, res);
 }
 
-function log(str, logger) {
-    logger(str);
-    str = now() + " " + str + "\r\n</br>";
-    window.$("#log").prepend(str);
-
+Server.prototype.log = function (str, logType) {
+    var self = this;
+    logType = logType || 'debug';
+    self.logger[logType](str);
+    str = "[" + format('yyyy-MM-dd hh:mm:ss.SSS', new Date()) + "] [" + logType.toUpperCase() + "] " + str + "\r\n</br>";
+    window.$("#log").append(str);
 }
-
-function now() {
-    var now = new Date()
-    var dateStr = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate() + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-    return dateStr;
-}
-
 
 module.exports = Server;
 //httpServer.start();

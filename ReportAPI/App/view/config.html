@@ -1,16 +1,34 @@
 <div>
     <table cellpadding="5">
         <tr>
+            <td colspan="2">REST配置</td>
+        </tr>
+        <tr>
             <td>监听端口:</td>
-            <td><input class="easyui-textbox" type="text" name="listenPort" id="listenPort" data-options="required:true" /></td>
+            <td><input class="easyui-textbox" type="text" name="listenPort" id="listenPort" data-options="required:true,validType:'number'" /></td>
         </tr>
         <tr>
-            <td>Email:</td>
-            <td><input class="easyui-textbox" type="text" name="email" data-options="required:true,validType:'email'" /></td>
+            <td colspan="2">数据库配置</td>
         </tr>
         <tr>
-            <td>Subject:</td>
-            <td><input class="easyui-textbox" type="text" name="subject" data-options="required:true" /></td>
+            <td>服务器地址:</td>
+            <td><input class="easyui-textbox" type="text" name="dbServer" id="dbServer" data-options="required:true" /></td>
+        </tr>
+        <tr>
+            <td>端口:</td>
+            <td><input class="easyui-textbox" type="text" name="dbPort" id="dbPort"  /></td>
+        </tr>
+        <tr>
+            <td>数据库名称:</td>
+            <td><input class="easyui-textbox" type="text" name="dbName"  id="dbName" data-options="required:true" /></td>
+        </tr>
+        <tr>
+            <td>用户名:</td>
+            <td><input class="easyui-textbox" type="text" name="dbUser" id="dbUser" data-options="required:true" /></td>
+        </tr>
+        <tr>
+            <td>密码:</td>
+            <td><input class="easyui-textbox" type="password" name="dbPass" id="dbPass" data-options="required:true" /></td>
         </tr>
         </table>
 </div>

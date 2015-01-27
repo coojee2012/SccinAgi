@@ -1,11 +1,16 @@
 [{
     "id":"main",
-    "text":"应用程序",
-    "iconCls":"icon-save",
+    "text":"REST服务",
     "children":[{
         "text":"服务管理",
         "attributes":{
-            "url":"sm.html"
+            "url":"index.html"
+        },
+        "checked":true
+    },{
+        "text":"服务配置",
+        "attributes":{
+            "url":"config.html"
         },
         "checked":true
     },{
@@ -28,8 +33,30 @@
     "text":"统计演示",
     "state":"closed",
     "children":[{
-        "text":"专家资源统计"
+        "text":"专家资源统计" ,
+        "children":[{
+            "text":"专业分布情况",
+            "attributes":{
+                "url":"zhuanjia/index.html"
+            }
+        },{
+            "text":"专业/年龄段分布情况",
+            "attributes":{
+                "url":"zhuanjia/index.html"
+            }
+        }]
     },{
-        "text":"抽取统计"
+        "text":"项目抽取统计" ,
+        "children":[{
+            "text":"当前专家专业分布情况",
+            "attributes":{
+                "url":"bb.html"
+            }
+        },{
+            "text":"专家专业/年龄段分布情况",
+            "attributes":{
+                "url":"bb.html"
+            }
+        }]
     }]
 }]
