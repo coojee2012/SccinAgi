@@ -30,7 +30,7 @@ Server.prototype.CreateServer = function () {
 
     server.on('request', self.app);
     server.maxHeadersCount = 0;
-    server.timeout = 10000;//3秒
+    server.timeout = 30000;//3秒
     server.on('error', function (error) {
         self.log('REST API服务发生严重错误: ', 'error');
     });
@@ -179,7 +179,9 @@ function handler(req, res) {
 
 Server.prototype.log = function (str, logType) {
     var self = this;
-    logType = logType || 'debug';
+    if(!logType){
+        logType='debug';
+    }
     self.logger[logType](str);
     str = "[" + format('yyyy-MM-dd hh:mm:ss.SSS', new Date()) + "] [" + logType.toUpperCase() + "] " + str + "\r\n</br>";
     window.$("#log").append(str);

@@ -8,8 +8,112 @@
     <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+    (function($){
+        function pagerFilter(data){
+            if ($.isArray(data)){ // is array
+                data = {
+                    total: data.length,
+                    rows: data
+                }
+            }
+            var dg = $(this);
+            var state = dg.data('treegrid');
+            var opts = dg.treegrid('options');
+            var pager = dg.treegrid('getPager');
+            pager.pagination({
+                onSelectPage:function(pageNum, pageSize){
+                    opts.pageNumber = pageNum;
+                    opts.pageSize = pageSize;
+                    pager.pagination('refresh',{
+                        pageNumber:pageNum,
+                        pageSize:pageSize
+                    });
+                    dg.treegrid('loadData',state.allRows);
+                }
+            });
+            opts.pageNumber = pager.pagination('options').pageNumber || 1;
+            if (!state.allRows){
+                state.allRows = data.rows;
+            }
+            var topRows = [];
+            var childRows = [];
+            $.map(state.allRows, function(row){
+                row._parentId ? childRows.push(row) : topRows.push(row);
+            });
+            data.total = topRows.length;
+            var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
+            var end = start + parseInt(opts.pageSize);
+            data.rows = $.extend(true,[],topRows.slice(start, end).concat(childRows));
+            window.console.log(data);
+            return data;
+        }
 
-    <script>
+        var appendMethod = $.fn.treegrid.methods.append;
+        var removeMethod = $.fn.treegrid.methods.remove;
+        var loadDataMethod = $.fn.treegrid.methods.loadData;
+        $.extend($.fn.treegrid.methods, {
+            clientPaging: function(jq){
+                return jq.each(function(){
+                    var state = $(this).data('treegrid');
+                    var opts = state.options;
+                    opts.loadFilter = pagerFilter;
+                    var onBeforeLoad = opts.onBeforeLoad;
+                    opts.onBeforeLoad = function(row,param){
+                        state.allRows = null;
+                        return onBeforeLoad.call(this, row, param);
+                    }
+                    $(this).treegrid('loadData', state.data);
+                    if (opts.url){
+                        $(this).treegrid('reload');
+                    }
+                });
+            },
+            loadData: function(jq, data){
+                jq.each(function(){
+                    $(this).data('treegrid').allRows = null;
+                });
+                return loadDataMethod.call($.fn.treegrid.methods, jq, data);
+            },
+            append: function(jq, param){
+                return jq.each(function(){
+                    var state = $(this).data('treegrid');
+                    if (state.options.loadFilter == pagerFilter){
+                        $.map(param.data, function(row){
+                            row._parentId = row._parentId || param.parent;
+                            state.allRows.push(row);
+                        });
+                        $(this).treegrid('loadData', state.allRows);
+                    } else {
+                        appendMethod.call($.fn.treegrid.methods, $(this), param);
+                    }
+                })
+            },
+            remove: function(jq, id){
+                return jq.each(function(){
+                    if ($(this).treegrid('find', id)){
+                        removeMethod.call($.fn.treegrid.methods, $(this), id);
+                    }
+                    var state = $(this).data('treegrid');
+                    if (state.options.loadFilter == pagerFilter){
+                        for(var i=0; i<state.allRows.length; i++){
+                            if (state.allRows[i][state.options.idField] == id){
+                                state.allRows.splice(i,1);
+                                break;
+                            }
+                        }
+                        $(this).treegrid('loadData', state.allRows);
+                    }
+                })
+            },
+            getAllRows: function(jq){
+                return jq.data('treegrid').allRows;
+            }
+        });
+
+    })(jQuery);
+</script>
+<script type="text/javascript">
         window.Q = require('q');//定义全局的promise
         window.reportApp = {};
         reportApp.gui = require('nw.gui');
@@ -205,28 +309,28 @@
         }
         /***
          * @description 服务端分页
-         * @param grid
+         * @param gridId - grid table ID
          * @constructor
          */
-        function ServerPageion(grid){
+        function ServerPagin(gridId,url,conditions){
             var companyCode =$('#hiddenCompanyCode').val();
             var name = $('#txtName').val();
             if (companyCode== "") companyCode = "000";
-            var dg =$('#tableTrainee');
+            var dg =$('#gridId');
             var opts =dg.datagrid('options');
             var pager =dg.datagrid('getPager');
             var _pageNumber =opts.pageNumber;
             var _pageSize =opts.pageSize;
+            if(typeof (conditions) !=='object'){
+                conditions={};
+            }
+            conditions.p=_pageNumber;
+            conditions.s=_pageSize;
             //异步获取数据到javascript对象，入参为查询条件和页码信息
-            $.post('Ajax/GetTraineeHandler.ashx', {
-                Name: name,
-                CompanyCode:companyCode,
-                pageNumber:_pageNumber,
-                pageSize:_pageSize
-            }, function(data) {
+            $.post(url, conditions, function(data) {
                 //注意此处从数据库传来的data数据有记录总行数的total列
                 var total = JSON.parse(data).rows[0].total;
-                $('#tableTrainee').datagrid('loadData', JSON.parse(data));
+                $('#gridId').datagrid('loadData', JSON.parse(data));
                 pager.pagination({
                     //更新pagination的导航列表各参数
                     total: total,//总数
