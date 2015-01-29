@@ -1,5 +1,5 @@
-<div class="easyui-tabs" style="width:100%;height:480px">
-    <div title="统计列表" data-options="tabWidth:112" style="padding:10px">
+<div class="easyui-tabs" style="width:100%;height:480px;">
+    <div title="统计列表" data-options="tabWidth:112" style="padding:10px;width:100%;height:460px;">
         <table id="tt" class="easyui-treegrid">
 
         </table>
@@ -18,20 +18,20 @@
             url: 'http://192.168.0.114:18081/zhuanjia/zynl',
             rownumbers: true,
             pagination: true,
-            pageSize: 2,
-            pageList: [2,10,20],
+            pageSize: 5,
+            pageList: [5,10,20],
             idField: 'id',
             treeField: 'name',
             columns: [
                 [
-                    {field: 'name', title: '专业名称', width: 180, align:"left"},
+                    {field: 'name', title: '专业名称', width: 280, align:"left"},
                     {field: 'total', title: '专家总数', width: 60, align:"center"},
-                    {field: 'age20', title: '<=30', width: 80, align:"center"},
-                    {field: 'age30', title: '31~40', width: 80, align:"center"},
-                    {field: 'age40', title: '41~50', width: 80, align:"center"},
-                    {field: 'age50', title: '51~60', width: 80, align:"center"},
-                    {field: 'age60', title: '61~70', width: 80, align:"center"},
-                    {field: 'age70', title: '>70', width: 80, align:"center"}
+                    {field: 'age20', title: '<=30', width: 60, align:"center"},
+                    {field: 'age30', title: '31~40', width: 60, align:"center"},
+                    {field: 'age40', title: '41~50', width: 60, align:"center"},
+                    {field: 'age50', title: '51~60', width: 60, align:"center"},
+                    {field: 'age60', title: '61~70', width: 60, align:"center"},
+                    {field: 'age70', title: '>70', width: 60, align:"center"}
                 ]
             ],
             onBeforeLoad: function(row,param){

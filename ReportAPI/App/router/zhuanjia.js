@@ -45,7 +45,8 @@ function zynl(req, res, next, db, logger) {
     }
 
     //window.alert(JSON.stringify(query));
-
+    var pageNumber=query.page;
+    var pageSize=query.rows;
     var sql = "select  sum(total) as total,";
     sql += "  sum(age20) as age20,sum(age30) as age30,sum(age40) as age40,sum(age50) as age50,sum(age60) as age60,sum(age70) as age70,";
     if (query && query.id === "0") {
@@ -53,7 +54,7 @@ function zynl(req, res, next, db, logger) {
     } else if (query && query.id.substr(4, 4) === "0000") {
         sql += "  SUBSTRING(tid,1,6)+'00' as id,'"+query.id+"' as parentId , name ,'closed' as state from (";
     } else {
-        sql += "  tid as id,'"+query.id+"' as parentId , name ,'open' as state from (";
+        sql += "  tid as id,'"+query.id+"' as parentId , name ,'closed' as state from (";
     }
 
     sql += "  select 1 as total, a.id as tid,";
@@ -72,14 +73,19 @@ function zynl(req, res, next, db, logger) {
     sql += "  case when c.年龄 > 50  and  c.年龄 <=60 then 1 else 0 end as age50,";
     sql += "  case when c.年龄 > 60  and  c.年龄 <=70 then 1 else 0 end as age60,";
     sql += "  case when c.年龄 > 70  then 1 else 0 end as age70";
-    sql += "  from 专业 as a";
-    sql += "  LEFT JOIN 专家专业关联 b on a.id=b.专业id";
+    sql += "  from 专家专业关联 as b";
+    sql += "  LEFT JOIN 专业 a on a.id=b.专业id";
     sql += "  LEFT JOIN 专家 c on b.专家id=c.id";
-    sql += "  where a.专业状态=1";
-    if (query && query.id !== "0") {
-        sql += " AND a.父专业ID='"+query.id+"'";
-    }
+    sql += "  where a.专业状态=1 AND c.逻辑状态 = 0 ";
+    if (query && query.id.substr(4, 4) === "0000") {
+        sql += " AND SUBSTRING(a.父专业ID,1,4)='"+query.id.substr(0, 4)+"'";
 
+    }else if (query && query.id.substr(6, 2) === "00") {
+        sql += " AND SUBSTRING(a.父专业ID,1,6)='"+query.id.substr(0, 6)+"'";
+    }else if(query && query.id !== "0" && query.id.substr(query.id.length-1, 2) !=='00'){
+        sql += " AND SUBSTRING(a.父专业ID,1,"+query.id.length+")='"+query.id+"'";
+    }
+   // sql+="  AND a.id <> '"+query.id+"'";
     sql += "  ) as temp";
     if (query && query.id === "0") {
         sql += "  group by SUBSTRING(tid,1,4),name order by total DESC";
@@ -99,7 +105,7 @@ function zynl(req, res, next, db, logger) {
         if (query.id === "0") {
             result = {
                 total: data.length,
-                rows: data
+                rows: data.slice(pageSize*(pageNumber-1),pageSize*pageNumber)
             };
         } else {
             result = data;
