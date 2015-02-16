@@ -26,7 +26,7 @@ posts.sippeers = function (req, res, next) {
         res.send(response);
 
     });
-}
+};
 
 posts.ping = function (req, res, next) {
     nami.send(new AsAction.Ping(), function (response) {
@@ -35,8 +35,7 @@ posts.ping = function (req, res, next) {
         res.send(response);
 
     });
-}
-
+}; 
 posts.hangup = function (req, res, next) {
     var action = new AsAction.Hangup();
     action.Channel = 'sip/abcd';
@@ -46,7 +45,7 @@ posts.hangup = function (req, res, next) {
         res.send(response);
 
     });
-}
+};
 
 posts.status = function (req, res, next) {
     var action = new AsAction.Status();
@@ -57,10 +56,10 @@ posts.status = function (req, res, next) {
         res.send(response);
 
     });
-}
+};
 
 posts.command = function (req, res, next) {
-    var cmd = req.body['cmd'] || req.query['cmd'];
+    var cmd = req.body.cmd || req.query.cmd;
     var action = new AsAction.Command();
     action.Command = cmd;
     nami.send(action, function (response) {
@@ -69,7 +68,7 @@ posts.command = function (req, res, next) {
         res.send(response);
 
     });
-}
+};
 
 posts.extensionstate = function (req, res, next) {
     var exten = req.body['exten'] || req.query['exten'];
@@ -586,7 +585,7 @@ posts.autodial = function (req, res, next) {
                             callback(err, null);
                         else {
                             if (counts && counts > conf.load('app').maxchans) {
-                                callback('当前可用线路不足，已用:' + counts, counts);
+                                callback('linefull', counts);
                             } else {
                                 callback(null, counts);
                             }
@@ -638,7 +637,7 @@ posts.autodial = function (req, res, next) {
                 }
                 res.send({
                     "success": false,
-                    "result": "服务器发生内部异常:" + errmsg + ",请联系系统管理员！"
+                    "result": errmsg
                 });
 
             } else {
@@ -650,9 +649,7 @@ posts.autodial = function (req, res, next) {
             }
 
         });
-
-    }
-
+} 
 }
 
 posts.VoiceNotice = function (req, res, next) {
