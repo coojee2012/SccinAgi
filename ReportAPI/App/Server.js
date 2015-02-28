@@ -23,6 +23,25 @@ var fs = require('fs'),
 
 //初始化日志记录方式
 
+function Server(config) {
+    this.conf = config || {};
+    this.connects = 0;
+    this.server = null;
+    this.app = null;
+    // this.port = conf.port || 18081;
+    // this.dir = conf.dir || "D:\\RestApiLogs\\";
+    this.ready = false;
+    this.logger = null;
+    this.db = null;
+    this.logDiv =
+        // this.dbServer = conf.dbServer;
+        //this.dbPort = conf.dbPort;
+        // this.dbUser = conf.dbUser;
+        // this.dbPass = conf.dbPass;
+        // this.dbName = conf.dbName;
+
+        this.init();
+};
 
 Server.prototype.CreateServer = function () {
     var self = this;
@@ -30,7 +49,7 @@ Server.prototype.CreateServer = function () {
 
     server.on('request', self.app);
     server.maxHeadersCount = 0;
-    server.timeout = 30000;//3秒
+    server.timeout = 300000;//3秒
     server.on('error', function (error) {
         self.log('REST API服务发生严重错误: ', 'error');
     });
@@ -79,26 +98,6 @@ Server.prototype.CreateApp = function () {
     self.app = app;
 }
 
-
-function Server(config) {
-    this.conf = config || {};
-    this.connects = 0;
-    this.server = null;
-    this.app = null;
-    // this.port = conf.port || 18081;
-    // this.dir = conf.dir || "D:\\RestApiLogs\\";
-    this.ready = false;
-    this.logger = null;
-    this.db = null;
-    this.logDiv =
-        // this.dbServer = conf.dbServer;
-        //this.dbPort = conf.dbPort;
-        // this.dbUser = conf.dbUser;
-        // this.dbPass = conf.dbPass;
-        // this.dbName = conf.dbName;
-
-        this.init();
-};
 
 Server.prototype.init = function () {
     var self = this;
@@ -172,19 +171,21 @@ Server.prototype.stop = function (callback) {
     self.server.close(callback);
 }
 
-function handler(req, res) {
-    var app = CreateApp();
-    app(req, res);
-}
 
 Server.prototype.log = function (str, logType) {
     var self = this;
-    if(!logType){
-        logType='debug';
+    if (!logType) {
+        logType = 'debug';
     }
     self.logger[logType](str);
     str = "[" + format('yyyy-MM-dd hh:mm:ss.SSS', new Date()) + "] [" + logType.toUpperCase() + "] " + str + "\r\n</br>";
     window.$("#log").append(str);
+}
+
+
+function handler(req, res) {
+    var app = CreateApp();
+    app(req, res);
 }
 
 module.exports = Server;
