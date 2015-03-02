@@ -96,6 +96,7 @@ function zynl(req, res, next, db, logger) {
 
         res.send(result);
     }, function (err) {
+        console.log("err:"+err);
         res.send(err);
     }).catch(function (err) {
         res.send(err);

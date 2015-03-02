@@ -378,9 +378,9 @@
     $(function () {
         checkAppdir().then(function (dir) {
             return  readConfig();
-        }).then(function(config){
+        })/*.then(function(config){
             reportApp.server=new reportApp.Server(config);
-        }).then(function (dir) {
+        })*/.then(function (dir) {
             $("#menmus").tree({
                 url: "./view/menmu.json",
                 method: 'get',
@@ -402,7 +402,7 @@
             $("#content").panel({
                 href: './view/index.html',
                 onLoad: function () {
-                    reportApp.server.start(function () {
+                  /*  reportApp.server.start(function () {
                      reportApp.isAppStart=true;
                      $("#btnText").html("结束");
 
@@ -411,7 +411,7 @@
                      msg: 'REST API启动成功.',
                      showType: 'show'
                      });
-                     });
+                     });*/
                 }
             });
 

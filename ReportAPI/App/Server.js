@@ -24,7 +24,10 @@ var fs = require('fs'),
 //初始化日志记录方式
 
 function Server(config) {
-    this.conf = config || {};
+    this.conf = config || {
+        dir:processPath,
+        port:18081
+    };
     this.connects = 0;
     this.server = null;
     this.app = null;
@@ -33,7 +36,7 @@ function Server(config) {
     this.ready = false;
     this.logger = null;
     this.db = null;
-    this.logDiv =
+    this.logDiv ="";
         // this.dbServer = conf.dbServer;
         //this.dbPort = conf.dbPort;
         // this.dbUser = conf.dbUser;
@@ -120,11 +123,11 @@ Server.prototype.init = function () {
                 "type": "dateFile",
                 "category": 'date',
                 "filename": self.conf.dir + "\\restApi.log",
-                "pattern": "-yyyy-MM-dd",
+                "pattern": "-yyyy-MM-dd.log",
                 "alwaysIncludePattern": true
             }
         ],
-        replaceConsole: true
+        replaceConsole: false
     });
     self.logger = log4js.getLogger('date');
     self.logger.setLevel('DEBUG');
@@ -179,7 +182,9 @@ Server.prototype.log = function (str, logType) {
     }
     self.logger[logType](str);
     str = "[" + format('yyyy-MM-dd hh:mm:ss.SSS', new Date()) + "] [" + logType.toUpperCase() + "] " + str + "\r\n</br>";
-    window.$("#log").append(str);
+   /* if(window){
+        window.$("#log").append(str);
+    }*/
 }
 
 
@@ -188,5 +193,14 @@ function handler(req, res) {
     app(req, res);
 }
 
+if (!module.parent) {
+    var myServer=new Server({
+        dir:processPath,
+        port:18081,
+        dbName:'BjexpertDW'
+
+    });
+    myServer.start();
+}
 module.exports = Server;
 //httpServer.start();
