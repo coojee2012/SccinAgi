@@ -13,21 +13,6 @@
             "url":"config.html"
         },
         "checked":true
-    },{
-        "text":"日志查看",
-        "state":"open",
-        "children":[{
-            "text":"PhotoShop",
-            "attributes":{
-                "url":"bb.html"
-            }
-        },{
-            "id": "subMani",
-            "text":"Sub Bookds",
-            "attributes":{
-                "url":"bb.html"
-            }
-        }]
     }]
 },{
     "text":"统计演示",

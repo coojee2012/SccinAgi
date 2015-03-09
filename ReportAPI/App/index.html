@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head lang="cn">
-    <meta charset="UTF-8">
-    <title>欢迎使用北京市评标专家库报表REST API</title>
-    <link rel="stylesheet" type="text/css" href="public/javascript/jquery-easyui-1.4.1/themes/bootstrap/easyui.css">
-    <link rel="stylesheet" type="text/css" href="public/javascript/jquery-easyui-1.4.1/themes/icon.css">
-    <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.min.js"></script>
-    <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js"></script>
+<meta charset="UTF-8">
+<title>欢迎使用北京市评标专家库报表REST API</title>
+<link rel="stylesheet" type="text/css" href="public/javascript/jquery-easyui-1.4.1/themes/bootstrap/easyui.css">
+<link rel="stylesheet" type="text/css" href="public/javascript/jquery-easyui-1.4.1/themes/icon.css">
+<script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js"></script>
 
-    <script type="text/javascript" src="public/javascript/highcharts/highcharts.js"></script>
-    <script type="text/javascript" src="public/javascript/highcharts/modules/exporting.js"></script>
-
+<script type="text/javascript" src="public/javascript/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="public/javascript/highcharts/modules/exporting.js"></script>
+<script type="text/javascript" src="public/javascript/highcharts/export-csv.js"></script>
 <script type="text/javascript">
-    (function($){
-        function pagerFilter(data){
-            if ($.isArray(data)){ // is array
+    (function ($) {
+        function pagerFilter(data) {
+            if ($.isArray(data)) { // is array
                 data = {
                     total: data.length,
                     rows: data
@@ -26,29 +26,29 @@
             var opts = dg.treegrid('options');
             var pager = dg.treegrid('getPager');
             pager.pagination({
-                onSelectPage:function(pageNum, pageSize){
+                onSelectPage: function (pageNum, pageSize) {
                     opts.pageNumber = pageNum;
                     opts.pageSize = pageSize;
-                    pager.pagination('refresh',{
-                        pageNumber:pageNum,
-                        pageSize:pageSize
+                    pager.pagination('refresh', {
+                        pageNumber: pageNum,
+                        pageSize: pageSize
                     });
-                    dg.treegrid('loadData',state.allRows);
+                    dg.treegrid('loadData', state.allRows);
                 }
             });
             opts.pageNumber = pager.pagination('options').pageNumber || 1;
-            if (!state.allRows){
+            if (!state.allRows) {
                 state.allRows = data.rows;
             }
             var topRows = [];
             var childRows = [];
-            $.map(state.allRows, function(row){
+            $.map(state.allRows, function (row) {
                 row._parentId ? childRows.push(row) : topRows.push(row);
             });
             data.total = topRows.length;
-            var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
+            var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
             var end = start + parseInt(opts.pageSize);
-            data.rows = $.extend(true,[],topRows.slice(start, end).concat(childRows));
+            data.rows = $.extend(true, [], topRows.slice(start, end).concat(childRows));
             window.console.log(data);
             return data;
         }
@@ -57,33 +57,33 @@
         var removeMethod = $.fn.treegrid.methods.remove;
         var loadDataMethod = $.fn.treegrid.methods.loadData;
         $.extend($.fn.treegrid.methods, {
-            clientPaging: function(jq){
-                return jq.each(function(){
+            clientPaging: function (jq) {
+                return jq.each(function () {
                     var state = $(this).data('treegrid');
                     var opts = state.options;
                     opts.loadFilter = pagerFilter;
                     var onBeforeLoad = opts.onBeforeLoad;
-                    opts.onBeforeLoad = function(row,param){
+                    opts.onBeforeLoad = function (row, param) {
                         state.allRows = null;
                         return onBeforeLoad.call(this, row, param);
                     }
                     $(this).treegrid('loadData', state.data);
-                    if (opts.url){
+                    if (opts.url) {
                         $(this).treegrid('reload');
                     }
                 });
             },
-            loadData: function(jq, data){
-                jq.each(function(){
+            loadData: function (jq, data) {
+                jq.each(function () {
                     $(this).data('treegrid').allRows = null;
                 });
                 return loadDataMethod.call($.fn.treegrid.methods, jq, data);
             },
-            append: function(jq, param){
-                return jq.each(function(){
+            append: function (jq, param) {
+                return jq.each(function () {
                     var state = $(this).data('treegrid');
-                    if (state.options.loadFilter == pagerFilter){
-                        $.map(param.data, function(row){
+                    if (state.options.loadFilter == pagerFilter) {
+                        $.map(param.data, function (row) {
                             row._parentId = row._parentId || param.parent;
                             state.allRows.push(row);
                         });
@@ -93,16 +93,16 @@
                     }
                 })
             },
-            remove: function(jq, id){
-                return jq.each(function(){
-                    if ($(this).treegrid('find', id)){
+            remove: function (jq, id) {
+                return jq.each(function () {
+                    if ($(this).treegrid('find', id)) {
                         removeMethod.call($.fn.treegrid.methods, $(this), id);
                     }
                     var state = $(this).data('treegrid');
-                    if (state.options.loadFilter == pagerFilter){
-                        for(var i=0; i<state.allRows.length; i++){
-                            if (state.allRows[i][state.options.idField] == id){
-                                state.allRows.splice(i,1);
+                    if (state.options.loadFilter == pagerFilter) {
+                        for (var i = 0; i < state.allRows.length; i++) {
+                            if (state.allRows[i][state.options.idField] == id) {
+                                state.allRows.splice(i, 1);
                                 break;
                             }
                         }
@@ -110,7 +110,7 @@
                     }
                 })
             },
-            getAllRows: function(jq){
+            getAllRows: function (jq) {
                 return jq.data('treegrid').allRows;
             }
         });
@@ -118,233 +118,155 @@
     })(jQuery);
 </script>
 <script type="text/javascript">
-        window.Q = require('q');//定义全局的promise
-        window.reportApp = {};
-        reportApp.gui = require('nw.gui');
-        reportApp.format = require('date-format');
-        reportApp.win = reportApp.gui.Window.get();
-        reportApp.app = reportApp.gui.App;
+    window.Q = require('q');//定义全局的promise
+    window.reportApp = {};
+    reportApp.gui = require('nw.gui');
+    reportApp.format = require('date-format');
+    reportApp.os = require('os');
+    reportApp.win = reportApp.gui.Window.get();
+    reportApp.app = reportApp.gui.App;
 
-        reportApp.appDir = localStorage.getItem('appdir');
-        reportApp.Server=require('./Server.js');
-        reportApp.isAppStart=false;
+    reportApp.appDir = "";//localStorage.getItem('appdir');
+    reportApp.Server = require('./Server.js');
+    reportApp.isAppStart = false;
 
 
-        /**
-         * @description 检查并设置程序数据存放目录
-         * @returns {*}
-         * */
-        function checkAppdir() {
-            var deferred = Q.defer();
-            if (!reportApp.appDir) {
-                try {
-                    $('#dd').dialog({
-                        title: '&nbsp;&nbsp;请选择数据保存目录',
-                        width: 400,
-                        height: 200,
-                        closed: true,
-                        cache: false,
-                        iconCls: 'icon-save',
-                        href: './view/appdir.html',
-                        closable: false,
-                        modal: true,
-                        buttons: [
-                            {
-                                text: '选择目录',
-                                handler: function () {
-                                    chooseDir('#fileDialog').then(function (dir) {
-                                        reportApp.appDir = dir;
-                                        localStorage.setItem('appdir', dir);
-                                        $('#dd').dialog('close');
+    function CheckConifgDir() {
+        var deferred = Q.defer();
+        var osType = reportApp.os.type().toLowerCase();
+        var cmd = "";
+        var baseDir="";
+        if (/windows/.test(osType)) {
+            cmd = 'echo %username%';
+        } else if (/linux/.test(osType)) {
+            cmd = 'whoami';
+        } else {
+            deferred.reject('系统平台不受支持');
+        }
+        var exec = require('child_process').exec;
+        exec(cmd, function (error, stdout, stderr) {
+            if (error) {
+                deferred.reject(error);
+            } else if (stderr) {
 
-                                        deferred.resolve(dir);
-                                    });
-                                }
-                            }
-                        ],
-                        onMove: function (e) {
-                            /// TODO 尝试禁止拖动对话框
-                            //  $('#dd').panel().draggable('disabled', true);
-                        }
-                    });
-                    $('#dd').dialog('open');
-                    $("#dd").panel("move", {
-                        top: $(document).scrollTop() + ($(window).height() - 200) * 0.5,
-                        left: $(document).scrollLeft() + ($(window).width() - 400) * 0.5
-                    });
-
-                } catch (err) {
-                    deferred.reject(err);
-                }
-
+                deferred.reject(stderr);
             } else {
-                $('#dd').dialog({
-                    title: '&nbsp;&nbsp;请选择数据保存目录',
-                    width: 400,
-                    height: 200,
-                    closed: true});
-                deferred.resolve(reportApp.appDir);
-            }
-            return deferred.promise;
-        }
-        /***
-         * @description 选择目录
-         * @param name - 目录元素的ID
-         * @returns {*}
-         */
-        function chooseDir(name) {
-            var deferred = Q.defer();
-            var chooser = $(name);
-            try {
-                chooser.change(function (evt) {
-                    console.log($(this).val());
-                    deferred.resolve($(this).val());
+
+                if (/windows/.test(osType)) {
+                    baseDir="C:/Users/"+stdout.replace(/\s*|\r|\r\n/g,"")+"/AppData/Local/ReportAPIConfig";
+                    //baseDir="C:/Users/LinYong/AppData/Local/datattt";
+                }else{
+                    baseDir="/home/"+stdout.replace(/\s*|\r|\r\n/g,"")+"/ReportAPIConfig";
+                }
+                var fs = require('fs');
+                fs.exists(baseDir,function(exists){
+
+                   if(!exists){
+                       var mkdirp = require('mkdirp');
+
+                       fs.mkdir(baseDir, function (err) {
+
+                           if(err){
+                               alert(err);
+                               deferred.reject(err);
+                           }else{
+                               alert(baseDir);
+                               reportApp.appDir=baseDir;
+                               deferred.resolve(reportApp.appDir);
+                           }
+                       });
+                   } else{
+                       reportApp.appDir=baseDir;
+                       deferred.resolve(reportApp.appDir);
+                   }
                 });
-                chooser.trigger('click');
-            } catch (err) {
-                deferred.reject(err);
+
             }
+        });
 
-            return deferred.promise;
-        }
-        /***
-         * @descript 初始化应用程序
-         */
-        function initApp() {
-            var fs = require('fs');
+        return deferred.promise;
+    }
 
-        }
-
-        function editConfig(config,allowClose) {
-            var closable = allowClose || false;
-            var filename = reportApp.appDir + "/setting.json";
-            var fs = require('fs');
-                config = config|| {};
-            var deferred = Q.defer();
-            try {
-                $('#dd').dialog({
-                    title: '&nbsp;&nbsp;请配置应用程序',
-                    width: 400,
-                    height: 400,
-                    closed: true,
-                    cache: false,
-                    iconCls: 'icon-save',
-                    href: './view/config.html',
-                    modal: true,
-                    closable: closable,
-                    buttons: [
-                        {
-                            text: '保&nbsp;&nbsp;&nbsp;&nbsp;存',
-                            handler: function () {
-                                config.port=$("#listenPort").val();
-                                config.dbServer=$("#dbServer").val();
-                                config.dbPort=$("#dbPort").val() || 1433;
-                                config.dbUser=$("#dbUser").val();
-                                config.dbPass=$("#dbPass").val();
-                                config.dbName=$("#dbName").val();
-                                config.dir=reportApp.appDir;
-                                fs.writeFile(filename,JSON.stringify(config),function(err){
-                                   if(err){
-                                       $('#dd').dialog('close');
-                                       deferred.reject(err);
-                                   } else{
-                                       $('#dd').dialog('close');
-                                       deferred.resolve(config);
-                                   }
-                                });
-                            }
-                        }
-                    ],
-                    onMove: function (e) {
-                        /// TODO 尝试禁止拖动对话框
-                        //  $('#dd').panel().draggable('disabled', true);
+    /***
+     * @descript 初始化应用程序
+     */
+    function initApp() {
+        var fs = require('fs');
+    }
+    /***
+     * @description 读取配置文件
+     */
+    function readConfig() {
+        var deferred = Q.defer();
+        var fs = require('fs');
+        var filename = reportApp.appDir + "/setting.json";
+        fs.exists(filename, function (exists) {
+            if (exists) {
+                fs.readFile(filename, function (err, data) {
+                    if (err) {
+                        alert("读取配置文件发生异常：" + err);
+                        deferred.reject(err);
+                    } else {
+                        reportApp.config = JSON.parse(data);
+                        deferred.resolve(reportApp.config);
                     }
                 });
-                $('#dd').dialog('open');
-                $("#dd").panel("move", {
-                    top: $(document).scrollTop() + ($(window).height() - 400) * 0.5,
-                    left: $(document).scrollLeft() + ($(window).width() - 400) * 0.5
-                });
-
-            } catch (err) {
-                deferred.reject(err);
+            } else {
+                alert("配置文件：" + filename + "不存在！");
+                deferred.reject('unconfiged');
             }
-            return deferred.promise;
-        }
-        /***
-         * @description 读取配置文件
-         */
-        function readConfig() {
-            var deferred = Q.defer();
-            var fs = require('fs');
-            var filename = reportApp.appDir + "/setting.json";
-            fs.exists(filename, function (exists) {
-                if (exists) {
-                    fs.readFile(filename, function (err, data) {
-                        if (err) {
-                            deferred.reject(err);
-                        } else {
-                            reportApp.config = JSON.parse(data);
-                           //alert(reportApp.config);
-                            deferred.resolve(reportApp.config);
-                        }
-                    });
-                } else {
-                    editConfig().then(function(config){
-                        deferred.resolve(config);
-                    });
-                }
-            });
-            return deferred.promise;
-        }
+        });
+        return deferred.promise;
+    }
 
-        function loadLog(){
-            var fs=require('fs');
-            var filename=reportApp.appDir+"/restApi.log-"+reportApp.format('yyyy-MM-dd',new Date());
-            fs.readFile(filename,{encoding:'utf8'}, function (err, data) {
-                if (err) {
-                    $("#log").prepend(err);
-                }else{
-                    data=data.replace(/\r|\r\n/g,'</br>');
-                    $("#log").prepend(data);
-                }
-
-            });
-        }
-        /***
-         * @description 服务端分页
-         * @param gridId - grid table ID
-         * @constructor
-         */
-        function ServerPagin(gridId,url,conditions){
-            var companyCode =$('#hiddenCompanyCode').val();
-            var name = $('#txtName').val();
-            if (companyCode== "") companyCode = "000";
-            var dg =$('#gridId');
-            var opts =dg.datagrid('options');
-            var pager =dg.datagrid('getPager');
-            var _pageNumber =opts.pageNumber;
-            var _pageSize =opts.pageSize;
-            if(typeof (conditions) !=='object'){
-                conditions={};
+    function loadLog() {
+        var fs = require('fs');
+        var filename = reportApp.appDir + "/restApi.log-" + reportApp.format('yyyy-MM-dd', new Date()) + ".log";
+        fs.readFile(filename, {encoding: 'utf8'}, function (err, data) {
+            if (err) {
+                $("#log").prepend(err);
+            } else {
+                data = data.replace(/\r|\r\n/g, '</br>');
+                $("#log").prepend(data);
             }
-            conditions.p=_pageNumber;
-            conditions.s=_pageSize;
-            //异步获取数据到javascript对象，入参为查询条件和页码信息
-            $.post(url, conditions, function(data) {
-                //注意此处从数据库传来的data数据有记录总行数的total列
-                var total = JSON.parse(data).rows[0].total;
-                $('#gridId').datagrid('loadData', JSON.parse(data));
-                pager.pagination({
-                    //更新pagination的导航列表各参数
-                    total: total,//总数
-                    pageSize: _pageSize,//行数
-                    pageNumber: _pageNumber//页数
-                });
-            });
 
-            }
-    </script>
+        });
+    }
+    /***
+     * @description 服务端分页
+     * @param gridId - grid table ID
+     * @constructor
+     */
+    function ServerPagin(gridId, url, conditions) {
+        var companyCode = $('#hiddenCompanyCode').val();
+        var name = $('#txtName').val();
+        if (companyCode == "") companyCode = "000";
+        var dg = $('#gridId');
+        var opts = dg.datagrid('options');
+        var pager = dg.datagrid('getPager');
+        var _pageNumber = opts.pageNumber;
+        var _pageSize = opts.pageSize;
+        if (typeof (conditions) !== 'object') {
+            conditions = {};
+        }
+        conditions.p = _pageNumber;
+        conditions.s = _pageSize;
+        //异步获取数据到javascript对象，入参为查询条件和页码信息
+        $.post(url, conditions, function (data) {
+            //注意此处从数据库传来的data数据有记录总行数的total列
+            var total = JSON.parse(data).rows[0].total;
+            $('#gridId').datagrid('loadData', JSON.parse(data));
+            pager.pagination({
+                //更新pagination的导航列表各参数
+                total: total,//总数
+                pageSize: _pageSize,//行数
+                pageNumber: _pageNumber//页数
+            });
+        });
+
+    }
+
+</script>
 
 </head>
 <body>
@@ -354,13 +276,11 @@
 
 <div style="margin:20px 0;"></div>
 <div class="easyui-layout" style="width:100%;height:640px;">
-    <div id="appMenmu" data-options="region:'west'" title="应用管理" style="width:20%;padding:10px;height:620px;">
+    <div id="appMenmu" data-options="region:'west'" title="北京，您好！" style="width:20%;padding:10px;height:620px;">
         <ul id="menmus"></ul>
     </div>
-    <div data-options="region:'center'" title="服务管理">
+    <div data-options="region:'center'" id="content" title="">
         <div style="margin:20px 0 10px 0;"></div>
-        <div id="content">
-        </div>
     </div>
     <div id="dd" class="easyui-dialog">
     </div>
@@ -376,11 +296,8 @@
     // var Server = require('./Server.js');
     // var server = new Server();
     $(function () {
-        checkAppdir().then(function (dir) {
-            return  readConfig();
-        })/*.then(function(config){
-            reportApp.server=new reportApp.Server(config);
-        })*/.then(function (dir) {
+        $('#dd').dialog('close');
+        CheckConifgDir().then(function (dir) {
             $("#menmus").tree({
                 url: "./view/menmu.json",
                 method: 'get',
@@ -389,6 +306,7 @@
                 onClick: function (node) {//单击事件
                     if (node.attributes && node.attributes.url) {
                         $("#content").panel({
+                            title: node.text || "",
                             href: "./view/" + node.attributes.url,
                             onLoad: function () {
                                 //alert(node.id);
@@ -399,26 +317,35 @@
                 }
             });
         }).then(function () {
+            return  readConfig();
+        }).then(function (config) {
+            reportApp.server = new reportApp.Server(config);
+        }).then(function () {
             $("#content").panel({
                 href: './view/index.html',
                 onLoad: function () {
-                  /*  reportApp.server.start(function () {
-                     reportApp.isAppStart=true;
-                     $("#btnText").html("结束");
-
-                     $.messager.show({
-                     title: '友情提示',
-                     msg: 'REST API启动成功.',
-                     showType: 'show'
-                     });
-                     });*/
+                    reportApp.server.start(function () {
+                        reportApp.isAppStart = true;
+                        $("#btnText").html("结束");
+                        $.messager.show({
+                            title: '友情提示',
+                            msg: 'REST API启动成功.',
+                            showType: 'show'
+                        });
+                    });
                 }
             });
-
         }).catch(function (err) {
-            alert(err);
+            if (err === 'unconfiged') {
+                alert("应用程序未能加载配置文件，请先设置相关配置！");
+                $("#content").panel({
+                    title: '服务配置',
+                    href: './view/config.html',
+                    onLoad: function () {
+                    }
+                });
+            }
         });
-
     });
 </script>
 

@@ -21,7 +21,6 @@ function test(req, res, next, db, logger) {
     sql += "  group by SUBSTRING(tid,1,4) order by total ";
 
     db.DataQuery(sql).then(function (data) {
-
         res.send({success: true, msg: "IN TEST FUNCTION", data: data, length: data.length});
     }, function (err) {
         res.send(err);
@@ -39,7 +38,6 @@ function zynl(req, res, next, db, logger) {
     var query = null;
     if (req.method === 'POST') {
         query = req.body;
-
     }
     if (req.method === 'GET') {
         query = req.query;
@@ -51,11 +49,11 @@ function zynl(req, res, next, db, logger) {
 
     var sql = "SELECT ";
     if (query && query.id === "0") {
-        sql +=" SUBSTRING(a.专业ID,1,4)+'0000' AS id, (SELECT 专业名称 FROM 专业 WHERE id=SUBSTRING(a.专业ID,1,4)+'0000') AS name,0 AS parentId,'closed' AS state, ";
-    }else if (query && query.id.substr(4, 4) === "0000") {
-        sql +=" SUBSTRING(a.专业ID,1,6)+'00' AS id,  (SELECT 专业名称 FROM 专业 WHERE id=SUBSTRING(a.专业ID,1,6)+'00') AS name,'"+query.id + "' AS parentId  ,'closed' AS state,";
-    }else {
-        sql +=" a.专业ID AS id,  (SELECT 专业名称 FROM 专业 WHERE id=a.专业ID) AS name,'"+query.id + "' AS parentId  ,'closed' AS state,";
+        sql += " SUBSTRING(a.专业ID,1,4)+'0000' AS id, (SELECT 专业名称 FROM 专业 WHERE id=SUBSTRING(a.专业ID,1,4)+'0000') AS name,0 AS parentId,'closed' AS state, ";
+    } else if (query && query.id.substr(4, 4) === "0000") {
+        sql += " SUBSTRING(a.专业ID,1,6)+'00' AS id,  (SELECT 专业名称 FROM 专业 WHERE id=SUBSTRING(a.专业ID,1,6)+'00') AS name,'" + query.id + "' AS parentId  ,'closed' AS state,";
+    } else {
+        sql += " a.专业ID AS id,  (SELECT 专业名称 FROM 专业 WHERE id=a.专业ID) AS name,'" + query.id + "' AS parentId  ,'closed' AS state,";
     }
     sql += " SUM(a.专家总数) AS total,SUM(a.男性) AS man,SUM(a.女性) AS women,SUM(a.年龄35及以下) AS age35,SUM(a.年龄3645) AS age45,";
     sql += " SUM(a.年龄4655) AS age55,SUM(a.年龄5665) AS age65,SUM(a.年龄66及以上) AS age70";
@@ -80,8 +78,9 @@ function zynl(req, res, next, db, logger) {
 
 
     db.DataQuery(sql).then(function (data) {
+
         if (!data) {
-            logger.debug(sql);
+            logger.info(sql);
             data = [];
         }
         var result = {};
@@ -93,10 +92,9 @@ function zynl(req, res, next, db, logger) {
         } else {
             result = data;
         }
-
         res.send(result);
     }, function (err) {
-        console.log("err:"+err);
+        console.log("err:" + err);
         res.send(err);
     }).catch(function (err) {
         res.send(err);

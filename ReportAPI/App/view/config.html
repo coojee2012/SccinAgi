@@ -1,34 +1,82 @@
 <div>
     <table cellpadding="5">
         <tr>
-            <td colspan="2">REST配置</td>
+            <td colspan="2"><b>REST&nbsp;&nbsp;API配置</b></td>
         </tr>
         <tr>
             <td>监听端口:</td>
-            <td><input class="easyui-textbox" type="text" name="listenPort" id="listenPort" data-options="required:true,validType:'number'" /></td>
+            <td><input class="easyui-textbox" type="text" name="listenPort" id="listenPort"
+                       data-options="required:true,validType:'number'"/></td>
         </tr>
         <tr>
-            <td colspan="2">数据库配置</td>
+            <td colspan="2"><b>数据库配置</b></td>
         </tr>
         <tr>
             <td>服务器地址:</td>
-            <td><input class="easyui-textbox" type="text" name="dbServer" id="dbServer" data-options="required:true" /></td>
+            <td><input class="easyui-textbox" type="text" name="dbServer" id="dbServer" data-options="required:true"/>
+            </td>
         </tr>
         <tr>
             <td>端口:</td>
-            <td><input class="easyui-textbox" type="text" name="dbPort" id="dbPort"  /></td>
+            <td><input class="easyui-textbox" type="text" name="dbPort" id="dbPort"/></td>
         </tr>
         <tr>
             <td>数据库名称:</td>
-            <td><input class="easyui-textbox" type="text" name="dbName"  id="dbName" data-options="required:true" /></td>
+            <td><input class="easyui-textbox" type="text" name="dbName" id="dbName" data-options="required:true"/></td>
         </tr>
         <tr>
             <td>用户名:</td>
-            <td><input class="easyui-textbox" type="text" name="dbUser" id="dbUser" data-options="required:true" /></td>
+            <td><input class="easyui-textbox" type="text" name="dbUser" id="dbUser" data-options="required:true"/></td>
         </tr>
         <tr>
             <td>密码:</td>
-            <td><input class="easyui-textbox" type="password" name="dbPass" id="dbPass" data-options="required:true" /></td>
+            <td><input class="easyui-textbox" type="password" name="dbPass" id="dbPass" data-options="required:true"/>
+            </td>
         </tr>
-        </table>
+    </table>
 </div>
+<div style="text-align:center;padding:5px">
+    <a href="javascript:void(0)" class="easyui-linkbutton" id="saveconfigbtn">保存配置</a>
+</div>
+<hr/>
+<script type="text/javascript">
+    $(function () {
+        var filename = reportApp.appDir + "/setting.json";
+        var fs = require('fs');
+        var config = reportApp.config;
+        if (reportApp.config && typeof(reportApp.config) === 'object') {
+            config = reportApp.config;
+              $("#listenPort").val(config.port);
+              $("#dbServer").val( config.dbServer);
+              $("#dbPort").val(config.dbPort);
+              $("#dbUser").val(config.dbUser);
+              $("#dbPass").val(config.dbPass);
+              $("#dbName").val(config.dbName);
+        } else {
+            config = {};
+        }
+
+        $("#saveconfigbtn").click(function () {
+            config.port = $("#listenPort").val();
+            config.dbServer = $("#dbServer").val();
+            config.dbPort = $("#dbPort").val() || 1433;
+            config.dbUser = $("#dbUser").val();
+            config.dbPass = $("#dbPass").val();
+            config.dbName = $("#dbName").val();
+            config.dir = reportApp.appDir;
+            fs.writeFile(filename, JSON.stringify(config), function (err) {
+                if (err) {
+                    alert(err);
+                } else {
+                    alert("保存成功，请重启服务以使其生效！");
+                    $("#content").panel({
+                        title:'服务管理',
+                        href: './view/index.html',
+                        onLoad: function () {
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>

@@ -54,10 +54,10 @@ Server.prototype.CreateServer = function () {
     server.maxHeadersCount = 0;
     server.timeout = 300000;//3秒
     server.on('error', function (error) {
-        self.log('REST API服务发生严重错误: ', 'error');
+        self.log('服务发生严重错误: '+error, 'error');
     });
     server.on('close', function () {
-        self.log('REST API服务关闭! ', 'error');
+        self.log('服务关闭! ', 'info');
         serverDm.exit();
     });
     server.on('timeout', function (socket) {
@@ -86,7 +86,6 @@ Server.prototype.CreateApp = function () {
             var path = req.path.toLowerCase().replace(/^\//, "").split("/");
             var fileName = path[0] || 'index';
             var fnName = path[1] || 'index';
-
             var router = require('./router/' + fileName + '.js');
             //req.method === 'POST'
             if (typeof(router[fnName]) === 'function') {
@@ -153,10 +152,10 @@ Server.prototype.start = function (callback) {
         } else {
             self.server.listen(self.app.get('port'), function (err) {
                 if (err) {
-                    self.log('REST API启动失败！原因： ' + err, 'error');
+                    self.log('服务启动失败！原因： ' + err, 'error');
                 } else {
-                    self.log('Current directory: ' + process.cwd(), 'error');
-                    self.log('REST API启动成功！监听端口： ' + self.app.get('port'), 'error');
+                    self.log('程序根目录: ' + process.cwd(), 'info');
+                    self.log('服务启动成功！监听端口： ' + self.app.get('port'), 'info');
                     if (typeof(callback) === 'function') {
                         callback();
                     }
@@ -173,8 +172,6 @@ Server.prototype.stop = function (callback) {
     var self = this;
     self.server.close(callback);
 }
-
-
 Server.prototype.log = function (str, logType) {
     var self = this;
     if (!logType) {
@@ -182,9 +179,9 @@ Server.prototype.log = function (str, logType) {
     }
     self.logger[logType](str);
     str = "[" + format('yyyy-MM-dd hh:mm:ss.SSS', new Date()) + "] [" + logType.toUpperCase() + "] " + str + "\r\n</br>";
-   /* if(window){
+    if(window){
         window.$("#log").append(str);
-    }*/
+    }
 }
 
 
@@ -198,7 +195,6 @@ if (!module.parent) {
         dir:processPath,
         port:18081,
         dbName:'BjexpertDW'
-
     });
     myServer.start();
 }

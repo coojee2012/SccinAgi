@@ -4,6 +4,7 @@
  */
 var NwBuilder = require('node-webkit-builder');
 var nw = new NwBuilder({
+    version:'0.12.0',
     files: './App/**/**', // use the glob format
     platforms: ['win64'],
     buildDir:'./build',

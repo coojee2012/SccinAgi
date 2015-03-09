@@ -1,23 +1,59 @@
-<div class="easyui-tabs" style="width:100%;height:480px;">
+<div id="tabs" class="easyui-tabs" style="width:100%;height:480px;">
     <div title="统计列表" data-options="tabWidth:112" style="padding:10px;width:100%;height:460px;">
         <table id="tt" class="easyui-treegrid">
-
         </table>
     </div>
     <div title="图形报表" style="padding:10px">
         <div>
             <button class="btn change" change="sex">专业-性别</button>
             <button class="btn change" change="age">专业-年龄段</button>
-            <button id="excelBtn">导出Excel</button>
         </div>
         <div id="container" style="min-width:800px;height:400px"></div>
     </div>
     <div title="按条件统计" data-options="iconCls:'icon-help',closable:true" style="padding:10px">
-        This is the help content.
+        <div class="easyui-panel" title="请输入查询条件" style="width:400px">
+            <div style="padding:10px 60px 20px 60px">
+                <form id="queryConditions" method="POST">
+                    <table cellpadding="5">
+                        <tr >
+                            <td>本次统计无查询条件！</td>
+                        </tr>
+                        <!--tr>
+                            <td>专业</td>
+                            <td>
+                                <select class="easyui-combobox" name="zhuanye">
+                                    <option value="0">全部</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>性别</td>
+                            <td>
+                                <select class="easyui-combobox" name="sex">
+                                    <option value="0">男</option>
+                                    <option value="1">女</option>
+                                </select>
+                            </td>
+                        </tr -->
+                    </table>
+
+
+                </form>
+                <div style="text-align:center;padding:5px">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" id="searchSubmit">查看列表</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
+
+function clearForm() {
+    $('#queryConditions').form('clear');
+}
 $(function () {
     var chart;
     $('#tt').treegrid({
@@ -130,32 +166,59 @@ $(function () {
                     exporting: {
                         enabled: true,
                         buttons: {
-                          /*  // 导出按钮配置
-                            exportButton: {
-                                text: '导出图片',
-                                menuItems: null,
-                                onclick: function () {
-                                    this.exportChart();
-                                }
-                            },
-                            // 打印按钮配置
-                            printButton: {
-                                enabled: true,
-                                text: '打印图表',
-                                onclick: function () {
-                                    this.print();
-                                }
-                            },*/
+                            /*  // 导出按钮配置
+                             exportButton: {
+                             text: '导出图片',
+                             menuItems: null,
+                             onclick: function () {
+                             this.exportChart();
+                             }
+                             },
+                             // 打印按钮配置
+                             printButton: {
+                             enabled: true,
+                             text: '打印图表',
+                             onclick: function () {
+                             this.print();
+                             }
+                             },*/
                             contextButton: {
                                 enabled: true,
-                                text: '导出图片',
+                                text: '图表菜单',
                                 menuItems: [
-                                   /* {
+                                    {
                                         text: '导出EXCEL',
                                         onclick: function () {
-                                            Highcharts.post('http://192.168.0.114:18081/base/getCSV', { csv: chart.getCSV() });
+
+                                            var form = $("<form>");
+                                            form.attr('style', 'display:none');
+                                            form.attr('target', '');
+                                            form.attr('method', 'post');
+                                            form.attr('action', 'http://192.168.0.114:18081/base/getCSV');
+                                            var input1 = $('<input>');
+                                            input1.attr('type', 'hidden');
+                                            input1.attr('name', 'csv');
+                                            input1.attr('value', chart.getCSV());
+                                            var input2 = $('<input>');
+                                            input2.attr('type', 'hidden');
+                                            input2.attr('name', 'filename');
+                                            input2.attr('value', 'ImportExcel');
+                                            $('body').append(form);
+                                            form.append(input1);
+                                            form.append(input2);
+
+                                            form.submit();
+                                            form.remove();
+
+                                            //alert(chart.getCSV());
+                                            // Highcharts.post('http://192.168.0.114:18081/base/getCSV', { csv: chart.getCSV() });
+
                                         }
-                                    },*/
+
+                                    },
+                                    {
+                                        separator: true
+                                    } ,
                                     {
                                         text: '导出 - PNG',
                                         onclick: function () {
@@ -168,8 +231,18 @@ $(function () {
                                             this.exportChart({
                                                 type: 'image/jpeg'
                                             });
-                                        },
-                                        separator: false
+                                        }
+                                    },
+                                    {
+                                        separator: true
+                                    },
+                                    {
+                                        text: '导出 - PDF',
+                                        onclick: function () {
+                                            this.exportChart({
+                                                type: 'application/pdf'
+                                            });
+                                        }
                                     },
                                     {
                                         text: '导出 - SVG',
@@ -177,8 +250,16 @@ $(function () {
                                             this.exportChart({
                                                 type: 'image/svg+xml'
                                             });
-                                        },
-                                        separator: false
+                                        }
+                                    },
+                                    {
+                                        separator: true
+                                    },
+                                    {
+                                        text: '打印图表',
+                                        onclick: function () {
+                                            this.print();
+                                        }
                                     }
                                 ]
                             }
@@ -187,8 +268,9 @@ $(function () {
                             "enctype": "application/x-www-form-urlencoded",
                             "charset": "UTF-8"
                         },
-                        filename: 'title',
+                        filename: title,
                         type: 'image/png',
+                        width: 1024,
                         url: 'http://192.168.0.114:18081/base/exporter'
                     },
                     xAxis: {
@@ -222,7 +304,13 @@ $(function () {
 
     DoChart('sex');
 
-
+    $("#searchSubmit").click(function (){
+       // alert("我要提交了！");
+        var t=$("#tabs");
+        var tabs = t.tabs('tabs');
+        t.tabs('select', tabs[0].panel('options').title);
+        DoChart('sex');
+    });
 });
 
 </script>
