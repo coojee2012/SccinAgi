@@ -1,6 +1,6 @@
 {
     "main": "app://reportserver/index.html",
-    "name": "BjExpertReportAPI",
+    "name": "ExpertReportAPI",
     "description": "北京专家库II期报表API",
     "version": "0.1.2",
     "keywords": [ "北京专家库", "报表"],
@@ -39,7 +39,6 @@
         "date-format":">=0.0.2",
         "rimraf":"^2.3.0",
         "highcharts-exporter":"^1.0.0",
-        "mkdirp":"^0.5.0",
         "iconv-lite":">=0.4.7",
         "xss": ">=0.1.x"
     },

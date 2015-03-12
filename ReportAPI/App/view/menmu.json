@@ -25,6 +25,16 @@
                 "url":"zhuanjia/index.html"
             }
         },{
+            "text":"库内专家状态汇总统计",
+            "attributes":{
+                "url":"zhuanjia/knzj.html"
+            }
+        },{
+            "text":"库内正式专家情况统计",
+            "attributes":{
+                "url":"zhuanjia/knzszj.html"
+            }
+        },{
             "text":"专业/年龄段分布情况",
             "attributes":{
                 "url":"zhuanjia/zy-nl.html"

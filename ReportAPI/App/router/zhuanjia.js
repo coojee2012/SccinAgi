@@ -29,10 +29,101 @@ function test(req, res, next, db, logger) {
     });
 }
 
-function zhuanyefenbu(req, res, db, logger) {
+function zyfb(req, res, db, logger) {
 
 }
 
+function knzj(req, res, next, db, logger) {
+    var query = null;
+    if (req.method === 'POST') {
+        query = req.body;
+    }
+    if (req.method === 'GET') {
+        query = req.query;
+    }
+    var sql = "SELECT TOP 10 * FROM 库内专家状态汇总 ORDER BY 年份 DESC ";
+    db.DataQuery(sql).then(function (data) {
+        if (!data) {
+            logger.info(sql);
+            data = [];
+        }
+        var result = {
+            total: data.length,
+            rows: data
+        };
+        res.send(result);
+    }, function (err) {
+        res.send(err);
+    }).catch(function (err) {
+        res.send(err);
+    });
+}
+/***
+ * 库内正式专家情况统计
+ * @param req
+ * @param res
+ * @param next
+ * @param db
+ * @param logger
+ */
+function knzszj(req, res, next, db, logger) {
+    var sql = " SELECT TOP 1 * FROM 库内正式专家情况 ORDER BY 日期 DESC";
+    simpleQuery(req, res, next, db, logger, sql);
+}
+/***
+ * 库内候选专家情况统计
+ * @param req
+ * @param res
+ * @param next
+ * @param db
+ * @param logger
+ */
+function knhxzj(req, res, next, db, logger){
+var sql="SELECT TOP 1 * FROM  库内候选专家情况 ORDER BY 日期 DESC";
+    simpleQuery(req, res, next, db, logger, sql);
+}
+/***
+ * 简单查询
+ * @param req
+ * @param res
+ * @param next
+ * @param db
+ * @param logger
+ * @param sql
+ */
+function simpleQuery(req, res, next, db, logger, sql) {
+    var query = null;
+    if (req.method === 'POST') {
+        query = req.body;
+    }
+    if (req.method === 'GET') {
+        query = req.query;
+    }
+
+    db.DataQuery(sql).then(function (data) {
+        if (!data) {
+            logger.info(sql);
+            data = [];
+        }
+        var result = {
+            total: data.length,
+            rows: data
+        };
+        res.send(result);
+    }, function (err) {
+        res.send(err);
+    }).catch(function (err) {
+        res.send(err);
+    });
+}
+/***
+ * 专家专业-性比、年龄段统计
+ * @param req
+ * @param res
+ * @param next
+ * @param db
+ * @param logger
+ */
 function zynl(req, res, next, db, logger) {
 
     var query = null;
@@ -78,7 +169,6 @@ function zynl(req, res, next, db, logger) {
 
 
     db.DataQuery(sql).then(function (data) {
-
         if (!data) {
             logger.info(sql);
             data = [];
@@ -98,35 +188,15 @@ function zynl(req, res, next, db, logger) {
         res.send(err);
     }).catch(function (err) {
         res.send(err);
-        console.log("err:", err);
+        console.log("err:" + err);
     });
-
-    /*  if (query.id === "0") {
-     res.send({"total": "3", "rows": [
-     { "id": "1", "parentId": "0", "name": "Computers", "age20": 4, "total": 10, "age30": 1, "state": "closed"},
-     {"id": "2", "parentId": "0", "name": "Electronics", "age20": 5, "total": 11, "age30": 2, "state": "closed"},
-     {"id": "3", "parentId": "0", "name": "Sporting", "age20": 6, "total": 12, "age30": 3, "state": "closed"}
-     ]});
-     } else if(query.id === "1") {
-     res.send([
-     {"id": "11", "parentId": "1", "name": "Computers1", "age20": 4, "total": 10, "age30": 1, "state": "closed"},
-     { "id": "12", "parentId": "1", "name": "Electronics1", "age20": 5, "total": 11, "age30": 2, "state": "closed"},
-     { "id": "13", "parentId": "1", "name": "Sporting1", "age20": 6, "total": 12, "age30": 3, "state": "closed"}
-     ]);
-     }else if(query.id === "11") {
-     res.send([
-     {"id": "111", "parentId": "11", "name": "Computers11", "age20": 4, "total": 10, "age30": 1, "state": "open"},
-     { "id": "112", "parentId": "11", "name": "Electronics11", "age20": 5, "total": 11, "age30": 2, "state": "open"},
-     { "id": "113", "parentId": "11", "name": "Sporting11", "age20": 6, "total": 12, "age30": 3, "state": "open"}
-     ]);
-     }else{
-     res.send([]);
-     }*/
-
 }
 
 module.exports = {
     test: test,
-    zhuanyefenbu: zhuanyefenbu,
+    zyfb: zyfb,
+    knzj: knzj,
+    knzszj: knzszj,
+    knhxzj:knhxzj,
     zynl: zynl
 }

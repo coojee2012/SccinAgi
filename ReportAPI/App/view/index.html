@@ -10,44 +10,49 @@
 <script>
     $(function () {
         if (!reportApp.server) {
-
-          alert(1);
-            readConfig().then(function(config){
+            readConfig().then(function (config) {
                 reportApp.server = new reportApp.Server(config);
-            }).then(function(){
+            }).then(function () {
                 reportApp.server.start(function () {
                     $("#btnText").html("结束");
                     reportApp.isAppStart = true;
                 });
-            }).catch(function(err){
+            }).catch(function (err) {
                 $("#btnText").html("开始");
-               alert(err);
+                alert(err);
             });
-        } else {
+        }
+        else {
             if (reportApp.isAppStart) {
                 $("#btnText").html("结束");
             } else {
                 $("#btnText").html("开始");
             }
-            loadLog();
-            $("#button").bind("click", function () {
-                var self = this;
+        }
 
-                if (!reportApp.isAppStart) {
-                    reportApp.server.start(function () {
+
+        loadLog();
+        $("#button").bind("click", function () {
+            var self = this;
+
+            if (!reportApp.isAppStart) {
+                reportApp.server.start(function (err) {
+                    if (!err) {
                         $("#btnText").html("结束");
                         reportApp.isAppStart = true;
-                    });
-                } else {
-                    $(self).attr("disabled", "disabled");
-                    //$("#log").append("*****请稍后,正在关闭REST API服务......\r\n</br>");
-                    reportApp.server.stop(function () {
-                        $("#btnText").html("开始");
-                        reportApp.isAppStart = false;
-                        $(self).removeAttr("disabled");
-                    });
-                }
-            });
-        }
+                    }
+
+                });
+            } else {
+                $(self).attr("disabled", "disabled");
+                //$("#log").append("*****请稍后,正在关闭REST API服务......\r\n</br>");
+                reportApp.server.stop(function () {
+                    $("#btnText").html("开始");
+                    reportApp.isAppStart = false;
+                    $(self).removeAttr("disabled");
+                });
+            }
+        });
+
     });
 </script>

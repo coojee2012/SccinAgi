@@ -1,16 +1,16 @@
 <div id="tabs" class="easyui-tabs" style="width:100%;height:480px;">
-    <div title="统计列表" data-options="tabWidth:112" style="padding:10px;width:100%;height:460px;">
+    <div title="统计列表" data-options="iconCls:'icon-large-smartart',tabWidth:112" style="padding:10px;width:100%;height:460px;">
         <table id="tt" class="easyui-treegrid">
         </table>
     </div>
-    <div title="图形报表" style="padding:10px">
+    <div title="图形报表"  data-options="iconCls:'icon-large-chart'"  style="padding:10px">
         <div>
             <button class="btn change" change="sex">专业-性别</button>
             <button class="btn change" change="age">专业-年龄段</button>
         </div>
         <div id="container" style="min-width:800px;height:400px"></div>
     </div>
-    <div title="按条件统计" data-options="iconCls:'icon-help',closable:true" style="padding:10px">
+    <div title="按条件统计" data-options="iconCls:'icon-help',closable:false" style="padding:10px">
         <div class="easyui-panel" title="请输入查询条件" style="width:400px">
             <div style="padding:10px 60px 20px 60px">
                 <form id="queryConditions" method="POST">
@@ -57,7 +57,7 @@ function clearForm() {
 $(function () {
     var chart;
     $('#tt').treegrid({
-        url: 'http://192.168.0.114:18081/zhuanjia/zynl',
+        url: BJExpert.apiServer + '/zhuanjia/zynl',
         rownumbers: true,
         pagination: true,
         pageSize: 5,
@@ -86,7 +86,7 @@ $(function () {
 
     function DoChart(cType) {
         $.ajax({
-            url: 'http://192.168.0.114:18081/zhuanjia/zynl',
+            url: BJExpert.apiServer + '/zhuanjia/zynl',
             type: 'POST',
             data: {id: 0, page: 1, rows: 10},
             dataType: "json",
@@ -271,7 +271,7 @@ $(function () {
                         filename: title,
                         type: 'image/png',
                         width: 1024,
-                        url: 'http://192.168.0.114:18081/base/exporter'
+                        url: BJExpert.apiServer + '/base/exporter'
                     },
                     xAxis: {
                         categories: categories,   //指定x轴分组
@@ -290,7 +290,7 @@ $(function () {
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 var msg = textStatus || errorThrown;
-                alert(msg);
+                alert("错误："+msg);
             }
 
         });

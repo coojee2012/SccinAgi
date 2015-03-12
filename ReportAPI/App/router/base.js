@@ -48,7 +48,18 @@ function exporter(req, res, next, db, logger) {
 
 
 }
+
+function getReportDate(req, res, next, db, logger) {
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    var month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+    var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+    var str = '数据截至' + date.getFullYear() + '年' + month + '月' + day + '日';
+    res.send({"success":true,"date":str});
+}
+
 module.exports = {
     exporter: exporter,
+    getreportdate:getReportDate,
     getcsv: getcsv
 }

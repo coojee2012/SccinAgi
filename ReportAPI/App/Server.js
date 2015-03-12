@@ -71,6 +71,9 @@ Server.prototype.CreateApp = function () {
     var self = this;
     var app = express();
     app.set('port', self.conf.port || process.env.PORT);
+    app.set('view engine', 'ejs');
+    app.engine('html', require('ejs').renderFile);
+
     app.use(session({
         secret: 'say web cat!'
     }));
@@ -81,11 +84,13 @@ Server.prototype.CreateApp = function () {
     app.use(bodyParser.json());
     app.use(methodOverride());
     app.use(express.static('./public'));
+
     app.use(function (req, res, next) {
         try {
             var path = req.path.toLowerCase().replace(/^\//, "").split("/");
             var fileName = path[0] || 'index';
             var fnName = path[1] || 'index';
+            console.log("fileName:",fileName,",fnName:",fnName);
             var router = require('./router/' + fileName + '.js');
             //req.method === 'POST'
             if (typeof(router[fnName]) === 'function') {
@@ -99,7 +104,6 @@ Server.prototype.CreateApp = function () {
     });
     self.app = app;
 }
-
 
 Server.prototype.init = function () {
     var self = this;
@@ -156,12 +160,10 @@ Server.prototype.start = function (callback) {
                 } else {
                     self.log('程序根目录: ' + process.cwd(), 'info');
                     self.log('服务启动成功！监听端口： ' + self.app.get('port'), 'info');
-                    if (typeof(callback) === 'function') {
-                        callback();
-                    }
-
                 }
-
+                if (typeof(callback) === 'function') {
+                    callback(err);
+                }
 
             });
         }
@@ -179,7 +181,7 @@ Server.prototype.log = function (str, logType) {
     }
     self.logger[logType](str);
     str = "[" + format('yyyy-MM-dd hh:mm:ss.SSS', new Date()) + "] [" + logType.toUpperCase() + "] " + str + "\r\n</br>";
-    if(window){
+    if(!typeof(window) == "undefined" && window){
         window.$("#log").append(str);
     }
 }

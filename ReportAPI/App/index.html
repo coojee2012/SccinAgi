@@ -8,7 +8,9 @@
 <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="public/javascript/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js"></script>
-
+<script type="text/javascript" src="public/javascript/q.js"></script>
+<script type="text/javascript" src="lib/app.js"></script>
+<script type="text/javascript" src="lib/jslib/public.js"></script>
 <script type="text/javascript" src="public/javascript/highcharts/highcharts.js"></script>
 <script type="text/javascript" src="public/javascript/highcharts/modules/exporting.js"></script>
 <script type="text/javascript" src="public/javascript/highcharts/export-csv.js"></script>
@@ -118,7 +120,7 @@
     })(jQuery);
 </script>
 <script type="text/javascript">
-    window.Q = require('q');//定义全局的promise
+    //window.Q = require('q');//定义全局的promise
     window.reportApp = {};
     reportApp.gui = require('nw.gui');
     reportApp.format = require('date-format');
@@ -131,11 +133,11 @@
     reportApp.isAppStart = false;
 
 
-    function CheckConifgDir() {
+    function CheckConfigDir() {
         var deferred = Q.defer();
         var osType = reportApp.os.type().toLowerCase();
         var cmd = "";
-        var baseDir="";
+        var baseDir = "";
         if (/windows/.test(osType)) {
             cmd = 'echo %username%';
         } else if (/linux/.test(osType)) {
@@ -153,45 +155,32 @@
             } else {
 
                 if (/windows/.test(osType)) {
-                    baseDir="C:/Users/"+stdout.replace(/\s*|\r|\r\n/g,"")+"/AppData/Local/ReportAPIConfig";
+                    baseDir = "C:/Users/" + stdout.replace(/\s*|\r|\r\n/g, "") + "/AppData/Local/ReportAPIConfig";
                     //baseDir="C:/Users/LinYong/AppData/Local/datattt";
-                }else{
-                    baseDir="/home/"+stdout.replace(/\s*|\r|\r\n/g,"")+"/ReportAPIConfig";
+                } else {
+                    baseDir = "/home/" + stdout.replace(/\s*|\r|\r\n/g, "") + "/ReportAPIConfig";
                 }
                 var fs = require('fs');
-                fs.exists(baseDir,function(exists){
-
-                   if(!exists){
-                       var mkdirp = require('mkdirp');
-
-                       fs.mkdir(baseDir, function (err) {
-
-                           if(err){
-                               alert(err);
-                               deferred.reject(err);
-                           }else{
-                               alert(baseDir);
-                               reportApp.appDir=baseDir;
-                               deferred.resolve(reportApp.appDir);
-                           }
-                       });
-                   } else{
-                       reportApp.appDir=baseDir;
-                       deferred.resolve(reportApp.appDir);
-                   }
+                fs.exists(baseDir, function (exists) {
+                    if (!exists) {
+                        fs.mkdir(baseDir, function (err) {
+                            if (err) {
+                                alert(err);
+                                deferred.reject(err);
+                            } else {
+                                reportApp.appDir = baseDir;
+                                deferred.resolve(reportApp.appDir);
+                            }
+                        });
+                    } else {
+                        reportApp.appDir = baseDir;
+                        deferred.resolve(reportApp.appDir);
+                    }
                 });
-
             }
         });
 
         return deferred.promise;
-    }
-
-    /***
-     * @descript 初始化应用程序
-     */
-    function initApp() {
-        var fs = require('fs');
     }
     /***
      * @description 读取配置文件
@@ -297,7 +286,7 @@
     // var server = new Server();
     $(function () {
         $('#dd').dialog('close');
-        CheckConifgDir().then(function (dir) {
+        CheckConfigDir().then(function (dir) {
             $("#menmus").tree({
                 url: "./view/menmu.json",
                 method: 'get',
@@ -319,19 +308,25 @@
         }).then(function () {
             return  readConfig();
         }).then(function (config) {
-            reportApp.server = new reportApp.Server(config);
+            if (!reportApp.server)
+                reportApp.server = new reportApp.Server(config);
         }).then(function () {
             $("#content").panel({
                 href: './view/index.html',
                 onLoad: function () {
-                    reportApp.server.start(function () {
-                        reportApp.isAppStart = true;
-                        $("#btnText").html("结束");
-                        $.messager.show({
-                            title: '友情提示',
-                            msg: 'REST API启动成功.',
-                            showType: 'show'
-                        });
+                    reportApp.server.start(function (err) {
+                        if(!err){
+                            reportApp.isAppStart = true;
+                            $("#btnText").html("结束");
+                            $.messager.show({
+                                title: '友情提示',
+                                msg: 'REST API启动成功.',
+                                showType: 'show'
+                            });
+                        }else{
+                            alert(err);
+                        }
+
                     });
                 }
             });
@@ -344,6 +339,8 @@
                     onLoad: function () {
                     }
                 });
+            } else {
+                alert("运行错误：" + err);
             }
         });
     });
