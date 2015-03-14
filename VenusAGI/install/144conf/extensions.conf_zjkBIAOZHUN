@@ -1,0 +1,49 @@
+[dialout]
+exten => s,1,Answer()
+exten => s,n,AGI(dialout.php)
+
+exten => failed,1,Set(NumberDialed=${CUT(PassedInfo,,1)}) 
+exten => failed,2,NoOp('FAILED REASON:'${REASON})
+;exten => failed,n,SetCDRUserField(${NumberDialed})
+exten => failed,n,AGI(faild.php,${NumberDialed},${REASON})
+
+exten => h,1,NoOp('cause of hangup:'${HANGUPCAUSE})
+exten => h,2,AGI(after_dialout.php,${HANGUPCAUSE})
+
+
+[from-pstn]
+exten => s,1,answer()
+exten => s,n,AGI(callin.php)
+
+exten => 63800688,1,answer()
+exten => 63800688,n,AGI(callin.php)
+
+exten => 3800688,1,answer()
+exten => 3800688,n,AGI(callin.php)
+
+[from-exten-sip]
+exten => 300,1,Dial(SIP/test252/15308098290) // dial 200 to dialout from dahdi 1
+exten => 300,2,Hangup
+
+
+exten=>_8XXX,1,NoOp('Dial local')
+exten=>_8XXX,n,Dial(DAHDI/4)
+
+exten => _X.,1,NoOp('CALL FROM SIP')
+exten => _X.,n,NoOp('Exten call from '${CALLERID(num)}' to '${EXTEN})
+exten => _X.,n,answer()
+exten => _X.,n,set(myphone=${CALLERID(num)})
+exten => _X.,n,AGI(callin.php)
+;exten => _X.,n,Dial(DAHDI/g0/${EXTEN})
+
+[monitor]
+exten =>s,1,Answer()
+exten =>s,n,AGI(monitor.php)
+;exten=>s,n,Hangup()
+exten => h,1,NoOp("DIAL MONITOR PHONE HANGUP")
+[cdtz]
+exten => s,1,Answer()
+exten => s,n,Playback(cdtz_befor&${PassedInfo}&cdtz_end)
+exten => s,n,Hangup()
+exten => failed,1,NoOp('CDTZ FAILED, REASON:'${REASON})
+exten => h,1,NoOp('cdtz cause of hangup:'${HANGUPCAUSE})

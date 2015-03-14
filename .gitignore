@@ -8,8 +8,9 @@ web.log
 *.dll
 *.exe
 .idea/
-/SccinAGI/node_modules
-/SccinCRM/node_modules
-/SccinCRM/.idea
+/VenusAGI/node_modules
+/VenusCRM/node_modules
+/VenusCRM/.idea
 .idea/*
 .idea
+node_modules
