@@ -1,2 +1,2 @@
-/*! 路由处理程序 2014-08-08 */
+/*! 路由处理程序 2014-10-16 */
 var conf=require("node-conf"),basedir=conf.load("app").appbase,Schemas=require(basedir+"/database/schema").Schemas,logger=require(basedir+"/lib/logger").logger("web"),async=require("async"),crypto=require("crypto"),_=require("lodash"),gets={},posts={};gets.index=function(a,b,c){a.session.destroy(function(a){a?c(a):b.redirect("/login")})},module.exports={get:gets,post:posts};

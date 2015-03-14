@@ -6,7 +6,8 @@ var async = require('async');
 var Schemas = require(basedir + '/database/schema').Schemas;
 var crypto = require('crypto');
 var moment = require('moment');
-
+var util = require('util');
+var commfun = require(basedir + '/lib/comfun');
 var logger = require(basedir + '/lib/logger').logger('web');
 var gets = {};
 var posts = {};
@@ -73,6 +74,8 @@ posts.checkAjax = function(req, res, next, baseurl) {
 gets.index = function(req, res, next, baseurl) {
     res.render('manage/UserInfo/list.html', {
         baseurl: baseurl,
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
         modename: 'manageUserInfo'
     });
 }
@@ -98,6 +101,7 @@ gets.create = function(req, res, next, baseurl) {
                     };
                     res.render('manage/UserInfo/create.html', {
                         baseurl: baseurl,
+                        where:util.inspect(commfun.searchContions(req.query["where"])),
                         departments: str,
                         roles: rolestr
                     });
@@ -158,6 +162,8 @@ gets.edit = function(req, res, next, baseurl) {
                 baseurl: baseurl,
                 inst: results.findUser,
                 departments: results.findDepartment.departments,
+                displayStart:req.query["displayStart"] || 0,
+                where:req.query["where"] || "",
                 roles: results.findDepartment.roles
             });
         });

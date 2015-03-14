@@ -10,7 +10,7 @@ var fs = require("fs");
 var nami = require(basedir + '/asterisk/asmanager').nami,
 	util = require('util'),
 	AsAction = require("nami").Actions;
-
+var commfun = require(basedir + '/lib/comfun');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -24,6 +24,8 @@ var checkFun = {};
 //列表显示
 gets.index = function(req, res, next, baseurl) {
 	res.render('pbx/linemonitor/list.html', {
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
 		baseurl: baseurl,
 		modename: 'pbxTrunk'
 	});

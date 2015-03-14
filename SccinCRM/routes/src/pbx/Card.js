@@ -4,7 +4,8 @@ var Schemas = require(basedir + '/database/schema').Schemas;
 var logger = require(basedir + '/lib/logger').logger('web');
 var guid = require('guid');
 var async = require('async');
-
+var commfun = require(basedir + '/lib/comfun');
+var util = require('util');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -16,6 +17,8 @@ module.exports = {
 gets.index = function(req, res, next) {
 	res.render('pbx/Card/list.html', {
 		baseurl: req.path,
+        pageIndex:req.query["displayStart"] || 0,
+        where:util.inspect(commfun.searchContions(req.query["where"])),
 		modename: 'pbxCard'
 	});
 }
@@ -111,9 +114,30 @@ posts.delete = function(req, res, next) {
 						})
 					},
 					updateRows: function(cb) {
-						Schemas['pbxCard'].query('update `pbxCard` set `line`=`line`-' + dbs.length + ' where `line`>' + dbs[0].line, function(err, result) {
-							cb(err, result);
-						});
+                        Schemas['pbxCard'].all({
+                            where: {
+                                line: {"gt":dbs[0].line}
+                            }
+                        },function(err,dbsUpdate){
+                            async.each(dbsUpdate,function(item,callback){
+                                Schemas['pbxCard'].update({
+                                    where: {
+                                        line: item.line
+                                    },
+                                    update: {
+                                        line:item.line-dbs.length
+                                    }
+                                },function(err,inst){
+
+                                    callback(err,inst);
+                                });
+                            },function(err){
+                                cb(err,null);
+                            });
+                        });
+
+
+
 					}
 
 				}, function(err, results) {

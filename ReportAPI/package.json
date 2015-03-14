@@ -1,0 +1,8 @@
+{
+    "name": "application-build",
+    "version": "0.0.1",
+    "dependencies": {
+        "node-webkit-builder":">=1.0.11"
+    }
+
+}

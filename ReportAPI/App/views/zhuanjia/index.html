@@ -1,0 +1,52 @@
+<div class="easyui-tabs" style="width:100%;height:480px">
+    <div title="统计列表" data-options="tabWidth:112" style="padding:10px">
+        <table id="treegrid" class="easyui-treegrid"></table>
+    </div>
+    <div title="图形报表" style="padding:10px">
+
+    </div>
+    <div title="按条件统计" data-options="iconCls:'icon-help',closable:true" style="padding:10px">
+        This is the help content.
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    function formatProgress(value) {
+        if (value) {
+            var s = '<div style="width:100%;border:1px solid #ccc">' +
+                    '<div style="width:' + value + '%;background:#cc0000;color:#fff">' + value + '%' + '</div>'
+            '</div>';
+            return s;
+        } else {
+            return '';
+        }
+    }
+
+    $(function () {
+        $('#treegrid').treegrid({
+            iconCls: 'icon-ok',
+            rownumbers: true,
+            animate: true,
+            collapsible: true,
+            fitColumns: true,
+            url: 'http://192.168.0.114:18081/test/treegrid_data2.json',
+            method: 'get',
+            idField: 'id',
+            treeField: 'name',
+            pagination: true,
+            pageSize: 2,
+            pageList: [2, 5, 10],
+            columns: [
+                [
+                    {field: 'name', title: 'Task Name', width: 180},
+                    {field: 'persons', title: 'Size', width: 60, align: 'right'},
+                    {field: 'begin', title: 'Type', width: 80},
+                    {field: 'end', title: 'Modify Date', width: 80},
+                    {field: 'progress', title: 'Modify Date', width: 80,formatter:formatProgress}
+                ]
+            ]
+        }).treegrid('clientPaging');
+    });
+</script>

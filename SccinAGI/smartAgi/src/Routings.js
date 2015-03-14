@@ -2053,7 +2053,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             logger.debug("准备从变量" + tempvarname + "读出数字字符:" + digits);
             if (actargs.digits && /\d+/.test(actargs.digits))
               digits = actargs.digits;
-            if (digits && digits !== '') {
+            if (/\d+/.test(digits)) {
               async.auto({
                 saydigits: function(callback) {
                   logger.debug("需要读出数字字符:", digits);
@@ -2080,7 +2080,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             if (actargs.digits && /\d+/.test(actargs.digits))
               digits = actargs.digits;
             logger.debug('数学读出：', digits);
-            if (digits && digits !== '') {
+            if (/\d+/.test(digits)) {
               self.sayNumber(digits, function(err, result) {
                 cb(err, result);
               });
@@ -2176,12 +2176,17 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             } else {
               cb(null, null);
             }
-          } else if (actmode.modename === '变量判断') {
+          }
+          else if (actmode.modename === '变量判断') {
             logger.debug("进行变量判断");
 
             if (actargs.varname && actargs.varname !== '') {
               var tempvarname = actargs.varname;
-              var tmpvalue = self.activevar[tempvarname] + "";
+              var tmpvalue =  "";
+                logger.debug("变量值："+self.activevar[tempvarname]+",期望值:"+actargs.varval);
+                if(self.activevar[tempvarname]){
+                    tmpvalue=self.activevar[tempvarname]+"";
+                }
               var varval = actargs.varval + "";
               var checkway = actargs.checkway === "" ? "eq" : actargs.checkway;
               if (checkway === "eq" && varval == tmpvalue) {
@@ -2729,10 +2734,11 @@ routing.prototype.queue = function(queuenum, assign, callback) {
       function(cb, results) {
         //Queue(queuename,options,URL,announceoverride,timeout,agi,cb)
         var queuetimeout = results.findQueue.queuetimeout == 0 ? 60 : results.findQueue.queuetimeout;
-        context.Queue(queuenum, 'tc', '', '', queuetimeout, 'agi://127.0.0.1/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
+        context.Queue(queuenum, 'tT', '', '', queuetimeout, 'agi://127.0.0.1/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
           logger.debug("队列拨打返回结果:", response);
           cb(err, response);
         });
+
       }
     ],
 
@@ -2959,7 +2965,7 @@ routing.prototype.router = function() {
             cbk("已经找到匹配的路由！");
           } else {
             if (vars.agi_accountcode === item.callergroup || item.callergroup === 'all') {
-              logger.debug("开始进行呼叫路由判断");
+              logger.debug("开始进行呼叫路由判断,主叫:",vars.agi_callerid,",被叫:",args.called);
               match = true;
               var reCaller = new RegExp("^" + item.callerid);
               var reCalled = new RegExp("^" + item.callednum);
@@ -2993,7 +2999,13 @@ routing.prototype.router = function() {
                   args.called = item.replacecalledappend + args.called;
 
                 processmode = item.processmode;
-                processdefined = item.processdefined || args.called; //如果指匹配设置号码否则采用被叫
+                //processdefined = item.routerline === '呼入'? args.called :item.processdefined; //如果指匹配设置号码否则采用被叫
+                 if( processmode==='dialout'){
+                     processdefined=item.processdefined;
+
+                 }else{
+                     processdefined=args.called;
+                 }
               }
             }
             cbk();
@@ -3830,3 +3842,24 @@ routing.prototype.unPauseQueueMember = function(queuenum, assign, callback) {
     callback(err, results);
   });
 };
+/**
+ * Created by LinYong on 2014/10/16.
+ */
+routing.prototype.voiceNoticeCallback = function() {
+    var self = this;
+    var context = self.context;
+    var schemas = self.schemas;
+    var nami = self.nami;
+    var logger = self.logger;
+    var args = self.args;
+    var vars = self.vars;
+
+    context.Playback('/home/share/' + args.fileID + '-api.wav', function(err, response) {
+        if(err){
+            context.hangup(function(err, response) {});
+        }else{
+            context.end();
+        }
+
+    });
+}

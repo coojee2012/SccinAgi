@@ -34,10 +34,11 @@ routing.prototype.queue = function(queuenum, assign, callback) {
       function(cb, results) {
         //Queue(queuename,options,URL,announceoverride,timeout,agi,cb)
         var queuetimeout = results.findQueue.queuetimeout == 0 ? 60 : results.findQueue.queuetimeout;
-        context.Queue(queuenum, 'tc', '', '', queuetimeout, 'agi://127.0.0.1/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
+        context.Queue(queuenum, 'tT', '', '', queuetimeout, 'agi://127.0.0.1/queueAnswered?queuenum=' + queuenum + '&sessionnum=' + self.sessionnum, function(err, response) {
           logger.debug("队列拨打返回结果:", response);
           cb(err, response);
         });
+
       }
     ],
 

@@ -1,0 +1,316 @@
+<div id="tabs" class="easyui-tabs" style="width:100%;height:480px;">
+    <div title="统计列表" data-options="iconCls:'icon-large-smartart',tabWidth:112" style="padding:10px;width:100%;height:460px;">
+        <table id="tt" class="easyui-treegrid">
+        </table>
+    </div>
+    <div title="图形报表"  data-options="iconCls:'icon-large-chart'"  style="padding:10px">
+        <div>
+            <button class="btn change" change="sex">专业-性别</button>
+            <button class="btn change" change="age">专业-年龄段</button>
+        </div>
+        <div id="container" style="min-width:800px;height:400px"></div>
+    </div>
+    <div title="按条件统计" data-options="iconCls:'icon-help',closable:false" style="padding:10px">
+        <div class="easyui-panel" title="请输入查询条件" style="width:400px">
+            <div style="padding:10px 60px 20px 60px">
+                <form id="queryConditions" method="POST">
+                    <table cellpadding="5">
+                        <tr >
+                            <td>本次统计无查询条件！</td>
+                        </tr>
+                        <!--tr>
+                            <td>专业</td>
+                            <td>
+                                <select class="easyui-combobox" name="zhuanye">
+                                    <option value="0">全部</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>性别</td>
+                            <td>
+                                <select class="easyui-combobox" name="sex">
+                                    <option value="0">男</option>
+                                    <option value="1">女</option>
+                                </select>
+                            </td>
+                        </tr -->
+                    </table>
+
+
+                </form>
+                <div style="text-align:center;padding:5px">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" id="searchSubmit">查看列表</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+function clearForm() {
+    $('#queryConditions').form('clear');
+}
+$(function () {
+    var chart;
+    $('#tt').treegrid({
+        url: BJExpert.apiServer + '/zhuanjia/zynl',
+        rownumbers: true,
+        pagination: true,
+        pageSize: 5,
+        pageList: [5, 10, 20],
+        idField: 'id',
+        treeField: 'name',
+        columns: [
+            [
+                {field: 'name', title: '专业名称', width: 280, align: "left"},
+                {field: 'total', title: '专家总数', width: 60, align: "center"},
+                {field: 'man', title: '男性', width: 60, align: "center"},
+                {field: 'women', title: '女性', width: 60, align: "center"},
+                {field: 'age35', title: '<=35', width: 60, align: "center"},
+                {field: 'age45', title: '36~45', width: 60, align: "center"},
+                {field: 'age55', title: '46~55', width: 60, align: "center"},
+                {field: 'age65', title: '46~65', width: 60, align: "center"},
+                {field: 'age70', title: '>65', width: 60, align: "center"}
+            ]
+        ],
+        onBeforeLoad: function (row, param) {
+            if (!row) { // load top level rows
+                param.id = 0; // set id=0, indicate to load new page rows
+            }
+        }
+    });
+
+    function DoChart(cType) {
+        $.ajax({
+            url: BJExpert.apiServer + '/zhuanjia/zynl',
+            type: 'POST',
+            data: {id: 0, page: 1, rows: 10},
+            dataType: "json",
+            success: function (data) {
+                var categories = [];
+                var series = [
+                    {                                 //指定数据列
+                        name: '男',                          //数据列名
+                        data: []                        //数据
+                    },
+                    {
+                        name: '女',
+                        data: []
+                    }
+                ];
+                if (cType === 'age') {
+                    series = [
+                        {                                 //指定数据列
+                            name: '35及以下',                          //数据列名
+                            data: []                        //数据
+                        },
+                        {
+                            name: '36~45',
+                            data: []
+                        },
+                        {
+                            name: '46~55',
+                            data: []
+                        },
+                        {
+                            name: '56~65',
+                            data: []
+                        },
+                        {
+                            name: '65以上',
+                            data: []
+                        }
+                    ];
+                }
+                var title = "专业-", rows = [];
+                if (data && typeof(data) === 'object') {
+                    rows = data.rows;
+                } else if (data) {
+                    rows = data;
+                }
+                title += cType === 'age' ? "年龄段" : "性别";
+                for (var i = 0; i < rows.length; i++) {
+                    categories.push(rows[i].name);
+                    if (cType === 'age') {
+                        series[0].data.push(rows[i].age35);
+                        series[1].data.push(rows[i].age45);
+                        series[2].data.push(rows[i].age55);
+                        series[3].data.push(rows[i].age65);
+                        series[4].data.push(rows[i].age70);
+                    } else {
+                        series[0].data.push(rows[i].man);
+                        series[1].data.push(rows[i].women);
+
+                    }
+
+                }
+                chart = new Highcharts.Chart({
+                    // $('#container').highcharts({                   //图表展示容器，与div的id保持一致
+                    chart: {
+                        renderTo: 'container',
+                        //width:$("#container").width(),
+                        type: 'column'                         //指定图表的类型，默认是折线图（line）
+                    },
+                    credits: {
+                        enabled: true,
+                        text: '四川建设网',
+                        href: 'http://www.sccin.com'
+                    },
+                    title: {
+                        text: title      //指定图表标题
+                    },
+                    exporting: {
+                        enabled: true,
+                        buttons: {
+                            /*  // 导出按钮配置
+                             exportButton: {
+                             text: '导出图片',
+                             menuItems: null,
+                             onclick: function () {
+                             this.exportChart();
+                             }
+                             },
+                             // 打印按钮配置
+                             printButton: {
+                             enabled: true,
+                             text: '打印图表',
+                             onclick: function () {
+                             this.print();
+                             }
+                             },*/
+                            contextButton: {
+                                enabled: true,
+                                text: '图表菜单',
+                                menuItems: [
+                                    {
+                                        text: '导出EXCEL',
+                                        onclick: function () {
+
+                                            var form = $("<form>");
+                                            form.attr('style', 'display:none');
+                                            form.attr('target', '');
+                                            form.attr('method', 'post');
+                                            form.attr('action', 'http://192.168.0.114:18081/base/getCSV');
+                                            var input1 = $('<input>');
+                                            input1.attr('type', 'hidden');
+                                            input1.attr('name', 'csv');
+                                            input1.attr('value', chart.getCSV());
+                                            var input2 = $('<input>');
+                                            input2.attr('type', 'hidden');
+                                            input2.attr('name', 'filename');
+                                            input2.attr('value', 'ImportExcel');
+                                            $('body').append(form);
+                                            form.append(input1);
+                                            form.append(input2);
+
+                                            form.submit();
+                                            form.remove();
+
+                                            //alert(chart.getCSV());
+                                            // Highcharts.post('http://192.168.0.114:18081/base/getCSV', { csv: chart.getCSV() });
+
+                                        }
+
+                                    },
+                                    {
+                                        separator: true
+                                    } ,
+                                    {
+                                        text: '导出 - PNG',
+                                        onclick: function () {
+                                            this.exportChart();
+                                        }
+                                    },
+                                    {
+                                        text: '导出 - JPG',
+                                        onclick: function () {
+                                            this.exportChart({
+                                                type: 'image/jpeg'
+                                            });
+                                        }
+                                    },
+                                    {
+                                        separator: true
+                                    },
+                                    {
+                                        text: '导出 - PDF',
+                                        onclick: function () {
+                                            this.exportChart({
+                                                type: 'application/pdf'
+                                            });
+                                        }
+                                    },
+                                    {
+                                        text: '导出 - SVG',
+                                        onclick: function () {
+                                            this.exportChart({
+                                                type: 'image/svg+xml'
+                                            });
+                                        }
+                                    },
+                                    {
+                                        separator: true
+                                    },
+                                    {
+                                        text: '打印图表',
+                                        onclick: function () {
+                                            this.print();
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        formAttributes: {
+                            "enctype": "application/x-www-form-urlencoded",
+                            "charset": "UTF-8"
+                        },
+                        filename: title,
+                        type: 'image/png',
+                        width: 1024,
+                        url: BJExpert.apiServer + '/base/exporter'
+                    },
+                    xAxis: {
+                        categories: categories,   //指定x轴分组
+                        labels: {
+                            rotation: 65
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: '专家人数'                  //指定y轴的标题
+                        }
+                    },
+                    series: series
+                });
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                var msg = textStatus || errorThrown;
+                alert("错误："+msg);
+            }
+
+        });
+    }
+
+    $(".change").click(function () {
+        var self = this;
+        var change = $(self).attr("change");
+        DoChart(change);
+    });
+
+    DoChart('sex');
+
+    $("#searchSubmit").click(function (){
+       // alert("我要提交了！");
+        var t=$("#tabs");
+        var tabs = t.tabs('tabs');
+        t.tabs('select', tabs[0].panel('options').title);
+        DoChart('sex');
+    });
+});
+
+</script>

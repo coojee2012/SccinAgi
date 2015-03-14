@@ -457,7 +457,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             logger.debug("准备从变量" + tempvarname + "读出数字字符:" + digits);
             if (actargs.digits && /\d+/.test(actargs.digits))
               digits = actargs.digits;
-            if (digits && digits !== '') {
+            if (/\d+/.test(digits)) {
               async.auto({
                 saydigits: function(callback) {
                   logger.debug("需要读出数字字符:", digits);
@@ -587,6 +587,7 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             if (actargs.varname && actargs.varname !== '') {
               var tempvarname = actargs.varname;
               var tmpvalue =  "";
+                logger.debug("变量值："+self.activevar[tempvarname]+",期望值:"+actargs.varval);
                 if(self.activevar[tempvarname]){
                     tmpvalue=self.activevar[tempvarname]+"";
                 }

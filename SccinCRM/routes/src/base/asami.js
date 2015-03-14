@@ -26,7 +26,7 @@ posts.sippeers = function (req, res, next) {
         res.send(response);
 
     });
-}
+};
 
 posts.ping = function (req, res, next) {
     nami.send(new AsAction.Ping(), function (response) {
@@ -35,8 +35,7 @@ posts.ping = function (req, res, next) {
         res.send(response);
 
     });
-}
-
+}; 
 posts.hangup = function (req, res, next) {
     var action = new AsAction.Hangup();
     action.Channel = 'sip/abcd';
@@ -46,7 +45,7 @@ posts.hangup = function (req, res, next) {
         res.send(response);
 
     });
-}
+};
 
 posts.status = function (req, res, next) {
     var action = new AsAction.Status();
@@ -57,10 +56,10 @@ posts.status = function (req, res, next) {
         res.send(response);
 
     });
-}
+};
 
 posts.command = function (req, res, next) {
-    var cmd = req.body['cmd'] || req.query['cmd'];
+    var cmd = req.body.cmd || req.query.cmd;
     var action = new AsAction.Command();
     action.Command = cmd;
     nami.send(action, function (response) {
@@ -69,7 +68,7 @@ posts.command = function (req, res, next) {
         res.send(response);
 
     });
-}
+};
 
 posts.extensionstate = function (req, res, next) {
     var exten = req.body['exten'] || req.query['exten'];
@@ -168,16 +167,33 @@ posts.transfer = function (req, res, next) {
     }
 
     getconnectchannel(fromtype, extenfrom, function (channels) {
+
+        console.log(channels);
         var action = new AsAction.Redirect();
-        action.Channel = channels.src;
+        //action.Channel = channels.src;
+        action.Channel = channels.dst;
+        //action.ExtraChannel=channels.dst;
         action.Exten = extento;
-        action.Context = 'from-exten-sip';
+        // action.ExtraExten=444;
+        action.Context = 'app-exten';
+        // action.ExtraContext = 'app-exten';
+
+        /* var action2=new AsAction.Setvar();
+         action2.Channel = channels.dst;
+         action2.Variable="transfernum";
+         action2.Value=extento;*/
+        //nami.send(action2, function (response) {
+
         nami.send(action, function (response) {
+            console.log(response);
             res.send(response);
         });
+        //  });
     });
 
 }
+
+
 /**
  * Originate Action
  * @constructor
@@ -235,8 +251,8 @@ posts.autodial = function (req, res, next) {
     //res.set('Access-Control-Allow-Origin', '*');
     //res.header('Access-Control-Allow-Origin', '*')
     var tts = require(basedir + '/lib/tts').tts;
-    var Userkey = req.get('User-key');
-    var UserAgent = req.get('User-Agent');
+    var Userkey = req.get('User-key') || req.get('Userkey');
+    var UserAgent = req.get('User-Agent') ||  req.get('UserAgent');
     logger.debug('拨打服务获取到的头信息：', Userkey, UserAgent);
     res.setHeader('Content-type', 'application/json');
     //res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
@@ -251,46 +267,58 @@ posts.autodial = function (req, res, next) {
     var HardContent = req.body['HardContent'] || "";
     HardContent = HardContent.replace(/\s+/g, '');
 
+    var ForcedSynthesis = false;
+    if( req.body['ForcedSynthesis'] &&  req.body['ForcedSynthesis']  === '1')
+        ForcedSynthesis=true;
+    console.log("ForcedSynthesis:",ForcedSynthesis);
+
     var Phones = req.body['Phones'];
     Phones = Phones.replace(/\s+/g, '');
     var KeyNum = req.body['KeyNum'];
 
     if (!CallInfoID || CallInfoID == "") {
+        logger.debug( '抽取编号不能为空');
         res.send({
             "success": false,
             "result": '抽取编号不能为空'
         });
 
     } else if (!ProjMoveID || ProjMoveID == "") {
+        logger.debug( '项目编号不能为空');
         res.send({
             "success": false,
             "result": '项目编号不能为空'
         });
 
     } else if (!NoticeContent || NoticeContent == "") {
+        logger.debug( '合成通知评标专家语音类容不能为空');
         res.send({
             "success": false,
             "result": '合成通知评标专家语音类容不能为空'
         });
 
     } else if (!SureContent || SureContent == "") {
+        logger.debug( '合成确认参加评标提示语音类容不能为空');
         res.send({
             "success": false,
             "result": '合成确认参加评标提示语音类容不能为空'
         });
 
     } else if (!QueryContent || QueryContent == "") {
+        logger.debug( '合成自动查询语音类容不能为空');
         res.send({
             "success": false,
             "result": '合成自动查询语音类容不能为空'
         });
 
     } else if (!HardContent || HardContent == "") {
+        logger.debug( '合成重听参评信息语音类容不能为空');
         res.send({
             "success": false,
             "result": '合成重听参评信息语音类容不能为空'
         });
     } else if (!Phones || Phones == "") {
+        logger.debug( '拨打电话不能为空');
         res.send({
             "success": false,
             "result": '拨打电话不能为空'
@@ -318,6 +346,20 @@ posts.autodial = function (req, res, next) {
                 try {
                     Schemas['crmVoiceContent'].find(ProjMoveID, function (err, inst) {
                         callback(err, inst);
+                    });
+                } catch (ex) {
+                    callback(ex, null);
+                }
+            },
+            getOtherSythState: function (callback) {
+                logger.debug("执行：getOtherSythState");
+                try {
+                    Schemas['crmVoiceContent'].all({
+                        where:{
+                            State:1
+                        }
+                    }, function (err, dbs) {
+                        callback(err, dbs);
                     });
                 } catch (ex) {
                     callback(ex, null);
@@ -389,11 +431,14 @@ posts.autodial = function (req, res, next) {
                 }
             ],
             //将新插入的合成表数据，更新合成状态为合成中
-            setVoiceContent: ['addVoiceContent',
+            setVoiceContent: ['addVoiceContent','getOtherSythState',
                 function (callback, results) {
                     logger.debug("执行：setVoiceContent");
                     try {
-                        if (results.addVoiceContent.State === 0) {
+                        if(results.getOtherSythState && results.getOtherSythState.length>0){
+                            callback('有其他项目的语音正在合成中！', null);
+                        }
+                        else if (results.addVoiceContent.State === 0  ||  ForcedSynthesis) {
                             var voc = new Schemas['crmVoiceContent'](results.addVoiceContent);
                             voc.State = 1;
                             voc.save(function (err, inst) {
@@ -413,7 +458,8 @@ posts.autodial = function (req, res, next) {
             //合成通知语音
             voiceMixNotice: ['setVoiceContent',
                 function (callback, results) {
-                    logger.debug("执行：voiceMixNotice");
+                    logger.debug("执行：voiceMixNotice-",NoticeContent);
+                    NoticeContent=NoticeContent.replace(/\r\n|\r|\n|\s+/,'');
                     //处理语音合成
                     //合成的语音文件名字  results.addCallRecords.id + -notice.wav
                     if (results.setVoiceContent.State === 1) {
@@ -443,6 +489,7 @@ posts.autodial = function (req, res, next) {
                         callback('合成确认语音失败!', null);
                     //处理语音合成
                     //合成的语音文件名字  results.addCallRecords.id + -sure.wav
+                    SureContent=SureContent.replace(/\r\n|\r|\n|\s+/,'');
                     if (results.setVoiceContent.State === 1) {
                         tts.synth('/home/share/' + ProjMoveID + '-sure.wav', SureContent, function (state, msg) {
                             if (state === 'true') {
@@ -467,6 +514,7 @@ posts.autodial = function (req, res, next) {
                         callback('合成查询语音失败!', null);
                     //处理语音合成
                     //合成的语音文件名字  results.addCallRecords.id + -query.wav
+                    QueryContent=QueryContent.replace(/\r\n|\r|\n|\s+/,'');
                     if (results.setVoiceContent.State === 1) {
                         tts.synth('/home/share/' + ProjMoveID + '-query.wav', QueryContent, function (state, msg) {
                             if (state === 'true') {
@@ -490,6 +538,7 @@ posts.autodial = function (req, res, next) {
                         callback('合成重复收听语音失败!', null);
                     //处理语音合成
                     //合成的语音文件名字  results.addCallRecords.id + -query.wav
+                    HardContent=HardContent.replace(/\r\n|\r|\n|\s+/,'');
                     if (results.setVoiceContent.State === 1) {
                         tts.synth('/home/share/' + ProjMoveID + '-hard.wav', HardContent, function (state, msg) {
                             if (state === 'true') {
@@ -536,7 +585,7 @@ posts.autodial = function (req, res, next) {
                             callback(err, null);
                         else {
                             if (counts && counts > conf.load('app').maxchans) {
-                                callback('当前可用线路不足，已用:' + counts, counts);
+                                callback('linefull', counts);
                             } else {
                                 callback(null, counts);
                             }
@@ -588,7 +637,7 @@ posts.autodial = function (req, res, next) {
                 }
                 res.send({
                     "success": false,
-                    "result": "服务器发生内部异常:" + errmsg + ",请联系系统管理员！"
+                    "result": errmsg
                 });
 
             } else {
@@ -600,12 +649,83 @@ posts.autodial = function (req, res, next) {
             }
 
         });
+} 
+}
+
+posts.VoiceNotice = function (req, res, next) {
+    var tts = require(basedir + '/lib/tts').tts;
+    var phoneStr = req.body["phones"] || "";
+    var voiceText = req.body["voiceText"] || "";
+    if (voiceText == "" || phoneStr == "") {
+        res.send({
+            "success": false,
+            "result": '联系电话或通知语音内容不能为空！'
+        });
+    }
+    else {
+        var phones = phoneStr.split(",");
+        async.auto({
+                MixVoice: function (cb) {
+                    var noticeID = new Date().getTime();//guid.create();
+
+                    tts.synth('/home/share/' + noticeID + '-api.wav', voiceText, function (state, msg) {
+                        if (state === 'true') {
+                            cb(null, noticeID);
+                        } else {
+                            cb("合成通知语音失败！", null);
+
+                        }
+                    });
+                },
+                notice:["MixVoice",function(cb,results){
+                    var voiceFileID=results.MixVoice;
+                    async.each(phones,function(item,callback){
+                        var channel = "LOCAL/" + item + "@sub-voiceNotice/n";
+                        var Context = 'sub-voiceNotice-callback';
+                        //var Context='app-exten';
+                        var action = new AsAction.Originate();
+                        action.Channel = channel;
+                        //action.Timeout=30;
+                        action.Async = true;
+                        action.Account = item;
+                        action.CallerID = item;
+                        action.Context = Context;
+                        action.Variable = 'voiceFile='+ voiceFileID ;
+                        action.Exten = voiceFileID;
+                        if (nami.connected) {
+                            nami.send(action, function (response) {
+                                callback(null, response);
+                            });
+                        } else {
+                            callback('无法连接到语音服务器！', null);
+
+                        }
+                    },function(err){
+                        cb(err,null);
+                    });
+
+
+                }]
+
+            }, function (err, results) {
+                if (err) {
+                    res.send({
+                        "success": false,
+                        "result": err
+                    });
+                } else {
+                    res.send({
+                        "success": true,
+                        "result": "通知成功!"
+                    });
+                }
+            }
+        );
 
     }
 
+
 }
-
-
 posts.getresult = function (req, res, next) {
     var Userkey = req.get('User-key');
     var UserAgent = req.get('User-Agent');
@@ -947,10 +1067,10 @@ gets.GetCallInfo = function (req, res, next) {
 posts.DadOn = function (req, res, next) {
     var exten = req.body['exten'] || req.query['exten'];
     var type = req.body['type'] || req.query['type'];
-    var extDB = require('../modules/ippbx/extension.js');
+
 
     try {
-        extDB.all({
+        Schemas['pbxExtension'].all({
             where: {
                 accountcode: exten
             }
@@ -1149,18 +1269,29 @@ function getconnectchannel(type, exten, cb) {
     var action = new AsAction.CoreShowChannels();
     nami.send(action, function (response) {
         if (response.response == 'Success') {
-
+            console.log(response.events);
             for (var i in response.events) {
                 //console.log("测试：");
-                //console.log(response.events[i]);
+
                 if (re.exec(response.events[i].channel) || response.events[i].accountcode == exten) {
                     src = response.events[i].channel;
                     dst = response.events[i].bridgedchannel;
+                    /* var parent2=new RegExp("^Local"  + '\\/' + exten,"gi");
+                     if(parent2.test(dst)){
+                     console.log("二次匹配！");
+                     for (var j in response.events) {
+                     if (parent2.exec(response.events[j].channel) && response.events[j].bridgedchannel != src && !parent2.exec(response.events[j].bridgedchannel)) {
+                     dst= response.events[j].bridgedchannel;
+                     break;
+                     }
+
+                     }
+                     }*/
                     break;
                 }
             }
         }
-
+        console.log("src:" + src + "dst:" + dst);
         cb({
             src: src,
             dst: dst

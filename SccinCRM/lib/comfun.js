@@ -64,5 +64,19 @@ mycommonfun.dellocalnum = function(num, cb) {
   });
 }
 
+mycommonfun.searchContions=function(whereContions){
+    var where=whereContions || "";
+    where=where.replace(/^(keywordsKey)/,"");
+    var whereObj={};
+    if(where!==""){
+        where=where.split("keywordsKey");
+        for(var i in where){
+            var kv=where[i].split("keywordsValue");
+            whereObj[kv[0]]=kv[1] || "";
+        }
+    }
+    return whereObj;
+}
+
 
 module.exports = mycommonfun;

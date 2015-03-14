@@ -10,7 +10,7 @@ var fs = require("fs");
 var nami = require(basedir + '/asterisk/asmanager').nami,
     util = require('util'),
     AsAction = require("nami").Actions;
-
+var commfun = require(basedir + '/lib/comfun');
 var gets = {};
 var posts = {};
 module.exports = {
@@ -77,6 +77,8 @@ gets.index = function(req, res, next, baseurl) {
         if (err)
             logger.error(err);
         res.render('pbx/RecordFile/list.html', {
+            pageIndex:req.query["displayStart"] || 0,
+            where:util.inspect(commfun.searchContions(req.query["where"])),
             baseurl: baseurl,
             ways: dbs,
             modename: 'pbxRcordFile'
@@ -167,6 +169,8 @@ gets.edit = function(req, res, next, baseurl) {
             baseurl:baseurl,
             hasExtens: results.findMembers.hasExtens,
             yyExtens: results.findMembers.yyExtens,
+            displayStart:req.query["displayStart"] || 0,
+            where:req.query["where"] || "",
             inst: results.find
         });
     });

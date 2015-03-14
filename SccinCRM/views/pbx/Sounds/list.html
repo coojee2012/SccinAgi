@@ -108,7 +108,7 @@
     <div class="modal-footer">
         <button type="button" id="soundpc" name="soundpc" class="btn btn-primary"  data-dismiss="modal" onclick="javascript:listenbypc();" >PC试听</button>
            <button type="button" id="soundext" name="soundext" class="btn btn-primary" data-dismiss="modal" onclick="javascript:listenbyphone();" >分机试听</button>
-            <button type="button" id="soundext" name="soundext" class="btn btn-warning" href="#" data-dismiss="modal" >取消</button>
+            <button type="button"  name="soundext" class="btn btn-warning" href="#" data-dismiss="modal" >取消</button>
     </div>
   </div>
 </div>
@@ -259,7 +259,12 @@ function getColums(){
     "aTargets": [7],
     "mRender": function(data, type, full) {
       if(full.isreadonly==0){
-        var str = '<a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id=' + data + '">编辑</a>';
+          var oTable = $('#datatable').dataTable();
+          var oSettings = oTable.fnSettings();
+          var displayStart=oSettings._iDisplayStart;
+       // var str = '<a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id=' + data + '&displayStart='+displayStart+'">编辑</a>';
+          var str = '<a class="btn btn-primary btn-xs print" href="javascript:editBase(\''+data+'\',\'<%- baseurl%>/edit\')">编辑</a>';
+
         str += '<a class="btn btn-primary btn-xs" onclick="javascript:setSoudfile(\''+full.filename+'\',\''+full.folder+'\',\''+full.extname+'\')">试听</a>';
       str += '<a class="btn btn-danger btn-xs print" href="javascript:delrow(\'' + data + '\');">删除</a>'
       return str;

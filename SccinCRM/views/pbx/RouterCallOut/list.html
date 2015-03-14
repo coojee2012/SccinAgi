@@ -153,7 +153,8 @@
             { "sClass": 'center', "sName": "callednum", "mData": "callednum", "bSortable": false, "bVisible": true, "aTargets": [3] },
             { "sClass": 'center', "sName": "processmode", "mData": "processmode", "bSortable": false, "bVisible": true, "aTargets": [4] },
             { "sClass": 'center', "sName": "id", "mData": "id", "bSortable": false, "bVisible": true, "aTargets": [5], "mRender": function (data, type, full) {
-                var str = '<input type="hidden" name="id" value="' + data + '"><a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id=' + data + '">编辑</a>';
+                //var str = '<input type="hidden" name="id" value="' + data + '"><a class="btn btn-primary btn-xs print" href="<%- baseurl%>/edit?id=' + data + '">编辑</a>';
+                var str = '<input type="hidden" name="id" value="' + data + '"><a class="btn btn-primary btn-xs print" href="javascript:editBase(\''+data+'\',\'<%- baseurl%>/edit\')">编辑</a>';
                 str += '<a class="btn btn-danger btn-xs print" href="javascript:delrow(\'' + data + '\');">删除</a>'
                 return str;
             }}

@@ -7,6 +7,7 @@ var moment = require('moment');
 var async = require('async');
 var logger = require(basedir + '/lib/logger').logger('web');
 var fs = require("fs");
+var commfun = require(basedir + '/lib/comfun');
 var nami = require(basedir + '/asterisk/asmanager').nami,
     util = require('util'),
     AsAction = require("nami").Actions;
@@ -18,11 +19,12 @@ module.exports = {
     post: posts
 };
 
-//呼出规则列表显示
+//系统语音列表显示
 gets.index = function(req, res, next, baseurl) {
     var os = require("os");
     var systype = os.type();
     var sysrelease = os.release();
+    var displayStart=req.query["displayStart"] || 0;
     if (/Windows_\w+/.test(systype)) {
         res.render('pbx/Sounds/list.html', {
             osinfo: systype + " " + sysrelease,
@@ -30,6 +32,8 @@ gets.index = function(req, res, next, baseurl) {
             unused: '-.-',
             baifenbi: '1%',
             baseurl: baseurl,
+            pageIndex:displayStart,
+            where:util.inspect(commfun.searchContions(req.query["where"])),
             modename: 'pbxSounds'
         });
     } else {
@@ -60,6 +64,8 @@ gets.index = function(req, res, next, baseurl) {
                         used: used,
                         unused: unused,
                         baifenbi: baifenbi,
+                        pageIndex:displayStart,
+                        where:util.inspect(commfun.searchContions(req.query["where"])),
                         baseurl: baseurl,
                         modename: 'pbxSounds'
                     });
@@ -79,6 +85,8 @@ gets.create = function(req, res, next, baseurl) {
 //编辑
 gets.edit = function(req, res, next, baseurl) {
     var id = req.query["id"];
+    //var where=req.query["where"] || "";
+    //    where=where.replace(/``/g,"&").replace(/~~/g,"=");
     async.auto({
         find: function(cb) {
             Schemas['pbxSounds'].find(id, function(err, inst) {
@@ -91,10 +99,13 @@ gets.edit = function(req, res, next, baseurl) {
     }, function(err, results) {
         res.render('pbx/Sounds/edit.html', {
             baseurl: baseurl,
+            displayStart:req.query["displayStart"] || 0,
+            where:req.query["where"] || "",
             inst: results.find
         });
     });
 }
+
 posts.delete = function(req, res, next, baseurl) {
     var id = req.body['id'];
     Schemas['pbxSounds'].find(id, function(err, inst) {
@@ -114,16 +125,19 @@ posts.delete = function(req, res, next, baseurl) {
                 var oldfilename = inst.filename;
                 var oldextname = inst.extname;
                 var oldpath = oldfolder + oldfilename + '.' + oldextname;
-                inst.destroy(function(err) {
+
+                fs.unlink(oldpath, function(err) {
                     if (err) {
+                        logger.error(err);
                         myjson.success = 'ERROR';
-                        myjson.msg = '删除数据发生异常,请联系管理员！！';
+                        myjson.msg = '删除语音文件发生异常,请联系管理员！！';
                         res.send(myjson);
                     } else {
-                        fs.unlink(oldpath, function(err) {
+                        inst.destroy(function(err) {
                             if (err) {
+                                logger.error(err);
                                 myjson.success = 'ERROR';
-                                myjson.msg = '删除语音文件发生异常,请联系管理员！！';
+                                myjson.msg = '删除数据库记录发生异常,请联系管理员！！';
                                 res.send(myjson);
                             } else {
                                 myjson.success = 'OK';
@@ -131,10 +145,10 @@ posts.delete = function(req, res, next, baseurl) {
                                 res.send(myjson);
                             }
                         });
-
                     }
-
                 });
+
+
             }
         }
     });
@@ -175,15 +189,19 @@ posts.save = function(req, res, next, baseurl) {
                     if (tmpdir !== '' && tmpname !== '' && results.isHaveCheck === null) {
                         var tmp_path = tmpdir + tmpname + '.' + extname;
                         var target_path = newfolder + newname + '.' + extname;
+                        logger.info("新增语音文件-需要将文件移动到:"+target_path);
                         // 移动文件
                         fs.rename(tmp_path, target_path, function(err) {
-                            if (err)
+                            if (err){
+                               // logger.error(err);
                                 cb(err, null);
+                            }
+
                             else
                             // 删除临时文件夹文件, 
                                 fs.unlink(tmp_path, function() {
-                                    if (err)
-                                        cb(err, null);
+                                   if (err)
+                                       cb(err, null);
                                     else
                                         cb(null, null);
                                 });
@@ -205,7 +223,7 @@ posts.save = function(req, res, next, baseurl) {
                         var oldpath = oldfolder + oldfilename + '.' + oldextname;
                         var tmp_path = tmpdir + tmpname + '.' + extname;
                         var target_path = newfolder + newname + '.' + extname;
-
+                        logger.info("修改语音文件-需要将文件移动到:"+target_path);
                         fs.unlink(oldpath, function(err) {
                             if (err)
                                 cb(err, null);
@@ -290,7 +308,7 @@ posts.save = function(req, res, next, baseurl) {
                 myjson.id = results.isHaveCheck.id;
 
             } else if (err) {
-                console.log(err);
+                logger.error(err);
                 myjson.success = 'ERROR';
                 myjson.msg = '保存数据发生异常,请联系管理员！';
             }

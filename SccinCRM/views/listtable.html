@@ -1,6 +1,12 @@
 <script type='text/javascript'>
 $(function(){
 var ajaxUrl="/base/common/pagination";
+var whereQuery=<%- where%>;
+ if(typeof(whereQuery)==='object'){
+     for(var key in whereQuery){
+             $("#"+key).val(whereQuery[key]);
+     }
+ }
 var oTable=$('#datatable').dataTable({
   sDom: "<'row'<'col-sm-4'l><'col-sm-4'f><'col-sm-4'T>r>t<'row'<'col-sm-4'i><'col-sm-8 center'p>>",
   sPaginationType: "bootstrap", 
@@ -11,7 +17,8 @@ var oTable=$('#datatable').dataTable({
   },
   sScrollX: "100%",
   bScrollCollapse: true,
-  iDisplayLength: 5,
+   <%if(pageIndex && pageIndex>0){%>iDisplayStart: <%= pageIndex%>,<%}%>
+    iDisplayLength: 5,
     bPaginate: true,
     bAutoWidth:false,
     bFilter:false,

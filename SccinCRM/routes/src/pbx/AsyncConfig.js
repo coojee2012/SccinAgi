@@ -13,6 +13,7 @@ var asconfdir = '/etc/asterisk/';
 var dahcondir = '/etc/dahdi/';
 var gets = {};
 var posts = {};
+var commfun = require(basedir + '/lib/comfun');
 
 module.exports = {
 	get: gets,

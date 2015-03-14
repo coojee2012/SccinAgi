@@ -83,4 +83,29 @@ function delrow(id) {
   $('#deleteid').val(id);
   $('#confirm_modal').modal('show');
 }
+/*
+*  @description  基本编辑方法
+*  @param {String} id - 需要编辑的记录编号
+*  @param {String} url - 编辑页面url
+*  @return {String} 编辑页面
+* */
+ function editBase(id,url){
+var realUrl=url+'?id='+id;
+var oTable = $('#datatable').dataTable();
+var oSettings = oTable.fnSettings();
+var displayStart=oSettings._iDisplayStart;
+     realUrl+="&displayStart="+displayStart;
+var where=getWhere();
+var whereStr="";
+if(where!==null && typeof(where)==='object'){
+    for(var key in where){
+        if(/^whereCol_(\d+)/.test(key)){
+            var n=RegExp.$1;
+            whereStr+="keywordsKey"+where["whereCol_"+n]+"keywordsValue"+where["whereValue_"+n].replace(/[%]/g,"");
+        }
+    }
+}
+     window.location.href=realUrl+"&where="+whereStr;
+     //window.open(realUrl);
+  }
 </script>

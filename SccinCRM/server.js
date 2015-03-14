@@ -72,7 +72,7 @@ if (cluster.isMaster) {
 		worker.on('message', function(msg) {
 			if (msg && typeof(msg) === 'object' && msg.count) {
 				count++;
-				logger.info('当前服务器总访问次数：' + count);
+				//logger.info('当前服务器总访问次数：' + count);
 			}
 		});
 
@@ -112,13 +112,13 @@ if (cluster.isMaster) {
 
 	});
 
-	var normal = require('child_process').fork(__dirname+'/Wetnurse'+SRCFILE);
+/*	var normal = require('child_process').fork(__dirname+'/Wetnurse'+SRCFILE);
 	normal.on('exit',function(code,signal){
     logger.info('奶妈程序退出了：'+code);
 	});
 	normal.on('error',function(err){
     logger.error('奶妈程序发生异常：'+err);
-	});
+	});*/
 
 } else if (cluster.isWorker) {
 	logger.info(' 子进程-> ' + "启动子进程 ..." + cluster.worker.id);
@@ -139,7 +139,7 @@ if (cluster.isMaster) {
 	var count = 0;
 	server.on('connection', function() {
 		count++;
-		logger.info('当前子进程：' + cluster.worker.id + '。访问次数: ' + count);
+		//logger.info('当前子进程：' + cluster.worker.id + '。访问次数: ' + count);
 		process.send({
 			count: true
 		});

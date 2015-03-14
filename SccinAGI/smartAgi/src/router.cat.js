@@ -41,7 +41,7 @@ routing.prototype.router = function() {
       function(cb, results) {
         schemas.pbxRouter.all({
           where: {
-            routerline: args.routerline,
+            routerline: args.routerline
           },
           order: ['proirety asc']
         }, function(err, insts) {
@@ -62,7 +62,7 @@ routing.prototype.router = function() {
             cbk("已经找到匹配的路由！");
           } else {
             if (vars.agi_accountcode === item.callergroup || item.callergroup === 'all') {
-              logger.debug("开始进行呼叫路由判断");
+              logger.debug("开始进行呼叫路由判断,主叫:",vars.agi_callerid,",被叫:",args.called);
               match = true;
               var reCaller = new RegExp("^" + item.callerid);
               var reCalled = new RegExp("^" + item.callednum);
@@ -96,7 +96,13 @@ routing.prototype.router = function() {
                   args.called = item.replacecalledappend + args.called;
 
                 processmode = item.processmode;
-                processdefined = item.processdefined || args.called; //如果指匹配设置号码否则采用被叫
+                //processdefined = item.routerline === '呼入'? args.called :item.processdefined; //如果指匹配设置号码否则采用被叫
+                 if( processmode==='dialout'){
+                     processdefined=item.processdefined;
+
+                 }else{
+                     processdefined=args.called;
+                 }
               }
             }
             cbk();
