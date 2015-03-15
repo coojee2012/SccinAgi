@@ -1,11 +1,216 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-<p>主叫号码:<%= caller%></p>
-<p>被叫号码:<%= called%></p>
-</body>
-</html>
+<div class="page_box">
+    <div class="column form-column main col col-sm-9 form-horizontal">
+
+
+        <div class="panel panel-default fieldset">
+            <div class="formStyle">
+                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                    <input type="hidden" id='customId' name='customId' value="<%= custom.id || ''%>"/>
+                    <input type="hidden" id='companyId' name='companyId' value="<%= company.id || ''%>"/>
+                    <table>
+                        <colgroup>
+                            <col style="width:15%">
+                        </colgroup>
+                        <tr>
+                            <th colspan="4" style="text-align:left;font-size:12px;color:#8B8682;">联系人信息</th>
+                        </tr>
+                        <tr>
+                            <th>姓名</th>
+                            <td>
+                                <input type="text" id='customName' name='customName' class="form-control input-sm"
+                                   value="<%= custom.customName || ''%>"    placeholder="输入联系人姓名，必能留空" datatype="*" errormsg="不能为空！"/>
+                            </td>
+
+                            <th>职位</th>
+                            <td>
+                                <input type="text" id="position" name="position" class="form-control input-sm"
+                                       value="<%= custom.position || ''%>"    placeholder="请输入联系人职位。" datatype="*" errormsg="不能为空！"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>性别</th>
+                            <td>
+                                <select name="sex" id="sex" class="form-control input-sm">
+                                    <option value="男" <% if(custom.sex=="男"){%> selected="selected" <%}%>>男</option>
+                                    <option value="女" <% if(custom.sex=="女"){%> selected="selected" <%}%>>女</option>
+                                </select>
+                            </td>
+                            <th>
+                                联系电话
+                            </th>
+                            <td>
+                                <input type="text" id="phones" name="phones" class="form-control input-sm"
+                                       value="<%= custom.phones || ''%>"     placeholder="多个电话用,号分开" datatype="*" errormsg="必须填写！"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                备注
+                            </th>
+                            <td colspan="3">
+                                <input type="text" id="customMemo" name="customMemo" class="form-control input-sm"
+                                       value="<%= custom.customMemo || ''%>"     placeholder="备注一些特别说明记录"/>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th colspan="4" style="text-align:left;font-size:12px;color:#8B8682;">公司信息</th>
+
+                        </tr>
+                        <tr>
+                            <th>
+                                公司名称
+                            </th>
+                            <td colspan="2">
+                                <input class="form-control input-sm" id="companyName" name="companyName"
+                                       value="<%= company.companyName || '' %>"     datatype="*" errormsg="不能为空！"/>
+                            </td>
+                            <td><a href="javascript:choseQy();">[选择已有]</a></td>
+                        </tr>
+                        <tr>
+                            <th>
+                                公司电话
+                            </th>
+                            <td colspan="3">
+                                <input type="text" id="telphones" name="telphones" class="form-control input-sm"
+                                       value="<%= company.telphones  || '' %>"      placeholder="多个号码用','分割"/>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th>
+                                公司地址
+                            </th>
+                            <td colspan="3">
+                                <input type="text" id="companyAddr" name="companyAddr" class="form-control input-sm"
+                                       value="<%= company.companyAddr || '' %>"      placeholder="公司联系地址"/>
+                            </td>
+                        </tr>
+
+                    </table>
+                </form>
+            </div>
+            <div class="panel-footer text-right">
+                <button class="btn btn-primary active" id='savebtn'>保存基本信息</button>
+            </div>
+            <div class="formStyle">
+                <form action='<%- baseurl%>/saveRecords' method='POST' id='form2'>
+                    <table>
+                        <tr>
+                            <th>记录编号</th>
+                            <td>
+                                <input type="text" id="callInfoId" name="callInfoId" class="form-control input-sm"
+                                  value="<%= callinfo.sessionid %>"     readonly="readonly"/>
+                                <input type="hidden" id='poptype' name='poptype' value="<%= callinfo.poptype || ''%>"/>
+                            </td>
+                            <th>记录类别</th>
+                            <td>
+                                <select name="recordType" id="recordType" class="form-control input-sm">
+                                    <option value="咨询" selected="selected">咨询</option>
+                                    <option value="投诉">投诉</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>内容</th>
+                            <td colspan="3">
+                                <textarea rows="4" style="width: 80%;" name="record" id="record"
+                                          placeholder="请填写本次通话的主要内容"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="panel-footer text-right">
+                <button class="btn btn-primary active" id='savebtn2'>保存话务记录</button>
+            </div>
+        </div>
+    </div>
+    <div class="column form-column main col col-sm-3">
+        <div class="formStyle">
+            <table id="recentdRecords">
+                <colgroup>
+                    <col style="width:15%">
+                </colgroup>
+                <tr>
+                    <th colspan="2" style="text-align:left;font-size:12px;color:#8B8682;">最近来电记录</th>
+                </tr>
+                <% for(var i=0;i<records.length;i++) {%>
+                <tr>
+                    <td colspan="2" style="text-align:left;font-size:10px;"><p><%= records[i].createTime %><br/><%= records[i].record || '' %></p></td>
+
+                </tr>
+                <% }%>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+
+
+
+            $(".tipmsg").tooltip({placement: 'auto'});
+            $('#form1').Validform();
+            $('#form2').Validform();
+            $('#savebtn').click(function (e) {
+
+                if ($('#form1').Validform().check()) {
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+                        url: '<%- baseurl%>/save',
+                        data: $('#form1').serialize(),// 你的formid
+                        async: false,
+                        error: function (request) {
+                            $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                        },
+                        success: function (data) {
+                            if (data.success === 'OK') {
+                                $('#companyId').val(data.companyId || "");
+                                $('#customId').val(data.customId || "");
+                            }
+                            $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                        }
+                    });
+                } else {
+                    $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+                }
+                });
+
+            $('#savebtn2').click(function (e){
+                var formData={};
+                formData.id=$("#callInfoId").val();
+                formData.companyId=$("#companyId").val();
+                formData.customId=$("#customId").val();
+                formData.recordType=$("#recordType").val();
+                formData.record=$("#record").val();
+                formData.poptype=$("#poptype").val();
+                formData.userId=parent._USERID || '0';
+
+                if (!formData.companyId || !formData.customId) {
+                    alert("请先保存联系人和公司信息！");
+                    return false;
+                }
+                else {
+                    if ($('#form2').Validform().check()) {
+                        $.ajax({
+                            cache: true,
+                            type: "POST",
+                            url: '<%- baseurl%>/saveRecords',
+                            data: formData,// 你的formid
+                            async: false,
+                            error: function (request) {
+                                $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                            },
+                            success: function (data) {
+                                $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                            }
+                        });
+                    } else {
+                        $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+                    }
+                }
+
+            });
+        });
+    </script>

@@ -493,6 +493,21 @@ schema.models.pbxBlacList;
 exports.pbxBlacList = pbxBlacList;
 
 Dbs.pbxBlacList=pbxBlacList;
+var pbxAutoMonitorWays=schema.define('pbxAutoMonitorWays',{
+	id:{type:String,length:100,default:function(){return guid.create();}},
+    wayName:   {type:String,length:50},//录音方式名称
+	recordout: {type:String,length:10,default: function () { return '是'; }},//呼出录音
+	recordin:  {type:String,length:10,default: function () { return '是'; }},//呼入录音
+	recordqueue:{type:String,length:10,default: function () { return '是'; }},//作为队列分机接听录音
+	keepfortype:{type:String,length:10,default: function () { return '永久保存'; }},//保存方式：永久保存,按时间，按条数
+	keepforargs: {type:Number,default: function () { return 100; }},//保存方式参数，永久保存无效
+	members: {type:String,length:50},//分机成员，一个分机只能有一个录音方式
+	cretime: {type:String,length:100,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+});
+pbxAutoMonitorWays.Name='pbxAutoMonitorWays';
+schema.models.pbxAutoMonitorWays;
+exports.pbxAutoMonitorWays = pbxAutoMonitorWays;
+Dbs.pbxAutoMonitorWays=pbxAutoMonitorWays;
 /*var Schema = require('jugglingdb').Schema;
 var moment = require('moment');
 var guid = require('guid');
@@ -658,14 +673,20 @@ schema.models.manageUserInfo;
 exports.manageUserInfo = manageUserInfo;
 Dbs.manageUserInfo = manageUserInfo;
 var crmCallRecords = schema.define('crmCallRecords', {
-    CallInfoID:     { type: String, length: 50},//呼叫编号
-    ProjMoveID:{type: String, length: 50},//项目编号
-    CallState:   { type: Number,default:0 },//是否呼叫标志0：未呼叫，1：已经呼叫
-    WorkTime:   { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
+    companyId: {type: String, length: 50},//企业编号
+    customId: {type: String, length: 50},//客户编号
+    userId: {type: Number, default: 0},//用户编号
+    poptype:{type: String, length: 10,default:'呼入'},//呼叫方向
+    recordType:{type: String, length: 10},
+    record:{type: String, length: 500},
+    createTime: {
+        type: String, length: 50, default: function () {
+            return moment().format("YYYY-MM-DD HH:mm:ss");
+        }
+    }//操作时间
 });
 
-crmCallRecords.Name='crmCallRecords';
-
+crmCallRecords.Name = 'crmCallRecords';
 
 
 schema.models.crmCallRecords;
@@ -791,21 +812,45 @@ crmVoiceContent.Name='crmVoiceContent';
 schema.models.crmVoiceContent;
 exports.crmVoiceContent = crmVoiceContent;
 Dbs.crmVoiceContent = crmVoiceContent;
-var pbxAutoMonitorWays=schema.define('pbxAutoMonitorWays',{
-	id:{type:String,length:100,default:function(){return guid.create();}},
-    wayName:   {type:String,length:50},//录音方式名称
-	recordout: {type:String,length:10,default: function () { return '是'; }},//呼出录音
-	recordin:  {type:String,length:10,default: function () { return '是'; }},//呼入录音
-	recordqueue:{type:String,length:10,default: function () { return '是'; }},//作为队列分机接听录音
-	keepfortype:{type:String,length:10,default: function () { return '永久保存'; }},//保存方式：永久保存,按时间，按条数
-	keepforargs: {type:Number,default: function () { return 100; }},//保存方式参数，永久保存无效
-	members: {type:String,length:50},//分机成员，一个分机只能有一个录音方式
-	cretime: {type:String,length:100,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+var crmCompanyInfo= schema.define('crmCompanyInfo', {
+    companyName:{type: String, length: 100},//公司名称
+    companyAddr:{type:String,length:200,default:''},
+    telphones:{type: String, length: 50,default:''},
+    url:{type: String, length: 50,default:''},
+    companyMemo:{type: String, length: 200,default:''},
+    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
 });
-pbxAutoMonitorWays.Name='pbxAutoMonitorWays';
-schema.models.pbxAutoMonitorWays;
-exports.pbxAutoMonitorWays = pbxAutoMonitorWays;
-Dbs.pbxAutoMonitorWays=pbxAutoMonitorWays;
+
+crmCompanyInfo.Name='crmCompanyInfo';
+
+
+
+schema.models.crmCompanyInfo;
+
+
+exports.crmCompanyInfo = crmCompanyInfo;
+Dbs.crmCompanyInfo = crmCompanyInfo;
+var crmCustomInfo= schema.define('crmCustomInfo', {
+    customName:{type: String, length: 50},//项目编号
+    position:{type: String, length: 50},
+    sex:{type:String,length:10,default: '男'},
+    birthday:{type: String, length: 50},
+    phones:{type: String, length: 50},
+    customMemo:{type: String, length: 200,default:''},
+    customAddr:{type: String, length: 100},
+    companyId:   { type: String, length: 50,default:"" },//公司编号
+    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
+});
+crmCustomInfo.belongsTo(crmCompanyInfo, {as: 'company', foreignKey: 'companyId'});
+crmCustomInfo.Name='crmCustomInfo';
+
+
+
+schema.models.crmCustomInfo;
+
+
+exports.crmCustomInfo = crmCustomInfo;
+Dbs.crmCustomInfo = crmCustomInfo;
 exports.Dbs = Dbs;
 
 /*    if (appconf.debug) {
