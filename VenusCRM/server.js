@@ -4,7 +4,7 @@
 根据CPU的个数开启响应数量的子进程多并发异步服务
 可以负载均衡
 **/
-
+'use strict';
 console.log(__dirname);
 
 var http = require('http');

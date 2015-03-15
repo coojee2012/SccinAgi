@@ -1,6 +1,7 @@
 /**
  * 模块依赖.
  */
+'use strict';
 var _ = require('lodash');
 var fs = require("fs");
 var path = require("path");
@@ -96,7 +97,7 @@ app.use(function(req, res, next) {
 });
 
 // 开发环境配置
-if ('development' == app.get('env')) {
+if ('development' === app.get('env')) {
   logger.info("当前运行于开发环境！");
   app.use(express.errorHandler({
     showStack: true,
@@ -106,7 +107,7 @@ if ('development' == app.get('env')) {
 }
 
 // 生产环境配置
-if ('production' == app.get('env')) {
+if ('production' === app.get('env')) {
 
 }
 app.use(checkbrower);

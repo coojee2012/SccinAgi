@@ -1,3 +1,4 @@
+'use strict';
 var tts = require('./lib/tts').tts;
 process.argv.forEach(function (val, index, array) {
     console.log(index + ': ' + val);
