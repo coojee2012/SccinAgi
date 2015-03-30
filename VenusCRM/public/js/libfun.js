@@ -113,6 +113,24 @@ $(function() {
             $(self).val('');
         });
     });
+
+    $(".datetimepicker").each(function(){
+        var self = this;
+        $(self).attr("readonly", "readonly");
+        $(self).css("background-color", "#ffffff");
+        $(self).datetimepicker({
+            format: "yyyy-mm-dd",
+            weekStart: 1,
+            autoclose: true, //false,true
+            startView: 'month', //hour,day,month,year,decade
+            minView: 'month', //default:hour
+            maxView: "year", //default:decade
+            todayBtn: true, //Default: false
+            todayHighlight: true,
+            language: 'zh-CN'
+        });
+
+    });
     //ED 初始化时间控件
 
     //初始化部门下拉控件-start

@@ -72,7 +72,8 @@ gets.index = function (req, res, next, baseurl) {
                 Schemas.crmCallRecords.all({
                     where: {
                         companyId: results.getCompany.id
-                    }
+                    },
+                    order:'createTime DESC'
                 }, function (err, inst) {
                     cb(err, inst);
                 });

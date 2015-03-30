@@ -105,7 +105,8 @@
             myLib.desktop.deskIcon.init(deskIconData);
 
             //初始化桌面导航栏
-            myLib.desktop.navBar.init();
+            //TODO 暂时关闭用于演示，取消掉导航
+           // myLib.desktop.navBar.init();
 
             <% if (role.isAgent == 1) { %>
                 //初始化侧边栏
@@ -344,11 +345,14 @@
         </marquee>
     </div>
     <!-- 导航菜单开始 -->
+    <!--
     <div id="navBar"><a href="#" class="m1 currTab" title="客服平台">
     </a><a href="#" class="m2" title="短信平台"> </a><a href="#" class="m3"
                                                     title="知识库"> </a><a href="#" class="m4" title="统计分析"> </a><a
             href="#"
-            class="m5" title="综合设置"> </a><a href="#" class="m6" title="系统管理"></a></div>
+            class="m5" title="综合设置"> </a><a href="#" class="m6" title="系统管理"></a>
+    </div>
+    -->
     <!-- 导航菜单结束 --> <!-- 桌面开始 -->
 
     <div id="desktopPanel">
