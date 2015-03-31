@@ -26,7 +26,7 @@ gets.index = function (req, res, next, baseurl) {
         baseurl: baseurl,
         pageIndex: req.query["displayStart"] || 0,
         where: util.inspect(commfun.searchContions(req.query["where"])),
-        modename: 'manageMenmus'
+        modename: 'crmCustomInfo'
     });
 }
 
@@ -34,6 +34,36 @@ gets.index = function (req, res, next, baseurl) {
 gets.create = function (req, res, next, baseurl) {
     res.render('crm/CustomInfo/create.html', {
         baseurl: baseurl
+    });
+}
+//编辑
+gets.edit = function (req, res, next, baseurl) {
+    var id = req.query.id;
+    async.auto({
+        findUser: function (cb) {
+            Schemas.crmCustomInfo.findOne({
+                include:['company'],
+                where:{id:id}
+            }, function (err, inst) {
+                if (err || inst === null){
+                    cb('编辑查找联系人发生错误或联系人不存在！', inst);
+                }
+
+                else
+                {
+                   inst.company=inst.__cachedRelations.company || {id:"",companyName:""};
+                    cb(err, inst);
+                }
+
+            });
+        }
+    }, function (err, results) {
+        res.render('crm/CustomInfo/edit.html', {
+            baseurl: baseurl,
+            displayStart:req.query.displayStart || 0,
+            where:req.query.where || "",
+            inst: results.findUser || {}
+        });
     });
 }
 
@@ -120,7 +150,7 @@ posts.save = function (req, res, next, baseurl) {
             } else if (results.updateOld !== -1) {
                 myjson.success = 'OK';
                 myjson.msg = '修改成功!';
-                myjson.id = results.updateOld.id;
+                myjson.id = Obj.id;
 
             } else if (err) {
                 console.log(err);
@@ -141,5 +171,20 @@ posts.searchCompany = function (req, res, next, baseurl) {
        }else{
            res.send({success:'OK',data:dbs});
        }
+    });
+}
+
+posts.addNewCompany=function(req,res,next,baseurl){
+    var companyName = req.body.name;
+    var companyId = guid.create();
+    Schemas.crmCompanyInfo.create({
+        id: companyId,
+        companyName: companyName
+    }, function (err, inst) {
+        if(err || !inst){
+            res.send({success:'ERROR',msg:err||'新增公司信息发生异常！'}) ;
+        }else{
+           res.send({success:'OK',inst:inst}) ;
+        }
     });
 }
