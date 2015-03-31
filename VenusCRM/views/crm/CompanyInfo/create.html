@@ -1,0 +1,108 @@
+<!--页面内容-->
+<div class="page_box">
+    <div class="column form-column main col col-sm-9 form-horizontal">
+        <h1> <span class="label label-info">
+      <img src="/images/man.png"/>
+      <img src="/images/queue.png"/>当前正在创建新的公司信息</span></h1>
+
+        <div class="panel panel-default fieldset">
+            <div class="formStyle">
+                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                    <input type="hidden" id='id' name='id' value=""/>
+                    <table>
+                        <colgroup>
+                            <col style="width:20%">
+                        </colgroup>
+                        <tr>
+                            <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">基本设置</th>
+                        </tr>
+                        <tr>
+                            <th>公司名称</th>
+                            <td>
+                                <input type="text" id='companyName' name='companyName' class="form-control input-sm"
+                                       placeholder="请输入公司名称。" datatype="*" errormsg="不能为空！"
+                                        />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>联系电话</th>
+                            <td>
+                                <input type="text" id="telphones" name="telphones" class="form-control input-sm"
+                                       placeholder="请输入联系电话，多个用,号分开。" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>联系地址</th>
+                            <td>
+                                <input type="text" id="companyAddr" name="companyAddr" class="form-control input-sm"
+                                       placeholder="请输入联系地址。" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                公司网址
+                            </th>
+                            <td>
+                                <input class="form-control input-sm datetimepicker" id="url" name="url" placeholder="请输入公司网址。" />
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <th>
+                                备注
+                            </th>
+                            <td>
+                                <input type="text" id="companyMemo" name="companyMemo" class="form-control input-sm"
+                                       placeholder="记录一些关于该公司的额外信息。" />
+                            </td>
+
+                        </tr>
+
+
+                    </table>
+                </form>
+            </div>
+            <div class="panel-footer text-center">
+                <button class="btn btn-primary active" id='savebtn'>保存</button>
+                <a href="/crm/CompanyInfo" class="btn btn-default" role="button">返回</a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+        <script type='text/javascript'>
+
+            $(function () {
+                $(".tipmsg").tooltip({placement: 'auto'});
+                $('#form1').Validform();
+                $('#savebtn').click(function (e) {
+                    if ($('#form1').Validform().check()) {
+                        $.ajax({
+                            cache: true,
+                            type: "POST",
+                            url: '<%- baseurl%>/save',
+                            data: $('#form1').serialize(),// 你的formid
+                            async: false,
+                            error: function (request) {
+                                $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                            },
+                            success: function (data) {
+                                if (data.success === 'OK') {
+                                    $('#id').val(data.id);
+                                }
+                                $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                            }
+                        });
+                    } else {
+                        $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+                    }
+
+                });
+
+            });
+
+        </script>
