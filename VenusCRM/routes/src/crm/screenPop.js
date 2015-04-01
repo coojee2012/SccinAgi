@@ -279,7 +279,7 @@ posts.saveRecords=function(req, res, next, baseurl){
             } else if (results.updateOld !== -1) {
                 myjson.success = 'OK';
                 myjson.msg = '修改成功!';
-                myjson.id = results.updateOld.id;
+                myjson.id = Obj.id;
 
             } else if (err) {
                 console.log(err);

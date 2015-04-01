@@ -40,7 +40,7 @@ gets.create = function (req, res, next, baseurl) {
 gets.edit = function (req, res, next, baseurl) {
     var id = req.query.id;
     async.auto({
-        findUser: function (cb) {
+        findInst: function (cb) {
             Schemas.crmCompanyInfo.findOne({
                 where:{id:id}
             }, function (err, inst) {
@@ -61,7 +61,7 @@ gets.edit = function (req, res, next, baseurl) {
             baseurl: baseurl,
             displayStart:req.query.displayStart || 0,
             where:req.query.where || "",
-            inst: results.findUser || {}
+            inst: results.findInst || {}
         });
     });
 }
@@ -75,8 +75,8 @@ posts.save = function (req, res, next, baseurl) {
     //console.log(Obj);
     async.auto({
             isHaveCheck: function (cb) {
-                if (!Obj.customName || Obj.customName === '') {
-                    cb('姓名不能为空', -1);
+                if (!Obj.companyName || Obj.companyName === '') {
+                    cb('公司名称不能为空', -1);
                 } else {
                     Schemas.crmCompanyInfo.find(Obj.id, function (err, inst) {
                         cb(err, inst);

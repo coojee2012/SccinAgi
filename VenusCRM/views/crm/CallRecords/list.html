@@ -1,0 +1,150 @@
+<div class="layout_main">
+    <div class="page_box">
+        <div class="column form-column main col form-horizontal">
+            <div class="panel panel-default fieldset">
+
+                <div class="panel-body ">
+                    <div class="form-group">
+
+                        <label for="record" class="control-label col-sm-2">服务内容</label>
+                        <div class="controls  col-sm-3">
+                            <input type="text" value="" name="record" id="record" class="form-control input-sm">
+                        </div>
+                        <label for="callNumber" class="control-label col-sm-2">关联电话</label>
+                        <div class="controls  col-sm-3">
+                            <input type="text" value="" name="callNumber" id="callNumber" class="form-control input-sm">
+                        </div>
+                        <div class="controls  col-sm-2">
+                            <input type="button" class="btn btn-primary btn-sm" id="search" value="查询">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-striped table-hover table-condensed table-bordered" id="datatable">
+    <!--   <colgroup>
+    <col style="width: 15%;">
+    <col style="width: 15%;">
+    <col style="width: 35%;">
+    <col style="width: 20%;">
+    <col style="width: 15%;">
+    </colgroup> -->
+    <thead>
+    <tr>
+        <th class="text-center">服务时间</th>
+        <th class="text-center">内容</th>
+        <th class="text-center">相关电话</th>
+        <th class="text-center">公司名称</th>
+        <th class="text-center">联系人姓名</th>
+        <th class="text-center"><span class="print">操作</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    <tfoot>
+    <tr>
+        <th class="text-center">服务时间</th>
+        <th class="text-center">内容</th>
+        <th class="text-center">相关电话</th>
+        <th class="text-center">公司名称</th>
+        <th class="text-center">联系人姓名</th>
+        <th class="text-center"><span class="print">操作</span></th>
+    </tr>
+    </tfoot>
+</table>
+</div>
+
+
+
+<%- include ../../listsuredelmodal.html %>
+<%- include ../../listtable.html %>
+<%- include ../../listbasefunc.html %>
+
+<script type="text/javascript">
+
+    function getWhere() {
+        var where = {};
+        where.dbName = '<%= modename%>';
+//gt > gete >=  lt  < lte <=   inq IN nin NOT IN neq  != like  LIKE
+        where.whereCount = 2;//添加需要查询的条件个数
+        where.whereCol_0 = 'record';
+        where.whereWay_0 = 'like';
+        where.whereValue_0 = '%' + $('#record').val() + '%';
+
+        where.whereCol_1 = 'callNumber';
+        where.whereWay_1 = 'like';
+        where.whereValue_1 =  '%' + $('#callNumber').val() + '%';
+
+        return where;
+    }
+
+    function getToolWhere() {
+        var where = getWhere();
+        var toolswhere = {};
+        for (var key in where) {
+            toolswhere[key] = where[key];
+        }
+
+        toolswhere.sColumns = '';
+
+        var colums = getColums();
+        toolswhere.iSortingCols = 0;
+        for (var i = 0; i < colums.length; i++) {
+            if (toolswhere.sColumns !== '')
+                toolswhere.sColumns += ',' + colums[i].mData;
+            else
+                toolswhere.sColumns = colums[i].mData;
+
+            if (colums[i].asSorting && colums[i].asSorting.length > 0) {
+                toolswhere['iSortCol_' + toolswhere.iSortingCols] = toolswhere.iSortingCols;
+                toolswhere['sSortDir_' + toolswhere.iSortingCols] = colums[i].asSorting[0];
+                toolswhere['bSortable_' + toolswhere.iSortingCols] = colums[i].bSortable;
+
+                toolswhere.iSortingCols++;
+
+            }
+
+        }
+
+        toolswhere.iDisplayStart = 0;
+        toolswhere.iDisplayLength = -1;
+        return toolswhere;
+    }
+
+    //设置默认排序列
+    function getaaSorting() {
+        return [
+            [4, 'desc']
+        ];
+    }
+
+    function getColums() {
+        var colums = [
+            {"asSorting": [ "desc" ], "sClass": 'center', "sName": "createTime", "mData": "createTime", "bSortable": true, "bVisible": true, "aTargets": [0] },
+            { "sClass": 'center', "sName": "record", "mData": "record", "bSortable": false, "bVisible": true, "aTargets": [1] },
+            { "sClass": 'center', "sName": "callNumber", "mData": "callNumber", "bSortable": false, "bVisible": true, "aTargets": [2] },
+            { "sClass": 'center', "sName": "companyId", "mData": "companyId", "bSortable": false, "bVisible": true, "aTargets": [3],"mRender": function (data, type, full) {
+                if(full && full!=null && full.company!=null){
+                    return full.company.companyName;
+                }else{
+                    return "";
+                }
+            } },
+            { "sClass": 'center', "sName": "customId", "mData": "customId", "bSortable": false, "bVisible": true, "aTargets": [4],"mRender": function (data, type, full) {
+                if(full && full!=null && full.custom!=null){
+                    return full.custom.customName;
+                }else{
+                    return "";
+                }
+            } },
+
+            { "sClass": 'center', "sName": "id", "mData": "id", "bSortable": false, "bVisible": true, "aTargets": [5], "mRender": function (data, type, full) {
+                var str = '<a class="btn btn-primary btn-xs print" href="javascript:editBase(\''+data+'\',\'<%- baseurl%>/edit\')">编辑</a>';
+                return str;
+            }}
+        ];
+        return colums;
+    }
+</script>
