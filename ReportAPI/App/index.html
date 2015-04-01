@@ -288,7 +288,7 @@
         $('#dd').dialog('close');
         CheckConfigDir().then(function (dir) {
             $("#menmus").tree({
-                url: "./view/menmu.json",
+                url: "./views/menmu.json",
                 method: 'get',
                 animate: true,
                 lines: true,
@@ -296,7 +296,7 @@
                     if (node.attributes && node.attributes.url) {
                         $("#content").panel({
                             title: node.text || "",
-                            href: "./view/" + node.attributes.url,
+                            href: "./views/" + node.attributes.url,
                             onLoad: function () {
                                 //alert(node.id);
                             }
@@ -312,7 +312,7 @@
                 reportApp.server = new reportApp.Server(config);
         }).then(function () {
             $("#content").panel({
-                href: './view/index.html',
+                href: './views/index.html',
                 onLoad: function () {
                     reportApp.server.start(function (err) {
                         if(!err){
@@ -335,7 +335,7 @@
                 alert("应用程序未能加载配置文件，请先设置相关配置！");
                 $("#content").panel({
                     title: '服务配置',
-                    href: './view/config.html',
+                    href: './views/config.html',
                     onLoad: function () {
                     }
                 });
