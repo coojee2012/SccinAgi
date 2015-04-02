@@ -1,4 +1,4 @@
 SccinAgi
 ========
 
-The Agi for Sccin
+The Agi for Venus
