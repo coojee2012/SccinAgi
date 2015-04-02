@@ -1,5 +1,5 @@
 {
-	"port" : 4574,
+	"port" : 4573,
 	"line" : "SIP/",
 	"timeout":30,
 	"dialoptions":"tr",

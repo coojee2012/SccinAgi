@@ -6,6 +6,6 @@
 	"phone" : "root",
 	"email" : "12345678",
 	"env":"development",
-	"appbase":"D:\\GitHub\\SccinAgi\\SccinAGI",
+	"appbase":"/opt/SccinAgi/VenusAGI",
 	"debug":true
 }
