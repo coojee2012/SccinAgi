@@ -1,11 +1,3 @@
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var Actions=require('./IvrActions');
-var Inputs=require('./IvrInputs');*/
-
 var pbxIvrMenmu=schema.define('pbxIvrMenmu',{
 	ivrname:   {type:String,length:50},
 	description:   {type:String,length:150},

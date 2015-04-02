@@ -23,7 +23,7 @@ var pbxQueue=schema.define('pbxQueue',{
                   ;wrandom   :(V1.6)
                   **/
 	wrapuptime:     {type:Number,default: function () { return 0; }},//接到一个call后，需要等待多长时间方置坐席为空闲
-	timeout:    {type:Number,default: function () { return 0;}},//呼叫坐席超时
+	timeout:    {type:Number,default: function () { return 0; }},//呼叫坐席超时
 	musicclass:   {type:String,length:50,default: function () { return 'default'; }},//背景音乐
 	retry:   {type:Number,default: function () { return 0; }},//表示队列呼叫失败后，给多少秒再重新呼叫分机的振铃时间，一般设置为0 
 	joinempty: {type:String,length:50,default: function () { return 'no'; }},//是允许否加入空队列-yes or no
