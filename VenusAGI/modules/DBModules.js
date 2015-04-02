@@ -266,14 +266,6 @@ pbxIvrInputs.Name='pbxIvrInputs';
 schema.models.pbxIvrInputs;
 exports.pbxIvrInputs = pbxIvrInputs;
 Dbs.pbxIvrInputs = pbxIvrInputs;
-/*var Schema = require('jugglingdb').Schema;
-var moment = require('moment');
-var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
-var schema = require(basedir+'/database/jdmysql').schema;
-var Actions=require('./IvrActions');
-var Inputs=require('./IvrInputs');*/
-
 var pbxIvrMenmu=schema.define('pbxIvrMenmu',{
 	ivrname:   {type:String,length:50},
 	description:   {type:String,length:150},
@@ -346,7 +338,7 @@ var pbxQueue=schema.define('pbxQueue',{
                   ;wrandom   :(V1.6)
                   **/
 	wrapuptime:     {type:Number,default: function () { return 0; }},//接到一个call后，需要等待多长时间方置坐席为空闲
-	timeout:    {type:Number,default: function () { return 0;}},//呼叫坐席超时
+	timeout:    {type:Number,default: function () { return 0; }},//呼叫坐席超时
 	musicclass:   {type:String,length:50,default: function () { return 'default'; }},//背景音乐
 	retry:   {type:Number,default: function () { return 0; }},//表示队列呼叫失败后，给多少秒再重新呼叫分机的振铃时间，一般设置为0 
 	joinempty: {type:String,length:50,default: function () { return 'no'; }},//是允许否加入空队列-yes or no
@@ -365,15 +357,15 @@ var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;*/
 var pbxRcordFile=schema.define('pbxRcordFile',{
 	id:{type:String,length:100,default:function(){return guid.create();}},//关联CDR
-	filename:   {type:String,length:50},
-	extname:    {type:String,length:50},
-	filesize:   {type:Number,default:function () { return 0; }},
-	calltype:   {type:String,length:50},
+	filename:   {type:String,length:50}, //文件名
+	extname:    {type:String,length:50}, //扩展名
+	filesize:   {type:Number,default:function () { return 0; }},//文件大小
+	calltype:   {type:String,length:50}, //主叫类型
 	lable:   {type:String,length:50},//录音类型，queue,exten,ivr,voicemail等
-	cretime:    {type: String, default: function () { return moment().unix(); }},
-	extennum:   {type:String,length:50},
-	folder:     {type:String,length:50},
-	callnumber: {type:String,length:50},
+	cretime:    {type: String, default: function () { return moment().unix(); }},//创建时间
+	extennum:   {type:String,length:50},//被叫
+	folder:     {type:String,length:50}, //目录
+	callnumber: {type:String,length:50}, //主叫
 	doymicac:   {type:String,length:50}
 });
 pbxRcordFile.Name='pbxRcordFile';
@@ -416,70 +408,18 @@ var guid = require('guid');
 var conf = require('node-conf');
 var basedir = conf.load('app').appbase;
 var schema = require(basedir+'/database/jdmysql').schema;*/
-var pbxScreenPop = schema.define('pbxScreenPop', {
-	callernumber: {
-		type: String,
-		length: 50,
-		default: function() {
-			return '';
-		}
-	}, //主叫
-	callednumber: {
-		type: String,
-		length: 50,
-		default: function() {
-			return '';
-		}
-	}, //被叫
-	extensionnumber: {
-		type: String,
-		length: 50,
-		default: function() {
-			return '';
-		}
-	},
-	sessionnumber: {
-		type: String,
-		length: 50,
-		default: function() {
-			return '';
-		}
-	}, //本次呼叫会话编号
-	updatetime: {
-		type: String,
-		default: function() {
-			return moment().format("YYYY-MM-DD HH:mm:ss");
-		}
-	},
-	status: {
-		type: String,
-		length: 10,
-		default: function() {
-			return 'over';
-		}
-	}, //弹出类型:waite,over
-	routerdype: {
-		type: Number,
-		default: function() {
-			return 1;
-		}
-	}, //呼叫路由1内线2外线
-	parked: {
-		type: String,
-		length: 50,
-		default: function() {
-			return 'not';
-		}
-	}, //保持状态：yes ,not
-	poptype: {
-		type: String,
-		length: 50,
-		default: function() {
-			return '';
-		}
-	} //弹出类型:diallocal,dialout,dialqueue
+var pbxScreenPop=schema.define('pbxScreenPop',{
+	callernumber:   {type:String,length:50,default:function () { return ''; }},//主叫
+	callednumber:   {type:String,length:50,default:function () { return ''; }},//被叫
+	extensionnumber:{type:String,length:50,default:function () { return ''; }},
+	sessionnumber:   {type:String,length:50,default:function () { return ''; }},//本次呼叫会话编号
+	updatetime:   {type: String, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	status:   {type:String,length:10,default:function () { return 'over'; }},//弹出类型:waite,over
+	routerdype:   {type:Number,default:function () { return 1; }},//呼叫路由1内线2外线
+	parked:   {type:String,length:50,default:function () { return 'not'; }},//保持状态：yes ,not
+	poptype:    {type:String,length:50,default:function () { return ''; }}//弹出类型:diallocal,dialout,dialqueue
 });
-pbxScreenPop.Name = 'pbxScreenPop';
+pbxScreenPop.Name='pbxScreenPop';
 schema.models.pbxScreenPop;
 exports.pbxScreenPop = pbxScreenPop;
 Dbs.pbxScreenPop = pbxScreenPop;
@@ -544,23 +484,33 @@ Dbs.pbxMobileCode=pbxMobileCode;
 /**
 黑名单
 **/
-var pbxBlackList=schema.define('pbxBlackList',{
+var pbxBlacList=schema.define('pbxBlacList',{
 	memo:{type:String,length:50,default: function () { return ''; }},//添加成黑名单的原因
 	cretime: {type:String,length:100,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
 });
-pbxBlackList.Name='pbxBlackList';
-schema.models.pbxBlackList;
-exports.pbxBlackList = pbxBlackList;
-Dbs.pbxBlackList=pbxBlackList;
+pbxBlacList.Name='pbxBlacList';
+schema.models.pbxBlacList;
+exports.pbxBlacList = pbxBlacList;
+
+Dbs.pbxBlacList=pbxBlacList;
 var crmCallRecords = schema.define('crmCallRecords', {
-    CallInfoID:     { type: String, length: 50},//呼叫编号
-    ProjMoveID:{type: String, length: 50},//项目编号
-    CallState:   { type: Number,default:0 },//是否呼叫标志0：未呼叫，1：已经呼叫
-    WorkTime:   { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
+    companyId: {type: String, length: 50},//企业编号
+    customId: {type: String, length: 50},//客户编号
+    userId: {type: Number, default: 0},//用户编号
+    poptype:{type: String, length: 10,default:'呼入'},//呼叫方向
+    callNumber:{type: Number, default:''},
+    recordType:{type: String, length: 10},
+    record:{type: String, length: 500},
+    createTime: {
+        type: String, length: 50, default: function () {
+            return moment().format("YYYY-MM-DD HH:mm:ss");
+        }
+    }//操作时间
 });
-
-crmCallRecords.Name='crmCallRecords';
-
+crmCallRecords.belongsTo(crmCompanyInfo, {as: 'company', foreignKey: 'companyId'});
+crmCallRecords.belongsTo(crmCustomInfo, {as: 'custom', foreignKey: 'customId'});
+crmCallRecords.belongsTo(manageUserInfo, {as: 'user', foreignKey: 'userId'});
+crmCallRecords.Name = 'crmCallRecords';
 
 
 schema.models.crmCallRecords;
@@ -686,21 +636,45 @@ crmVoiceContent.Name='crmVoiceContent';
 schema.models.crmVoiceContent;
 exports.crmVoiceContent = crmVoiceContent;
 Dbs.crmVoiceContent = crmVoiceContent;
-var pbxAutoMonitorWays=schema.define('pbxAutoMonitorWays',{
-	id:{type:String,length:100,default:function(){return guid.create();}},
-    wayName:   {type:String,length:50},//录音方式名称
-	recordout: {type:String,length:10,default: function () { return '是'; }},//呼出录音
-	recordin:  {type:String,length:10,default: function () { return '是'; }},//呼入录音
-	recordqueue:{type:String,length:10,default: function () { return '是'; }},//作为队列分机接听录音
-	keepfortype:{type:String,length:10,default: function () { return '永久保存'; }},//保存方式：永久保存,按时间，按条数
-	keepforargs: {type:Number,default: function () { return 100; }},//保存方式参数，永久保存无效
-	members: {type:String,length:50},//分机成员，一个分机只能有一个录音方式
-	cretime: {type:String,length:100,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+var crmCompanyInfo= schema.define('crmCompanyInfo', {
+    companyName:{type: String, length: 100},//公司名称
+    companyAddr:{type:String,length:200,default:''},
+    telphones:{type: String, length: 50,default:''},
+    url:{type: String, length: 50,default:''},
+    companyMemo:{type: String, length: 200,default:''},
+    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
 });
-pbxAutoMonitorWays.Name='pbxAutoMonitorWays';
-schema.models.pbxAutoMonitorWays;
-exports.pbxAutoMonitorWays = pbxAutoMonitorWays;
-Dbs.pbxAutoMonitorWays=pbxAutoMonitorWays;
+
+crmCompanyInfo.Name='crmCompanyInfo';
+
+
+
+schema.models.crmCompanyInfo;
+
+
+exports.crmCompanyInfo = crmCompanyInfo;
+Dbs.crmCompanyInfo = crmCompanyInfo;
+var crmCustomInfo= schema.define('crmCustomInfo', {
+    customName:{type: String, length: 50},//项目编号
+    position:{type: String, length: 50},
+    sex:{type:String,length:10,default: '男'},
+    birthday:{type: String, length: 50},
+    phones:{type: String, length: 50},
+    customMemo:{type: String, length: 200,default:''},
+    customAddr:{type: String, length: 100},
+    companyId:   { type: String, length: 50,default:"" },//公司编号
+    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
+});
+crmCustomInfo.belongsTo(crmCompanyInfo, {as: 'company', foreignKey: 'companyId'});
+crmCustomInfo.Name='crmCustomInfo';
+
+
+
+schema.models.crmCustomInfo;
+
+
+exports.crmCustomInfo = crmCustomInfo;
+Dbs.crmCustomInfo = crmCustomInfo;
 exports.Dbs = Dbs;
 
 /*    if (appconf.debug) {

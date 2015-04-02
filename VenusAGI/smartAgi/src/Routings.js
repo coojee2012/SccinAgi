@@ -2944,7 +2944,7 @@ routing.prototype.router = function() {
       function(cb, results) {
         schemas.pbxRouter.all({
           where: {
-            routerline: args.routerline,
+            routerline: args.routerline
           },
           order: ['proirety asc']
         }, function(err, insts) {
@@ -3854,7 +3854,7 @@ routing.prototype.voiceNoticeCallback = function() {
     var args = self.args;
     var vars = self.vars;
 
-    context.Playback('/home/share/' + args.fileID + '-api.wav', function(err, response) {
+    context.Playback('/home/share/' + args.fileID + '-api', function(err, response) {
         if(err){
             context.hangup(function(err, response) {});
         }else{
