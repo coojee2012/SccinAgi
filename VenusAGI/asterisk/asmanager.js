@@ -1,4 +1,4 @@
-var Nami=require("lib/nami.js").Nami;
+var Nami=require(__dirname+"/nami.js").Nami;
 var conf = require('node-conf');
 var nami = new Nami(conf.load('asterisk'));
 nami.on('namiEvent', function (event) {
