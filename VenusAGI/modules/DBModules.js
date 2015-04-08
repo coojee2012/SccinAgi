@@ -493,6 +493,209 @@ schema.models.pbxBlacList;
 exports.pbxBlacList = pbxBlacList;
 
 Dbs.pbxBlacList=pbxBlacList;
+/*var Schema = require('jugglingdb').Schema;
+var moment = require('moment');
+var guid = require('guid');
+var conf = require('node-conf');
+var basedir = conf.load('app').appbase;
+var schema = require(basedir+'/database/jdmysql').schema;*/
+//var manageUserInfo=require('./UserInfo');
+
+var manageDepartments=schema.define('manageDepartments',{
+	id:{type:String,length:100,default:function(){return guid.create();}},
+	depName:   {type:String,length:50},
+	crtTime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastModify:  {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	memo:    {type:String,length:200}
+});
+
+//manageDepartments.hasMany(manageUserInfo, {as: 'users',foreignKey:'depId'});
+
+
+manageDepartments.validatesPresenceOf('depName');//验证非空
+//manageDepartments.validatesLengthOf('uPass', {min: 4, message: {min: '注册密码必须4位以上'}});//验证长度
+//manageDepartments.validatesInclusionOf('deviceproto', {in: ['SIP', 'IAX2','VIRTUAL']});//验证是否在给定几个值
+//manageDepartments.validatesNumericalityOf('uPhone','uExten', {int: true});//验证未数字
+
+manageDepartments.Name='manageDepartments';
+schema.models.manageDepartments;
+exports.manageDepartments = manageDepartments;
+Dbs.manageDepartments = manageDepartments;
+/*var Schema = require('jugglingdb').Schema;
+var moment = require('moment');
+var guid = require('guid');
+var conf = require('node-conf');
+var basedir = conf.load('app').appbase;
+var schema = require(basedir+'/database/jdmysql').schema;*/
+
+var manageMenmuRoleRelations=schema.define('manageMenmuRoleRelations',{
+	id:{type:String,length:100,default:function(){return guid.create();}},
+	roleId:   {type:String,length:100},
+	menmuID:  {type:String,length:100},
+	crtTime:  {type:String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+});
+
+manageMenmuRoleRelations.Name='manageMenmuRoleRelations';
+schema.models.manageMenmuRoleRelations;
+exports.manageMenmuRoleRelations = manageMenmuRoleRelations;
+Dbs.manageMenmuRoleRelations = manageMenmuRoleRelations;
+var manageMenmuGroup=schema.define('manageMenmuGroup',{
+    id:{type:String,length:100,default:function(){return guid.create();}},
+    groupName:   {type:String,length:50},
+    crtTime:   {type: String,length:50,index: true, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+});
+
+
+
+
+manageMenmuGroup.validatesPresenceOf('groupName');//验证非空
+
+manageMenmuGroup.Name='manageMenmuGroup';
+schema.models.manageMenmuGroup;
+exports.manageMenmuGroup = manageMenmuGroup;
+Dbs.manageMenmuGroup = manageMenmuGroup;
+/*var Schema = require('jugglingdb').Schema;
+var moment = require('moment');
+var guid = require('guid');
+var conf = require('node-conf');
+var basedir = conf.load('app').appbase;
+var schema = require(basedir+'/database/jdmysql').schema;
+var manageUserRole=require('./UserRole');
+var manageDepartments=require('./Departments');*/
+
+var manageMenmus=schema.define('manageMenmus',{
+	id:{type:String,length:100,default:function(){return guid.create();}},
+	menName:   {type:String,length:50},
+	menURL:    {type:String,length:150},
+	iconName:  {type:String,length:150},
+    mgID:      {type: String, length:100},
+	crtTime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	width:	{type:Number,default:function () { return 960 }},
+	height:	{type:Number,default:function () { return 540 }},
+	ordernum:	{type:Number,default:function () { return 0 }}
+});
+
+
+manageMenmus.belongsTo(manageMenmuGroup, {as: 'menmugroup', foreignKey: 'mgID'});
+
+manageMenmuGroup.hasMany(manageMenmus, {as:'menmus',foreignKey: 'mgID'});
+
+manageMenmus.validatesPresenceOf('menName', 'menURL','iconName');//验证非空
+
+manageMenmus.Name='manageMenmus';
+schema.models.manageMenmus;
+exports.manageMenmus = manageMenmus;
+Dbs.manageMenmus = manageMenmus;
+/*var Schema = require('jugglingdb').Schema;
+var moment = require('moment');
+var guid = require('guid');
+var conf = require('node-conf');
+var basedir = conf.load('app').appbase;
+var schema = require(basedir+'/database/jdmysql').schema;
+var manageMenmuRoleRelations=require('./MenmuRoleRelations');*/
+
+var manageUserRole=schema.define('manageUserRole',{
+	id:{type:String,length:100,default:function(){return guid.create();}},
+	roleName:   {type:String,length:50},
+	isAgent:{type: String,length:10, default: function () { return '否' }},
+	hasPtions:   {type: Number, default: function () { return 0 }},
+	crtTime:   {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastModify:  {type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	memo:    {type:String,length:200}
+});
+
+manageUserRole.hasMany(manageMenmuRoleRelations, {as: 'users',foreignKey:'roleId'});
+
+
+manageUserRole.validatesPresenceOf('roleName');//验证非空
+//manageUserRole.validatesLengthOf('uPass', {min: 4, message: {min: '注册密码必须4位以上'}});//验证长度
+//manageUserRole.validatesInclusionOf('deviceproto', {in: ['SIP', 'IAX2','VIRTUAL']});//验证是否在给定几个值
+//manageUserRole.validatesNumericalityOf('uPhone','uExten', {int: true});//验证未数字
+
+manageUserRole.Name='manageUserRole';
+schema.models.manageUserRole;
+exports.manageUserRole = manageUserRole;
+Dbs.manageUserRole = manageUserRole;
+/*var Schema = require('jugglingdb').Schema;
+var moment = require('moment');
+var guid = require('guid');
+var conf = require('node-conf');
+var basedir = conf.load('app').appbase;
+var schema = require(basedir+'/database/jdmysql').schema;
+var manageUserRole=require('./UserRole');
+var manageDepartments=require('./Departments');
+*/
+var manageUserInfo=schema.define('manageUserInfo',{
+	id:{type:String,length:100,default:function(){return guid.create();}},
+	uName:   {type:String,length:50},
+	uCard:    {type:String,length:100},
+	uSex:  {type:String,length:10,default:function () { return '男' }},
+	uLogin:   {type:String,length:50},
+	uPass:	{type:String,length:100},
+	uPhone:{type:String,length:50},
+	uWorkNum:{type:String,length:50},
+	uExten:	{type:String,length:10},
+	uAddr:{type:String,length:200},
+	readOnly:{type:String,length:10,default:function () { return '否' }},
+    roleId:{type:String,length:100},
+    depId:{type:String,length:100},
+	uMemo:{type:String,length:50},
+	crtTime:{type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastChangeTime:{type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }},
+	lastLoginTime:{type: String,length:50, default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); }}
+});
+
+manageUserInfo.belongsTo(manageUserRole, {as: 'role', foreignKey: 'roleId'});
+manageUserInfo.belongsTo(manageDepartments, {as: 'department', foreignKey: 'depId'});
+
+manageUserInfo.validatesPresenceOf('uLogin','uName', 'uPass','uExten');//验证非空
+manageUserInfo.validatesLengthOf('uPass', {min: 4, message: {min: '注册密码必须4位以上'}});//验证长度
+//manageUserInfo.validatesInclusionOf('deviceproto', {in: ['SIP', 'IAX2','VIRTUAL']});//验证是否在给定几个值
+//manageUserInfo.validatesNumericalityOf('uPhone','uExten', {int: true});//验证未数字
+
+manageUserInfo.Name='manageUserInfo';
+schema.models.manageUserInfo;
+exports.manageUserInfo = manageUserInfo;
+Dbs.manageUserInfo = manageUserInfo;
+var crmCompanyInfo= schema.define('crmCompanyInfo', {
+    companyName:{type: String, length: 100},//公司名称
+    companyAddr:{type:String,length:200,default:''},
+    telphones:{type: String, length: 50,default:''},
+    url:{type: String, length: 50,default:''},
+    companyMemo:{type: String, length: 200,default:''},
+    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
+});
+
+crmCompanyInfo.Name='crmCompanyInfo';
+
+
+
+schema.models.crmCompanyInfo;
+
+
+exports.crmCompanyInfo = crmCompanyInfo;
+Dbs.crmCompanyInfo = crmCompanyInfo;
+var crmCustomInfo= schema.define('crmCustomInfo', {
+    customName:{type: String, length: 50},//项目编号
+    position:{type: String, length: 50},
+    sex:{type:String,length:10,default: '男'},
+    birthday:{type: String, length: 50},
+    phones:{type: String, length: 50},
+    customMemo:{type: String, length: 200,default:''},
+    customAddr:{type: String, length: 100},
+    companyId:   { type: String, length: 50,default:"" },//公司编号
+    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
+});
+crmCustomInfo.belongsTo(crmCompanyInfo, {as: 'company', foreignKey: 'companyId'});
+crmCustomInfo.Name='crmCustomInfo';
+
+
+
+schema.models.crmCustomInfo;
+
+
+exports.crmCustomInfo = crmCustomInfo;
+Dbs.crmCustomInfo = crmCustomInfo;
 var crmCallRecords = schema.define('crmCallRecords', {
     companyId: {type: String, length: 50},//企业编号
     customId: {type: String, length: 50},//客户编号
@@ -636,45 +839,6 @@ crmVoiceContent.Name='crmVoiceContent';
 schema.models.crmVoiceContent;
 exports.crmVoiceContent = crmVoiceContent;
 Dbs.crmVoiceContent = crmVoiceContent;
-var crmCompanyInfo= schema.define('crmCompanyInfo', {
-    companyName:{type: String, length: 100},//公司名称
-    companyAddr:{type:String,length:200,default:''},
-    telphones:{type: String, length: 50,default:''},
-    url:{type: String, length: 50,default:''},
-    companyMemo:{type: String, length: 200,default:''},
-    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
-});
-
-crmCompanyInfo.Name='crmCompanyInfo';
-
-
-
-schema.models.crmCompanyInfo;
-
-
-exports.crmCompanyInfo = crmCompanyInfo;
-Dbs.crmCompanyInfo = crmCompanyInfo;
-var crmCustomInfo= schema.define('crmCustomInfo', {
-    customName:{type: String, length: 50},//项目编号
-    position:{type: String, length: 50},
-    sex:{type:String,length:10,default: '男'},
-    birthday:{type: String, length: 50},
-    phones:{type: String, length: 50},
-    customMemo:{type: String, length: 200,default:''},
-    customAddr:{type: String, length: 100},
-    companyId:   { type: String, length: 50,default:"" },//公司编号
-    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
-});
-crmCustomInfo.belongsTo(crmCompanyInfo, {as: 'company', foreignKey: 'companyId'});
-crmCustomInfo.Name='crmCustomInfo';
-
-
-
-schema.models.crmCustomInfo;
-
-
-exports.crmCustomInfo = crmCustomInfo;
-Dbs.crmCustomInfo = crmCustomInfo;
 exports.Dbs = Dbs;
 
 /*    if (appconf.debug) {

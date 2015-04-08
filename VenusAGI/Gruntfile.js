@@ -71,6 +71,9 @@ module.exports = function(grunt) {
                     'modules/src/manage/Menmus.js',
                     'modules/src/manage/UserRole.js',
                     'modules/src/manage/UserInfo.js',
+'modules/src/crm/CompanyInfo.js',
+                    'modules/src/crm/CustomInfo.js',
+
                     'modules/src/crm/CallRecords.js',
                     'modules/src/crm/CallPhone.js',
                     'modules/src/crm/CallLog.js',
@@ -78,8 +81,6 @@ module.exports = function(grunt) {
                     'modules/src/crm/KeyType.js',
                     'modules/src/crm/UserKeysRecord.js',
                     'modules/src/crm/VoiceContent.js',
-                    'modules/src/crm/CompanyInfo.js',
-                    'modules/src/crm/CustomInfo.js',
           'modules/src/DBEnd.js'
         ],
         dest: 'modules/DBModules.js'

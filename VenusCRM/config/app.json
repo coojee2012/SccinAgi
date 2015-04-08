@@ -8,7 +8,7 @@
 
     "hostport": 3001,
 
-    "appbase": "E:/GitHub/Venus/VenusCRM",
+    "appbase": "/opt/SccinAgi/VenusCRM",
 
     "monitor": "/var/spool/asterisk/monitor/",
 
