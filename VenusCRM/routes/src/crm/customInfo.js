@@ -161,6 +161,10 @@ posts.save = function (req, res, next, baseurl) {
         });
 }
 
+
+
+
+
 posts.searchCompany = function (req, res, next, baseurl) {
     var companyName = req.body.name;
     Schemas.crmCompanyInfo.all({
