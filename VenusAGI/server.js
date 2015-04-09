@@ -1,16 +1,16 @@
-var AGI = require('./lib/index');
-var nami = require(__dirname + '/asterisk/asmanager').nami;
+var AGI = require(__dirname +'/../VenusLib/agi/index');
+var nami = require(__dirname + '/../VenusLib/ami/asmanager').nami;
 var conf = require('node-conf');
 var logconf = conf.load('log4js');
 var agiconf = conf.load('fastagi');
 var moment = require('moment');
-var routing = require('./smartAgi/src/Routings');
+var routing = require(__dirname +'/smartAgi/src/Routings');
 //var Schemas = require('./database/schema').Schemas;
 var log4js = require('log4js');
 log4js.configure(logconf, agiconf);
 var logger = log4js.getLogger('agi');
 logger.setLevel('DEBUG');
-var Schemas = require('./database/schema').Schemas;
+var Schemas = require(__dirname +'/database/schema').Schemas;
 
 var server = AGI.createServer(function(context) {
 

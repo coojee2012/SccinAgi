@@ -1,2 +1,2 @@
-/*! 路由处理程序 2015-03-31 */
-exports.list=function(a,b){b.send("respond with a resource")};
+/*! 路由处理程序 2015-04-09 */
+exports.list=function(a,b,c){b.send("respond with a resource")};

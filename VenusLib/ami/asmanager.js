@@ -1,6 +1,10 @@
-var Nami=require(__dirname+"/nami.js").Nami;
-var conf = require('node-conf');
-var nami = new Nami(conf.load('asterisk'));
+var Nami=require(__dirname+"/lib/nami.js").Nami;
+var nami = new Nami({
+    "host": "192.168.2.88",
+    "port": 5038,
+    "username": "admin",
+    "secret": "admin"
+});
 nami.on('namiEvent', function (event) {
 	//console.log(event);
 });

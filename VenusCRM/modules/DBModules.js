@@ -672,11 +672,51 @@ manageUserInfo.Name='manageUserInfo';
 schema.models.manageUserInfo;
 exports.manageUserInfo = manageUserInfo;
 Dbs.manageUserInfo = manageUserInfo;
+var crmCompanyInfo= schema.define('crmCompanyInfo', {
+    companyName:{type: String, length: 100},//公司名称
+    companyAddr:{type:String,length:200,default:''},
+    telphones:{type: String, length: 50,default:''},
+    url:{type: String, length: 50,default:''},
+    companyMemo:{type: String, length: 200,default:''},
+    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
+});
+
+crmCompanyInfo.Name='crmCompanyInfo';
+
+
+
+schema.models.crmCompanyInfo;
+
+
+exports.crmCompanyInfo = crmCompanyInfo;
+Dbs.crmCompanyInfo = crmCompanyInfo;
+var crmCustomInfo= schema.define('crmCustomInfo', {
+    customName:{type: String, length: 50},//项目编号
+    position:{type: String, length: 50},
+    sex:{type:String,length:10,default: '男'},
+    birthday:{type: String, length: 50},
+    phones:{type: String, length: 50},
+    customMemo:{type: String, length: 200,default:''},
+    customAddr:{type: String, length: 100},
+    companyId:   { type: String, length: 50,default:"" },//公司编号
+    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
+});
+crmCustomInfo.belongsTo(crmCompanyInfo, {as: 'company', foreignKey: 'companyId'});
+crmCustomInfo.Name='crmCustomInfo';
+
+
+
+schema.models.crmCustomInfo;
+
+
+exports.crmCustomInfo = crmCustomInfo;
+Dbs.crmCustomInfo = crmCustomInfo;
 var crmCallRecords = schema.define('crmCallRecords', {
     companyId: {type: String, length: 50},//企业编号
     customId: {type: String, length: 50},//客户编号
     userId: {type: Number, default: 0},//用户编号
     poptype:{type: String, length: 10,default:'呼入'},//呼叫方向
+    callNumber:{type: Number, default:''},
     recordType:{type: String, length: 10},
     record:{type: String, length: 500},
     createTime: {
@@ -685,7 +725,9 @@ var crmCallRecords = schema.define('crmCallRecords', {
         }
     }//操作时间
 });
-
+crmCallRecords.belongsTo(crmCompanyInfo, {as: 'company', foreignKey: 'companyId'});
+crmCallRecords.belongsTo(crmCustomInfo, {as: 'custom', foreignKey: 'customId'});
+crmCallRecords.belongsTo(manageUserInfo, {as: 'user', foreignKey: 'userId'});
 crmCallRecords.Name = 'crmCallRecords';
 
 
@@ -812,45 +854,6 @@ crmVoiceContent.Name='crmVoiceContent';
 schema.models.crmVoiceContent;
 exports.crmVoiceContent = crmVoiceContent;
 Dbs.crmVoiceContent = crmVoiceContent;
-var crmCompanyInfo= schema.define('crmCompanyInfo', {
-    companyName:{type: String, length: 100},//公司名称
-    companyAddr:{type:String,length:200,default:''},
-    telphones:{type: String, length: 50,default:''},
-    url:{type: String, length: 50,default:''},
-    companyMemo:{type: String, length: 200,default:''},
-    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
-});
-
-crmCompanyInfo.Name='crmCompanyInfo';
-
-
-
-schema.models.crmCompanyInfo;
-
-
-exports.crmCompanyInfo = crmCompanyInfo;
-Dbs.crmCompanyInfo = crmCompanyInfo;
-var crmCustomInfo= schema.define('crmCustomInfo', {
-    customName:{type: String, length: 50},//项目编号
-    position:{type: String, length: 50},
-    sex:{type:String,length:10,default: '男'},
-    birthday:{type: String, length: 50},
-    phones:{type: String, length: 50},
-    customMemo:{type: String, length: 200,default:''},
-    customAddr:{type: String, length: 100},
-    companyId:   { type: String, length: 50,default:"" },//公司编号
-    createTime:  { type: String, length: 50,default: function () { return moment().format("YYYY-MM-DD HH:mm:ss"); } }//操作时间
-});
-crmCustomInfo.belongsTo(crmCompanyInfo, {as: 'company', foreignKey: 'companyId'});
-crmCustomInfo.Name='crmCustomInfo';
-
-
-
-schema.models.crmCustomInfo;
-
-
-exports.crmCustomInfo = crmCustomInfo;
-Dbs.crmCustomInfo = crmCustomInfo;
 exports.Dbs = Dbs;
 
 /*    if (appconf.debug) {
