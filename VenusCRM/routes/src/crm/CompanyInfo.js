@@ -142,3 +142,31 @@ posts.save = function (req, res, next, baseurl) {
             res.send(myjson);
         });
 }
+posts.delete = function (req, res, next, baseurl) {
+    var id = req.body['id'];
+    Schemas.crmCompanyInfo.find(id, function (err, inst) {
+        var myjson = {};
+        if (err) {
+            myjson.success = 'ERROR';
+            myjson.msg = '查询数据发生异常,请联系管理员！';
+        } else {
+            if (!inst) {
+                myjson.success = 'ERROR';
+                myjson.msg = '没有找到需要删除的数据！';
+            }
+            inst.destroy(function (err) {
+                if (err) {
+                    myjson.success = 'ERROR';
+                    myjson.msg = '删除数据发生异常,请联系管理员！！';
+                } else {
+                    myjson.success = 'OK';
+                    myjson.msg = '删除成功！';
+                }
+                res.send(myjson);
+
+            });
+
+        }
+
+    });
+}
