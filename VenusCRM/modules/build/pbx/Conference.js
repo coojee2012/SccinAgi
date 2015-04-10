@@ -1,2 +1,0 @@
-/*! 数据库表结构 2014-03-22 */
-var pbxConference=schema.define("pbxConference",{pincode:{type:String,length:50},playwhenevent:{type:Number,"default":function(){return 0}},mohwhenonlyone:{type:Number,"default":function(){return 0}},cretime:{type:String,length:50,"default":function(){return moment().format("YYYY-MM-DD HH:mm:ss")}}});pbxConference.Name="pbxConference",schema.models.pbxConference,exports.pbxConference=pbxConference,Dbs.pbxConference=pbxConference;

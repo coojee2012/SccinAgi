@@ -1,2 +1,0 @@
-/*! 数据库表结构 2014-02-17 */
-var Schema=require("jugglingdb").Schema,schema=require("../../database/jdmysql").schema,moment=require("moment"),CallRecords=require("./CallRecords"),DialResult=schema.define("DialResult",{ProjExpertID:{type:String,length:50},Result:{type:Number,"default":-1},State:{type:Number,"default":0},WorkTime:{type:String,length:50,"default":function(){return moment().format("YYYY-MM-DD HH:mm:ss")}}});DialResult.Name="DialResult",DialResult.belongsTo(CallRecords,{as:"callrecord",foreignKey:"id"}),schema.models.DialResult,module.exports=DialResult;

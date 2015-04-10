@@ -1,2 +1,0 @@
-/*! 数据库表结构 2014-02-17 */
-var Schema=require("jugglingdb").Schema,schema=require("../../database/jdmysql").schema,moment=require("moment"),CallRecords=require("./CallRecords"),CallPhone=schema.define("CallPhone",{callRecordsID:{type:String,length:50},Phone:{type:String,length:50},State:{type:Number,"default":0},PhoneSequ:{type:Number,"default":0}});CallPhone.belongsTo(CallRecords,{as:"callrecord",foreignKey:"callRecordsID"}),CallPhone.Name="CallPhone",schema.models.CallPhone,module.exports=CallPhone;

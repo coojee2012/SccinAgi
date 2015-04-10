@@ -1,2 +1,0 @@
-/*! 数据库表结构 2014-02-17 */
-var Schema=require("jugglingdb").Schema,moment=require("moment"),schema=require("../../database/jdmysql").schema,PBXLocalNumber=schema.define("PBXLocalNumber",{localtype:{type:String,length:50},assign:{type:String,length:100}});PBXLocalNumber.Name="PBXLocalNumber",schema.models.PBXLocalNumber,module.exports=PBXLocalNumber;

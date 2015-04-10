@@ -1,2 +1,0 @@
-/*! 数据库表结构 2014-03-22 */
-var crmCallRecords=schema.define("crmCallRecords",{CallInfoID:{type:String,length:50},CallState:{type:Number,"default":0},WorkTime:{type:String,length:50,"default":function(){return moment().format("YYYY-MM-DD HH:mm:ss")}}});crmCallRecords.Name="crmCallRecords",schema.models.crmCallRecords,exports.crmCallRecords=crmCallRecords,Dbs.crmCallRecords=crmCallRecords;

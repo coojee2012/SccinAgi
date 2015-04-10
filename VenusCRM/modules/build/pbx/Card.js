@@ -1,2 +1,0 @@
-/*! 数据库表结构 2014-03-22 */
-var pbxCard=schema.define("pbxCard",{id:{type:String,length:100,"default":function(){return guid.create()}},cardname:{type:String,length:50},driver:{type:String,length:50,"default":function(){return"DAHDI"}},line:{type:Number},group:{type:String,length:10,"default":function(){return"-1"}},dataline:{type:String,length:10,"default":function(){return""}},trunkproto:{type:String,length:50}});pbxCard.Name="pbxCard",schema.models.pbxCard,exports.pbxCard=pbxCard,Dbs.pbxCard=pbxCard;

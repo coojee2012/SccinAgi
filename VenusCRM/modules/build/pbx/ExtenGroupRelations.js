@@ -1,2 +1,0 @@
-/*! 数据库表结构 2014-03-22 */
-var pbxExtenGroupRelations=schema.define("pbxExtenGroupRelations",{id:{type:String,length:100,"default":function(){return guid.create()}},groupid:{type:Number},extenid:{type:String,length:50}});pbxExtenGroupRelations.Name="pbxExtenGroupRelations",schema.models.pbxExtenGroupRelations,exports.pbxExtenGroupRelations=pbxExtenGroupRelations,Dbs.pbxExtenGroupRelations=pbxExtenGroupRelations;

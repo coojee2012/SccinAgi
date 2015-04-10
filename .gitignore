@@ -16,3 +16,8 @@ web.log
 .idea
 node_modules
 /VenusCRM/public/upload
+/VenusCRM/routes/build
+/VenusCRM/modules/build
+/VenusCRM/build
+/VenusCRM/app.min.js
+/VenusAGI/modules/build

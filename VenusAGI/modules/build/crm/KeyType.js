@@ -1,2 +1,0 @@
-/*! 数据库表结构 2014-03-21 */
-var Schema=require("jugglingdb").Schema,moment=require("moment"),conf=require("node-conf"),basedir=conf.load("app").appbase,schema=require(basedir+"/database/jdmysql").schema,crmKeyType=schema.define("KeyType",{keyTypeID:{type:String,length:50},KeyTypeName:{type:String,length:50},State:{type:Number,"default":0}});crmKeyType.Name="crmKeyType",schema.models.crmKeyType,module.exports=crmKeyType;
