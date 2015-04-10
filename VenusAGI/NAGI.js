@@ -7,7 +7,7 @@
 var cluster = require('cluster');
 var conf = require('node-conf');
 var agiconf = conf.load('fastagi');
-var logger = require(__dirname+'/../lib/logger').logger('agi');
+var logger = require(__dirname+'/../VenusLib/logger').logger('agi');
 var os = require('os');
 // 获取CPU 的数量
 var numCPUs = os.cpus().length;
