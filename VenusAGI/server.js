@@ -1,3 +1,4 @@
+'use strict';
 var AGI = require(__dirname +'/../VenusLib/agi/index');
 var nami = require(__dirname + '/../VenusLib/ami/asmanager').nami;
 var conf = require('node-conf');
