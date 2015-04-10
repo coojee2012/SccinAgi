@@ -26,7 +26,7 @@ gets.index = function (req, res, next, baseurl) {
         baseurl: baseurl,
         pageIndex: req.query.displayStart || 0,
         where: util.inspect(commfun.searchContions(req.query.where)),
-        modename: 'crmCompanyInfo'
+        modename: 'crmCallRecords'
     });
 }
 
