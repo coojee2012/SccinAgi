@@ -68,8 +68,6 @@ module.exports = function (grunt) {
                     '../DBModules/manage/Menmus.js',
                     '../DBModules/manage/UserRole.js',
                     '../DBModules/manage/UserInfo.js',
-
-
                     '../DBModules/crm/CompanyInfo.js',
                     '../DBModules/crm/CustomInfo.js',
                     '../DBModules/crm/CallRecords.js',
