@@ -5,6 +5,7 @@
         "node-conf": "*",
         "log4js": "*",
         "lodash":">=2.4.1",
+        "readable-stream": "*",
         "async": ">=0.2.9"
     }
 }
