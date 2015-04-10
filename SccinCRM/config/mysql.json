@@ -1,8 +1,0 @@
-{
-	"host" : "192.168.7.144",
-	"port" : 3306,
-	"database" : "callcenter",
-	"user" : "root",
-	"password" : "12345678",
-	"debug":false
-}

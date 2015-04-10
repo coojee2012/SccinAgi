@@ -1,0 +1,177 @@
+<!--页面内容-->
+<div class="page_box">
+    <div class="column form-column main col col-sm-9 form-horizontal">
+        <h1> <span class="label label-info">
+      <img src="/images/man.png"/>
+      <img src="/images/queue.png"/>当前正在编辑规则<%= inst.routername%></span></h1>
+
+        <div class="panel panel-default fieldset">
+            <div class="formStyle">
+                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                    <table>
+                        <colgroup>
+                            <col style="width:20%">
+                        </colgroup>
+                        <tr>
+                            <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">规则信息</th>
+                        </tr>
+                        <tr>
+                            <th>规则名称</th>
+                            <td>
+                                <input type="text" id='routername' name='routername' value="<%= inst.routername%>"
+                                       class="form-control input-sm" placeholder="输入方便记忆的规则名称。"/>
+                                <input type="hidden" id="id" name="id" value="<%= inst.id%>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>系统默认</th>
+                            <td>
+                                <label class="radio-inline tipmsg">
+                                    <input type="radio" id="createmode1" name='createmode' value="是"
+                                    <%if(inst.createmode==='是'){%>checked='checked'<%}%> />是</label>
+                                <label class="radio-inline tipmsg" title="">
+                                    <input type="radio" id="createmode2" name='createmode' value="否"
+                                    <%if(inst.createmode==='否'){%>checked='checked'<%}%> />否</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>分机分组</th>
+                            <td>
+                                <select name="callergroup" id="callergroup" value="<%= inst.callergroup%>"
+                                        class="form-control input-sm" style='width: 100%;'>
+                                    <option value="all">任意</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>匹配规则</th>
+                            <td>
+                                <div class="form-inline">用户拨打的号码是以<input type="text" style="width:60px;" id='callednum' value="<%= inst.callednum%>" name='callednum' class="form-control input-sm"/>开头,长度为<input type="text" id='calledlen' value="<%= inst.calledlen%>" style="width:60px;" name='calledlen' class="form-control input-sm"/>位.从头删除掉<input type="text" value="<%= inst.replacecalledtrim%>" id='replacecalledtrim' style="width:60px;" name='replacecalledtrim' class="form-control input-sm"/>位数字,同时补充<input type="text" id='replacecalledappend' style="width:80px;" value="<%= inst.replacecalledappend%>" name='replacecalledappend' class="form-control input-sm"/>到该号码上.
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>处理方式</th>
+                            <td>
+                                <select name="processmode" id="processmode" class="form-control input-sm"
+                                        style='width: 100%;'>
+                                    <option value="blacklist"
+                                    <%if(inst.processmode==='blacklist'){%>selected='selected'<%}%>>黑名单</option>
+                                    <option value="diallocal"
+                                    <%if(inst.processmode==='diallocal'){%>selected='selected'<%}%>>本地处理</option>
+                                    <option value="dialout"
+                                    <%if(inst.processmode==='dialout'){%>selected='selected'<%}%>>拨打外线</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th id="dododoway">黑名单</th>
+                            <td>
+                                <select name="processdefined" id="processdefined" class="form-control input-sm"
+                                        style='width: 100%;'>
+                                   
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">高级参数</th>
+                        </tr>
+                        <tr>
+                            <th>最终规则</th>
+                            <td>
+                                <label class="radio-inline tipmsg">
+                                    <input type="radio" id="lastwhendone1" name='lastwhendone' value="是"
+                                    <%if(inst.lastwhendone==='是'){%>checked='checked'<%}%> >是</label>
+                                <label class="radio-inline tipmsg" title="">
+                                    <input type="radio" id="lastwhendone2" name='lastwhendone' value="否"
+                                    <%if(inst.lastwhendone==='否'){%>checked='checked'<%}%>>否</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>主叫替换</th>
+                            <td>
+                                <input type="text" id='replacecallerid' name='replacecallerid'
+                                       value="<%= inst.replacecallerid%>" class="form-control input-sm"/>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="panel-footer text-center">
+                <button class="btn btn-primary active" id='savebtn'>保存</button>
+                <a href="/pbx/RouterCallOut?displayStart=<%= displayStart%>&where=<%- where%>" class="btn btn-default" role="button">返回</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+    $(function () {
+        $(".tipmsg").tooltip({placement: 'auto'});
+        $('#form1').Validform();
+        $('#savebtn').click(function (e) {
+            if ($('#form1').Validform().check()) {
+
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '<%- baseurl%>/save',
+                    data: $('#form1').serialize(),// 你的formid
+                    async: false,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+                        if (data.success === 'OK') {
+                            $('#id').val(data.id);
+                        }
+                        $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                    }
+                });
+            } else {
+                $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+            }
+
+        });
+
+
+         $("#processmode").change(function(){
+$("#processdefined").empty();
+var processmode=$("#processmode").val();
+findprocessmode(processmode);
+
+        }); 
+
+ findprocessmode($("#processmode").val(),"<%= inst.processdefined%>");
+
+    });
+
+
+  function findprocessmode(processmode,v){
+
+   $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: '/base/common/findprocessmode',
+                    data: {"processmode":processmode},// 你的formid
+                    async: true,
+                    error: function (request) {
+                        $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                    },
+                    success: function (data) {
+             for(var i=0;i<data.data.length;i++){
+  var option = $("<option>").val(data.data[i].id).text(data.data[i].trunkname);
+$("#processdefined").append(option);
+             }
+             $("#dododoway").html(data.name);
+             if(v!==''){
+              $("#processdefined").val(v);  
+             }
+                    }
+                });  
+
+
+}
+
+</script>

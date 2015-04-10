@@ -1,0 +1,66 @@
+-- MySQL dump 10.13  Distrib 5.5.28, for Linux (i686)
+--
+-- Host: localhost    Database: autodial
+-- ------------------------------------------------------
+-- Server version	5.5.28-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `manageUserInfo`
+--
+
+DROP TABLE IF EXISTS `manageUserInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `manageUserInfo` (
+  `id` varchar(100) NOT NULL,
+  `uName` varchar(50) DEFAULT NULL,
+  `uCard` varchar(100) DEFAULT NULL,
+  `uSex` varchar(10) DEFAULT NULL,
+  `uLogin` varchar(50) DEFAULT NULL,
+  `uPass` varchar(100) DEFAULT NULL,
+  `uPhone` varchar(50) DEFAULT NULL,
+  `uWorkNum` varchar(50) DEFAULT NULL,
+  `uExten` varchar(10) DEFAULT NULL,
+  `uAddr` varchar(200) DEFAULT NULL,
+  `readOnly` varchar(10) DEFAULT NULL,
+  `roleId` varchar(100) DEFAULT NULL,
+  `depId` varchar(100) DEFAULT NULL,
+  `uMemo` varchar(50) DEFAULT NULL,
+  `crtTime` varchar(50) DEFAULT NULL,
+  `lastChangeTime` varchar(50) DEFAULT NULL,
+  `lastLoginTime` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `manageUserInfo`
+--
+
+LOCK TABLES `manageUserInfo` WRITE;
+/*!40000 ALTER TABLE `manageUserInfo` DISABLE KEYS */;
+INSERT INTO `manageUserInfo` VALUES ('0','系统管理员','','0','admin','5F4DCC3B5AA765D61D8327DEB882CF99','13588668866','','8801','','1','0','1','','2014-03-07 00:59:47','2014-03-07 00:59:47','2014-03-07 00:59:47'),('1','坐席员','','0','agent','5F4DCC3B5AA765D61D8327DEB882CF99','13588668866','','8001','','0','1','3','','2014-03-07 00:59:47','2014-03-07 00:59:47','2014-03-07 00:59:47'),('1ce1b8ac-dc00-7646-7394-294fa47f6631','141','','男','admin123','E10ADC3949BA59ABBE56E057F20F883E','21321','','12312','','是','0','1','','2014-03-25 07:41:13','2014-06-24 08:32:27','2014-03-25 07:41:13'),('2','销售员','','0','sale','5F4DCC3B5AA765D61D8327DEB882CF99','13588668866','','8002','','0','2','2','','2014-03-07 00:59:47','2014-03-07 00:59:47','2014-03-07 00:59:47'),('3e8c47db-f24b-1950-d556-af44b8df3d23','222','22','男','11111','2222','22','222','2222','22','是','22','222','','2014-03-10 08:32:32','2014-03-10 08:32:32','2014-03-10 08:32:32'),('581c08d6-961f-d987-9492-afd64a4a202a','12312','','男','sssss','2D02E669731CBADE6A64B58D602CF2A4','1321','123','1111113','','是','2','2','dsda','2014-03-11 02:07:51','2014-03-17 08:58:04','2014-03-11 02:07:51'),('98095ebd-3b01-991b-fed8-41efceb54936','12','','男','111','DC483E80A7A0BD9EF71D8CF973673924','15883710712','132','124258','','是','0','1','','2014-06-24 08:33:24','2014-06-24 08:33:24','2014-06-24 08:33:24'),('ecc022e1-bc96-d445-d032-9b8af5839178','111','','男','1111','1111','111','11','1111','','是','','','','2014-03-10 08:21:19','2014-03-10 08:21:19','2014-03-10 08:21:19');
+/*!40000 ALTER TABLE `manageUserInfo` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2014-09-03 10:47:12

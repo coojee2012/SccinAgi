@@ -1,0 +1,180 @@
+<tr>
+	<th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">注册验证</th>
+</tr>
+<tr>
+	<th>注册方式</th>
+	<td >
+		<label class="radio-inline tipmsg" title="互联网电话服务商一般为用户提供的VOIP服务都是基于这种验证模式.">
+			<input type="radio" id="trunkprototype1" name='trunkprototype' value="reg">用户名和密码</label>
+		<label class="radio-inline tipmsg" title="用于跟同级的设备进行对接,适合高级用户.">
+			<input type="radio" id="trunkprototype2" name='trunkprototype' value="ip" >IP地址</label>
+		<label class="radio-inline tipmsg" title="允许外部注册到本地作为本地的中继.">
+			<input type="radio" id="trunkprototype2" name='trunkprototype' value="iad">验证注册</label>
+
+	</td>
+</tr>
+
+<tr id="tr_host">
+	<th>服务器地址</th>
+	<td>
+		<input type="text" id='str_host'  name='str_host' value="" class="form-control input-sm tipmsg" title="请填写服务器地址，可以是IP或域名"  />
+	</td>
+</tr>
+
+<tr id="tr_port">
+	<th>服务器端口</th>
+	<td>
+		<input type="text" id='str_port'  name='str_port' value="5060" class="form-control input-sm tipmsg" title="请填写服务器提供的端口，一般是5060."  />
+	</td>
+</tr>
+
+<tr id="tr_username">
+	<th>验证用户</th>
+	<td>
+		<input type="text" id='str_username'  name='str_username' value="" class="form-control input-sm tipmsg" title="请填写验证用户名"  />
+	</td>
+</tr>
+
+<tr id="tr_secret">
+	<th>验证密码</th>
+	<td>
+		<input type="password" id='str_secret'  name='str_secret' value="" class="form-control input-sm tipmsg" title="请填写验证密码"  />
+	</td>
+</tr>
+
+<tr>
+	<th colspan="2" style="text-align:left;font-size:16px;color:#8B8682;">高级设置</th>
+</tr>
+<tr>
+	<th>强制主叫号码</th>
+	<td>
+		<input type="text" id='str_callerid'  name='str_callerid' value="" class="form-control input-sm tipmsg"  title="如果填写,表示强制以这个主叫号码送出通话"  />
+	</td>
+</tr>
+<tr>
+	<th>加密通信</th>
+	<td>
+		
+		<label class="radio-inline tipmsg" title="使用IAX2加密技术。默认否。">
+			<input type="radio" id="encryption1" name='str_encryption' value="yes"   >是</label>
+		<label class="radio-inline tipmsg" title="">
+			<input type="radio" id="encryption2" name='str_encryption' value="no" checked='checked'>否</label>
+
+	
+	</td>
+</tr>
+<tr>
+	<th>语音抖动</th>
+	<td>
+		<label class="radio-inline tipmsg" title="该设置将覆盖全局设置，为用户启用/禁用抖动缓存">
+			<input type="radio" id="jitterbuffer1" name='str_jitterbuffer' value="yes" checked='checked'  >是</label>
+		<label class="radio-inline tipmsg" title="">
+			<input type="radio" id="jitterbuffer2" name='str_jitterbuffer' value="no" >否</label>
+
+	</td>
+</tr>
+<tr>
+	<th>IAX转发</th>
+	<td>
+		<label class="radio-inline tipmsg" title="禁用/允许使用流媒体IAX2本地转移">
+			<input type="radio" id="progressinband1" name='str_transfer' value="mediaonly" checked='checked'   >是</label>
+		<label class="radio-inline tipmsg" title="">
+			<input type="radio" id="progressinband2" name='str_transfer' value="no" >否</label>
+	</td>
+</tr>
+<tr>
+	<th>服务器保活</th>
+	<td>
+		<label class="radio-inline tipmsg" title="确保这个通道还活着。">
+			<input type="radio" id="qualify1" name='str_qualify' value="yes" checked='checked'   >是</label>
+		<label class="radio-inline tipmsg" title="">
+			<input type="radio" id="qualify2" name='str_qualify' value="no" >否</label>
+	</td>
+</tr>
+<tr>
+	<th>编码支持</th>
+	<td>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="g723">G.723</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="g729">G.729</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="gsm">GSM</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="ulaw">ULAW</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="alaw">ALAW</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="h263">H.263</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="h264">H.264</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="g722">G.722</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="g726">G.726</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="ilbc">ILBC</label>
+		<label class="checkbox-inline tipmsg" title="">
+			<input type="checkbox"  name='str_allow' value="speex">SPEEX</label>
+	</td>
+</tr>
+</table>
+</form>
+</div>
+
+<div class="panel-footer text-center">
+<button  class="btn btn-primary active" id='savebtn'>保存</button>
+<a href="/pbx/Trunk?displayStart=<%= displayStart%>&where=<%- where%>" class="btn btn-default" role="button">返回</a>
+</div>
+</div>
+</div>
+
+<script tyoe="text/javascript">
+$(function(){
+$(".tipmsg").tooltip({placement:'auto'});
+$('#form1').Validform();
+$('#savebtn').click(function(e){
+//href="/PBXQueue/save"
+if($('#form1').Validform().check()){
+ $.ajax({
+                cache: true,
+                type: "POST",
+                url:'<%- baseurl%>/save',
+                data:$('#form1').serialize(),// 你的formid
+                async: false,
+                error: function(request) {
+                   $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                },
+                success: function(data) {
+                  if(data.success==='OK'){
+                    $('#id').val(data.id);
+                    $('#accountcode').attr('readonly','readonly');
+                  }
+                  $.scojs_message(data.msg, $.scojs_message['TYPE_'+data.success]);                  
+                }
+            }); 
+}else{
+  $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+}
+
+});
+
+$("input[name='trunkprototype']").click(function(){
+			if ($("input[name='trunkprototype']:checked").val() == 'reg') {
+				$('#tr_host').show();
+				$('#tr_username').show();
+				$('#tr_secret').show();
+			} else if ($("input[name='trunkprototype']:checked").val() == 'ip') {
+				$('#tr_host').show();
+				$('#tr_username').hide();
+				$('#tr_secret').hide();
+			} else if ($("input[name='trunkprototype']:checked").val() == 'iad') {
+				$('#tr_host').hide();
+				$('#tr_username').hide();
+				$('#tr_secret').show();
+			}
+		});
+
+
+});
+</script>

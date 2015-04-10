@@ -1,0 +1,11 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "dependencies": {
+        "node-conf": "*",
+        "log4js": "*",
+        "lodash":">=2.4.1",
+        "readable-stream": "*",
+        "async": ">=0.2.9"
+    }
+}

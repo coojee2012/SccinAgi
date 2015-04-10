@@ -1,0 +1,18 @@
+{
+
+"host": "192.168.2.88",
+
+"port": 3306,
+
+"database": "autodial",
+
+"username": "root",
+
+"password": "12345678",
+
+"log": true,
+
+"slave": true,
+
+"debug": false
+}

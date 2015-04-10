@@ -1,0 +1,75 @@
+<!--页面内容-->
+<div class="page_box">
+    <div class="column form-column main col col-sm-9 form-horizontal">
+        <h1> <span class="label label-info">
+      <img src="/images/man.png"/>
+      <img src="/images/queue.png"/>当前正在修改服务内容</span></h1>
+
+        <div class="panel panel-default fieldset">
+            <div class="formStyle">
+                <form action='<%- baseurl%>/save' method='POST' id='form1'>
+                    <input type="hidden" id='id' name='id' value="<%= inst.id %>"/>
+                    <table>
+                        <colgroup>
+                            <col style="width:20%">
+                        </colgroup>
+
+                        <tr>
+                            <th>服务类型</th>
+                            <td>
+                                <input type="text" id='recordType' name='recordType' class="form-control input-sm" value="<%= inst.recordType %>"
+                                       placeholder="请输入服务类型。" datatype="*" errormsg="不能为空！"
+                                        />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>服务内容</th>
+                            <td>
+                                <input type="text" id="record" name="record" class="form-control input-sm" value="<%= inst.record || '' %>"
+                                       placeholder="内容不能为空。" datatype="*" errormsg="不能为空！" />
+                            </td>
+                        </tr>
+
+
+                    </table>
+                </form>
+            </div>
+            <div class="panel-footer text-center">
+                <button class="btn btn-primary active" id='savebtn'>保存</button>
+                <a href="/crm/CallRecords" class="btn btn-default" role="button">返回</a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script type='text/javascript'>
+
+        $(function () {
+            $(".tipmsg").tooltip({placement: 'auto'});
+            $('#form1').Validform();
+            $('#savebtn').click(function (e) {
+                if ($('#form1').Validform().check()) {
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+                        url: '<%- baseurl%>/save',
+                        data: $('#form1').serialize(),// 你的formid
+                        async: false,
+                        error: function (request) {
+                            $.scojs_message('连接服务器失败！', $.scojs_message.TYPE_ERROR);
+                        },
+                        success: function (data) {
+                            $.scojs_message(data.msg, $.scojs_message['TYPE_' + data.success]);
+                        }
+                    });
+                } else {
+                    $.scojs_message('输入验证不通过，请检查！', $.scojs_message.TYPE_ERROR);
+                }
+
+            });
+
+        });
+
+    </script>
