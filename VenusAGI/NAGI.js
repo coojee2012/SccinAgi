@@ -3,10 +3,11 @@
 根据CPU的个数开启响应数量的子进程多并发异步服务
 可以负载均衡
 **/
+'use strict';
 var cluster = require('cluster');
 var conf = require('node-conf');
 var agiconf = conf.load('fastagi');
-var logger = require('./lib/logger').logger('agi');
+var logger = require(__dirname+'/../lib/logger').logger('agi');
 var os = require('os');
 // 获取CPU 的数量
 var numCPUs = os.cpus().length;
