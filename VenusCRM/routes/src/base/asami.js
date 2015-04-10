@@ -1,8 +1,8 @@
 var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
+var basedir = Venus.baseDir;
 /*var tts = require(basedir + '/lib/tts').tts;*/
 
-var nami = require(basedir + '/asterisk/asmanager').nami,
+var nami = require(basedir + '/../VenusLib/ami/asmanager').nami,
     util = require('util'),
     async = require('async'),
     AsAction = require("nami").Actions;

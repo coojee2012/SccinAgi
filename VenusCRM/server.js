@@ -5,8 +5,6 @@
 可以负载均衡
 **/
 'use strict';
-console.log(__dirname);
-
 var http = require('http');
 var cluster = require('cluster');
 var logger = require('./lib/logger').logger('web');

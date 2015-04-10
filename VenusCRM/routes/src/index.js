@@ -1,5 +1,5 @@
 var conf = require('node-conf');
-var basedir = conf.load('app').appbase;
+var basedir = Venus.baseDir;
 var Schemas = require(basedir + '/database/schema').Schemas;
 var logger = require(basedir + '/lib/logger').logger('web');
 var async = require('async');

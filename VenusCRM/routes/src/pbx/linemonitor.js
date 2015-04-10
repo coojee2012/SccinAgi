@@ -1,13 +1,13 @@
 var path = require("path");
 var guid = require('guid');
 var conf = require('node-conf').load('app');
-var basedir = conf.appbase;
+var basedir =  Venus.baseDir;
 var Schemas = require(basedir + '/database/schema').Schemas;
 var moment = require('moment');
 var async = require('async');
 var logger = require(basedir + '/lib/logger').logger('web');
 var fs = require("fs");
-var nami = require(basedir + '/asterisk/asmanager').nami,
+var nami = require(basedir + '/../VenusLib/ami/asmanager').nami,
 	util = require('util'),
 	AsAction = require("nami").Actions;
 var commfun = require(basedir + '/lib/comfun');

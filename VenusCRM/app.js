@@ -8,7 +8,7 @@ var serverDm = domain.create();
 
 
 global.Venus = {};//定义全局变量
-
+Venus.baseDir=__dirname;
 serverDm.on('error', function (error) {
     delete error.domain;
     console.error("应用程序发生异常：", error.stack);
@@ -23,18 +23,18 @@ serverDm.run(function () {
     var https = require('https');
 
     var conf = require('node-conf');
-    var nami = require(__dirname + '/asterisk/asmanager').nami;
+    var nami = require(__dirname + '/../VenusLib/ami/asmanager').nami;
 
     var JugglingStore = require('connect-jugglingdb')(express);
-    var schema = require('./database/jdmysql').schema;
+    var schema = require(__dirname + '/database/jdmysql').schema;
     var Schemas = require(__dirname + '/modules/DBModules').Dbs;
 
 
     var appconf = conf.load('app');
     var SRCFILE = appconf.debug ? 'src' : 'build';
 
-    var logger = require('./lib/logger').logger('web');
-    var log4js = require('./lib/logger').log4js;
+    var logger = require(__dirname +'/lib/logger').logger('web');
+    var log4js = require(__dirname +'/lib/logger').log4js;
 
 
     var server = http.createServer();

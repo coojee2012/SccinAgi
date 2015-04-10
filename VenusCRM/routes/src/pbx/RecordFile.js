@@ -1,7 +1,7 @@
 var path = require("path");
 var guid = require('guid');
 var conf = require('node-conf').load('app');
-var basedir = conf.appbase;
+var basedir =Venus.baseDir;
 var Schemas = require(basedir + '/database/schema').Schemas;
 var moment = require('moment');
 var async = require('async');
