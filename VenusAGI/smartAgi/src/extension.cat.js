@@ -73,7 +73,7 @@ routing.prototype.extension = function(extennum, assign, callback) {
             cb('呼叫转移方式指定错误或呼叫转移循环层级达到10', -1);
           }
         } else {
-          context.Dial(extenproto + '/' + extennum, timeout, 'tr', function(err, response) {
+          context.Dial(extenproto + '/' + extennum, timeout, conf.dialLocalOptions, function(err, response) {
             logger.debug("拨打分机返回结果：", response);
             if (err) {
               cb(err, response);

@@ -1674,7 +1674,11 @@ routing.prototype.ivr = function(ivrnum, action, callback) {
    17、播放音调
 
    18、挂机
-
+   19、播放语音并接收DTMF按键：
+                file:给定播放的语音文件
+                timeout:超时
+                maxdigits:最大接受，默认20
+                varname：保存的变量名，仅在当前会话有效
 
 **/
 routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
@@ -1705,8 +1709,9 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             processname: actmode.modename,
             doneresults: ''
           }, function(err, inst) {
-            if (err)
-              logger.error("记录呼叫处理过程发生异常：", err);
+            if (err){
+                logger.error("记录呼叫处理过程发生异常：", err);
+            }
             cb(err, inst);
           });
         },
@@ -1718,8 +1723,6 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
             logger.debug("IVR播放语音");
             var musicfile = actargs.folder + '/' + actargs.filename;
             if (actargs.specfile && actargs.specfile !== "") {
-
-
               var specfile = actargs.specfile;
               if (/\%(\S+)\%/.test(specfile)) {
                 var tmp = RegExp.$1;
@@ -2042,6 +2045,50 @@ routing.prototype.ivraction = function(actionid, actions, inputs, callback) {
 
 
             }
+          }
+          //放音录制
+          else if(actmode.modename === '放音录制'){
+              logger.debug("准备开始放音录制字符。");
+              var maxdigits = 20; //默认最多可接收20个按键
+              var inputkey = '';
+              var timeout = 10 * 1000;
+              var filename=actargs.folder + '/' + actargs.filename;
+              if (actargs.timeout && /\d+/.test(actargs.timeout) && actargs.timeout + 0 > 0) {
+                  timeout = actargs.timeout * 1000;
+              }
+              var ivrnumber = actargs.ivrnumber;
+              var ivractionid = actargs.actionid || 1;
+
+              if (actargs.maxdigits && /\d+/.test(actargs.maxdigits))
+                  maxdigits = parseInt(actargs.maxdigits);
+              if (maxdigits <= 0) {
+                  cb(null, 1);
+              } else {
+                  async.auto({
+                      getdata:function(callback){
+                          context.GetData(filename,timeout,maxdigits, function(err, response) {
+                              console.log(response);
+                              if (err){
+                                  callback(err, response);
+                              }
+                              else {
+                                  var tempvarname = 'lastgetdata';
+                                  inputkey=response.result;
+                                  if (actargs.varname && actargs.varname !== ''){
+                                      tempvarname = actargs.varname;
+                                  }
+                                  self.activevar[tempvarname] = inputkey; //将输入的按键保存到临时变量
+                                  logger.debug("保存到变量" + tempvarname + "的数字字符:" + self.activevar[tempvarname]);
+                                  callback(null, inputkey);
+                              }
+
+                          });
+                      }
+                  },function(err, results) {
+                      cb(err, results);
+                  });
+
+              }
           }
           //读出数字字符 
           else if (actmode.modename === '读出数字字符') {

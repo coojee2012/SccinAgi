@@ -1,0 +1,70 @@
+{
+    "main": "app://reportserver/index.html",
+    "name": "ExpertReportAPI",
+    "description": "北京专家库II期报表API",
+    "version": "0.1.2",
+    "keywords": [ "北京专家库", "报表"],
+    "window": {
+        "icon": "logo.png",
+        "toolbar": true,
+        "width": 1024,
+        "height": 768,
+        "frame": true,
+        "position": "center",
+        "min_width": 400,
+        "min_height": 200,
+        "max_width": 1024,
+        "max_height": 768
+    },
+    "node-main":"",
+    "single-instance":true,
+    "webkit": {
+        "plugin": true
+    },
+    "user-agent": "%name %ver %nwver %webkit_ver %osinfo",
+    "dependencies": {
+        "express": ">=4.0.0",
+        "express-session":">=1.9.0",
+        "cookie-parser":">=1.3.0",
+        "body-parser": ">=1.6.5",
+        "method-override": ">=2.1.3",
+        "domain-middleware": ">=0.1.0",
+        "ejs": ">=1.0.0",
+        "mssql-q": ">=1.0.0",
+        "node-conf": ">=0.0.6",
+        "async": ">=0.9.0",
+        "q":">=1.1.0",
+        "mssql":">=1.3.0",
+        "log4js": ">=0.6.0",
+        "date-format":">=0.0.2",
+        "rimraf":"^2.3.0",
+        "highcharts-exporter":"^1.0.0",
+        "connect-timeout":"^1.6.0",
+        "iconv-lite":">=0.4.7",
+        "morgan":"~1.5.0",
+        "adm-zip": "0.4.4",
+        "fs-extra": "~0.16.0",
+        "kew": "0.4.0",
+        "npmconf": "2.1.1",
+        "progress": "1.1.8",
+        "request": "2.42.0",
+        "request-progress": "0.3.1",
+        "which": "~1.0.5",
+        "config-chain": "~1.1.8",
+        "inherits": "~2.0.0",
+        "ini": "^1.2.0",
+        "mkdirp": "^0.5.0",
+        "nopt": "~3.0.1",
+        "once": "~1.3.0",
+        "osenv": "^0.1.0",
+        "semver": "2 || 3 || 4",
+        "uid-number": "0.0.5",
+        "xss": ">=0.1.x"
+    },
+    "devDependencies": {
+    },
+    "engines": {
+        "node": ">=0.10.0"
+    }
+}
+
