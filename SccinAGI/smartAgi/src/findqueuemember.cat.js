@@ -32,7 +32,7 @@ routing.prototype.findqueuemember = function() {
 				var extenproto = localargs.extenproto || 'SIP';
 				var timeout = localargs.timeout || '60';
 				timeout = parseInt(timeout);
-				context.Dial(extenproto + '/' + extennum, timeout, 'tr', function(err, response) {
+				context.Dial(extenproto + '/' + extennum, timeout, conf.dialOutOptions, function(err, response) {
 					logger.debug("拨打队列分机返回结果：", response);
 					if (err) {
 						cb(err, response);
@@ -60,13 +60,6 @@ routing.prototype.findqueuemember = function() {
 					logger.debug("被叫开启了呼叫转移！");
 					cb("被叫开启了呼叫转移！", -1);
 				}
-				/*else if (anwserstatus === 'CONGESTION') {
-          logger.debug("被叫直接挂机！");
-          cb("被叫直接挂机！", -1);
-        }  else if (anwserstatus === 'NOANSWER') {
-          logger.debug("被叫无应答！");
-          cb("被叫无应答！", -1);
-        }*/
 				else if (anwserstatus !== 'ANSWER') {
 					cb("拨打队列分机应答不成功！", -1);
 				} else {

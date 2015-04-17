@@ -84,7 +84,7 @@ routing.prototype.dialout = function(linenum, callback) {
         }
         //context.ChannelStatus(channele, function(err, reponse) {
         //logger.debug('线路状态：', reponse);
-        context.Dial(channele + '/' + called, conf.timeout, conf.dialoptions, function(err, response) {
+        context.Dial(channele + '/' + called, conf.timeout, conf.dialOutOptions, function(err, response) {
           if (err) {
             cb(err, response);
           } else {
