@@ -534,8 +534,8 @@ routing.prototype.calloutback = function() {
               }
             }, function(err, inst) {
               if (context.stream && context.stream.readable) {
+                console.log('context.stream.readable:',context.stream.readable);
                 context.Playback('waiteout', function(err, response) {
-
                   context.hangup(function(err, response) {
                     context.end();
                     cb(err, inst);
@@ -557,205 +557,216 @@ routing.prototype.calloutback = function() {
             else {
                 context.Playback('/home/share/' + results.getProjMoveID + '-notice', function(err, response) {
                     if(err){
+                        //console.log("Playback err:",response);
+                        hangupStatus();
                         cb(err,response);
                     }
                     else{
-                        context.waitForDigit(5000, function(err, response) {
-                       // context.GetData('/home/share/' + results.getProjMoveID + '-notice', 5000, 1, function(err, response) {
+                        //console.log("Playback success:",response);
+                        if(response. result ===  '0') {
+                            context.waitForDigit(5000, function (err, response) {
+                                // context.GetData('/home/share/' + results.getProjMoveID + '-notice', 5000, 1, function(err, response) {
 
-                            if (err){
-                                cb(err, null);
-                            }
-
-                            else {
-
-                               // var key = response.result;
-                              //  key.replace(/\s+/, "");
-
-                                var key = String.fromCharCode(response.result);
-                                //记录用户按键到按键记录表
-                                schemas.crmUserKeysRecord.create({
-                                    id: guid.create(),
-                                    Key: key,
-                                    keyTypeID: '111111',
-                                    callLogID: phone.id
-                                }, function(err, inst) {});
-                                //确认参加
-
-                                if (key === keyNum[0]) {
-                                    logger.debug("专家确定参加评标！");
-                                    var GetSureKey = function(surecount) {
-                                        if (surecount > 2) {
-                                            hangupStatus();
-                                        } else {
-
-                                            context.GetData('suercomttip', 5000, 1, function(errsure, responsesure) {
-                                                if (errsure)
-                                                    cb(errsure, null);
-                                                else {
-                                                    logger.debug("再次确认参加收键:", responsesure);
-                                                    var keysure = responsesure.result;
-                                                    keysure.replace(/\s+/, "");
-                                                    //记录用户按键到按键记录表
-                                                    schemas.crmUserKeysRecord.create({
-                                                        id: guid.create(),
-                                                        Key: keysure,
-                                                        keyTypeID: '111111',
-                                                        callLogID: phone.id
-                                                    }, function(err, inst) {});
-                                                    //按井号确认参加
-                                                    if (keysure === '' || keysure === '#') {
-                                                        self.SureCome(callRecordsID, ProjMoveID, phone, keyNum, function(err, results) {
-                                                            cb(err, results);
-                                                        });
-                                                    }
-                                                    //按星号重新确认
-                                                    else if (keysure === '*') {
-                                                        count++
-                                                        GetInputkey(count);
-                                                    }
-                                                    //等待确认按键超时
-                                                    else if (/timeout/.test(keysure) && surecount < 3) {
-                                                        context.Playback('timeout', function(err22, response22) {
-                                                            if (err22)
-                                                                cb(err22, null);
-                                                            else {
-                                                                surecount++;
-                                                                GetSureKey(surecount);
-                                                            }
-
-                                                        });
-
-                                                    } else if (keysure !== '-1' && surecount < 3) {
-                                                        context.Playback('inputerror', function(err22, response22) {
-                                                            if (err22)
-                                                                cb(err22, null);
-                                                            else {
-                                                                surecount++;
-                                                                GetSureKey(surecount);
-                                                            }
-
-                                                        });
-
-                                                    }
-                                                    //按键错误或等待超时就挂机了
-                                                    else {
-                                                        hangupStatus();
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                    GetSureKey(0);
+                                if (err) {
+                                    cb(err, null);
                                 }
-                                //不参加
-                                else if (key === keyNum[1]) {
-                                    logger.debug("专家确定不参加评标！");
-                                    var GetCannelKey = function(CannelCount) {
 
-                                        if (CannelCount+0 > 2) {
-                                            hangupStatus();
-                                        } else {
-                                            logger.debug("专家确定不参加评标次数：", CannelCount);
-                                            context.GetData('canneltip', 5000, 1, function(errcannel, responsecannel) {
-                                                if (errcannel)
-                                                    cb(errcannel, null);
-                                                else {
-                                                    var keycannel = responsecannel.result;
-                                                    keycannel.replace(/\s+/, "");
-                                                    //记录用户按键到按键记录表
-                                                    schemas.crmUserKeysRecord.create({
-                                                        id: guid.create(),
-                                                        Key: keycannel,
-                                                        keyTypeID: '111111',
-                                                        callLogID: phone.id
-                                                    }, function(err, inst) {});
-                                                    //按井号确认参加
-                                                    if (keycannel === '' || keycannel === '#') {
-                                                        self.NoCome(callRecordsID, function(err, results) {
-                                                            cb(err, results);
-                                                        });
-                                                    }
-                                                    //按星号重新确认
-                                                    else if (keycannel === '*') {
-                                                        count++;
-                                                        GetInputkey(count);
-                                                    }
-                                                    //等待确认按键超时
-                                                    else if (/timeout/.test(keycannel)) {
-                                                        context.Playback('timeout', function(err22, response22) {
-                                                            if (err22)
-                                                                cb(err22, null);
-                                                            else {
-                                                                CannelCount++;
-                                                                GetCannelKey(CannelCount);
-                                                            }
-
-                                                        });
-
-                                                    } else if (keycannel !== '-1') {
-                                                        context.Playback('inputerror', function(err22, response22) {
-                                                            if (err22)
-                                                                cb(err22, null);
-                                                            else {
-                                                                CannelCount++;
-                                                                GetCannelKey(CannelCount);
-                                                            }
-
-                                                        });
-
-                                                    }
-                                                    //按键错误或等待超时就挂机了
-                                                    else {
-                                                        hangupStatus();
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                    GetCannelKey(0);
-                                }
-                                //重听
-                                else if (key === keyNum[2]) {
-                                    logger.debug("专家重听评标信息！");
-                                    count++;
-                                    GetInputkey(count);
-                                }
-                                //等待确认按键超时
-                                else if (/timeout/.test(key)) {
-                                    logger.debug("等待专家按键超时！");
-                                    context.Playback('timeout', function(err22, response22) {
-                                        if (err22)
-                                            cb(err22, null);
-                                        else {
-                                            count++;
-                                            GetInputkey(count);
-                                        }
-
-                                    });
-
-                                }
-                                //挂机
-                                else if (key !== '-1') {
-                                    logger.debug("专家按键错误！");
-                                    context.Playback('inputerror', function(err22, response22) {
-                                        if (err22)
-                                            cb(err22, null);
-                                        else {
-                                            count++;
-                                            GetInputkey(count);
-                                        }
-
-                                    });
-
-                                }
-                                //按键错误或等待超时就挂机了
                                 else {
-                                    hangupStatus();
-                                }
-                            }
 
-                        });
+                                    // var key = response.result;
+                                    //  key.replace(/\s+/, "");
+
+                                    var key = String.fromCharCode(response.result);
+                                    //记录用户按键到按键记录表
+                                    schemas.crmUserKeysRecord.create({
+                                        id: guid.create(),
+                                        Key: key,
+                                        keyTypeID: '111111',
+                                        callLogID: phone.id
+                                    }, function (err, inst) {
+                                    });
+                                    //确认参加
+
+                                    if (key === keyNum[0]) {
+                                        logger.debug("专家确定参加评标！");
+                                        var GetSureKey = function (surecount) {
+                                            if (surecount > 2) {
+                                                hangupStatus();
+                                            } else {
+
+                                                context.GetData('suercomttip', 5000, 1, function (errsure, responsesure) {
+                                                    if (errsure)
+                                                        cb(errsure, null);
+                                                    else {
+                                                        logger.debug("再次确认参加收键:", responsesure);
+                                                        var keysure = responsesure.result;
+                                                        keysure.replace(/\s+/, "");
+                                                        //记录用户按键到按键记录表
+                                                        schemas.crmUserKeysRecord.create({
+                                                            id: guid.create(),
+                                                            Key: keysure,
+                                                            keyTypeID: '111111',
+                                                            callLogID: phone.id
+                                                        }, function (err, inst) {
+                                                        });
+                                                        //按井号确认参加
+                                                        if (keysure === '' || keysure === '#') {
+                                                            self.SureCome(callRecordsID, ProjMoveID, phone, keyNum, function (err, results) {
+                                                                cb(err, results);
+                                                            });
+                                                        }
+                                                        //按星号重新确认
+                                                        else if (keysure === '*') {
+                                                            count++
+                                                            GetInputkey(count);
+                                                        }
+                                                        //等待确认按键超时
+                                                        else if (/timeout/.test(keysure) && surecount < 3) {
+                                                            context.Playback('timeout', function (err22, response22) {
+                                                                if (err22)
+                                                                    cb(err22, null);
+                                                                else {
+                                                                    surecount++;
+                                                                    GetSureKey(surecount);
+                                                                }
+
+                                                            });
+
+                                                        } else if (keysure !== '-1' && surecount < 3) {
+                                                            context.Playback('inputerror', function (err22, response22) {
+                                                                if (err22)
+                                                                    cb(err22, null);
+                                                                else {
+                                                                    surecount++;
+                                                                    GetSureKey(surecount);
+                                                                }
+
+                                                            });
+
+                                                        }
+                                                        //按键错误或等待超时就挂机了
+                                                        else {
+                                                            hangupStatus();
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        GetSureKey(0);
+                                    }
+                                    //不参加
+                                    else if (key === keyNum[1]) {
+                                        logger.debug("专家确定不参加评标！");
+                                        var GetCannelKey = function (CannelCount) {
+
+                                            if (CannelCount + 0 > 2) {
+                                                hangupStatus();
+                                            } else {
+                                                logger.debug("专家确定不参加评标次数：", CannelCount);
+                                                context.GetData('canneltip', 5000, 1, function (errcannel, responsecannel) {
+                                                    if (errcannel)
+                                                        cb(errcannel, null);
+                                                    else {
+                                                        var keycannel = responsecannel.result;
+                                                        keycannel.replace(/\s+/, "");
+                                                        //记录用户按键到按键记录表
+                                                        schemas.crmUserKeysRecord.create({
+                                                            id: guid.create(),
+                                                            Key: keycannel,
+                                                            keyTypeID: '111111',
+                                                            callLogID: phone.id
+                                                        }, function (err, inst) {
+                                                        });
+                                                        //按井号确认参加
+                                                        if (keycannel === '' || keycannel === '#') {
+                                                            self.NoCome(callRecordsID, function (err, results) {
+                                                                cb(err, results);
+                                                            });
+                                                        }
+                                                        //按星号重新确认
+                                                        else if (keycannel === '*') {
+                                                            count++;
+                                                            GetInputkey(count);
+                                                        }
+                                                        //等待确认按键超时
+                                                        else if (/timeout/.test(keycannel)) {
+                                                            context.Playback('timeout', function (err22, response22) {
+                                                                if (err22)
+                                                                    cb(err22, null);
+                                                                else {
+                                                                    CannelCount++;
+                                                                    GetCannelKey(CannelCount);
+                                                                }
+
+                                                            });
+
+                                                        } else if (keycannel !== '-1') {
+                                                            context.Playback('inputerror', function (err22, response22) {
+                                                                if (err22)
+                                                                    cb(err22, null);
+                                                                else {
+                                                                    CannelCount++;
+                                                                    GetCannelKey(CannelCount);
+                                                                }
+
+                                                            });
+
+                                                        }
+                                                        //按键错误或等待超时就挂机了
+                                                        else {
+                                                            hangupStatus();
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        GetCannelKey(0);
+                                    }
+                                    //重听
+                                    else if (key === keyNum[2]) {
+                                        logger.debug("专家重听评标信息！");
+                                        count++;
+                                        GetInputkey(count);
+                                    }
+                                    //等待确认按键超时
+                                    else if (/timeout/.test(key)) {
+                                        logger.debug("等待专家按键超时！");
+                                        context.Playback('timeout', function (err22, response22) {
+                                            if (err22)
+                                                cb(err22, null);
+                                            else {
+                                                count++;
+                                                GetInputkey(count);
+                                            }
+
+                                        });
+
+                                    }
+                                    //挂机
+                                    else if (key !== '-1') {
+                                        logger.debug("专家按键错误！");
+                                        context.Playback('inputerror', function (err22, response22) {
+                                            if (err22)
+                                                cb(err22, null);
+                                            else {
+                                                count++;
+                                                GetInputkey(count);
+                                            }
+
+                                        });
+
+                                    }
+                                    //按键错误或等待超时就挂机了
+                                    else {
+                                        hangupStatus();
+                                    }
+                                }
+
+                            });
+                        }
+                        else{
+                            hangupStatus();
+                        }
                     }
                 });
 
