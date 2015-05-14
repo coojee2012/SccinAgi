@@ -1,2 +1,2 @@
-/*! 路由处理程序 2014-10-16 */
-var guid=require("guid"),async=require("async"),_=require("lodash"),conf=require("node-conf"),basedir=conf.load("app").appbase,Schemas=require(basedir+"/database/schema").Schemas,logger=require(basedir+"/lib/logger").logger("web"),gets={},posts={};module.exports={get:gets,post:posts};var checkFun={};gets.index=function(a,b,c,d){var e=a.query.caller,f=a.query.called;b.render("crm/screenPop/index.html",{baseurl:d,caller:e,called:f})};
+/*! 路由处理程序 2015-05-13 */
+var guid=require("guid"),async=require("async"),_=require("lodash"),conf=require("node-conf"),basedir=conf.load("app").appbase,Schemas=require(basedir+"/database/schema").Schemas,logger=require(basedir+"/lib/logger").logger("web"),util=require("util"),gets={},posts={};module.exports={get:gets,post:posts};var checkFun={};gets.index=function(a,b,c,d){var e=a.query.caller,f=a.query.called;b.render("crm/screenPop/index.html",{baseurl:d,caller:e,called:f})};

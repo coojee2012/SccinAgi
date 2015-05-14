@@ -250,6 +250,8 @@ posts.dialout = function (req, res, next) {
 posts.autodial = function (req, res, next) {
     //res.set('Access-Control-Allow-Origin', '*');
     //res.header('Access-Control-Allow-Origin', '*')
+
+
     var tts = require(basedir + '/lib/tts').tts;
     var Userkey = req.get('User-key') || req.get('Userkey');
     var UserAgent = req.get('User-Agent') ||  req.get('UserAgent');
@@ -735,6 +737,15 @@ posts.getresult = function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
     var CallInfoID = req.body['CallInfoID'];
     logger.debug("开始获取：" + CallInfoID + '的呼叫结果！');
+
+    //用于性能测试
+    var myDate=new Date();
+    var unixTime=myDate.getTime();
+    res.send({
+        "success": true,
+        "result": unixTime%2 + 1
+    });
+    //性能测试结束
 
     if (!CallInfoID || CallInfoID == "") {
         res.send({
