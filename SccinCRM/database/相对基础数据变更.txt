@@ -1,1 +1,0 @@
-INSERT INTO `pbxIvrActMode` (`id`, `modename`) VALUES ('21', '放音录制');
