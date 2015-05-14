@@ -8,6 +8,9 @@ var agi = {
      console.log("AGI服务已启动....");
       var context = new Context(stream);
         context.setMaxListeners(0);
+        context.on('close',function(){
+            console.log("Context closed;");
+        });
       handler(context);
     });
   }

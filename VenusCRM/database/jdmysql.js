@@ -2,10 +2,12 @@ var Schema = require('jugglingdb').Schema;
 var conf = require('node-conf');
 var mysqlconfig=conf.load('jdmysql');
 var schema = new Schema('mysql', mysqlconfig);
-
+schema.setMaxListeners(0);
 schema.on('connected', function() {
 	console.log('数据库连接成功！');
 });
+
+
 
 schema.on('log', function(msg, duration) {
 	//console.log('log');
