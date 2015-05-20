@@ -105,6 +105,7 @@ Server.prototype.CreateApp = function () {
             if (exists) {
                 var router = require(file);
                 //req.method === 'POST'
+
                 if (typeof(router[fnName]) === 'function') {
                     router[fnName](req, res, next, self.db, self.logger);
                 } else {
