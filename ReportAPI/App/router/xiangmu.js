@@ -168,7 +168,7 @@ function zjly(req,res,next,db,logger){
     db.DataQuery(sql2).then(function (dbs) {
         var sumArray = [];
         for (var i = 0; i < dbs.length; i++) {
-            sumArray.push("sum(CASE C.[资金来源ID] WHEN '" + dbs[i].ID + "' THEN 1 ELSE 0 END ) AS [" + dbs[i]['资金来源'] + "],");
+            sumArray.push("sum(CASE C.[资金来源ID] WHEN '" + dbs[i].id + "' THEN 1 ELSE 0 END ) AS [" + dbs[i]['资金来源'] + "],");
             keys.push(dbs[i]['资金来源']);
         }
         var sumStr = sumArray.join(" ");
