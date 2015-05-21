@@ -92,9 +92,114 @@ function zblx(req, res, next, db, logger) {
 
 }
 
+//招标方式
+function zbfs(req,res,next,db,logger){
+
+    var sql2 = "SELECT * FROM [招标方式]";
+    var keys=['日期'];
+    db.DataQuery(sql2).then(function (dbs) {
+        var sumArray = [];
+        for (var i = 0; i < dbs.length; i++) {
+            sumArray.push("sum(CASE B.[招标方式ID] WHEN '" + dbs[i].ID + "' THEN 1 ELSE 0 END ) AS [" + dbs[i]['招标方式'] + "],");
+            keys.push(dbs[i]['招标方式']);
+        }
+        var sumStr = sumArray.join(" ");
+        var sqlArray = [];
+
+        sqlArray.push(" SELECT TOP 10  ");
+        sqlArray.push(sumStr);
+        sqlArray.push("A.[年份] AS [日期]");
+        sqlArray.push("FROM [抽取活动] A LEFT JOIN [招标项目] B ON B.ID = A.招标项目ID WHERE 1=1");
+        sqlArray.push("GROUP BY  A.[年份] ORDER BY A.[年份] DESC");
+        var sqlStr = sqlArray.join(" ");
+        console.log(sqlStr);
+        return db.DataQuery(sqlStr)
+
+
+    }).then(function (dbs) {
+        var obj={};
+        obj.keys=keys;
+        obj.data=dbs;
+        res.send(obj);
+    }).fail(function (err) {
+        res.send(err);
+    });
+}
+
+
+//行业类型
+function sshy(req,res,next,db,logger){
+
+    var sql2 = "SELECT * FROM [行业]";
+    var keys=['日期'];
+    db.DataQuery(sql2).then(function (dbs) {
+        var sumArray = [];
+        for (var i = 0; i < dbs.length; i++) {
+            sumArray.push("sum(CASE B.[所属行业ID] WHEN '" + dbs[i].ID + "' THEN 1 ELSE 0 END ) AS [" + dbs[i]['行业名称'] + "],");
+            keys.push(dbs[i]['行业名称']);
+        }
+        var sumStr = sumArray.join(" ");
+        var sqlArray = [];
+
+        sqlArray.push(" SELECT TOP 10  ");
+        sqlArray.push(sumStr);
+        sqlArray.push("A.[年份] AS [日期]");
+        sqlArray.push("FROM [抽取活动] A LEFT JOIN [招标项目] B ON B.ID = A.招标项目ID WHERE 1=1");
+        sqlArray.push("GROUP BY  A.[年份] ORDER BY A.[年份] DESC");
+        var sqlStr = sqlArray.join(" ");
+        console.log(sqlStr);
+        return db.DataQuery(sqlStr)
+
+
+    }).then(function (dbs) {
+        var obj={};
+        obj.keys=keys;
+        obj.data=dbs;
+        res.send(obj);
+    }).fail(function (err) {
+        res.send(err);
+    });
+}
+//资金来源
+function zjly(req,res,next,db,logger){
+
+    var sql2 = "SELECT * FROM [资金来源]";
+    var keys=['日期'];
+    db.DataQuery(sql2).then(function (dbs) {
+        var sumArray = [];
+        for (var i = 0; i < dbs.length; i++) {
+            sumArray.push("sum(CASE C.[资金来源ID] WHEN '" + dbs[i].ID + "' THEN 1 ELSE 0 END ) AS [" + dbs[i]['资金来源'] + "],");
+            keys.push(dbs[i]['资金来源']);
+        }
+        var sumStr = sumArray.join(" ");
+        var sqlArray = [];
+
+        sqlArray.push(" SELECT TOP 10  ");
+        sqlArray.push(sumStr);
+        sqlArray.push("A.[年份] AS [日期]");
+        sqlArray.push("FROM [抽取活动] A LEFT JOIN [招标项目] B ON B.ID = A.招标项目ID LEFT JOIN [项目] C ON C.id = B.项目ID WHERE 1=1");
+        sqlArray.push("GROUP BY  A.[年份] ORDER BY A.[年份] DESC");
+        var sqlStr = sqlArray.join(" ");
+        console.log(sqlStr);
+        return db.DataQuery(sqlStr)
+
+
+    }).then(function (dbs) {
+        var obj={};
+        obj.keys=keys;
+        obj.data=dbs;
+        res.send(obj);
+    }).fail(function (err) {
+        res.send(err);
+    });
+}
+
 module.exports = {
     zyydqk: zyydqk,
     zblx:zblx,//招标类型
+    zbfs:zbfs,//招标方式
+    sshy:sshy,//行业类型
+    zjly:zjly,//资金来源
     test: function () {
     }
 }
