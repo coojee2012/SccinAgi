@@ -540,8 +540,6 @@ routing.prototype.calloutback = function() {
                     context.end();
                     cb(err, inst);
                   });
-
-
                 });
               }
 
@@ -782,10 +780,18 @@ routing.prototype.calloutback = function() {
 
         }
       ]
-    },
-
-    function(err, results) {
+    },function(err, results) {
       if (err) {
+          schemas.crmDialResult.update({
+              where: {
+                  id: callRecordsID
+              },
+              update: {
+                  Result: 3,
+                  State: 1
+              }
+          },function(err, inst) {
+          });
         //console.log(results.getKey);
         if (context.stream && context.stream.readable) {
           context.hangup(function(err, response) {
@@ -793,7 +799,6 @@ routing.prototype.calloutback = function() {
           });
         }
       }
-
     });
 
 }
