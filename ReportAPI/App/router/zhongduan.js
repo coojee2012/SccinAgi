@@ -148,7 +148,8 @@ function xmslqk(req,res,next,db,logger){
     sqlArray.push(" SELECT A.[网络终端ID] AS zdid,B.[网络终端] AS zdmc , A.[年份] AS y, ");
     sqlArray.push("sum( CASE A.[填报类型] WHEN 1 THEN 1 ELSE  0 END ) AS rzyh,");
     sqlArray.push("sum( CASE A.[填报类型] WHEN 2 THEN 1 ELSE  0 END ) AS qtyh,");
-    sqlArray.push("sum( CASE A.[填报类型] WHEN 3 THEN 1 ELSE  0 END ) AS xcyh ");
+    sqlArray.push("sum( CASE A.[填报类型] WHEN 3 THEN 1 ELSE  0 END ) AS xcyh, ");
+    sqlArray.push("sum([抽取人数]) AS cqrs");
     sqlArray.push("FROM [抽取活动] A LEFT JOIN [网络终端] B ON B.ID = A.网络终端ID WHERE 1=1");
     if (query && typeof(query.year) != 'undefined') {
         sqlArray.push("AND A.[年份] = '"+query.year+"年'");

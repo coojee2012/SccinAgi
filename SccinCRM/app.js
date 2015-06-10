@@ -85,7 +85,7 @@ app.use(express.session({
 
 
 //记录长时间没有返回结果的访问
-app.use(function(req, res, next) {
+/*app.use(function(req, res, next) {
   setTimeout(function() {
     if (!res.finished) {
       res.end();
@@ -93,7 +93,7 @@ app.use(function(req, res, next) {
     }
   }, 60000);
   next();
-});
+});*/
 
 // 开发环境配置
 if ('development' == app.get('env')) {

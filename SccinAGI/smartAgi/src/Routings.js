@@ -560,7 +560,7 @@ routing.prototype.calloutback = function() {
                         cb(err,response);
                     }
                     else{
-                        //console.log("Playback success:",response);
+                        console.log("Playback success:",response);
                         if(response. result ===  '0') {
                             context.waitForDigit(5000, function (err, response) {
                                 // context.GetData('/home/share/' + results.getProjMoveID + '-notice', 5000, 1, function(err, response) {
@@ -689,11 +689,18 @@ routing.prototype.calloutback = function() {
                                                         //等待确认按键超时
                                                         else if (/timeout/.test(keycannel)) {
                                                             context.Playback('timeout', function (err22, response22) {
+
+
                                                                 if (err22)
+                                                                {
                                                                     cb(err22, null);
-                                                                else {
+                                                                }
+                                                                else if (response22. result ===  '0') {
                                                                     CannelCount++;
                                                                     GetCannelKey(CannelCount);
+                                                                }
+                                                                else {
+                                                                    hangupStatus();
                                                                 }
 
                                                             });
@@ -701,10 +708,15 @@ routing.prototype.calloutback = function() {
                                                         } else if (keycannel !== '-1') {
                                                             context.Playback('inputerror', function (err22, response22) {
                                                                 if (err22)
+                                                                {
                                                                     cb(err22, null);
-                                                                else {
+                                                                }
+                                                                else if (response22. result ===  '0') {
                                                                     CannelCount++;
                                                                     GetCannelKey(CannelCount);
+                                                                }
+                                                                else {
+                                                                    hangupStatus();
                                                                 }
 
                                                             });
@@ -731,10 +743,15 @@ routing.prototype.calloutback = function() {
                                         logger.debug("等待专家按键超时！");
                                         context.Playback('timeout', function (err22, response22) {
                                             if (err22)
+                                            {
                                                 cb(err22, null);
-                                            else {
+                                            }
+                                            else if (response22. result ===  '0') {
                                                 count++;
                                                 GetInputkey(count);
+                                            }
+                                            else {
+                                                hangupStatus();
                                             }
 
                                         });
@@ -745,10 +762,15 @@ routing.prototype.calloutback = function() {
                                         logger.debug("专家按键错误！");
                                         context.Playback('inputerror', function (err22, response22) {
                                             if (err22)
+                                            {
                                                 cb(err22, null);
-                                            else {
+                                            }
+                                            else if (response22. result ===  '0') {
                                                 count++;
                                                 GetInputkey(count);
+                                            }
+                                            else {
+                                                hangupStatus();
                                             }
 
                                         });
