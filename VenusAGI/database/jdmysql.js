@@ -1,8 +1,8 @@
 var Schema = require('jugglingdb').Schema;
 var conf = require('node-conf');
-var mysqlconfig = conf.load('jdmysql');
+var mysqlconfig = require('../config/jdmysql.json'); //conf.load('jdmysql');
 var schema = new Schema('mysql', mysqlconfig);
-
+console.log('mysqlconfig',mysqlconfig);
 schema.on('connected', function() {
 	console.log('数据库连接成功！');
 	schema.isActual(function(err, actual) {

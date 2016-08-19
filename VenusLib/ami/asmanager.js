@@ -1,6 +1,6 @@
 var Nami=require(__dirname+"/lib/nami.js").Nami;
 var nami = new Nami({
-    "host": "192.168.2.88",
+    "host": "127.0.0.1",
     "port": 5038,
     "username": "admin",
     "secret": "admin"

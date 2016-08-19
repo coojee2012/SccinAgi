@@ -9,8 +9,7 @@ var http = require('http');
 var cluster = require('cluster');
 var logger = require('./lib/logger').logger('web');
 var os = require('os');
-var conf = require('node-conf');
-var appconf = conf.load('app');
+var appconf = require('./config/app.json');// conf.load('app');
 var SRCFILE = appconf.debug ? '.js' : '.min.js';
 // 获取CPU 的数量
 //var numCPUs = os.cpus().length;

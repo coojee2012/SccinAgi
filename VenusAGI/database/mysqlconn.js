@@ -1,6 +1,6 @@
 var mysql=require('mysql');
 var conf = require('node-conf');
-var mysqlconf=conf.load('mysql');
+var mysqlconf= require('../config/mysql.json');//conf.load('mysql');
 
 var connection=mysql.createConnection(mysqlconf);
     connection.connect(function(err){

@@ -1,6 +1,6 @@
 var Nami=require("nami").Nami;
-var conf = require('node-conf');
-var nami = new Nami(conf.load('asterisk'));
+var conf = require('../config/asterisk.json');
+var nami = new Nami(conf);
 nami.on('namiEvent', function (event) {
 	//console.log(event);
 });
